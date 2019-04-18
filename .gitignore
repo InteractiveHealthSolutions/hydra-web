@@ -1,3 +1,38 @@
+# OpenMRS Module # 
+*.class
+*.iml
+*.idea
+*.omod
+.settings
+.project
+*.sass-cache
+target
+doc
+.java-version
+*.releaseBackup
+release.properties
+README.html
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.iml
+
+.settings/*
+api/.classpath
+api/.project
+api/.settings/*
+api/target/*
+api/doc/*
+omod/.classpath
+omod/.project
+omod/.settings/*
+omod/target/*
+omod/doc/*
+/.settings
+
+# ReactJS Project # 
 .DS_STORE
 node_modules
 scripts/flow/*/.flowconfig
@@ -13,11 +48,9 @@ coverage/
 fixtures/dom/public/react-dom.js
 fixtures/dom/public/react.js
 test/the-files-to-test.generated.js
-*.log*
 chrome-user-data
 *.sublime-project
 *.sublime-workspace
-.idea
 *.iml
 .vscode
 *.swp
