@@ -20,31 +20,31 @@ import org.openmrs.module.web.extension.AdministrationSectionExt;
  * heading. This extension is enabled by defining (uncommenting) it in the config.xml file.
  */
 public class AdminList extends AdministrationSectionExt {
-	
+
 	/**
 	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getMediaType()
 	 */
 	public Extension.MEDIA_TYPE getMediaType() {
 		return Extension.MEDIA_TYPE.html;
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getTitle()
 	 */
 	public String getTitle() {
 		return "hydra.title";
 	}
-	
+
 	/**
 	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getLinks()
 	 */
 	public Map<String, String> getLinks() {
-		
+
 		Map<String, String> map = new HashMap<String, String>();
-		
+
 		map.put("module/hydra/hydra.form", "hydra.title");
-		
+
 		return map;
 	}
-	
+
 }
