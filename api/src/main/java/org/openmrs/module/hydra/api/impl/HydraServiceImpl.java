@@ -12,7 +12,7 @@ package org.openmrs.module.hydra.api.impl;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.hydra.Item;
+import org.openmrs.module.hydra.HydraForm;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 
@@ -37,16 +37,12 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
-	public Item getItemByUuid(String uuid) throws APIException {
+	public HydraForm getItemByUuid(String uuid) throws APIException {
 		return dao.getItemByUuid(uuid);
 	}
 
 	@Override
-	public Item saveItem(Item item) throws APIException {
-		if (item.getOwner() == null) {
-			item.setOwner(userService.getUser(1));
-		}
-
-		return dao.saveItem(item);
+	public HydraForm saveForm(HydraForm item) throws APIException {
+		return dao.saveForm(item);
 	}
 }

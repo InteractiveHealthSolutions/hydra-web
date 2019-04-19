@@ -12,7 +12,7 @@ package org.openmrs.module.hydra.api.dao;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
-import org.openmrs.module.hydra.Item;
+import org.openmrs.module.hydra.HydraForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,12 +26,12 @@ public class HydraDao {
 		return sessionFactory.getCurrentSession();
 	}
 
-	public Item getItemByUuid(String uuid) {
-		return (Item) getSession().createCriteria(Item.class).add(Restrictions.eq("uuid", uuid)).uniqueResult();
+	public HydraForm getItemByUuid(String uuid) {
+		return (HydraForm) getSession().createCriteria(HydraForm.class).add(Restrictions.eq("uuid", uuid)).uniqueResult();
 	}
 
-	public Item saveItem(Item item) {
-		getSession().saveOrUpdate(item);
-		return item;
+	public HydraForm saveForm(HydraForm form) {
+		getSession().saveOrUpdate(form);
+		return form;
 	}
 }

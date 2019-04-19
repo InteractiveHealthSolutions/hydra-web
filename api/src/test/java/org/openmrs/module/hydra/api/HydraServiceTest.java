@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
-import org.openmrs.module.hydra.Item;
+import org.openmrs.module.hydra.HydraForm;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.impl.HydraServiceImpl;
 import static org.mockito.Mockito.*;
@@ -45,19 +45,12 @@ public class HydraServiceTest {
 
 	@Test
 	public void saveItem_shouldSetOwnerIfNotSet() {
-		// Given
-		Item item = new Item();
-		item.setDescription("some description");
-
-		when(dao.saveItem(item)).thenReturn(item);
-
+		HydraForm item = new HydraForm();
+		item.setActionsXml("<root><node>NO TEXT</node></root>");
+		when(dao.saveForm(item)).thenReturn(item);
 		User user = new User();
 		when(userService.getUser(1)).thenReturn(user);
-
-		// When
-		basicModuleService.saveItem(item);
-
-		// Then
+		basicModuleService.saveForm(item);
 		assertThat(item, hasProperty("owner", is(user)));
 	}
 }

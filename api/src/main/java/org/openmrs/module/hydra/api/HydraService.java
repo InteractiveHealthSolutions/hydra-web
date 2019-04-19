@@ -13,7 +13,7 @@ import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.HydraConfig;
-import org.openmrs.module.hydra.Item;
+import org.openmrs.module.hydra.HydraForm;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -32,11 +32,10 @@ public interface HydraService extends OpenmrsService {
 	 */
 	@Authorized()
 	@Transactional(readOnly = true)
-	Item getItemByUuid(String uuid) throws APIException;
+	HydraForm getItemByUuid(String uuid) throws APIException;
 
 	/**
-	 * Saves an item. Sets the owner to superuser, if it is not set. It can be called by users with this
-	 * module's privilege. It is executed in a transaction.
+	 * Saves a form.
 	 * 
 	 * @param item
 	 * @return
@@ -44,5 +43,5 @@ public interface HydraService extends OpenmrsService {
 	 */
 	@Authorized(HydraConfig.MODULE_PRIVILEGE)
 	@Transactional
-	Item saveItem(Item item) throws APIException;
+	HydraForm saveForm(HydraForm item) throws APIException;
 }
