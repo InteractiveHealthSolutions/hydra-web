@@ -22,6 +22,19 @@
 		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-hydra.git</developerConnection>
 		<url>https://github.com/openmrs/openmrs-module-hydra/</url>
 	</scm>
+	
+	<distributionManagement>
+	    <repository>
+	        <id>central</id>
+	        <name>jfrog-atri-test-releases</name>
+	        <url>http://ihs.ihsinformatics.com:6837/artifactory/hydra</url>
+	    </repository>
+	    <snapshotRepository>
+	        <id>snapshots</id>
+	        <name>jfrog-atri-test-snapshots</name>
+	        <url>http://ihs.ihsinformatics.com:6837/artifactory/hydra</url>
+	    </snapshotRepository>
+	</distributionManagement>
 
 	<modules>
 		<module>api</module>
