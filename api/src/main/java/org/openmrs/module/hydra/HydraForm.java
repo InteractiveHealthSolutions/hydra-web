@@ -25,8 +25,7 @@ import org.openmrs.Form;
 import org.openmrs.Program;
 
 /**
- * Please note that a corresponding table schema must be created in
- * liquibase.xml.
+ * Please note that a corresponding table schema must be created in liquibase.xml.
  */
 // Uncomment 2 lines below if you want to make the Item class persistable, see
 // also HydraDaoTest and liquibase.xml

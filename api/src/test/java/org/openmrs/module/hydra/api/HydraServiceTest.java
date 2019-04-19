@@ -45,12 +45,12 @@ public class HydraServiceTest {
 
 	@Test
 	public void saveItem_shouldSetOwnerIfNotSet() {
-		HydraForm item = new HydraForm();
-		item.setActionsXml("<root><node>NO TEXT</node></root>");
-		when(dao.saveForm(item)).thenReturn(item);
+		HydraForm hydraFrom = new HydraForm();
+		hydraFrom.setActionsXml("<root><node>NO TEXT</node></root>");
+		when(dao.saveForm(hydraFrom)).thenReturn(hydraFrom);
 		User user = new User();
 		when(userService.getUser(1)).thenReturn(user);
-		basicModuleService.saveForm(item);
-		assertThat(item, hasProperty("owner", is(user)));
+		basicModuleService.saveForm(hydraFrom);
+		assertThat(hydraFrom, hasProperty("actionsXml", is(hydraFrom.getActionsXml())));
 	}
 }

@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * This class configured as controller using annotation and mapped with the URL of
- * 'module/${rootArtifactid}/${rootArtifactid}Link.form'.
+ * This class configured as controller using annotation and mapped with the URL
+ * of 'module/${rootArtifactid}/${rootArtifactid}Link.form'.
  */
 @Controller("${rootrootArtifactid}.HydraController")
 @RequestMapping(value = "module/${rootArtifactid}/${rootArtifactid}.form")
@@ -61,7 +61,7 @@ public class HydraController {
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String onPost(HttpSession httpSession, @ModelAttribute("anyRequestObject") Object anyRequestObject,
-	        BindingResult errors) {
+			BindingResult errors) {
 
 		if (errors.hasErrors()) {
 			// return error view
@@ -71,9 +71,9 @@ public class HydraController {
 	}
 
 	/**
-	 * This class returns the form backing object. This can be a string, a boolean, or a normal java
-	 * pojo. The bean name defined in the ModelAttribute annotation and the type can be just defined by
-	 * the return type of this method
+	 * This class returns the form backing object. This can be a string, a boolean,
+	 * or a normal java pojo. The bean name defined in the ModelAttribute annotation
+	 * and the type can be just defined by the return type of this method
 	 */
 	@ModelAttribute("users")
 	protected List<User> getUsers() throws Exception {
