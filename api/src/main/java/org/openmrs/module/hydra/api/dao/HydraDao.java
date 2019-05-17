@@ -10,9 +10,10 @@
 package org.openmrs.module.hydra.api.dao;
 
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.api.APIException;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
-import org.openmrs.module.hydra.HydraForm;
+import org.openmrs.module.hydra.model.HydraForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,8 +27,19 @@ public class HydraDao {
 		return sessionFactory.getCurrentSession();
 	}
 
-	public HydraForm getItemByUuid(String uuid) {
+	public HydraForm getHydraFormByUuid(String uuid) {
 		return (HydraForm) getSession().createCriteria(HydraForm.class).add(Restrictions.eq("uuid", uuid)).uniqueResult();
+	}
+
+	public HydraForm getHydraModuleFormByTag(String tag) {
+		DbSession session = getSession();
+		HydraForm form = (HydraForm) session.createCriteria(HydraForm.class).add(Restrictions.eq("uuid", tag))
+		        .uniqueResult();
+		return form;
+	}
+
+	public java.util.Set<HydraForm> getHydraFormsByTag(String tag) throws APIException {
+		return null;
 	}
 
 	public HydraForm saveForm(HydraForm form) {

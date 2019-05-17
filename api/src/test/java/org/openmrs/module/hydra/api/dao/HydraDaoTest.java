@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.Ignore;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.hydra.HydraForm;
+import org.openmrs.module.hydra.model.HydraForm;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.hamcrest.Matchers.*;
@@ -37,14 +37,14 @@ public class HydraDaoTest extends BaseModuleContextSensitiveTest {
 	public void saveItem_shouldSaveAllPropertiesInDb() {
 		// Given
 		HydraForm item = new HydraForm();
-		item.setActionsXml("<root><node>NO TEXT</node></root>");
+		item.setActionsXML("<root><node>NO TEXT</node></root>");
 		dao.saveForm(item);
 		Context.flushSession();
 		Context.clearSession();
 		// Then
-		HydraForm savedItem = dao.getItemByUuid(item.getUuid());
+		HydraForm savedItem = dao.getHydraFormByUuid(item.getUuid());
 		assertThat(savedItem, hasProperty("uuid", is(item.getUuid())));
 		assertThat(savedItem, hasProperty("form", is(item.getForm())));
-		assertThat(savedItem, hasProperty("actionsXml", is(item.getActionsXml())));
+		assertThat(savedItem, hasProperty("actionsXml", is(item.getActionsXML())));
 	}
 }

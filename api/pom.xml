@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>hydra</artifactId>
-		<version>1.0.0</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hydra-api</artifactId>

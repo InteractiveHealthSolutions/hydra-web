@@ -9,12 +9,14 @@
  */
 package org.openmrs.module.hydra.api.impl;
 
+import java.util.Set;
+
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.hydra.HydraForm;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDao;
+import org.openmrs.module.hydra.model.HydraForm;
 
 public class HydraServiceImpl extends BaseOpenmrsService implements HydraService {
 
@@ -37,12 +39,23 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
-	public HydraForm getItemByUuid(String uuid) throws APIException {
-		return dao.getItemByUuid(uuid);
+	public HydraForm getHydraFormByUuid(String uuid) throws APIException {
+		return dao.getHydraFormByUuid(uuid);
 	}
 
 	@Override
 	public HydraForm saveForm(HydraForm item) throws APIException {
 		return dao.saveForm(item);
+	}
+
+	@Override
+	public Set<HydraForm> getHydraFormsByTag(String tag) throws APIException {
+		return dao.getHydraFormsByTag(tag);
+	}
+
+	@Override
+	public HydraForm getHydraFormByEncounterName(String encunterName) throws APIException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -9,11 +9,13 @@
  */
 package org.openmrs.module.hydra.api;
 
+import java.util.Set;
+
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.HydraConfig;
-import org.openmrs.module.hydra.HydraForm;
+import org.openmrs.module.hydra.model.HydraForm;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -32,7 +34,19 @@ public interface HydraService extends OpenmrsService {
 	 */
 	@Authorized()
 	@Transactional(readOnly = true)
-	HydraForm getItemByUuid(String uuid) throws APIException;
+	HydraForm getHydraFormByUuid(String uuid) throws APIException;
+
+	/**
+	 * Returns a {@link org.openmrs.module.hydra.model.HydraForm} by encounterName. It can be called by
+	 * any authenticated user. It is fetched in read only transaction.
+	 * 
+	 * @param uuid
+	 * @return
+	 * @throws APIException
+	 */
+	@Authorized()
+	@Transactional(readOnly = true)
+	HydraForm getHydraFormByEncounterName(String encunterName) throws APIException;
 
 	/**
 	 * Saves a form.
@@ -44,4 +58,17 @@ public interface HydraService extends OpenmrsService {
 	@Authorized(HydraConfig.MODULE_PRIVILEGE)
 	@Transactional
 	HydraForm saveForm(HydraForm item) throws APIException;
+
+	/**
+	 * Returns a set of {@link org.openmrs.module.hydra.model.HydraForm} by tag. It can be called by any
+	 * authenticated user. It is fetched in read only transaction.
+	 * 
+	 * @param uuid
+	 * @return
+	 * @throws APIException
+	 */
+	@Authorized()
+	@Transactional(readOnly = true)
+	Set<HydraForm> getHydraFormsByTag(String tag) throws APIException;
+
 }
