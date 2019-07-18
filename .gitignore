@@ -55,3 +55,4 @@ chrome-user-data
 .vscode
 *.swp
 *.swo
+openmrs-runtime.properties
