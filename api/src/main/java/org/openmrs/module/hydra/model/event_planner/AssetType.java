@@ -1,14 +1,14 @@
-package org.openmrs.module.hydra.model;
+package org.openmrs.module.hydra.model.event_planner;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-public class EventType {
+public class AssetType {
 
 	@Id
 	@GeneratedValue
-	private int eventTypeId;
+	private int assetTypeId;
 
 	@Column(unique = true)
 	private String name;

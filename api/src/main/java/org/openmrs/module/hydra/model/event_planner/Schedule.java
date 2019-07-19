@@ -1,4 +1,4 @@
-package org.openmrs.module.hydra.model;
+package org.openmrs.module.hydra.model.event_planner;
 
 import java.util.Date;
 

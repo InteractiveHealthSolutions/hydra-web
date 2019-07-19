@@ -21,10 +21,10 @@
 			Creating the hydramodule_form table
 		</comment>
 		<createTable tableName="hydramodule_form">
-			<column name="form_id" type="int" autoIncrement="true">
+			<column name="hydramodule_form_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false"/>
 			</column>
-			<column name="openmrs_form_id" type="int">
+			<column name="form_id" type="int">
 			</column>
 			<column name="program_id" type="int">
 			</column>
@@ -54,7 +54,7 @@
 		</createTable>
 		
 		<addForeignKeyConstraint constraintName="openmrs_form_fk"
-			baseTableName="hydramodule_form" baseColumnNames="openmrs_form_id" referencedTableName="form"
+			baseTableName="hydramodule_form" baseColumnNames="form_id" referencedTableName="form"
 			referencedColumnNames="form_id" />
 		<addForeignKeyConstraint constraintName="openmrs_program_fk"
 			baseTableName="hydramodule_form" baseColumnNames="program_id" referencedTableName="program"
@@ -123,7 +123,7 @@
             <column name="form_tag_id" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="form_id" type="int">
+            <column name="hydramodule_form_id" type="int">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -133,8 +133,8 @@
 			referencedTableName="hydramodule_form_tag" referencedColumnNames="form_tag_id" />
 			
 		<addForeignKeyConstraint constraintName="hydramodule_form_tag_map_form_fk"
-			baseTableName="hydramodule_form_tag_map" baseColumnNames="form_id" 
-			referencedTableName="hydramodule_form" referencedColumnNames="form_id" />
+			baseTableName="hydramodule_form_tag_map" baseColumnNames="hydramodule_form_id" 
+			referencedTableName="hydramodule_form" referencedColumnNames="hydramodule_form_id" />
     </changeSet> 
     
     
@@ -358,7 +358,7 @@
             </column>
         </createTable>
         <addForeignKeyConstraint constraintName="hydramodule_component_forms_form_fk"
-			baseTableName="hydramodule_component_forms" baseColumnNames="hydra_form_id" referencedTableName="hydramodule_form" referencedColumnNames="form_id" />
+			baseTableName="hydramodule_component_forms" baseColumnNames="hydra_form_id" referencedTableName="hydramodule_form" referencedColumnNames="hydramodule_form_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_component_forms_component_fk"
 			baseTableName="hydramodule_component_forms" baseColumnNames="component_id" referencedTableName="hydramodule_component" referencedColumnNames="component_id" />
     </changeSet> <!-- -->

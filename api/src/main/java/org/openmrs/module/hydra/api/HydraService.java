@@ -15,7 +15,7 @@ import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.HydraConfig;
-import org.openmrs.module.hydra.model.HydraForm;
+import org.openmrs.module.hydra.model.event_planner.HydraForm;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -37,7 +37,7 @@ public interface HydraService extends OpenmrsService {
 	HydraForm getHydraFormByUuid(String uuid) throws APIException;
 
 	/**
-	 * Returns a {@link org.openmrs.module.hydra.model.HydraForm} by encounterName. It can be called by
+	 * Returns a {@link org.openmrs.module.hydra.model.event_planner.HydraForm} by encounterName. It can be called by
 	 * any authenticated user. It is fetched in read only transaction.
 	 * 
 	 * @param uuid
@@ -60,7 +60,7 @@ public interface HydraService extends OpenmrsService {
 	HydraForm saveForm(HydraForm item) throws APIException;
 
 	/**
-	 * Returns a set of {@link org.openmrs.module.hydra.model.HydraForm} by tag. It can be called by any
+	 * Returns a set of {@link org.openmrs.module.hydra.model.event_planner.HydraForm} by tag. It can be called by any
 	 * authenticated user. It is fetched in read only transaction.
 	 * 
 	 * @param uuid

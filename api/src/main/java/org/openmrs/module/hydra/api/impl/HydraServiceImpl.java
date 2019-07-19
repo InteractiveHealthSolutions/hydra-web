@@ -16,7 +16,7 @@ import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDao;
-import org.openmrs.module.hydra.model.HydraForm;
+import org.openmrs.module.hydra.model.event_planner.HydraForm;
 
 public class HydraServiceImpl extends BaseOpenmrsService implements HydraService {
 
