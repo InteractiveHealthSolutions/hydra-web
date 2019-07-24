@@ -9,25 +9,31 @@
  */
 package org.openmrs.module.hydra.api.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.dao.HydraDao;
+import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class HydraServiceImpl extends BaseOpenmrsService implements HydraService {
 
-	HydraDao dao;
+	@Autowired
+	private HydraDaoImpl dao;
 
-	UserService userService;
+	// @Autowired
+	// private UserService userService;
 
 	/**
 	 * Injected in moduleApplicationContext.xml
 	 */
-	public void setDao(HydraDao dao) {
+	public void setDao(HydraDaoImpl dao) {
 		this.dao = dao;
 	}
 
@@ -35,7 +41,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	 * Injected in moduleApplicationContext.xml
 	 */
 	public void setUserService(UserService userService) {
-		this.userService = userService;
+		// this.userService = userService;
 	}
 
 	@Override
@@ -57,5 +63,29 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public HydraForm getHydraFormByEncounterName(String encunterName) throws APIException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public HydramodulePhase getPhaseByUUID(String uuid) throws APIException {
+
+		return dao.getPhase(uuid);
+	}
+
+	@Override
+	public List<HydramodulePhase> getAllPhases() throws APIException {
+
+		return dao.getAllPhases();
+	}
+
+	@Override
+	public HydramoduleComponent getComponentByUUID(String uuid) throws APIException {
+
+		return dao.getComponent(uuid);
+	}
+
+	@Override
+	public List<HydramoduleComponent> getAllComponents() throws APIException {
+
+		return dao.getAllComponents();
 	}
 }

@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
-import org.openmrs.module.hydra.api.dao.HydraDao;
+import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.api.impl.HydraServiceImpl;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
 
@@ -34,7 +34,7 @@ public class HydraServiceTest {
 	HydraServiceImpl basicModuleService;
 
 	@Mock
-	HydraDao dao;
+	HydraDaoImpl dao;
 
 	@Mock
 	UserService userService;

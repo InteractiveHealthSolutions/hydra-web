@@ -1,4 +1,5 @@
 package org.openmrs.module.hydra.model.workflow;
+
 // Generated Jul 19, 2019 12:33:37 PM by Hibernate Tools 4.3.1
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -28,19 +29,25 @@ import org.openmrs.Program;
 @Table(name = "hydramodule_form", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
 public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Serializable {
 
+	private static final long serialVersionUID = -2668916537478185182L;
+
 	private Integer hydramoduleFormId;
+
 	private Form form;
+
 	private Program program;
+
 	private String actionsXml;
-	private Set hydramoduleFormTagMaps = new HashSet(0);
-	private Set hydramoduleComponentFormses = new HashSet(0);
+
+	private Set<HydramoduleFormTagMap> hydramoduleFormTagMaps = new HashSet<HydramoduleFormTagMap>(0);
+
+	private Set<HydramoduleComponentForms> hydramoduleComponentFormses = new HashSet<HydramoduleComponentForms>(0);
 
 	public HydramoduleForm() {
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-
 	@Column(name = "hydramodule_form_id", unique = true, nullable = false)
 	public Integer getHydramoduleFormId() {
 		return this.hydramoduleFormId;
@@ -80,20 +87,20 @@ public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Seri
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleForm")
-	public Set getHydramoduleFormTagMaps() {
+	public Set<HydramoduleFormTagMap> getHydramoduleFormTagMaps() {
 		return this.hydramoduleFormTagMaps;
 	}
 
-	public void setHydramoduleFormTagMaps(Set hydramoduleFormTagMaps) {
+	public void setHydramoduleFormTagMaps(Set<HydramoduleFormTagMap> hydramoduleFormTagMaps) {
 		this.hydramoduleFormTagMaps = hydramoduleFormTagMaps;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleForm")
-	public Set getHydramoduleComponentFormses() {
+	public Set<HydramoduleComponentForms> getHydramoduleComponentFormses() {
 		return this.hydramoduleComponentFormses;
 	}
 
-	public void setHydramoduleComponentFormses(Set hydramoduleComponentFormses) {
+	public void setHydramoduleComponentFormses(Set<HydramoduleComponentForms> hydramoduleComponentFormses) {
 		this.hydramoduleComponentFormses = hydramoduleComponentFormses;
 	}
 

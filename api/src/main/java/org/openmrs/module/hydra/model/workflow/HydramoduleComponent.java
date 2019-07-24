@@ -1,4 +1,5 @@
 package org.openmrs.module.hydra.model.workflow;
+
 // Generated Jul 19, 2019 12:33:37 PM by Hibernate Tools 4.3.1
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -25,29 +26,27 @@ import org.openmrs.Concept;
 @Entity
 @Table(name = "hydramodule_component", catalog = "hydra")
 public class HydramoduleComponent extends BaseOpenmrsMetadata implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = 1969581011447190685L;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "component_id", unique = true, nullable = false)
 	private Integer componentId;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "concept_id")
 	private Concept concept;
-	private String name;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleComponent")
-	private Set<HydramodulePhaseComponents> hydramodulePhaseComponentses = new HashSet(0);
-	
+	private Set<HydramodulePhaseComponents> hydramodulePhaseComponentses = new HashSet<HydramodulePhaseComponents>(0);
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleComponent")
-	private Set<HydramoduleComponentForms> hydramoduleComponentFormses = new HashSet(0);
+	private Set<HydramoduleComponentForms> hydramoduleComponentFormses = new HashSet<HydramoduleComponentForms>(0);
 
 	public HydramoduleComponent() {
 	}
 
-	
 	public Integer getComponentId() {
 		return this.componentId;
 	}
@@ -56,7 +55,6 @@ public class HydramoduleComponent extends BaseOpenmrsMetadata implements java.io
 		this.componentId = componentId;
 	}
 
-	
 	public Concept getConcept() {
 		return this.concept;
 	}
@@ -65,16 +63,7 @@ public class HydramoduleComponent extends BaseOpenmrsMetadata implements java.io
 		this.concept = concept;
 	}
 
-	@Column(name = "name", nullable = false, length = 50)
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Set getHydramodulePhaseComponentses() {
+	public Set<HydramodulePhaseComponents> getHydramodulePhaseComponentses() {
 		return this.hydramodulePhaseComponentses;
 	}
 
@@ -82,7 +71,7 @@ public class HydramoduleComponent extends BaseOpenmrsMetadata implements java.io
 		this.hydramodulePhaseComponentses = hydramodulePhaseComponentses;
 	}
 
-	public Set getHydramoduleComponentFormses() {
+	public Set<HydramoduleComponentForms> getHydramoduleComponentFormses() {
 		return this.hydramoduleComponentFormses;
 	}
 
@@ -90,12 +79,10 @@ public class HydramoduleComponent extends BaseOpenmrsMetadata implements java.io
 		this.hydramoduleComponentFormses = hydramoduleComponentFormses;
 	}
 
-
 	@Override
 	public Integer getId() {
 		return componentId;
 	}
-
 
 	@Override
 	public void setId(Integer id) {

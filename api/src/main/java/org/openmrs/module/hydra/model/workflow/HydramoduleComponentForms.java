@@ -1,4 +1,5 @@
 package org.openmrs.module.hydra.model.workflow;
+
 // Generated Jul 19, 2019 12:33:37 PM by Hibernate Tools 4.3.1
 
 import javax.persistence.Column;
@@ -19,12 +20,16 @@ import org.openmrs.BaseOpenmrsData;
 @Entity
 @Table(name = "hydramodule_component_forms", catalog = "hydra")
 public class HydramoduleComponentForms extends BaseOpenmrsData implements java.io.Serializable {
-	
+
+	private static final long serialVersionUID = 5949471417426993376L;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	private Integer id;
+
 	private HydramoduleComponent hydramoduleComponent;
+
 	private HydramoduleForm hydramoduleForm;
 
 	public HydramoduleComponentForms() {
@@ -35,7 +40,6 @@ public class HydramoduleComponentForms extends BaseOpenmrsData implements java.i
 		this.hydramoduleForm = hydramoduleForm;
 	}
 
-	
 	public Integer getId() {
 		return this.id;
 	}

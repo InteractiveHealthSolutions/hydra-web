@@ -1,21 +1,17 @@
 package org.openmrs.module.hydra.model.workflow;
-// Generated Jul 19, 2019 12:33:37 PM by Hibernate Tools 4.3.1
 
-import java.util.Date;
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.openmrs.BaseOpenmrsMetadata;
 
@@ -26,16 +22,17 @@ import org.openmrs.BaseOpenmrsMetadata;
 @Table(name = "hydramodule_form_tag", catalog = "hydra")
 public class HydramoduleFormTag extends BaseOpenmrsMetadata implements java.io.Serializable {
 
+	private static final long serialVersionUID = 4858693656254140516L;
+
 	private Integer formTagId;
-	private String name;
-	private Set hydramoduleFormTagMaps = new HashSet(0);
+
+	private Set<HydramoduleFormTagMap> hydramoduleFormTagMaps = new HashSet<HydramoduleFormTagMap>(0);
 
 	public HydramoduleFormTag() {
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-
 	@Column(name = "form_tag_id", unique = true, nullable = false)
 	public Integer getFormTagId() {
 		return this.formTagId;
@@ -45,21 +42,19 @@ public class HydramoduleFormTag extends BaseOpenmrsMetadata implements java.io.S
 		this.formTagId = formTagId;
 	}
 
-	@Column(name = "name", nullable = false, length = 50)
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+	/*
+	 * @Column(name = "name", nullable = false, length = 50) public String getName()
+	 * { return this.name; }
+	 * 
+	 * public void setName(String name) { this.name = name; }
+	 */
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleFormTag")
-	public Set getHydramoduleFormTagMaps() {
+	public Set<HydramoduleFormTagMap> getHydramoduleFormTagMaps() {
 		return this.hydramoduleFormTagMaps;
 	}
 
-	public void setHydramoduleFormTagMaps(Set hydramoduleFormTagMaps) {
+	public void setHydramoduleFormTagMaps(Set<HydramoduleFormTagMap> hydramoduleFormTagMaps) {
 		this.hydramoduleFormTagMaps = hydramoduleFormTagMaps;
 	}
 

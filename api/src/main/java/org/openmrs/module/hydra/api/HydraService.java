@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.hydra.api;
 
+import java.util.List;
 import java.util.Set;
 
 import org.openmrs.annotation.Authorized;
@@ -16,6 +17,8 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.HydraConfig;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -37,8 +40,8 @@ public interface HydraService extends OpenmrsService {
 	HydraForm getHydraFormByUuid(String uuid) throws APIException;
 
 	/**
-	 * Returns a {@link org.openmrs.module.hydra.model.event_planner.HydraForm} by encounterName. It can be called by
-	 * any authenticated user. It is fetched in read only transaction.
+	 * Returns a {@link org.openmrs.module.hydra.model.event_planner.HydraForm} by encounterName. It can
+	 * be called by any authenticated user. It is fetched in read only transaction.
 	 * 
 	 * @param uuid
 	 * @return
@@ -60,8 +63,8 @@ public interface HydraService extends OpenmrsService {
 	HydraForm saveForm(HydraForm item) throws APIException;
 
 	/**
-	 * Returns a set of {@link org.openmrs.module.hydra.model.event_planner.HydraForm} by tag. It can be called by any
-	 * authenticated user. It is fetched in read only transaction.
+	 * Returns a set of {@link org.openmrs.module.hydra.model.event_planner.HydraForm} by tag. It can be
+	 * called by any authenticated user. It is fetched in read only transaction.
 	 * 
 	 * @param uuid
 	 * @return
@@ -70,5 +73,13 @@ public interface HydraService extends OpenmrsService {
 	@Authorized()
 	@Transactional(readOnly = true)
 	Set<HydraForm> getHydraFormsByTag(String tag) throws APIException;
+
+	HydramodulePhase getPhaseByUUID(String uuid) throws APIException;
+
+	List<HydramodulePhase> getAllPhases() throws APIException;
+
+	HydramoduleComponent getComponentByUUID(String uuid) throws APIException;
+
+	List<HydramoduleComponent> getAllComponents() throws APIException;
 
 }

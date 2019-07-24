@@ -25,6 +25,11 @@
 		<class>org.openmrs.module.hydra.extension.html.AdminList</class>
 	</extension>
 
+<require_modules>
+    <require_module version="${webservicesRestVersion}">org.openmrs.module.webservices.rest</require_module>
+    <!-- <require_module version="${reportingModuleVersion}">org.openmrs.module.reporting</require_module> -->
+</require_modules>
+
 	<aware_of_modules>
 		<aware_of_module>org.openmrs.module.legacyui</aware_of_module>
 	</aware_of_modules>

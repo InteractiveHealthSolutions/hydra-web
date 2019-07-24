@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -18,8 +19,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/phase", supportedClass = HydramodulePhase.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
-public class PhaseController extends MetadataDelegatingCrudResource<HydramodulePhase> {
+        + "/hydra/component", supportedClass = HydramoduleComponent.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
+public class ComponentController extends MetadataDelegatingCrudResource<HydramoduleComponent> {
 
 	/**
 	 * Logger for this class
@@ -30,30 +31,30 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 	HydraService service = Context.getService(HydraService.class);
 
 	@Override
-	public HydramodulePhase newDelegate() {
-		return new HydramodulePhase();
+	public HydramoduleComponent newDelegate() {
+		return new HydramoduleComponent();
 	}
 
 	@Override
-	public HydramodulePhase save(HydramodulePhase delegate) {
+	public HydramoduleComponent save(HydramoduleComponent delegate) {
 		return null;
 	}
 
 	@Override
-	public HydramodulePhase getByUniqueId(String uuid) {
-		return service.getPhaseByUUID(uuid);
+	public HydramoduleComponent getByUniqueId(String uuid) {
+		return service.getComponentByUUID(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		simpleObject.put("phases",
-		    ConversionUtil.convertToRepresentation(service.getAllPhases(), context.getRepresentation()));
+		simpleObject.put("components",
+		    ConversionUtil.convertToRepresentation(service.getAllComponents(), context.getRepresentation()));
 		return simpleObject;
 	}
 
 	@Override
-	public void purge(HydramodulePhase delegate, RequestContext context) throws ResponseException {
+	public void purge(HydramoduleComponent delegate, RequestContext context) throws ResponseException {
 
 	}
 
@@ -66,7 +67,7 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 		description.addSelfLink();
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("uuid");
-		description.addProperty("phaseId");
+		description.addProperty("componentId");
 		description.addProperty("name");
 
 		if (representation instanceof DefaultRepresentation) {
@@ -79,7 +80,7 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 
 			description.addProperty("uuid");
 
-			description.addProperty("phaseId");
+			// description.addProperty("phaseId");
 			description.addProperty("concept");
 			description.addProperty("name");
 

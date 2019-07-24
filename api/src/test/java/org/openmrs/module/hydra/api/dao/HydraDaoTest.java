@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 public class HydraDaoTest extends BaseModuleContextSensitiveTest {
 
 	@Autowired
-	HydraDao dao;
+	HydraDaoImpl dao;
 
 	@Autowired
 	UserService userService;

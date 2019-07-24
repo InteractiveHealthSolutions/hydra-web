@@ -9,22 +9,60 @@
  */
 package org.openmrs.module.hydra.api.dao;
 
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.APIException;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository("hydra.HydraDao")
-public class HydraDao {
+public class HydraDaoImpl {
 
 	@Autowired
 	DbSessionFactory sessionFactory;
 
 	private DbSession getSession() {
 		return sessionFactory.getCurrentSession();
+	}
+
+	public HydramodulePhase getPhase(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramodulePhase.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return (HydramodulePhase) criteria.uniqueResult();
+	}
+
+	public List<HydramodulePhase> getAllPhases() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramodulePhase.class);
+		criteria.addOrder(Order.asc("phaseId"));
+		return criteria.list();
+	}
+
+	public HydramoduleComponent getComponent(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleComponent.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return (HydramoduleComponent) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleComponent> getAllComponents() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleComponent.class);
+		criteria.addOrder(Order.asc("componentId"));
+		return criteria.list();
 	}
 
 	public HydraForm getHydraFormByUuid(String uuid) {
