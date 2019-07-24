@@ -82,4 +82,6 @@ public interface HydraService extends OpenmrsService {
 
 	List<HydramoduleComponent> getAllComponents() throws APIException;
 
+	HydramodulePhase savePhase(HydramodulePhase item) throws APIException;
+
 }

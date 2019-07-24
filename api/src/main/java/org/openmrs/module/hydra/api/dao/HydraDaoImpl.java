@@ -84,4 +84,9 @@ public class HydraDaoImpl {
 		getSession().saveOrUpdate(form);
 		return form;
 	}
+
+	public HydramodulePhase savePhase(HydramodulePhase phase) {
+		getSession().saveOrUpdate(phase);
+		return phase;
+	}
 }

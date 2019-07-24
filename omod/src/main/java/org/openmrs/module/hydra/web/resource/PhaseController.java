@@ -18,7 +18,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/phase", supportedClass = HydramodulePhase.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
+        + "/hydra/phase", supportedClass = HydramodulePhase.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
 public class PhaseController extends MetadataDelegatingCrudResource<HydramodulePhase> {
 
 	/**
@@ -36,7 +36,8 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 
 	@Override
 	public HydramodulePhase save(HydramodulePhase delegate) {
-		return null;
+
+		return service.savePhase(delegate);
 	}
 
 	@Override
@@ -104,7 +105,7 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addProperty("concept");
+		description.addProperty("phaseId");
 		description.addProperty("name");
 
 		return description;

@@ -55,6 +55,11 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
+	public HydramodulePhase savePhase(HydramodulePhase item) throws APIException {
+		return dao.savePhase(item);
+	}
+
+	@Override
 	public Set<HydraForm> getHydraFormsByTag(String tag) throws APIException {
 		return dao.getHydraFormsByTag(tag);
 	}

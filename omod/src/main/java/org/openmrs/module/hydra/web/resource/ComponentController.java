@@ -19,7 +19,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/component", supportedClass = HydramoduleComponent.class, supportedOpenmrsVersions = { "2.0.*,2.1.*" })
+        + "/hydra/component", supportedClass = HydramoduleComponent.class, supportedOpenmrsVersions = {
+                "2.0.*,2.1.*,2.2.*" })
 public class ComponentController extends MetadataDelegatingCrudResource<HydramoduleComponent> {
 
 	/**
