@@ -19,12 +19,15 @@ import org.openmrs.module.hydra.HydraConfig;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
+import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
+import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The main service of this module, which is exposed for other modules. See
  * moduleApplicationContext.xml on how it is wired up.
  */
+@Transactional
 public interface HydraService extends OpenmrsService {
 
 	/**
@@ -84,4 +87,15 @@ public interface HydraService extends OpenmrsService {
 
 	HydramodulePhase savePhase(HydramodulePhase item) throws APIException;
 
+	HydramoduleWorkflow saveWorkflow(HydramoduleWorkflow item) throws APIException;
+
+	public HydramoduleWorkflowPhases saveWorkflowPhaseRelation(HydramoduleWorkflowPhases item) throws APIException;
+
+	HydramoduleWorkflow getWorkflowByUUID(String uuid) throws APIException;
+
+	HydramoduleWorkflowPhases getWorkflowPhasesRelationByUUID(String uuid) throws APIException;
+
+	List<HydramoduleWorkflow> getAllWorkflows() throws APIException;
+
+	List<HydramoduleWorkflowPhases> getAllWorkflowPhaseRelations() throws APIException;
 }

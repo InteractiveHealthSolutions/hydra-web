@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openmrs.BaseOpenmrsMetadata;
 
 /**
@@ -26,6 +27,7 @@ public class HydramoduleFormTag extends BaseOpenmrsMetadata implements java.io.S
 
 	private Integer formTagId;
 
+	@JsonIgnore
 	private Set<HydramoduleFormTagMap> hydramoduleFormTagMaps = new HashSet<HydramoduleFormTagMap>(0);
 
 	public HydramoduleFormTag() {

@@ -22,10 +22,13 @@ import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
+import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
+import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository("hydra.HydraDao")
+@Transactional
 public class HydraDaoImpl {
 
 	@Autowired
@@ -33,6 +36,29 @@ public class HydraDaoImpl {
 
 	private DbSession getSession() {
 		return sessionFactory.getCurrentSession();
+	}
+
+	public HydramoduleWorkflow getWorkflow(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return (HydramoduleWorkflow) criteria.uniqueResult();
+	}
+
+	public HydramoduleWorkflowPhases getWorkflowPhaseRelation(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleWorkflowPhases.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return (HydramoduleWorkflowPhases) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleWorkflow> getAllWorkflows() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
+		criteria.addOrder(Order.asc("workflowId"));
+		return criteria.list();
 	}
 
 	public HydramodulePhase getPhase(String uuid) {
@@ -47,6 +73,13 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePhase.class);
 		criteria.addOrder(Order.asc("phaseId"));
+		return criteria.list();
+	}
+
+	public List<HydramoduleWorkflowPhases> getAllPhasesWorkFlowPhaseRelations() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleWorkflowPhases.class);
+		criteria.addOrder(Order.asc("displayOrder"));
 		return criteria.list();
 	}
 
@@ -85,8 +118,24 @@ public class HydraDaoImpl {
 		return form;
 	}
 
+	public HydramoduleWorkflowPhases saveWorkflowPhase(HydramoduleWorkflowPhases phases) {
+		getSession().saveOrUpdate(phases);
+		return phases;
+	}
+
+	public HydramoduleWorkflow saveWorkflow(HydramoduleWorkflow workflow) {
+		getSession().saveOrUpdate(workflow);
+		return workflow;
+	}
+
+	public HydramoduleWorkflowPhases saveWorkflowPhaseRelation(HydramoduleWorkflowPhases workflow) {
+		getSession().saveOrUpdate(workflow);
+		return workflow;
+	}
+
 	public HydramodulePhase savePhase(HydramodulePhase phase) {
 		getSession().saveOrUpdate(phase);
+		getSession().flush();
 		return phase;
 	}
 }

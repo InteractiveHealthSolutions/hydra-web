@@ -2,7 +2,9 @@ package org.openmrs.module.hydra.model.workflow;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -15,6 +17,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.hibernate.search.annotations.ContainedIn;
 import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Concept;
 
@@ -37,10 +42,12 @@ public class HydramodulePhase extends BaseOpenmrsMetadata implements java.io.Ser
 	private Concept concept;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramodulePhase")
-	private Set<HydramodulePhaseComponents> hydramodulePhaseComponentses = new HashSet<HydramodulePhaseComponents>(0);
+	@JsonManagedReference
+	private List<HydramodulePhaseComponents> hydramodulePhaseComponents = new ArrayList<HydramodulePhaseComponents>();
 
+	@JsonManagedReference
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramodulePhase")
-	private Set<HydramoduleWorkflowPhases> hydramoduleWorkflowPhaseses = new HashSet<HydramoduleWorkflowPhases>(0);
+	private List<HydramoduleWorkflowPhases> hydramoduleWorkflowPhases = new ArrayList<HydramoduleWorkflowPhases>();
 
 	public HydramodulePhase() {
 	}
@@ -61,20 +68,20 @@ public class HydramodulePhase extends BaseOpenmrsMetadata implements java.io.Ser
 		this.concept = concept;
 	}
 
-	public Set<HydramodulePhaseComponents> getHydramodulePhaseComponentses() {
-		return this.hydramodulePhaseComponentses;
+	public List<HydramodulePhaseComponents> getHydramodulePhaseComponents() {
+		return this.hydramodulePhaseComponents;
 	}
 
-	public void setHydramodulePhaseComponentses(Set<HydramodulePhaseComponents> hydramodulePhaseComponentses) {
-		this.hydramodulePhaseComponentses = hydramodulePhaseComponentses;
+	public void setHydramodulePhaseComponents(List<HydramodulePhaseComponents> hydramodulePhaseComponentses) {
+		this.hydramodulePhaseComponents = hydramodulePhaseComponentses;
 	}
 
-	public Set<HydramoduleWorkflowPhases> getHydramoduleWorkflowPhaseses() {
-		return this.hydramoduleWorkflowPhaseses;
+	public List<HydramoduleWorkflowPhases> getHydramoduleWorkflowPhases() {
+		return this.hydramoduleWorkflowPhases;
 	}
 
-	public void setHydramoduleWorkflowPhaseses(Set<HydramoduleWorkflowPhases> hydramoduleWorkflowPhaseses) {
-		this.hydramoduleWorkflowPhaseses = hydramoduleWorkflowPhaseses;
+	public void setHydramoduleWorkflowPhases(List<HydramoduleWorkflowPhases> hydramoduleWorkflowPhaseses) {
+		this.hydramoduleWorkflowPhases = hydramoduleWorkflowPhaseses;
 	}
 
 	@Override

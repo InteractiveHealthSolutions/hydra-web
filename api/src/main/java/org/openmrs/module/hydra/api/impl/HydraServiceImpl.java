@@ -20,7 +20,10 @@ import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
+import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
+import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 public class HydraServiceImpl extends BaseOpenmrsService implements HydraService {
 
@@ -50,13 +53,50 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
+	@Transactional
 	public HydraForm saveForm(HydraForm item) throws APIException {
 		return dao.saveForm(item);
 	}
 
 	@Override
+	@Transactional
+	public HydramoduleWorkflow saveWorkflow(HydramoduleWorkflow item) throws APIException {
+		return dao.saveWorkflow(item);
+	}
+
+	@Override
+	@Transactional
+	public HydramoduleWorkflowPhases saveWorkflowPhaseRelation(HydramoduleWorkflowPhases item) throws APIException {
+		return dao.saveWorkflowPhaseRelation(item);
+	}
+
+	@Override
+	@Transactional
 	public HydramodulePhase savePhase(HydramodulePhase item) throws APIException {
-		return dao.savePhase(item);
+		HydramodulePhase phase = dao.savePhase(item);
+		// This set
+		/*
+		 * List<HydramoduleWorkflowPhases> workflowPhases =
+		 * phase.getHydramoduleWorkflowPhases();
+		 * 
+		 * List<HydramoduleWorkflowPhases> saveable = new
+		 * ArrayList<HydramoduleWorkflowPhases>(); Iterator<HydramoduleWorkflowPhases>
+		 * it = workflowPhases.iterator(); while (it.hasNext()) {
+		 * HydramoduleWorkflowPhases workflowPhase = (HydramoduleWorkflowPhases)
+		 * it.next(); String workflowUUID = workflowPhase.getWorkflowUUID();
+		 * HydramoduleWorkflow workflow = dao.getWorkflow(workflowUUID);
+		 * 
+		 * workflowPhase.setHydramodulePhase(phase);
+		 * workflowPhase.setHydramoduleWorkflow(workflow); saveable.add(workflowPhase);
+		 * }
+		 * 
+		 * // Saving workflow phases Iterator<HydramoduleWorkflowPhases> saveableIt =
+		 * saveable.iterator(); while (saveableIt.hasNext()) { HydramoduleWorkflowPhases
+		 * type = (HydramoduleWorkflowPhases) saveableIt.next();
+		 * dao.saveWorkflowPhase(type); }
+		 */
+
+		return phase;
 	}
 
 	@Override
@@ -68,6 +108,18 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public HydraForm getHydraFormByEncounterName(String encunterName) throws APIException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public HydramoduleWorkflow getWorkflowByUUID(String uuid) throws APIException {
+
+		return dao.getWorkflow(uuid);
+	}
+
+	@Override
+	public List<HydramoduleWorkflow> getAllWorkflows() throws APIException {
+
+		return dao.getAllWorkflows();
 	}
 
 	@Override
@@ -92,5 +144,16 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public List<HydramoduleComponent> getAllComponents() throws APIException {
 
 		return dao.getAllComponents();
+	}
+
+	@Override
+	public HydramoduleWorkflowPhases getWorkflowPhasesRelationByUUID(String uuid) throws APIException {
+		// TODO Auto-generated method stub
+		return dao.getWorkflowPhaseRelation(uuid);
+	}
+
+	@Override
+	public List<HydramoduleWorkflowPhases> getAllWorkflowPhaseRelations() throws APIException {
+		return dao.getAllPhasesWorkFlowPhaseRelations();
 	}
 }

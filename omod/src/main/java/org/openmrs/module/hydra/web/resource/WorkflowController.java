@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
+import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -21,8 +22,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/phase", supportedClass = HydramodulePhase.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
-public class PhaseController extends MetadataDelegatingCrudResource<HydramodulePhase> {
+        + "/hydra/workflow", supportedClass = HydramoduleWorkflow.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
+public class WorkflowController extends MetadataDelegatingCrudResource<HydramoduleWorkflow> {
 
 	/**
 	 * Logger for this class
@@ -30,34 +31,33 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 	protected final Log log = LogFactory.getLog(getClass());
 
 	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	HydraService service = Context.getService(HydraService.class);
 
 	@Override
-	public HydramodulePhase newDelegate() {
-		return new HydramodulePhase();
+	public HydramoduleWorkflow newDelegate() {
+		return new HydramoduleWorkflow();
 	}
 
 	@Override
-	public HydramodulePhase save(HydramodulePhase delegate) {
-		return service.savePhase(delegate);
+	public HydramoduleWorkflow save(HydramoduleWorkflow delegate) {
+		return service.saveWorkflow(delegate);
 	}
 
 	@Override
-	public HydramodulePhase getByUniqueId(String uuid) {
-		return service.getPhaseByUUID(uuid);
+	public HydramoduleWorkflow getByUniqueId(String uuid) {
+		return service.getWorkflowByUUID(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramodulePhase> p = service.getAllPhases();
-		simpleObject.put("phases",
-		    ConversionUtil.convertToRepresentation(service.getAllPhases(), context.getRepresentation()));
+		List<HydramoduleWorkflow> p = service.getAllWorkflows();
+		simpleObject.put("workflows", ConversionUtil.convertToRepresentation(p, context.getRepresentation()));
 		return simpleObject;
 	}
 
 	@Override
-	public void purge(HydramodulePhase delegate, RequestContext context) throws ResponseException {
+	public void purge(HydramoduleWorkflow delegate, RequestContext context) throws ResponseException {
 
 	}
 
@@ -70,7 +70,7 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 		description.addSelfLink();
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("uuid");
-		description.addProperty("phaseId");
+		description.addProperty("workflowId");
 		description.addProperty("name");
 
 		if (representation instanceof DefaultRepresentation) {
@@ -81,11 +81,9 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 
 		} else if (representation instanceof FullRepresentation) {
 
-			// description.addProperty("hydramodulePhaseComponents");
-			description.addProperty("hydramoduleWorkflowPhases");
-
-			description.addProperty("display");
+			description.addProperty("hydramoduleWorkflowPhaseses");
 			description.addProperty("concept");
+			description.addProperty("name");
 
 			// description.addProperty("creator");
 			description.addProperty("dateCreated");
@@ -109,6 +107,7 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("name");
+		description.addProperty("description");
 
 		return description;
 

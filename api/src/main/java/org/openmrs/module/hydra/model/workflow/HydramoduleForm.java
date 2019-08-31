@@ -18,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Form;
 import org.openmrs.Program;
@@ -31,24 +33,33 @@ public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Seri
 
 	private static final long serialVersionUID = -2668916537478185182L;
 
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "hydramodule_form_id", unique = true, nullable = false)
 	private Integer hydramoduleFormId;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "form_id")
 	private Form form;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "program_id")
 	private Program program;
 
+	@Column(name = "actions_xml", length = 2000)
 	private String actionsXml;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleForm")
+	@JsonManagedReference
 	private Set<HydramoduleFormTagMap> hydramoduleFormTagMaps = new HashSet<HydramoduleFormTagMap>(0);
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleForm")
+	@JsonIgnore
 	private Set<HydramoduleComponentForms> hydramoduleComponentFormses = new HashSet<HydramoduleComponentForms>(0);
 
 	public HydramoduleForm() {
 	}
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "hydramodule_form_id", unique = true, nullable = false)
 	public Integer getHydramoduleFormId() {
 		return this.hydramoduleFormId;
 	}
@@ -57,8 +68,6 @@ public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Seri
 		this.hydramoduleFormId = hydramoduleFormId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "form_id")
 	public Form getForm() {
 		return this.form;
 	}
@@ -67,8 +76,6 @@ public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Seri
 		this.form = form;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "program_id")
 	public Program getProgram() {
 		return this.program;
 	}
@@ -77,7 +84,6 @@ public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Seri
 		this.program = program;
 	}
 
-	@Column(name = "actions_xml", length = 2000)
 	public String getActionsXml() {
 		return this.actionsXml;
 	}
@@ -86,7 +92,6 @@ public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Seri
 		this.actionsXml = actionsXml;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleForm")
 	public Set<HydramoduleFormTagMap> getHydramoduleFormTagMaps() {
 		return this.hydramoduleFormTagMaps;
 	}
@@ -95,7 +100,6 @@ public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Seri
 		this.hydramoduleFormTagMaps = hydramoduleFormTagMaps;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleForm")
 	public Set<HydramoduleComponentForms> getHydramoduleComponentFormses() {
 		return this.hydramoduleComponentFormses;
 	}

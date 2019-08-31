@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Concept;
 
@@ -38,11 +40,13 @@ public class HydramoduleComponent extends BaseOpenmrsMetadata implements java.io
 	@JoinColumn(name = "concept_id")
 	private Concept concept;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleComponent")
-	private Set<HydramodulePhaseComponents> hydramodulePhaseComponentses = new HashSet<HydramodulePhaseComponents>(0);
+	private Set<HydramodulePhaseComponents> hydramodulePhaseComponents = new HashSet<HydramodulePhaseComponents>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleComponent")
-	private Set<HydramoduleComponentForms> hydramoduleComponentFormses = new HashSet<HydramoduleComponentForms>(0);
+	@JsonManagedReference
+	private Set<HydramoduleComponentForms> hydramoduleComponentForms = new HashSet<HydramoduleComponentForms>(0);
 
 	public HydramoduleComponent() {
 	}
@@ -63,20 +67,20 @@ public class HydramoduleComponent extends BaseOpenmrsMetadata implements java.io
 		this.concept = concept;
 	}
 
-	public Set<HydramodulePhaseComponents> getHydramodulePhaseComponentses() {
-		return this.hydramodulePhaseComponentses;
+	public Set<HydramodulePhaseComponents> getHydramodulePhaseComponents() {
+		return this.hydramodulePhaseComponents;
 	}
 
-	public void setHydramodulePhaseComponentses(Set<HydramodulePhaseComponents> hydramodulePhaseComponentses) {
-		this.hydramodulePhaseComponentses = hydramodulePhaseComponentses;
+	public void setHydramodulePhaseComponents(Set<HydramodulePhaseComponents> hydramodulePhaseComponentses) {
+		this.hydramodulePhaseComponents = hydramodulePhaseComponentses;
 	}
 
-	public Set<HydramoduleComponentForms> getHydramoduleComponentFormses() {
-		return this.hydramoduleComponentFormses;
+	public Set<HydramoduleComponentForms> getHydramoduleComponentForms() {
+		return this.hydramoduleComponentForms;
 	}
 
-	public void setHydramoduleComponentFormses(Set<HydramoduleComponentForms> hydramoduleComponentFormses) {
-		this.hydramoduleComponentFormses = hydramoduleComponentFormses;
+	public void setHydramoduleComponentForms(Set<HydramoduleComponentForms> hydramoduleComponentFormses) {
+		this.hydramoduleComponentForms = hydramoduleComponentFormses;
 	}
 
 	@Override
