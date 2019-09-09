@@ -72,6 +72,8 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 		description.addProperty("displayOrder");
 		description.addProperty("phaseUUID");
 		description.addProperty("workflowUUID");
+		description.addProperty("phaseName");
+		description.addProperty("workflowName");
 
 		if (representation instanceof DefaultRepresentation) {
 

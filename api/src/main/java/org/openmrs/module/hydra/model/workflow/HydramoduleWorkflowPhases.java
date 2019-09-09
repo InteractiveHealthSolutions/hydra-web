@@ -51,6 +51,12 @@ public class HydramoduleWorkflowPhases extends BaseOpenmrsObject implements java
 
 	@Transient
 	private String workflowUUID;
+	
+	@Transient
+	private String phaseName;
+
+	@Transient
+	private String workflowName;
 
 	public HydramoduleWorkflowPhases() {
 	}
@@ -107,4 +113,22 @@ public class HydramoduleWorkflowPhases extends BaseOpenmrsObject implements java
 	public void setWorkflowUUID(String workflowUUID) {
 		this.workflowUUID = workflowUUID;
 	}
+
+	public String getPhaseName() {
+		return hydramodulePhase.getName();
+	}
+
+	public void setPhaseName(String phaseName) {
+		this.phaseName = phaseName;
+	}
+
+	public String getWorkflowName() {
+		return hydramoduleWorkflow.getName();
+	}
+
+	public void setWorkflowName(String workflowName) {
+		this.workflowName = workflowName;
+	}
+	
+	
 }
