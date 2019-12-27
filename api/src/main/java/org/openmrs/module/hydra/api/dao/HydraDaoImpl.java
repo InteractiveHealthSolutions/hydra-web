@@ -21,7 +21,10 @@ import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
+import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
+import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +57,25 @@ public class HydraDaoImpl {
 		return (HydramoduleWorkflowPhases) criteria.uniqueResult();
 	}
 
+	public HydramodulePhaseComponents getPhaseComponentRelation(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramodulePhaseComponents.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (HydramodulePhaseComponents) criteria.uniqueResult();
+	}
+
+	public HydramoduleComponentForms getComponentFormRelation(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleComponentForms.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (HydramoduleComponentForms) criteria.uniqueResult();
+	}
+
 	public List<HydramoduleWorkflow> getAllWorkflows() {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
 		criteria.addOrder(Order.asc("workflowId"));
+		criteria.add(Restrictions.eq("retired", false));
 		return criteria.list();
 	}
 
@@ -65,7 +83,7 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePhase.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
-
+		criteria.add(Restrictions.eq("retired", false));
 		return (HydramodulePhase) criteria.uniqueResult();
 	}
 
@@ -73,6 +91,7 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePhase.class);
 		criteria.addOrder(Order.asc("phaseId"));
+		criteria.add(Restrictions.eq("retired", false));
 		return criteria.list();
 	}
 
@@ -83,11 +102,25 @@ public class HydraDaoImpl {
 		return criteria.list();
 	}
 
+	public List<HydramodulePhaseComponents> getAllPhaseComponentRelations() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramodulePhaseComponents.class);
+		criteria.addOrder(Order.asc("displayOrder"));
+		return criteria.list();
+	}
+
+	public List<HydramoduleComponentForms> getAllComponentFormRelations() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleComponentForms.class);
+		criteria.addOrder(Order.asc("displayOrder"));
+		return criteria.list();
+	}
+
 	public HydramoduleComponent getComponent(String uuid) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponent.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
-
+		criteria.add(Restrictions.eq("retired", false));
 		return (HydramoduleComponent) criteria.uniqueResult();
 	}
 
@@ -95,6 +128,7 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponent.class);
 		criteria.addOrder(Order.asc("componentId"));
+		criteria.add(Restrictions.eq("retired", false));
 		return criteria.list();
 	}
 
@@ -118,6 +152,18 @@ public class HydraDaoImpl {
 		return form;
 	}
 
+	public HydramoduleForm saveModuleForm(HydramoduleForm form) {
+		getSession().saveOrUpdate(form);
+		return form;
+	}
+
+	public List<HydramoduleForm> getAllModuleForm() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleForm.class);
+		criteria.addOrder(Order.asc("hydramoduleFormId"));
+		return criteria.list();
+	}
+
 	public HydramoduleWorkflowPhases saveWorkflowPhase(HydramoduleWorkflowPhases phases) {
 		getSession().saveOrUpdate(phases);
 		return phases;
@@ -133,9 +179,78 @@ public class HydraDaoImpl {
 		return workflow;
 	}
 
+	public HydramoduleComponentForms saveComponentFormRelation(HydramoduleComponentForms componentForm) {
+		getSession().saveOrUpdate(componentForm);
+		return componentForm;
+	}
+
+	public HydramodulePhaseComponents savePhaseComponentsRelation(HydramodulePhaseComponents phaseComponent) {
+		getSession().saveOrUpdate(phaseComponent);
+		return phaseComponent;
+	}
+
 	public HydramodulePhase savePhase(HydramodulePhase phase) {
 		getSession().saveOrUpdate(phase);
 		getSession().flush();
 		return phase;
+	}
+
+	public HydramoduleComponent saveComponent(HydramoduleComponent component) {
+		getSession().saveOrUpdate(component);
+		getSession().flush();
+		return component;
+	}
+
+	public HydramoduleComponent updateComponent(HydramoduleComponent component) {
+		getSession().update(component);
+		getSession().flush();
+		return component;
+	}
+
+	public HydramoduleForm getModuleForm(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleForm.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return (HydramoduleForm) criteria.uniqueResult();
+	}
+
+	// delete map classes
+
+	public void deleteComponentForm(HydramoduleComponentForms componentForm) {
+		sessionFactory.getCurrentSession().delete(componentForm);
+	}
+
+	public void deletePhaseComponent(HydramodulePhaseComponents phaseComponent) {
+		sessionFactory.getCurrentSession().delete(phaseComponent);
+	}
+
+	public void deleteWorkflowPhase(HydramoduleWorkflowPhases workflowphases) {
+		sessionFactory.getCurrentSession().delete(workflowphases);
+	}
+
+	public void deleteWorkflow(HydramoduleWorkflow workflow) throws APIException {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void purgeWorkflow(HydramoduleWorkflow workflow) throws APIException {
+		// TODO Auto-generated method stub
+
+	}
+
+	public List<HydramoduleWorkflowPhases> getWorkflowPhase(HydramoduleWorkflow workflow) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleWorkflowPhases.class);
+		criteria.add(Restrictions.eq("workflowId", workflow.getWorkflowId()));
+		return criteria.list();
+	}
+
+	public List<HydramodulePhaseComponents> getPhaseComponent(HydramoduleWorkflow workflow) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramodulePhaseComponents.class);
+		criteria.add(Restrictions.eq("hydramoduleWorkflow", workflow.getWorkflowId()));
+
+		return criteria.list();
 	}
 }

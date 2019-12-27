@@ -22,6 +22,8 @@
 			<column name="hydramodule_form_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
+			<column name="name" type="varchar(50)" defaultValue="null">
+			</column>
 			<column name="form_id" type="int">
 			</column>
 			<column name="program_id" type="int">
@@ -30,9 +32,8 @@
 			</column>
 
 
-			<column name="description" type="text">
-			</column>
-			<column defaultValueNumeric="0" name="creator" type="int">
+			<column name="description" type="varchar(255)" defaultValue="null" />
+			<column name="creator" type="int">
 				<constraints nullable="false" />
 			</column>
 			<column name="date_created" type="datetime">
@@ -40,32 +41,31 @@
 			</column>
 			<column name="changed_by" type="int" />
 			<column name="date_changed" type="datetime" />
-			<column defaultValueBoolean="false" name="voided" type="boolean">
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
 				<constraints nullable="false" />
 			</column>
-			<column name="voided_by" type="int" />
-			<column name="date_voided" type="datetime" />
-			<column name="void_reason" type="varchar(255)" />
-			<column name="uuid" type="char(38)">
-				<constraints nullable="false" unique="true"></constraints>
-			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
 		</createTable>
-
+		
+		<addForeignKeyConstraint constraintName="hydramodule_form_tag_creator_fk"
+			baseTableName="hydramodule_form_tag" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_form_tag_changed_by_fk"
+			baseTableName="hydramodule_form_tag" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_form_tag_voided_by_fk"
+			baseTableName="hydramodule_form_tag" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
 		<addForeignKeyConstraint constraintName="openmrs_form_fk"
 			baseTableName="hydramodule_form" baseColumnNames="form_id"
 			referencedTableName="form" referencedColumnNames="form_id" />
 		<addForeignKeyConstraint constraintName="openmrs_program_fk"
 			baseTableName="hydramodule_form" baseColumnNames="program_id"
 			referencedTableName="program" referencedColumnNames="program_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_form_creator_fk"
-			baseTableName="hydramodule_form" baseColumnNames="creator"
-			referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_form_changed_by_fk"
-			baseTableName="hydramodule_form" baseColumnNames="changed_by"
-			referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_form_voided_by_fk"
-			baseTableName="hydramodule_form" baseColumnNames="voided_by"
-			referencedTableName="users" referencedColumnNames="user_id" />
+		
 	</changeSet>
 
 	<changeSet author="naveed.iqbal" id="hydra-201905091130">

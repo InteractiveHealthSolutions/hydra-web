@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -21,9 +21,9 @@ import org.openmrs.module.webservices.rest.web.response.ObjectNotFoundException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/workflowphases", supportedClass = HydramoduleWorkflowPhases.class, supportedOpenmrsVersions = {
+        + "/hydra/componentform", supportedClass = HydramoduleComponentForms.class, supportedOpenmrsVersions = {
                 "2.0.*,2.1.*,2.2.*" })
-public class WorkflowPhasesMapController extends DelegatingCrudResource<HydramoduleWorkflowPhases> {
+public class ComponentFormsMapController extends DelegatingCrudResource<HydramoduleComponentForms> {
 
 	/**
 	 * Logger for this class
@@ -34,31 +34,49 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 	HydraService service = Context.getService(HydraService.class);
 
 	@Override
-	public HydramoduleWorkflowPhases newDelegate() {
-		return new HydramoduleWorkflowPhases();
+	public HydramoduleComponentForms newDelegate() {
+		return new HydramoduleComponentForms();
 	}
 
 	@Override
-	public HydramoduleWorkflowPhases save(HydramoduleWorkflowPhases delegate) {
-		return service.saveWorkflowPhaseRelation(delegate);
+	public HydramoduleComponentForms save(HydramoduleComponentForms componentForm) {
+		return service.saveComponentFromRelation(componentForm);
 	}
 
 	@Override
-	public HydramoduleWorkflowPhases getByUniqueId(String uuid) {
-		return service.getWorkflowPhasesRelationByUUID(uuid);
+	public HydramoduleComponentForms getByUniqueId(String uuid) {
+		return service.getComponentFormRelationByUUID(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleWorkflowPhases> p = service.getAllWorkflowPhaseRelations();
-		simpleObject.put("workflowPhasesMap", ConversionUtil.convertToRepresentation(p, context.getRepresentation()));
+		List<HydramoduleComponentForms> componentForm = service.getAllComponentFormRelations();
+		simpleObject.put("ComponentFormMap",
+		    ConversionUtil.convertToRepresentation(componentForm, context.getRepresentation()));
 		return simpleObject;
 	}
 
 	@Override
-	public void purge(HydramoduleWorkflowPhases delegate, RequestContext context) throws ResponseException {
+	protected void delete(HydramoduleComponentForms componentForm, String reason, RequestContext context)
+	        throws ResponseException {
 
+		service.deleteComponentForm(componentForm);
+
+	}
+
+	@Override
+	public void purge(HydramoduleComponentForms delegate, RequestContext context) throws ResponseException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void delete(String uuid, String reason, RequestContext context) throws ResponseException {
+		HydramoduleComponentForms componentForm = getByUniqueId(uuid);
+		if (componentForm == null)
+			throw new ObjectNotFoundException();
+		service.deleteComponentForm(componentForm);
 	}
 
 	@Override
@@ -71,13 +89,11 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("id");
 		description.addProperty("displayOrder");
-		description.addProperty("phaseUUID");
-		description.addProperty("workflowUUID");
-		description.addProperty("phaseName");
-		description.addProperty("workflowName");
+		description.addProperty("hydramoduleComponent");
+		description.addProperty("hydramoduleForm");
+		description.addProperty("hydramoduleWorkflow");
 
 		if (representation instanceof DefaultRepresentation) {
-
 			return description;
 
 		} else if (representation instanceof FullRepresentation) {
@@ -92,28 +108,14 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-
 		description.addProperty("uuid");
 		description.addProperty("displayOrder");
-		description.addProperty("hydramodulePhase");
+		description.addProperty("hydramoduleComponent");
+		description.addProperty("hydramoduleForm");
 		description.addProperty("hydramoduleWorkflow");
 
 		return description;
 
-	}
-
-	@Override
-	protected void delete(HydramoduleWorkflowPhases workflowphases, String reason, RequestContext context)
-	        throws ResponseException {
-		service.deleteWorkflowPhase(workflowphases);
-	}
-
-	@Override
-	public void delete(String uuid, String reason, RequestContext context) throws ResponseException {
-		HydramoduleWorkflowPhases workflowPhases = getByUniqueId(uuid);
-		if (workflowPhases == null)
-			throw new ObjectNotFoundException();
-		service.deleteWorkflowPhase(workflowPhases);
 	}
 
 }

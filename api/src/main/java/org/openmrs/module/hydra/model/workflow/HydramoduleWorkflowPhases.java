@@ -15,8 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
-import org.openmrs.BaseOpenmrsData;
-import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.BaseOpenmrsObject;
 
 /**
@@ -51,7 +49,7 @@ public class HydramoduleWorkflowPhases extends BaseOpenmrsObject implements java
 
 	@Transient
 	private String workflowUUID;
-	
+
 	@Transient
 	private String phaseName;
 
@@ -129,6 +127,5 @@ public class HydramoduleWorkflowPhases extends BaseOpenmrsObject implements java
 	public void setWorkflowName(String workflowName) {
 		this.workflowName = workflowName;
 	}
-	
-	
+
 }

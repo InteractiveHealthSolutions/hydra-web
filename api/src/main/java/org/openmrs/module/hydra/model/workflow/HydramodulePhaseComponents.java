@@ -6,16 +6,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Transient;
+
 import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.openmrs.BaseOpenmrsData;
-import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.BaseOpenmrsObject;
 
 /**
@@ -47,14 +47,23 @@ public class HydramodulePhaseComponents extends BaseOpenmrsObject implements jav
 	@JsonBackReference
 	private HydramoduleWorkflow hydramoduleWorkflow;
 
-	@Column(name = "display_order")
-	private int displayOrder;
+	@Transient
+	private String phaseUUID;
 
-	public int getDisplayOrder() {
+	@Transient
+	private String componentUUID;
+
+	@Transient
+	private String workflowUUID;
+
+	@Column(name = "display_order")
+	private Integer displayOrder;
+
+	public Integer getDisplayOrder() {
 		return displayOrder;
 	}
 
-	public void setDisplayOrder(int displayOrder) {
+	public void setDisplayOrder(Integer displayOrder) {
 		this.displayOrder = displayOrder;
 	}
 
@@ -104,6 +113,22 @@ public class HydramodulePhaseComponents extends BaseOpenmrsObject implements jav
 
 	public String getComponentUUID() {
 		return hydramoduleComponent.getUuid();
+	}
+
+	public void setPhaseUUID(String phaseUUID) {
+		this.phaseUUID = phaseUUID;
+	}
+
+	public void setComponentUUID(String componentUUID) {
+		this.componentUUID = componentUUID;
+	}
+
+	public String getWorkflowUUID() {
+		return hydramoduleWorkflow.getUuid();
+	}
+
+	public void setWorkflowUUID(String workflowUUID) {
+		this.workflowUUID = workflowUUID;
 	}
 
 }

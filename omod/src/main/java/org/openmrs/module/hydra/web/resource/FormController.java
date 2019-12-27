@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
+import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -20,8 +20,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/phase", supportedClass = HydramodulePhase.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
-public class PhaseController extends MetadataDelegatingCrudResource<HydramodulePhase> {
+        + "/hydra/form", supportedClass = HydramoduleForm.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
+public class FormController extends MetadataDelegatingCrudResource<HydramoduleForm> {
 
 	/**
 	 * Logger for this class
@@ -32,30 +32,30 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 	private HydraService service = Context.getService(HydraService.class);
 
 	@Override
-	public HydramodulePhase newDelegate() {
-		return new HydramodulePhase();
+	public HydramoduleForm newDelegate() {
+		return new HydramoduleForm();
 	}
 
 	@Override
-	public HydramodulePhase save(HydramodulePhase delegate) {
-		return service.savePhase(delegate);
+	public HydramoduleForm save(HydramoduleForm delegate) {
+		return service.saveModuleForm(delegate);
 	}
 
 	@Override
-	public HydramodulePhase getByUniqueId(String uuid) {
-		return service.getPhaseByUUID(uuid);
+	public HydramoduleForm getByUniqueId(String uuid) {
+		return service.getHydraModuleFormByUuid(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramodulePhase> phase = service.getAllPhases();
-		simpleObject.put("phases", ConversionUtil.convertToRepresentation(phase, context.getRepresentation()));
+		List<HydramoduleForm> moduleForm = service.getAllModuleForm();
+		simpleObject.put("form", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}
 
 	@Override
-	public void purge(HydramodulePhase delegate, RequestContext context) throws ResponseException {
+	public void purge(HydramoduleForm delegate, RequestContext context) throws ResponseException {
 	}
 
 	@Override
@@ -67,8 +67,10 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 		description.addSelfLink();
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("uuid");
-		description.addProperty("phaseId");
+		description.addProperty("hydramoduleFormId");
 		description.addProperty("name");
+		description.addProperty("program");
+		description.addProperty("form");
 
 		if (representation instanceof DefaultRepresentation) {
 			description.addProperty("display");
@@ -78,13 +80,15 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 
 		} else if (representation instanceof FullRepresentation) {
 
-			// description.addProperty("hydramodulePhaseComponents");
-			description.addProperty("hydramoduleWorkflowPhases");
+			description.addProperty("hydramoduleFormTagMaps");
+			description.addProperty("hydramoduleComponentFormses");
+
+			description.addProperty("program");
+			description.addProperty("form");
 
 			description.addProperty("display");
 			description.addProperty("concept");
 
-			// description.addProperty("creator");
 			description.addProperty("dateCreated");
 
 			description.addProperty("changedBy");
@@ -105,11 +109,11 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-
+		description.addProperty("form");
 		description.addProperty("name");
-		description.addProperty("retired");
 		description.addProperty("uuid");
-		description.addProperty("phaseId");
+		description.addProperty("hydramoduleFormId");
+		description.addProperty("retired");
 
 		return description;
 

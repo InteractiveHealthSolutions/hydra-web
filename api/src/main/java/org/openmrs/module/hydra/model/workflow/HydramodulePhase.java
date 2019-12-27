@@ -3,9 +3,7 @@ package org.openmrs.module.hydra.model.workflow;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,10 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
-import org.hibernate.search.annotations.ContainedIn;
 import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Concept;
 

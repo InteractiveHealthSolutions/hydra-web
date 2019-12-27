@@ -9,17 +9,23 @@
  */
 package org.openmrs.module.hydra.api.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
+import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
+import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +67,36 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	@Transactional
 	public HydramoduleWorkflow saveWorkflow(HydramoduleWorkflow item) throws APIException {
+
+		// if (item.getRetired()) {
+		// List<HydramoduleWorkflowPhases> workflowPhase = dao.getWorkflowPhase(item);
+		// List<HydramodulePhaseComponents> phaseComp = dao.getPhaseComponent(item);
+		//
+		// if (workflowPhase != null) {
+		// for (HydramoduleWorkflowPhases hydramoduleWorkflowPhases : workflowPhase)
+		// {
+		// deleteWorkflowPhase(hydramoduleWorkflowPhases);
+		// }
+
+		// if (phaseComp != null) {
+		// for (HydramodulePhaseComponents hydramodulePhaseComponents : phaseComp) {
+		// deletePhaseComponent(hydramodulePhaseComponents);
+		// }
+		// }
+		// }
+
+		// return dao.saveWorkflow(item);
+		//
+		// }
+		// else {
+		// return dao.saveWorkflow(item);
+		// }
+
 		return dao.saveWorkflow(item);
+	}
+
+	public HydramoduleComponent saveComponent(HydramoduleComponent component) throws APIException {
+		return dao.saveComponent(component);
 	}
 
 	@Override
@@ -155,5 +190,92 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public List<HydramoduleWorkflowPhases> getAllWorkflowPhaseRelations() throws APIException {
 		return dao.getAllPhasesWorkFlowPhaseRelations();
+	}
+
+	@Override
+	public void purgeComponent(HydramoduleComponent component) throws APIException {
+		component.setRetired(true);
+		component.setRetiredBy(Context.getAuthenticatedUser());
+		component.setDateRetired(new Date());
+		dao.updateComponent(component);
+	}
+
+	@Override
+	public HydramoduleForm saveModuleForm(HydramoduleForm form) throws APIException {
+		return dao.saveModuleForm(form);
+	}
+
+	@Override
+	public List<HydramoduleForm> getAllModuleForm() throws APIException {
+		return dao.getAllModuleForm();
+	}
+
+	@Override
+	public HydramoduleForm getHydraModuleFormByUuid(String uuid) throws APIException {
+		return dao.getModuleForm(uuid);
+	}
+
+	@Override
+	public HydramodulePhaseComponents savePhaseComponentRelation(HydramodulePhaseComponents item) throws APIException {
+		return dao.savePhaseComponentsRelation(item);
+	}
+
+	@Override
+	public HydramodulePhaseComponents getPhasesComponentRelationByUUID(String uuid) throws APIException {
+		return dao.getPhaseComponentRelation(uuid);
+	}
+
+	@Override
+	public List<HydramodulePhaseComponents> getAllPhaseComponentsRelations() throws APIException {
+		return dao.getAllPhaseComponentRelations();
+	}
+
+	@Override
+	public HydramoduleComponentForms saveComponentFromRelation(HydramoduleComponentForms item) throws APIException {
+
+		return dao.saveComponentFormRelation(item);
+	}
+
+	@Override
+	public HydramoduleComponentForms getComponentFormRelationByUUID(String uuid) throws APIException {
+		return dao.getComponentFormRelation(uuid);
+	}
+
+	@Override
+	public List<HydramoduleComponentForms> getAllComponentFormRelations() throws APIException {
+		return dao.getAllComponentFormRelations();
+	}
+
+	@Transactional
+	@Override
+	public void deleteComponentForm(HydramoduleComponentForms componentForm) throws APIException {
+		dao.deleteComponentForm(componentForm);
+
+	}
+
+	@Transactional
+	@Override
+	public void deletePhaseComponent(HydramodulePhaseComponents phaseComponent) throws APIException {
+		dao.deletePhaseComponent(phaseComponent);
+
+	}
+
+	@Transactional
+	@Override
+	public void deleteWorkflowPhase(HydramoduleWorkflowPhases workflowphases) throws APIException {
+		dao.deleteWorkflowPhase(workflowphases);
+
+	}
+
+	@Override
+	public void deleteWorkflow(HydramoduleWorkflow workflow) throws APIException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void purgeWorkflow(HydramoduleWorkflow workflow) throws APIException {
+		// TODO Auto-generated method stub
+
 	}
 }

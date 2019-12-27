@@ -1,13 +1,11 @@
 package org.openmrs.module.hydra.web.resource;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -62,6 +60,11 @@ public class WorkflowController extends MetadataDelegatingCrudResource<Hydramodu
 	}
 
 	@Override
+	public void delete(String uuid, String reason, RequestContext context) throws ResponseException {
+		super.delete(uuid, reason, context);
+	}
+
+	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
 
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
@@ -108,6 +111,9 @@ public class WorkflowController extends MetadataDelegatingCrudResource<Hydramodu
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("name");
 		description.addProperty("description");
+		description.addProperty("uuid");
+		description.addProperty("workflowId");
+		description.addProperty("retired");
 
 		return description;
 
