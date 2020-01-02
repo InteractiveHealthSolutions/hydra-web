@@ -1,0 +1,102 @@
+package org.openmrs.module.hydra.model.event_planner;
+
+import java.sql.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.openmrs.BaseOpenmrsMetadata;
+
+@Entity
+@Table(name = "hydramodule_asset", catalog = "hydra")
+public class HydramoduleAsset extends BaseOpenmrsMetadata {
+
+	/**
+	 * To keep track of object versions, may help in object storage
+	 */
+	private static final long serialVersionUID = 2825439626685522357L;
+
+	@Id
+	@GeneratedValue
+	private Integer assetId;
+
+	private String capitalValue;
+
+	private String referenceId;
+
+	private Date dateProcured;
+
+	@ManyToOne
+	@JoinColumn(name = "asset_type_id", referencedColumnName = "asset_type_id")
+	private HydramoduleAssetType assetType;
+	
+	@ManyToOne
+	@JoinColumn(name = "asset_category_id", referencedColumnName = "asset_category_id")
+	private HydramoduleAssetCategory assetCategory;
+
+	public int getAssetId() {
+		return assetId;
+	}
+
+	public void setAssetId(int assetId) {
+		this.assetId = assetId;
+	}
+
+	public String getCapitalValue() {
+		return capitalValue;
+	}
+
+	public void setCapitalValue(String capitalValue) {
+		this.capitalValue = capitalValue;
+	}
+
+	public String getReferenceId() {
+		return referenceId;
+	}
+
+	public void setReferenceId(String referenceId) {
+		this.referenceId = referenceId;
+	}
+
+	public Date getDateProcured() {
+		return dateProcured;
+	}
+
+	public void setDateProcured(Date dateProcured) {
+		this.dateProcured = dateProcured;
+	}
+
+	public HydramoduleAssetType getAssetType() {
+		return assetType;
+	}
+
+	public void setAssetType(HydramoduleAssetType assetType) {
+		this.assetType = assetType;
+	}
+
+	public HydramoduleAssetCategory getAssetCategory() {
+		return assetCategory;
+	}
+
+	public void setAssetCategory(HydramoduleAssetCategory assetCategory) {
+		this.assetCategory = assetCategory;
+	}
+
+	public void setAssetId(Integer assetId) {
+		this.assetId = assetId;
+	}
+
+	@Override
+	public Integer getId() {
+		return assetId;
+	}
+
+	@Override
+	public void setId(Integer id) {
+		assetId = id;
+	}
+}

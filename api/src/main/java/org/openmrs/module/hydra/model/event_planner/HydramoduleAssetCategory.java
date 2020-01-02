@@ -1,0 +1,41 @@
+package org.openmrs.module.hydra.model.event_planner;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.openmrs.BaseOpenmrsMetadata;
+
+@Entity
+@Table(name = "hydramodule_asset_category", catalog = "hydra")
+public class HydramoduleAssetCategory extends BaseOpenmrsMetadata {
+
+	/**
+	 * To keep track of object versions, may help in object storage
+	 */
+	private static final long serialVersionUID = -5072805330615138555L;
+	@Id
+	@GeneratedValue
+	private Integer assetCategoryId;
+
+	public int getAssetCategoryId() {
+		return assetCategoryId;
+	}
+
+	public void setAssetCategoryId(int assetCategoryId) {
+		this.assetCategoryId = assetCategoryId;
+	}
+
+	@Override
+	public Integer getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setId(Integer id) {
+		// TODO Auto-generated method stub
+		
+	}
+}
