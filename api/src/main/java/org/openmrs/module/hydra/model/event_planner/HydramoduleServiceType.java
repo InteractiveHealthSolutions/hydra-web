@@ -18,7 +18,7 @@ public class HydramoduleServiceType extends BaseOpenmrsMetadata implements java.
 	 * To keep track of object versions, may help in object storage
 	 */
 	private static final long serialVersionUID = 8415965501353491566L;
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "service_type_id", unique = true, nullable = false)

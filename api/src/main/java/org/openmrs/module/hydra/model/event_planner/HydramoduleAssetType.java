@@ -1,5 +1,6 @@
 package org.openmrs.module.hydra.model.event_planner;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -15,8 +16,10 @@ public class HydramoduleAssetType extends BaseOpenmrsMetadata {
 	 * To keep track of object versions, may help in object storage
 	 */
 	private static final long serialVersionUID = -3785441749369003756L;
+
 	@Id
 	@GeneratedValue
+	@Column(name = "asset_type_id", unique = true, nullable = false)
 	private Integer assetTypeId;
 
 	public Integer getAssetTypeId() {
@@ -36,8 +39,7 @@ public class HydramoduleAssetType extends BaseOpenmrsMetadata {
 	@Override
 	public void setId(Integer id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
 }

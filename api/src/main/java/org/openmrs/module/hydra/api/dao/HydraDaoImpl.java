@@ -20,6 +20,11 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleAsset;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetCategory;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetType;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleService;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleServiceType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
@@ -251,6 +256,121 @@ public class HydraDaoImpl {
 		Criteria criteria = session.createCriteria(HydramodulePhaseComponents.class);
 		criteria.add(Restrictions.eq("hydramoduleWorkflow", workflow.getWorkflowId()));
 
+		return criteria.list();
+	}
+
+	// Service Type
+	public HydramoduleServiceType saveServiceType(HydramoduleServiceType serviceType) {
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleServiceType getServiceType(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleServiceType.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("retired", false));
+		return (HydramoduleServiceType) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleServiceType> getAllServiceTypes(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleServiceType.class);
+		criteria.addOrder(Order.asc("serviceId"));
+		criteria.add(Restrictions.eq("retired", retired));
+		return criteria.list();
+	}
+
+	// Service
+	public HydramoduleService saveService(HydramoduleService service) {
+		getSession().saveOrUpdate(service);
+		getSession().flush();
+		return service;
+	}
+
+	public HydramoduleService getService(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleService.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("retired", false));
+		return (HydramoduleService) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleService> getAllServices(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleService.class);
+		criteria.addOrder(Order.asc("serviceId"));
+		criteria.add(Restrictions.eq("retired", retired));
+		return criteria.list();
+	}
+
+	// AssetType
+	public HydramoduleAssetType saveAssetType(HydramoduleAssetType serviceType) {
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleAssetType getAssetType(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleAssetType.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("retired", false));
+		return (HydramoduleAssetType) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleAssetType> getAllAssetTypes(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleAssetType.class);
+		criteria.addOrder(Order.asc("assetTypeId"));
+		criteria.add(Restrictions.eq("retired", retired));
+		return criteria.list();
+	}
+
+	// AssetCategory
+	public HydramoduleAssetCategory saveAssetCategory(HydramoduleAssetCategory serviceType) {
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleAssetCategory getAssetCategory(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleAssetCategory.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("retired", false));
+		return (HydramoduleAssetCategory) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleAssetCategory> getAllAssetCategories(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleAssetCategory.class);
+		criteria.addOrder(Order.asc("assetCategoryId"));
+		criteria.add(Restrictions.eq("retired", retired));
+		return criteria.list();
+	}
+
+	// AssetCategory
+	public HydramoduleAsset saveAsset(HydramoduleAsset serviceType) {
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleAsset getAsset(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleAsset.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("retired", false));
+		return (HydramoduleAsset) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleAsset> getAllAssets(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleAsset.class);
+		criteria.addOrder(Order.asc("assetId"));
+		criteria.add(Restrictions.eq("retired", retired));
 		return criteria.list();
 	}
 }

@@ -17,6 +17,11 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.HydraConfig;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleAsset;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetCategory;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetType;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleService;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleServiceType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
@@ -137,4 +142,34 @@ public interface HydraService extends OpenmrsService {
 	void deleteWorkflow(HydramoduleWorkflow workflow) throws APIException;
 
 	void purgeWorkflow(HydramoduleWorkflow workflow) throws APIException;
+
+	HydramoduleService saveService(HydramoduleService service) throws APIException;
+
+	List<HydramoduleService> getAllServices(boolean retired) throws APIException;
+
+	HydramoduleService getService(String uuid) throws APIException;
+
+	HydramoduleServiceType saveServiceType(HydramoduleServiceType form) throws APIException;
+
+	List<HydramoduleServiceType> getAllServiceTypes(boolean retired) throws APIException;
+
+	HydramoduleServiceType getServiceType(String uuid) throws APIException;
+
+	HydramoduleAssetType saveAssetType(HydramoduleAssetType service) throws APIException;
+
+	List<HydramoduleAssetType> getAllAssetTypes(boolean retired) throws APIException;
+
+	HydramoduleAssetType getAssetType(String uuid) throws APIException;
+
+	HydramoduleAssetCategory saveAssetCategory(HydramoduleAssetCategory service) throws APIException;
+
+	List<HydramoduleAssetCategory> getAllAssetCategories(boolean retired) throws APIException;
+
+	HydramoduleAssetCategory getAssetCategory(String uuid) throws APIException;
+
+	HydramoduleAsset saveAsset(HydramoduleAsset service) throws APIException;
+
+	List<HydramoduleAsset> getAllAssets(boolean retired) throws APIException;
+
+	HydramoduleAsset getAsset(String uuid) throws APIException;
 }

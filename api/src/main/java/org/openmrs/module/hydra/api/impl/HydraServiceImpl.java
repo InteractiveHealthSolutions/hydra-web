@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
@@ -21,6 +20,11 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleAsset;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetCategory;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetType;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleService;
+import org.openmrs.module.hydra.model.event_planner.HydramoduleServiceType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
@@ -69,17 +73,21 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public HydramoduleWorkflow saveWorkflow(HydramoduleWorkflow item) throws APIException {
 
 		// if (item.getRetired()) {
-		// List<HydramoduleWorkflowPhases> workflowPhase = dao.getWorkflowPhase(item);
-		// List<HydramodulePhaseComponents> phaseComp = dao.getPhaseComponent(item);
+		// List<HydramoduleWorkflowPhases> workflowPhase =
+		// dao.getWorkflowPhase(item);
+		// List<HydramodulePhaseComponents> phaseComp =
+		// dao.getPhaseComponent(item);
 		//
 		// if (workflowPhase != null) {
-		// for (HydramoduleWorkflowPhases hydramoduleWorkflowPhases : workflowPhase)
+		// for (HydramoduleWorkflowPhases hydramoduleWorkflowPhases :
+		// workflowPhase)
 		// {
 		// deleteWorkflowPhase(hydramoduleWorkflowPhases);
 		// }
 
 		// if (phaseComp != null) {
-		// for (HydramodulePhaseComponents hydramodulePhaseComponents : phaseComp) {
+		// for (HydramodulePhaseComponents hydramodulePhaseComponents :
+		// phaseComp) {
 		// deletePhaseComponent(hydramodulePhaseComponents);
 		// }
 		// }
@@ -277,5 +285,85 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public void purgeWorkflow(HydramoduleWorkflow workflow) throws APIException {
 		// TODO Auto-generated method stub
 
+	}
+
+	// ServiceType
+	@Override
+	public HydramoduleServiceType saveServiceType(HydramoduleServiceType form) throws APIException {
+		return dao.saveServiceType(form);
+	}
+
+	@Override
+	public List<HydramoduleServiceType> getAllServiceTypes(boolean retired) throws APIException {
+		return dao.getAllServiceTypes(retired);
+	}
+
+	@Override
+	public HydramoduleServiceType getServiceType(String uuid) throws APIException {
+		return dao.getServiceType(uuid);
+	}
+
+	// Service
+	@Override
+	public HydramoduleService saveService(HydramoduleService service) throws APIException {
+		return dao.saveService(service);
+	}
+
+	@Override
+	public List<HydramoduleService> getAllServices(boolean retired) throws APIException {
+		return dao.getAllServices(retired);
+	}
+
+	@Override
+	public HydramoduleService getService(String uuid) throws APIException {
+		return dao.getService(uuid);
+	}
+
+	// AssetType
+	@Override
+	public HydramoduleAssetType saveAssetType(HydramoduleAssetType service) throws APIException {
+		return dao.saveAssetType(service);
+	}
+
+	@Override
+	public List<HydramoduleAssetType> getAllAssetTypes(boolean retired) throws APIException {
+		return dao.getAllAssetTypes(retired);
+	}
+
+	@Override
+	public HydramoduleAssetType getAssetType(String uuid) throws APIException {
+		return dao.getAssetType(uuid);
+	}
+
+	// AssetCategory
+	@Override
+	public HydramoduleAssetCategory saveAssetCategory(HydramoduleAssetCategory service) throws APIException {
+		return dao.saveAssetCategory(service);
+	}
+
+	@Override
+	public List<HydramoduleAssetCategory> getAllAssetCategories(boolean retired) throws APIException {
+		return dao.getAllAssetCategories(retired);
+	}
+
+	@Override
+	public HydramoduleAssetCategory getAssetCategory(String uuid) throws APIException {
+		return dao.getAssetCategory(uuid);
+	}
+
+	// Asset
+	@Override
+	public HydramoduleAsset saveAsset(HydramoduleAsset service) throws APIException {
+		return dao.saveAsset(service);
+	}
+
+	@Override
+	public List<HydramoduleAsset> getAllAssets(boolean retired) throws APIException {
+		return dao.getAllAssets(retired);
+	}
+
+	@Override
+	public HydramoduleAsset getAsset(String uuid) throws APIException {
+		return dao.getAsset(uuid);
 	}
 }

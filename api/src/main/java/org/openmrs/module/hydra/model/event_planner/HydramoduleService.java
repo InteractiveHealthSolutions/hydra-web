@@ -1,7 +1,10 @@
 package org.openmrs.module.hydra.model.event_planner;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,28 +24,23 @@ public class HydramoduleService extends BaseOpenmrsMetadata implements Serializa
 	private static final long serialVersionUID = 2588114502971056722L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "service_id", unique = true, nullable = false)
 	private Integer serviceId;
 
+	@Column(name = "unit_cost")
 	private String unitCost;
 
+	@Column(name = "reference_id")
 	private String referenceId;
 
 	@ManyToOne
-	@JoinColumn(name = "service_type_id", referencedColumnName = "service_type_id")
+	@JoinColumn(name = "service_type_id")
 	private HydramoduleServiceType serviceType;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "service_category_id", referencedColumnName = "service_category_id")
+	@JoinColumn(name = "service_category_id")
 	private HydraModuleServiceCategory serviceCategory;
-
-	public int getServiceId() {
-		return serviceId;
-	}
-
-	public void setServiceId(int serviceId) {
-		this.serviceId = serviceId;
-	}
 
 	public String getUnitCost() {
 		return unitCost;
@@ -74,6 +72,10 @@ public class HydramoduleService extends BaseOpenmrsMetadata implements Serializa
 
 	public void setServiceCategory(HydraModuleServiceCategory serviceCategory) {
 		this.serviceCategory = serviceCategory;
+	}
+
+	public Integer getServiceId() {
+		return serviceId;
 	}
 
 	public void setServiceId(Integer serviceId) {

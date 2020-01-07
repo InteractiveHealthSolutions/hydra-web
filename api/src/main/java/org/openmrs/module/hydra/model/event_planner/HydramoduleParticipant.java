@@ -8,6 +8,7 @@ import org.openmrs.User;
 public class HydramoduleParticipant {
 
 	private User user;
+
 	private Role role;
 
 }
