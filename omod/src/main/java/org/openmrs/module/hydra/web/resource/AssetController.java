@@ -6,8 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAsset;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -21,7 +20,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/asset", supportedClass = HydramoduleService.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
+        + "/hydra/asset", supportedClass = HydramoduleAsset.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
 public class AssetController extends MetadataDelegatingCrudResource<HydramoduleAsset> {
 
 	/**
@@ -39,6 +38,7 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 
 	@Override
 	public HydramoduleAsset save(HydramoduleAsset component) {
+		System.out.println(component.getName());
 		return service.saveAsset(component);
 	}
 
@@ -67,10 +67,12 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
+		description.addSelfLink();
+		description.addProperty("display");
 		description.addProperty("uuid");
 		description.addProperty("assetId");
 		description.addProperty("name");
-		// description.addProperty("assetType", Representation.REF);
+		description.addProperty("assetType", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
 
@@ -97,9 +99,9 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("name");
-		description.addProperty("retired");
 		description.addProperty("uuid");
 		description.addProperty("assetId");
+		description.addProperty("retired");
 		return description;
 
 	}

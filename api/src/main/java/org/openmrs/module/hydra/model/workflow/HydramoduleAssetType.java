@@ -1,4 +1,4 @@
-package org.openmrs.module.hydra.model.event_planner;
+package org.openmrs.module.hydra.model.workflow;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,12 +33,12 @@ public class HydramoduleAssetType extends BaseOpenmrsMetadata {
 	@Override
 	public Integer getId() {
 		// TODO Auto-generated method stub
-		return null;
+		return assetTypeId;
 	}
 
 	@Override
 	public void setId(Integer id) {
-		// TODO Auto-generated method stub
+		assetTypeId = id;
 
 	}
 

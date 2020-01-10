@@ -1,4 +1,4 @@
-package org.openmrs.module.hydra.model.event_planner;
+package org.openmrs.module.hydra.model.workflow;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

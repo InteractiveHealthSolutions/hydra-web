@@ -6,8 +6,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
-import org.openmrs.module.hydra.model.workflow.HydramoduleService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
+import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -21,9 +21,9 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/assetCategory", supportedClass = HydramoduleAssetCategory.class, supportedOpenmrsVersions = {
+        + "/hydra/participantSalaryType", supportedClass = HydramoduleParticipantSalaryType.class, supportedOpenmrsVersions = {
                 "2.0.*,2.1.*,2.2.*" })
-public class AssetCategoryController extends MetadataDelegatingCrudResource<HydramoduleAssetCategory> {
+public class ParticipantSalaryTypeController extends MetadataDelegatingCrudResource<HydramoduleParticipantSalaryType> {
 
 	/**
 	 * Logger for this class
@@ -34,31 +34,32 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 	private HydraService service = Context.getService(HydraService.class);
 
 	@Override
-	public HydramoduleAssetCategory newDelegate() {
-		return new HydramoduleAssetCategory();
+	public HydramoduleParticipantSalaryType newDelegate() {
+		return new HydramoduleParticipantSalaryType();
 	}
 
 	@Override
-	public HydramoduleAssetCategory save(HydramoduleAssetCategory component) {
-		return service.saveAssetCategory(component);
+	public HydramoduleParticipantSalaryType save(HydramoduleParticipantSalaryType component) {
+		System.out.println(component.getName());
+		return service.saveParticipantSalaryType(component);
 	}
 
 	@Override
-	public HydramoduleAssetCategory getByUniqueId(String uuid) {
-		return service.getAssetCategory(uuid);
+	public HydramoduleParticipantSalaryType getByUniqueId(String uuid) {
+		return service.getParticipantSalaryType(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleAssetCategory> services = service.getAllAssetCategories(true);
-		services.addAll(service.getAllAssetCategories(false));
-		simpleObject.put("services", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
+		List<HydramoduleParticipantSalaryType> services = service.getAllParticipantSalaryTypes(true);
+		services.addAll(service.getAllParticipantSalaryTypes(false));
+		simpleObject.put("salaryTypes", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}
 
 	@Override
-	public void purge(HydramoduleAssetCategory component, RequestContext context) throws ResponseException {
+	public void purge(HydramoduleParticipantSalaryType component, RequestContext context) throws ResponseException {
 		// service.purgeComponent(component);
 	}
 
@@ -68,13 +69,16 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
+		description.addSelfLink();
+		description.addProperty("display");
 		description.addProperty("uuid");
-		description.addProperty("assetCategoryId");
+		description.addProperty("salaryTypeId");
 		description.addProperty("name");
 
 		if (representation instanceof DefaultRepresentation) {
 
 			return description;
+
 		} else if (representation instanceof FullRepresentation) {
 
 			description.addProperty("dateCreated");
@@ -97,8 +101,9 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("name");
 		description.addProperty("retired");
+		description.addProperty("description");
 		description.addProperty("uuid");
-		description.addProperty("assetCategoryId");
+		description.addProperty("salaryTypeId");
 		return description;
 
 	}

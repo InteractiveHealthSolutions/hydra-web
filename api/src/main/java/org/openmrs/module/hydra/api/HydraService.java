@@ -17,16 +17,18 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.HydraConfig;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAsset;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetCategory;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetType;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleService;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleServiceType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
+import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
+import org.openmrs.module.hydra.model.workflow.HydramoduleService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.transaction.annotation.Transactional;
@@ -172,4 +174,16 @@ public interface HydraService extends OpenmrsService {
 	List<HydramoduleAsset> getAllAssets(boolean retired) throws APIException;
 
 	HydramoduleAsset getAsset(String uuid) throws APIException;
+
+	HydramoduleParticipant saveParticipant(HydramoduleParticipant service) throws APIException;
+
+	List<HydramoduleParticipant> getAllParticipants(boolean retired) throws APIException;
+
+	HydramoduleParticipant getParticipant(String uuid) throws APIException;
+
+	HydramoduleParticipantSalaryType saveParticipantSalaryType(HydramoduleParticipantSalaryType service) throws APIException;
+
+	List<HydramoduleParticipantSalaryType> getAllParticipantSalaryTypes(boolean retired) throws APIException;
+
+	HydramoduleParticipantSalaryType getParticipantSalaryType(String uuid) throws APIException;
 }

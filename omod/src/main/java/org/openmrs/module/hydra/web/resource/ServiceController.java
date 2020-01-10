@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleService;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -102,7 +102,6 @@ public class ServiceController extends MetadataDelegatingCrudResource<Hydramodul
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("name");
-		description.addProperty("retired");
 		description.addProperty("uuid");
 		description.addProperty("serviceId");
 		description.addProperty("retired");

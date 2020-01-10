@@ -1,4 +1,6 @@
-package org.openmrs.module.hydra.model.event_planner;
+package org.openmrs.module.hydra.model.workflow;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -22,7 +24,7 @@ public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializabl
 	private static final long serialVersionUID = 2825439626685522357L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "asset_id", unique = true, nullable = false)
 	private Integer assetId;
 
@@ -83,14 +85,13 @@ public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializabl
 		this.assetType = assetType;
 	}
 
-	//
-	// public HydramoduleAssetCategory getAssetCategory() {
-	// return assetCategory;
-	// }
-	//
-	// public void setAssetCategory(HydramoduleAssetCategory assetCategory) {
-	// this.assetCategory = assetCategory;
-	// }
+	public HydramoduleAssetCategory getAssetCategory() {
+		return assetCategory;
+	}
+
+	public void setAssetCategory(HydramoduleAssetCategory assetCategory) {
+		this.assetCategory = assetCategory;
+	}
 
 	@Override
 	public Integer getId() {

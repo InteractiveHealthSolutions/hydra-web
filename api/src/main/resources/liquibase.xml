@@ -741,6 +741,124 @@
 			referencedTableName="hydramodule_service_category" referencedColumnNames="service_category_id" />
 	</changeSet>
 	
+	
+	
+	
+	
+	
+	
+	
+	<changeSet id="hydra-202010011100" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_participant_salary_type" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_participant_salary_type table
+		</comment>
+		<createTable tableName="hydramodule_participant_salary_type">
+			<column name="salary_type_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			
+			<column name="name" type="varchar(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="varchar(255)" defaultValue="null" />
+			<column name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_salary_type_creator_fk"
+			baseTableName="hydramodule_participant_salary_type" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_salary_type_changed_by_fk"
+			baseTableName="hydramodule_participant_salary_type" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_salary_type_voided_by_fk"
+			baseTableName="hydramodule_participant_salary_type" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
+	<changeSet id="hydra-202010011058" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_participant" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_participant table
+		</comment>
+		<createTable tableName="hydramodule_participant">
+			<column name="participant_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="salary_value" type="varchar(8)"></column>
+			<column name="user_id" type="int"></column>
+			<column name="salary_type_id" type="int"></column>
+			
+			<column name="name" type="varchar(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="varchar(255)" defaultValue="null" />
+			<column name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_participant_creator_fk"
+			baseTableName="hydramodule_participant" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_participant_changed_by_fk"
+			baseTableName="hydramodule_participant" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_participant_voided_by_fk"
+			baseTableName="hydramodule_participant" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+			
+		<addForeignKeyConstraint constraintName="hydramodule_participant_salary_type_id_fk"
+			baseTableName="hydramodule_participant" baseColumnNames="salary_type_id"
+			referencedTableName="hydramodule_participant_salary_type" referencedColumnNames="salary_type_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_participant_user_id_fk"
+			baseTableName="hydramodule_participant" baseColumnNames="user_id"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<changeSet id="hydra-201905091203" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>

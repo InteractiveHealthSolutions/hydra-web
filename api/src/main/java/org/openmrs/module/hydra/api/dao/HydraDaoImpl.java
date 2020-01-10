@@ -20,16 +20,18 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAsset;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetCategory;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetType;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleService;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleServiceType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
+import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
+import org.openmrs.module.hydra.model.workflow.HydramoduleService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -248,6 +250,7 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflowPhases.class);
 		criteria.add(Restrictions.eq("workflowId", workflow.getWorkflowId()));
+		
 		return criteria.list();
 	}
 
@@ -277,8 +280,9 @@ public class HydraDaoImpl {
 	public List<HydramoduleServiceType> getAllServiceTypes(boolean retired) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleServiceType.class);
-		criteria.addOrder(Order.asc("serviceId"));
+		criteria.addOrder(Order.asc("serviceTypeId"));
 		criteria.add(Restrictions.eq("retired", retired));
+		
 		return criteria.list();
 	}
 
@@ -351,8 +355,9 @@ public class HydraDaoImpl {
 		return criteria.list();
 	}
 
-	// AssetCategory
+	// Asset
 	public HydramoduleAsset saveAsset(HydramoduleAsset serviceType) {
+		// System.out.println(serviceType.getUuid());
 		getSession().saveOrUpdate(serviceType);
 		getSession().flush();
 		return serviceType;
@@ -370,6 +375,54 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleAsset.class);
 		criteria.addOrder(Order.asc("assetId"));
+		criteria.add(Restrictions.eq("retired", retired));
+		return criteria.list();
+	}
+
+	// Participant
+	public HydramoduleParticipant saveParticipant(HydramoduleParticipant serviceType) {
+		// System.out.println(serviceType.getUuid());
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleParticipant getParticipant(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleParticipant.class);
+		criteria.add(Restrictions.eq("participantId", uuid));
+		criteria.add(Restrictions.eq("retired", false));
+		return (HydramoduleParticipant) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleParticipant> getAllParticipants(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleParticipant.class);
+		criteria.addOrder(Order.asc("participantId"));
+		criteria.add(Restrictions.eq("retired", retired));
+		return criteria.list();
+	}
+
+	// ParticipantSalaryType
+	public HydramoduleParticipantSalaryType saveParticipantSalaryType(HydramoduleParticipantSalaryType serviceType) {
+		System.out.println(serviceType.getUuid());
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleParticipantSalaryType getParticipantSalaryType(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleParticipantSalaryType.class);
+		criteria.add(Restrictions.eq("salaryTypeId", uuid));
+		criteria.add(Restrictions.eq("retired", false));
+		return (HydramoduleParticipantSalaryType) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleParticipantSalaryType> getAllParticipantSalaryTypes(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleParticipantSalaryType.class);
+		criteria.addOrder(Order.asc("salaryTypeId"));
 		criteria.add(Restrictions.eq("retired", retired));
 		return criteria.list();
 	}

@@ -6,8 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetType;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -21,7 +20,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/assetType", supportedClass = HydramoduleService.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
+        + "/hydra/assetType", supportedClass = HydramoduleAssetType.class, supportedOpenmrsVersions = {
+                "2.0.*,2.1.*,2.2.*" })
 public class AssetTypeController extends MetadataDelegatingCrudResource<HydramoduleAssetType> {
 
 	/**
@@ -105,7 +105,7 @@ public class AssetTypeController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("retired");
 		description.addProperty("uuid");
 		description.addProperty("assetTypeId");
-		description.addProperty("retired");
+
 		return description;
 
 	}

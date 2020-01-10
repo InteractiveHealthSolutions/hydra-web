@@ -20,16 +20,18 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAsset;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetCategory;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleAssetType;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleService;
-import org.openmrs.module.hydra.model.event_planner.HydramoduleServiceType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
+import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
+import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
+import org.openmrs.module.hydra.model.workflow.HydramoduleService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -289,6 +291,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	// ServiceType
 	@Override
+	@Transactional
 	public HydramoduleServiceType saveServiceType(HydramoduleServiceType form) throws APIException {
 		return dao.saveServiceType(form);
 	}
@@ -305,6 +308,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	// Service
 	@Override
+	@Transactional
 	public HydramoduleService saveService(HydramoduleService service) throws APIException {
 		return dao.saveService(service);
 	}
@@ -321,6 +325,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	// AssetType
 	@Override
+	@Transactional
 	public HydramoduleAssetType saveAssetType(HydramoduleAssetType service) throws APIException {
 		return dao.saveAssetType(service);
 	}
@@ -337,6 +342,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	// AssetCategory
 	@Override
+	@Transactional
 	public HydramoduleAssetCategory saveAssetCategory(HydramoduleAssetCategory service) throws APIException {
 		return dao.saveAssetCategory(service);
 	}
@@ -353,6 +359,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	// Asset
 	@Override
+	@Transactional
 	public HydramoduleAsset saveAsset(HydramoduleAsset service) throws APIException {
 		return dao.saveAsset(service);
 	}
@@ -365,5 +372,40 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public HydramoduleAsset getAsset(String uuid) throws APIException {
 		return dao.getAsset(uuid);
+	}
+
+	// Participant
+	@Override
+	@Transactional
+	public HydramoduleParticipant saveParticipant(HydramoduleParticipant service) throws APIException {
+		return dao.saveParticipant(service);
+	}
+
+	@Override
+	public List<HydramoduleParticipant> getAllParticipants(boolean retired) throws APIException {
+		return dao.getAllParticipants(retired);
+	}
+
+	@Override
+	public HydramoduleParticipant getParticipant(String uuid) throws APIException {
+		return dao.getParticipant(uuid);
+	}
+
+	// ParticipantSalaryType
+	@Override
+	@Transactional
+	public HydramoduleParticipantSalaryType saveParticipantSalaryType(HydramoduleParticipantSalaryType service)
+	        throws APIException {
+		return dao.saveParticipantSalaryType(service);
+	}
+
+	@Override
+	public List<HydramoduleParticipantSalaryType> getAllParticipantSalaryTypes(boolean retired) throws APIException {
+		return dao.getAllParticipantSalaryTypes(retired);
+	}
+
+	@Override
+	public HydramoduleParticipantSalaryType getParticipantSalaryType(String uuid) throws APIException {
+		return dao.getParticipantSalaryType(uuid);
 	}
 }
