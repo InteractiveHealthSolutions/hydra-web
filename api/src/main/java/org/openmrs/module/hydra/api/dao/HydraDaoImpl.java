@@ -250,7 +250,7 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflowPhases.class);
 		criteria.add(Restrictions.eq("workflowId", workflow.getWorkflowId()));
-		
+
 		return criteria.list();
 	}
 
@@ -282,7 +282,7 @@ public class HydraDaoImpl {
 		Criteria criteria = session.createCriteria(HydramoduleServiceType.class);
 		criteria.addOrder(Order.asc("serviceTypeId"));
 		criteria.add(Restrictions.eq("retired", retired));
-		
+
 		return criteria.list();
 	}
 
