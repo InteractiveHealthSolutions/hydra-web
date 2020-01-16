@@ -33,12 +33,12 @@ public class HydramoduleAssetCategory extends BaseOpenmrsMetadata {
 	@Override
 	public Integer getId() {
 		// TODO Auto-generated method stub
-		return null;
+		return assetCategoryId;
 	}
 
 	@Override
 	public void setId(Integer id) {
-		// TODO Auto-generated method stub
+		this.assetCategoryId = id;
 
 	}
 }
