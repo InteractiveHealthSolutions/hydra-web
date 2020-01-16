@@ -71,6 +71,9 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 		description.addProperty("display");
 		description.addProperty("uuid");
 		description.addProperty("assetId");
+		description.addProperty("capitalValue");
+		description.addProperty("referenceId");
+		description.addProperty("dateProcured");
 		description.addProperty("name");
 		description.addProperty("assetType", Representation.REF);
 
@@ -102,6 +105,9 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 		description.addProperty("uuid");
 		description.addProperty("assetId");
 		description.addProperty("retired");
+		description.addProperty("capitalValue");
+		description.addProperty("referenceId");
+		description.addProperty("dateProcured");
 		return description;
 
 	}

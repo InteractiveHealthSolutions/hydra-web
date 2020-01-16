@@ -12,7 +12,7 @@ import org.openmrs.BaseOpenmrsMetadata;
 
 @Entity
 @Table(name = "hydramodule_event_type", catalog = "hydra")
-public class EventType extends BaseOpenmrsMetadata {
+public class HydramoduleEventType extends BaseOpenmrsMetadata {
 
 	/**
 	 * 
@@ -24,7 +24,7 @@ public class EventType extends BaseOpenmrsMetadata {
 	@Column(name = "event_type_id", unique = true, nullable = false)
 	private Integer eventTypeId;
 
-	public EventType() {
+	public HydramoduleEventType() {
 		super();
 	}
 

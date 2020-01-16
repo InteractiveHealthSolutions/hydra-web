@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 import org.openmrs.BaseOpenmrsData;
 
-@Entity
+// @Entity
 @Table(name = "hydramodule_event_participants", catalog = "hydra")
 public class HydramoduleEventParticipants extends BaseOpenmrsData {
 
@@ -25,19 +25,19 @@ public class HydramoduleEventParticipants extends BaseOpenmrsData {
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "event_participant_id", unique = true, nullable = false)
 	private Integer eventParticipantId;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "event_id")
 	private HydramoduleEvent event;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "participant_id")
 	private HydramoduleParticipant participant;
-	
-	@Column(name="attendance")
+
+	@Column(name = "attendance")
 	private boolean attendance;
 
-	@Column(name="absence_reason")
+	@Column(name = "absence_reason")
 	private String absence_reason;
 
 	public HydramoduleEventParticipants() {

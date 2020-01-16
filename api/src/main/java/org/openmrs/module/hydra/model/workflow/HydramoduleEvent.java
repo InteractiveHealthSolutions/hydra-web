@@ -10,10 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.tools.DocumentationTool.Location;
 
 import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.openmrs.BaseOpenmrsData;
+import org.openmrs.Location;
 
 @Entity
 @Table(name = "hydramodule_event", catalog = "hydra")
@@ -45,11 +45,11 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 
 	@ManyToOne
 	@JoinColumn(name = "location_id")
-	private Location location;
+	Location location;
 
 	@ManyToOne
 	@JoinColumn(name = "event_type_id")
-	EventType eventType;
+	HydramoduleEventType eventType;
 
 	public HydramoduleEvent() {
 		super();
@@ -103,11 +103,11 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 		this.location = location;
 	}
 
-	public EventType getEventType() {
+	public HydramoduleEventType getEventType() {
 		return eventType;
 	}
 
-	public void setEventType(EventType eventType) {
+	public void setEventType(HydramoduleEventType eventType) {
 		this.eventType = eventType;
 	}
 

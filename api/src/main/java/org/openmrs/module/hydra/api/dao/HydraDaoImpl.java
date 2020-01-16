@@ -25,6 +25,12 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
@@ -390,7 +396,7 @@ public class HydraDaoImpl {
 	public HydramoduleParticipant getParticipant(String uuid) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleParticipant.class);
-		criteria.add(Restrictions.eq("participantId", uuid));
+		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("retired", false));
 		return (HydramoduleParticipant) criteria.uniqueResult();
 	}
@@ -414,7 +420,7 @@ public class HydraDaoImpl {
 	public HydramoduleParticipantSalaryType getParticipantSalaryType(String uuid) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleParticipantSalaryType.class);
-		criteria.add(Restrictions.eq("salaryTypeId", uuid));
+		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("retired", false));
 		return (HydramoduleParticipantSalaryType) criteria.uniqueResult();
 	}
@@ -424,6 +430,153 @@ public class HydraDaoImpl {
 		Criteria criteria = session.createCriteria(HydramoduleParticipantSalaryType.class);
 		criteria.addOrder(Order.asc("salaryTypeId"));
 		criteria.add(Restrictions.eq("retired", retired));
+		return criteria.list();
+	}
+
+	// Event
+	public HydramoduleEvent saveHydramoduleEvent(HydramoduleEvent serviceType) {
+		// System.out.println(serviceType.getUuid());
+		HydramoduleEventSchedule schedule = serviceType.getSchedule();
+		schedule = saveHydramoduleEventScedule(schedule);
+		serviceType.setSchedule(schedule);
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleEvent getHydramoduleEvent(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEvent.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("voided", false));
+		return (HydramoduleEvent) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleEvent> getAllHydramoduleEvents(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEvent.class);
+		criteria.addOrder(Order.asc("eventId"));
+		criteria.add(Restrictions.eq("voided", retired));
+		return criteria.list();
+	}
+
+	// EventScedule
+	public HydramoduleEventSchedule saveHydramoduleEventScedule(HydramoduleEventSchedule serviceType) {
+		// System.out.println(serviceType.getUuid());
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleEventSchedule getHydramoduleEventScedule(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEventSchedule.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("voided", false));
+		return (HydramoduleEventSchedule) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleEventSchedule> getAllHydramoduleEventScedules(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEventSchedule.class);
+		criteria.addOrder(Order.asc("scheduleId"));
+		criteria.add(Restrictions.eq("voided", retired));
+		return criteria.list();
+	}
+
+	// EventType
+	public HydramoduleEventType saveHydramoduleEventType(HydramoduleEventType serviceType) {
+		// System.out.println(serviceType.getUuid());
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleEventType getHydramoduleEventType(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEventType.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("retired", false));
+		return (HydramoduleEventType) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleEventType> getAllHydramoduleEventTypes(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEventType.class);
+		criteria.addOrder(Order.asc("eventTypeId"));
+		criteria.add(Restrictions.eq("retired", retired));
+		return criteria.list();
+	}
+
+	// EventAsset
+	public HydramoduleEventAsset saveHydramoduleEventAsset(HydramoduleEventAsset serviceType) {
+		// System.out.println(serviceType.getUuid());
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleEventAsset getHydramoduleEventAsset(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEventAsset.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("voided", false));
+		return (HydramoduleEventAsset) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleEventAsset> getAllHydramoduleEventAssets(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEventAsset.class);
+		criteria.addOrder(Order.asc("eventAssetId"));
+		criteria.add(Restrictions.eq("voided", retired));
+		return criteria.list();
+	}
+
+	// EventService
+	public HydramoduleEventService saveHydramoduleEventService(HydramoduleEventService serviceType) {
+		// System.out.println(serviceType.getUuid());
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleEventService getHydramoduleEventService(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEventService.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("voided", false));
+		return (HydramoduleEventService) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleEventService> getAllHydramoduleEventServices(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEventService.class);
+		criteria.addOrder(Order.asc("eventServiceId"));
+		criteria.add(Restrictions.eq("voided", retired));
+		return criteria.list();
+	}
+
+	// EventParticipant
+	public HydramoduleEventParticipants saveHydramoduleEventParticipant(HydramoduleEventParticipants serviceType) {
+		// System.out.println(serviceType.getUuid());
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleEventParticipants getHydramoduleEventParticipant(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEventParticipants.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("voided", false));
+		return (HydramoduleEventParticipants) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleEventParticipants> getAllHydramoduleEventParticipants(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEventParticipants.class);
+		criteria.addOrder(Order.asc("eventParticipantId"));
+		criteria.add(Restrictions.eq("voided", retired));
 		return criteria.list();
 	}
 }

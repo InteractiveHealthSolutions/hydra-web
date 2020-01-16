@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -74,6 +73,7 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 		description.addProperty("uuid");
 		description.addProperty("participantId");
 		description.addProperty("name");
+		description.addProperty("salaryValue");
 		description.addProperty("user", Representation.REF);
 		description.addProperty("salaryType", Representation.REF);
 
@@ -106,6 +106,9 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 		description.addProperty("description");
 		description.addProperty("uuid");
 		description.addProperty("participantId");
+		description.addProperty("salaryType");
+		description.addProperty("salaryValue");
+		description.addProperty("user");
 		return description;
 
 	}

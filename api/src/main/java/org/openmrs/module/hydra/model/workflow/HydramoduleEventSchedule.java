@@ -13,10 +13,11 @@ import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.openmrs.BaseOpenmrsData;
+import org.openmrs.BaseOpenmrsObject;
 
 @Entity
 @Table(name = "hydramodule_event_schedule", catalog = "hydra")
-public class HydramoduleEventSchedule extends BaseOpenmrsData {
+public class HydramoduleEventSchedule extends BaseOpenmrsObject {
 
 	/**
 	 * 
@@ -28,19 +29,18 @@ public class HydramoduleEventSchedule extends BaseOpenmrsData {
 	@Column(name = "schedule_id", unique = true, nullable = false)
 	private int scheduleId;
 
-	@Column(name="planned_date")
+	@Column(name = "planned_date")
 	private Date plannedDate;
 
-	@Column(name="event_date")
+	@Column(name = "event_date")
 	private Date eventDate;
 
-	@Column(name="reason_deferred")
+	@Column(name = "end_date")
+	private Date endDate;
+
+	@Column(name = "reason_deferred")
 	private String reasonDeferred;
 
-	@OneToOne(mappedBy="schedule")
-	@JsonBackReference
-	private HydramoduleEvent event;
-	
 	public HydramoduleEventSchedule() {
 		super();
 	}
@@ -85,5 +85,13 @@ public class HydramoduleEventSchedule extends BaseOpenmrsData {
 	@Override
 	public void setId(Integer id) {
 		this.scheduleId = id;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 }

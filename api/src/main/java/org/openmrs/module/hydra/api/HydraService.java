@@ -22,6 +22,12 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForms;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
@@ -186,4 +192,40 @@ public interface HydraService extends OpenmrsService {
 	List<HydramoduleParticipantSalaryType> getAllParticipantSalaryTypes(boolean retired) throws APIException;
 
 	HydramoduleParticipantSalaryType getParticipantSalaryType(String uuid) throws APIException;
+
+	HydramoduleEvent saveEvent(HydramoduleEvent service) throws APIException;
+
+	List<HydramoduleEvent> getAllEvents(boolean voided) throws APIException;
+
+	HydramoduleEvent getEvent(String uuid) throws APIException;
+
+	HydramoduleEventSchedule saveEventSchedule(HydramoduleEventSchedule service) throws APIException;
+
+	List<HydramoduleEventSchedule> getAllEventSchedules(boolean voided) throws APIException;
+
+	HydramoduleEventSchedule getEventSchedule(String uuid) throws APIException;
+
+	HydramoduleEventType saveEventType(HydramoduleEventType service) throws APIException;
+
+	List<HydramoduleEventType> getAllEventTypes(boolean voided) throws APIException;
+
+	HydramoduleEventType getEventType(String uuid) throws APIException;
+
+	HydramoduleEventService saveEventService(HydramoduleEventService service) throws APIException;
+
+	List<HydramoduleEventService> getAllEventServices(boolean voided) throws APIException;
+
+	HydramoduleEventService getEventService(String uuid) throws APIException;
+
+	HydramoduleEventAsset saveEventAsset(HydramoduleEventAsset service) throws APIException;
+
+	List<HydramoduleEventAsset> getAllEventAssets(boolean voided) throws APIException;
+
+	HydramoduleEventAsset getEventAsset(String uuid) throws APIException;
+
+	HydramoduleEventParticipants saveEventParticipant(HydramoduleEventParticipants service) throws APIException;
+
+	List<HydramoduleEventParticipants> getAllEventParticipants(boolean voided) throws APIException;
+
+	HydramoduleEventParticipants getEventParticipant(String uuid) throws APIException;
 }

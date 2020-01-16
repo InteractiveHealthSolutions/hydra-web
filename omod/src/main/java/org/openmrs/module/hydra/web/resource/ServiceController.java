@@ -68,6 +68,8 @@ public class ServiceController extends MetadataDelegatingCrudResource<Hydramodul
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("uuid");
 		description.addProperty("serviceId");
+		description.addProperty("unitCost");
+		description.addProperty("referenceId");
 		description.addProperty("name");
 		description.addProperty("serviceType", Representation.REF);
 
@@ -105,6 +107,8 @@ public class ServiceController extends MetadataDelegatingCrudResource<Hydramodul
 		description.addProperty("uuid");
 		description.addProperty("serviceId");
 		description.addProperty("retired");
+		description.addProperty("unitCost");
+		description.addProperty("referenceId");
 		return description;
 
 	}

@@ -450,8 +450,6 @@
 		</addColumn>
 	</changeSet>
 
-
-
 	<changeSet id="hydra-201905091201" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -741,13 +739,6 @@
 			referencedTableName="hydramodule_service_category" referencedColumnNames="service_category_id" />
 	</changeSet>
 	
-	
-	
-	
-	
-	
-	
-	
 	<changeSet id="hydra-202010011100" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -851,14 +842,7 @@
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	<changeSet id="hydra-201905091203" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -872,31 +856,89 @@
 			<column name="event_type_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="name" type="varchar(128)">
+			<column name="name" type="varchar(50)">
 				<constraints nullable="false" />
 			</column>
+			<column name="description" type="varchar(255)" defaultValue="null" />
+			<column name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
 		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_event_type_creator_fk"
+			baseTableName="hydramodule_event_type" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_type_changed_by_fk"
+			baseTableName="hydramodule_event_type" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_type_voided_by_fk"
+			baseTableName="hydramodule_event_type" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
+
 	<changeSet id="hydra-201905091204" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="hydramodule_schedule" />
+				<tableExists tableName="hydramodule_event_schedule" />
 			</not>
 		</preConditions>
 		<comment>
-			Creating the hydramodule_schedule table
+			Creating the hydramodule_event_schedule table
 		</comment>
-		<createTable tableName="hydramodule_schedule">
+		<createTable tableName="hydramodule_event_schedule">
 			<column name="schedule_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="date_planned" type="datetime">
+			<column name="planned_date" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="end_date" type="datetime">
 				<constraints nullable="false" />
 			</column>
 			<column name="event_date" type="datetime">
 			</column>
 			<column name="reason_deferred" type="varchar(255)"></column>
+			<column name="description" type="text">
+			</column>
+			<column defaultValueNumeric="0" name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column defaultValueBoolean="false" name="voided" type="boolean">
+				<constraints nullable="false" />
+			</column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
 		</createTable>
+
+		<addForeignKeyConstraint constraintName="hydramodule_event_schedule_creator_fk"
+			baseTableName="hydramodule_event_schedule" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_schedule_changed_by_fk"
+			baseTableName="hydramodule_event_schedule" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_schedule_voided_by_fk"
+			baseTableName="hydramodule_event_schedule" baseColumnNames="voided_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
 	<changeSet id="hydra-201905091205" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
@@ -949,7 +991,7 @@
 
 		<addForeignKeyConstraint constraintName="hydramodule_event_schedule_fk"
 			baseTableName="hydramodule_event" baseColumnNames="schedule_id"
-			referencedTableName="hydramodule_schedule" referencedColumnNames="schedule_id" />
+			referencedTableName="hydramodule_event_schedule" referencedColumnNames="schedule_id" />
 
 		<addForeignKeyConstraint constraintName="hydramodule_event_location_fk"
 			baseTableName="hydramodule_event" baseColumnNames="location_id"
@@ -979,7 +1021,7 @@
 			Creating the hydramodule_event_asset table
 		</comment>
 		<createTable tableName="hydramodule_event_asset">
-			<column name="id" type="int" autoIncrement="true">
+			<column name="event_asset_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 			<column name="event_id" type="int">
@@ -988,6 +1030,25 @@
 			<column name="asset_id" type="int">
 				<constraints nullable="false" />
 			</column>
+			<column name="description" type="text">
+			</column>
+			<column defaultValueNumeric="0" name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column defaultValueBoolean="false" name="voided" type="boolean">
+				<constraints nullable="false" />
+			</column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_event_asset_event_fk"
 			baseTableName="hydramodule_event_asset" baseColumnNames="event_id"
@@ -995,19 +1056,128 @@
 
 		<addForeignKeyConstraint constraintName="hydramodule_event_assest_asset_fk"
 			baseTableName="hydramodule_event_asset" baseColumnNames="asset_id"
-			referencedTableName="hydramodule_event_type" referencedColumnNames="event_type_id" />
+			referencedTableName="hydramodule_asset" referencedColumnNames="asset_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_asset_creator_fk"
+			baseTableName="hydramodule_event_asset" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_asset_changed_by_fk"
+			baseTableName="hydramodule_event_asset" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_asset_voided_by_fk"
+			baseTableName="hydramodule_event_asset" baseColumnNames="voided_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-	<!-- <changeSet id="hydra-201905091207" author="naveed.iqbal"> <preConditions 
-		onFail="MARK_RAN"> <not><tableExists tableName="hydramodule_event_participants"/></not> 
-		</preConditions> <comment> Creating the hydramodule_event_participants table 
-		</comment> <createTable tableName="hydramodule_event_participants"> <column 
-		name="id" type="int" autoIncrement="true"> <constraints primaryKey="true" 
-		nullable="false"/> </column> <column name="event_id" type="int"> <constraints 
-		nullable="false"/> </column> <column name="user_id" type="int"> <constraints 
-		nullable="false"/> </column> </createTable> <addForeignKeyConstraint constraintName="hydramodule_event_location_fk" 
-		baseTableName="hydramodule_event_participants" baseColumnNames="event_id" 
-		referencedTableName="hydramodule_event" referencedColumnNames="event_id" 
-		/> <addForeignKeyConstraint constraintName="hydramodule_event_event_type_fk" 
-		baseTableName="hydramodule_event_participants" baseColumnNames="asset_id" 
-		referencedTableName="users" referencedColumnNames="user_id" /> </changeSet> -->
+	
+	<changeSet id="hydra-202014010337" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_event_service" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_event_asset table
+		</comment>
+		<createTable tableName="hydramodule_event_service">
+			<column name="event_service_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="event_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="service_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="text">
+			</column>
+			<column defaultValueNumeric="0" name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column defaultValueBoolean="false" name="voided" type="boolean">
+				<constraints nullable="false" />
+			</column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_event_service_event_fk"
+			baseTableName="hydramodule_event_service" baseColumnNames="event_id"
+			referencedTableName="hydramodule_event" referencedColumnNames="event_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_service_service_fk"
+			baseTableName="hydramodule_event_service" baseColumnNames="service_id"
+			referencedTableName="hydramodule_service" referencedColumnNames="service_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_service_creator_fk"
+			baseTableName="hydramodule_event_service" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_service_changed_by_fk"
+			baseTableName="hydramodule_event_service" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_service_voided_by_fk"
+			baseTableName="hydramodule_event_service" baseColumnNames="voided_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
+	<changeSet id="hydra-202014010346" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_event_participants" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_event_asset table
+		</comment>
+		<createTable tableName="hydramodule_event_participants">
+			<column name="event_participant_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="event_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="participant_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="text">
+			</column>
+			<column defaultValueNumeric="0" name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column defaultValueBoolean="false" name="voided" type="boolean">
+				<constraints nullable="false" />
+			</column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_event_participants_event_fk"
+			baseTableName="hydramodule_event_participants" baseColumnNames="event_id"
+			referencedTableName="hydramodule_event" referencedColumnNames="event_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_participants_participant_fk"
+			baseTableName="hydramodule_event_participants" baseColumnNames="participant_id"
+			referencedTableName="hydramodule_participant" referencedColumnNames="participant_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_participants_creator_fk"
+			baseTableName="hydramodule_event_participants" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_participants_changed_by_fk"
+			baseTableName="hydramodule_event_participants" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_event_participants_voided_by_fk"
+			baseTableName="hydramodule_event_participants" baseColumnNames="voided_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
 </databaseChangeLog>
