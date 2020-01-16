@@ -558,6 +558,9 @@
 			<column name="asset_type_id" type="int"></column>
 			<column name="asset_category_id" type="int" />
 			
+			<column name="fixed_asset" type="BOOLEAN" defaultValueBoolean="true">
+				<constraints nullable="false" />
+			</column>
 			<column name="name" type="varchar(50)">
 				<constraints nullable="false" />
 			</column>

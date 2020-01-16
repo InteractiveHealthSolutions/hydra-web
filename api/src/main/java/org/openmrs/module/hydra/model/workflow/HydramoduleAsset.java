@@ -3,7 +3,7 @@ package org.openmrs.module.hydra.model.workflow;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +30,9 @@ public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializabl
 
 	@Column(name = "capital_value")
 	private String capitalValue;
+
+	@Column(name = "fixed_asset")
+	private String fixedAsset;
 
 	@Column(name = "reference_id")
 	private String referenceId;
@@ -102,5 +105,17 @@ public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializabl
 	public void setId(Integer id) {
 		assetId = id;
 
+	}
+
+	public String getFixedAsset() {
+		return fixedAsset;
+	}
+
+	public void setFixedAsset(String fixedAsset) {
+		this.fixedAsset = fixedAsset;
+	}
+
+	public void setAssetId(Integer assetId) {
+		this.assetId = assetId;
 	}
 }
