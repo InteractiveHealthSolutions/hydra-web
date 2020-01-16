@@ -108,6 +108,7 @@ public class ServiceController extends MetadataDelegatingCrudResource<Hydramodul
 		description.addProperty("serviceId");
 		description.addProperty("retired");
 		description.addProperty("unitCost");
+		description.addProperty("serviceType");
 		description.addProperty("referenceId");
 		return description;
 

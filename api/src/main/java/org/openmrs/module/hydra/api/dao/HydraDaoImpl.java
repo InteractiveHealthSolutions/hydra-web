@@ -294,6 +294,11 @@ public class HydraDaoImpl {
 
 	// Service
 	public HydramoduleService saveService(HydramoduleService service) {
+		HydramoduleServiceType serviceType = service.getServiceType();
+		if (serviceType != null) {
+			serviceType = getServiceType(serviceType.getUuid());
+			service.setServiceType(serviceType);
+		}
 		getSession().saveOrUpdate(service);
 		getSession().flush();
 		return service;
