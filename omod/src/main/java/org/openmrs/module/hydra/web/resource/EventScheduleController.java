@@ -15,14 +15,14 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
-import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource;
+import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
         + "/hydra/eventSchedule", supportedClass = HydramoduleEventSchedule.class, supportedOpenmrsVersions = {
                 "2.0.*,2.1.*,2.2.*" })
-public class EventScheduleController extends DelegatingCrudResource<HydramoduleEventSchedule> {
+public class EventScheduleController extends DataDelegatingCrudResource<HydramoduleEventSchedule> {
 
 	/**
 	 * Logger for this class
@@ -98,8 +98,9 @@ public class EventScheduleController extends DelegatingCrudResource<HydramoduleE
 	}
 
 	@Override
-	protected void delete(HydramoduleEventSchedule arg0, String arg1, RequestContext arg2) throws ResponseException {
+	protected void delete(HydramoduleEventSchedule delegate, String reason, RequestContext context)
+	        throws ResponseException {
+		// TODO Auto-generated method stub
 
 	}
-
 }

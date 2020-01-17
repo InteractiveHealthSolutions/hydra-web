@@ -13,11 +13,12 @@ import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.openmrs.BaseOpenmrsData;
+import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.BaseOpenmrsObject;
 
 @Entity
 @Table(name = "hydramodule_event_schedule", catalog = "hydra")
-public class HydramoduleEventSchedule extends BaseOpenmrsObject {
+public class HydramoduleEventSchedule extends BaseOpenmrsData {
 
 	/**
 	 * 
