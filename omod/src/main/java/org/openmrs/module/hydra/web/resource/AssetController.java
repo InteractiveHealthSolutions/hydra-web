@@ -76,8 +76,6 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 		description.addProperty("dateProcured");
 		description.addProperty("fixedAsset");
 		description.addProperty("name");
-		description.addProperty("assetType", Representation.REF);
-		description.addProperty("assetCategory", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
 
@@ -94,7 +92,7 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 			description.addProperty("dateRetired");
 			description.addProperty("retiredBy");
 			description.addProperty("retireReason");
-
+			description.addProperty("assetType", Representation.REF);
 			return description;
 		}
 		return description;
@@ -112,7 +110,6 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 		description.addProperty("fixedAsset");
 		description.addProperty("dateProcured");
 		description.addProperty("assetType");
-		description.addProperty("assetCategory");
 		return description;
 
 	}

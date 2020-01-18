@@ -331,6 +331,11 @@ public class HydraDaoImpl {
 
 	// AssetType
 	public HydramoduleAssetType saveAssetType(HydramoduleAssetType serviceType) {
+		HydramoduleAssetCategory assetCategory = serviceType.getAssetCategory();
+		if (assetCategory != null) {
+			assetCategory = getAssetCategory(assetCategory.getUuid());
+			serviceType.setAssetCategory(assetCategory);
+		}
 		getSession().saveOrUpdate(serviceType);
 		getSession().flush();
 		return serviceType;
@@ -378,15 +383,11 @@ public class HydraDaoImpl {
 	// Asset
 	public HydramoduleAsset saveAsset(HydramoduleAsset serviceType) {
 		HydramoduleAssetType assetType = serviceType.getAssetType();
-		HydramoduleAssetCategory assetCategory = serviceType.getAssetCategory();
 		if (assetType != null) {
 			assetType = getAssetType(assetType.getUuid());
 			serviceType.setAssetType(assetType);
 		}
-		if (assetCategory != null) {
-			assetCategory = getAssetCategory(assetCategory.getUuid());
-			serviceType.setAssetCategory(assetCategory);
-		}
+
 		// System.out.println(serviceType.getUuid());
 		getSession().saveOrUpdate(serviceType);
 		getSession().flush();

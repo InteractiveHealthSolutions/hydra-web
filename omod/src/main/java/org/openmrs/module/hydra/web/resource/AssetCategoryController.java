@@ -73,7 +73,6 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 		description.addProperty("name");
 
 		if (representation instanceof DefaultRepresentation) {
-
 			return description;
 		} else if (representation instanceof FullRepresentation) {
 
@@ -86,7 +85,7 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 			description.addProperty("dateRetired");
 			description.addProperty("retiredBy");
 			description.addProperty("retireReason");
-
+			description.addProperty("assetTypes", Representation.DEFAULT);
 			return description;
 		}
 		return description;

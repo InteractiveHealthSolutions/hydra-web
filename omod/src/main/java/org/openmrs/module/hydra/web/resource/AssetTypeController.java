@@ -72,16 +72,10 @@ public class AssetTypeController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("name");
 
 		if (representation instanceof DefaultRepresentation) {
-			/*
-			 * description.addProperty("display"); description.addProperty("concept");
-			 */
+			description.addProperty("assets", Representation.REF);
 			return description;
 
 		} else if (representation instanceof FullRepresentation) {
-
-			/*
-			 * description.addProperty("display"); description.addProperty("concept");
-			 */
 
 			description.addProperty("dateCreated");
 
@@ -92,6 +86,8 @@ public class AssetTypeController extends MetadataDelegatingCrudResource<Hydramod
 			description.addProperty("dateRetired");
 			description.addProperty("retiredBy");
 			description.addProperty("retireReason");
+			description.addProperty("assets", Representation.REF);
+			description.addProperty("assetCategory", Representation.REF);
 
 			return description;
 		}
@@ -105,6 +101,7 @@ public class AssetTypeController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("retired");
 		description.addProperty("uuid");
 		description.addProperty("assetTypeId");
+		description.addProperty("assetCategory");
 
 		return description;
 

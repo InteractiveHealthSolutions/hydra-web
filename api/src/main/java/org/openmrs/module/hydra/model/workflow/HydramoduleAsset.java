@@ -44,10 +44,6 @@ public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializabl
 	@JoinColumn(name = "asset_type_id")
 	private HydramoduleAssetType assetType;
 
-	@ManyToOne
-	@JoinColumn(name = "asset_category_id")
-	private HydramoduleAssetCategory assetCategory;
-
 	public int getAssetId() {
 		return assetId;
 	}
@@ -86,14 +82,6 @@ public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializabl
 
 	public void setAssetType(HydramoduleAssetType assetType) {
 		this.assetType = assetType;
-	}
-
-	public HydramoduleAssetCategory getAssetCategory() {
-		return assetCategory;
-	}
-
-	public void setAssetCategory(HydramoduleAssetCategory assetCategory) {
-		this.assetCategory = assetCategory;
 	}
 
 	@Override

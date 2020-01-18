@@ -101,7 +101,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_form_tag_creator_fk"
 			baseTableName="hydramodule_form_tag" baseColumnNames="creator"
@@ -179,7 +181,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_workflow_creator_fk"
 			baseTableName="hydramodule_workflow" baseColumnNames="creator"
@@ -230,7 +234,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_phase_creator_fk"
 			baseTableName="hydramodule_phase" baseColumnNames="creator"
@@ -281,7 +287,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_component_creator_fk"
 			baseTableName="hydramodule_component" baseColumnNames="creator"
@@ -316,7 +324,9 @@
 			<column name="phase_id" type="int">
 				<constraints nullable="false" />
 			</column>
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_workflow_phase_phase_fk"
 			baseTableName="hydramodule_workflow_phases" baseColumnNames="phase_id"
@@ -345,7 +355,9 @@
 			<column name="phase_id" type="int">
 				<constraints nullable="false" />
 			</column>
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_phase_components_component_fk"
 			baseTableName="hydramodule_phase_components" baseColumnNames="component_id"
@@ -377,7 +389,9 @@
 			<column name="hydra_form_id" type="int">
 				<constraints nullable="false" />
 			</column>
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_component_forms_form_fk"
 			baseTableName="hydramodule_component_forms" baseColumnNames="hydra_form_id"
@@ -395,7 +409,8 @@
 			</not>
 		</preConditions>
 		<comment>
-			Adding column 'display_order' in hydramodule_component_forms table
+			Adding column 'display_order' in hydramodule_component_forms
+			table
 		</comment>
 		<addColumn tableName="hydramodule_component_forms">
 			<column name="workflow_id" type="int">
@@ -418,7 +433,8 @@
 			</not>
 		</preConditions>
 		<comment>
-			Adding column 'display_order' in hydramodule_phase_components table
+			Adding column 'display_order' in hydramodule_phase_components
+			table
 		</comment>
 		<addColumn tableName="hydramodule_phase_components">
 			<column name="workflow_id" type="int">
@@ -441,7 +457,8 @@
 			</not>
 		</preConditions>
 		<comment>
-			Adding column 'display_order' in hydramodule_workflow_phases table
+			Adding column 'display_order' in hydramodule_workflow_phases
+			table
 		</comment>
 		<addColumn tableName="hydramodule_workflow_phases">
 			<column name="display_order" type="int">
@@ -450,51 +467,6 @@
 		</addColumn>
 	</changeSet>
 
-	<changeSet id="hydra-201905091201" author="naveed.iqbal">
-		<preConditions onFail="MARK_RAN">
-			<not>
-				<tableExists tableName="hydramodule_asset_type" />
-			</not>
-		</preConditions>
-		<comment>
-			Creating the hydramodule_asset_type table
-		</comment>
-		<createTable tableName="hydramodule_asset_type">
-				<column name="asset_type_id" type="int" autoIncrement="true">
-					<constraints primaryKey="true" nullable="false" />
-				</column>
-				<column name="name" type="varchar(50)">
-					<constraints nullable="false" />
-				</column>
-				<column name="description" type="varchar(255)" defaultValue="" />
-				<column name="creator" type="int">
-					<constraints nullable="false" />
-				</column>
-				<column name="date_created" type="datetime">
-					<constraints nullable="false" />
-				</column>
-				<column name="changed_by" type="int" />
-				<column name="date_changed" type="datetime" />
-				<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
-					<constraints nullable="false" />
-				</column>
-				<column name="retired_by" type="int" />
-				<column name="date_retired" type="datetime" />
-				<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-				<column name="uuid" type="char(38)">
-					<constraints unique="true"/>
-				</column>
-	  </createTable>
-		<addForeignKeyConstraint constraintName="hydramodule_asset_type_creator_fk"
-			baseTableName="hydramodule_asset_type" baseColumnNames="creator"
-			referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_asset_type_changed_by_fk"
-			baseTableName="hydramodule_asset_type" baseColumnNames="changed_by"
-			referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_asset_type_voided_by_fk"
-			baseTableName="hydramodule_asset_type" baseColumnNames="retired_by"
-			referencedTableName="users" referencedColumnNames="user_id" />
-	</changeSet>
 	<changeSet id="hydra-201905091245" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -526,7 +498,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_asset_category_creator_fk"
 			baseTableName="hydramodule_asset_category" baseColumnNames="creator"
@@ -538,7 +512,59 @@
 			baseTableName="hydramodule_asset_category" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-	
+	<changeSet id="hydra-201905091201" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_asset_type" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_asset_type table
+		</comment>
+		<createTable tableName="hydramodule_asset_type">
+			<column name="asset_type_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="asset_category_id" type="int" />
+
+			<column name="description" type="varchar(255)" defaultValue="" />
+			<column name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_asset_type_creator_fk"
+			baseTableName="hydramodule_asset_type" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_asset_type_changed_by_fk"
+			baseTableName="hydramodule_asset_type" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_asset_type_voided_by_fk"
+			baseTableName="hydramodule_asset_type" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_asset_type_asset_category_id_fk"
+			baseTableName="hydramodule_asset_type" baseColumnNames="asset_category_id"
+			referencedTableName="hydramodule_asset_category"
+			referencedColumnNames="asset_category_id" />
+
+	</changeSet>
+
 	<changeSet id="hydra-201905091202" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -556,8 +582,7 @@
 			<column name="reference_id" type="varchar(45)"></column>
 			<column name="date_procured" type="datetime"></column>
 			<column name="asset_type_id" type="int"></column>
-			<column name="asset_category_id" type="int" />
-			
+
 			<column name="fixed_asset" type="BOOLEAN" defaultValueBoolean="true">
 				<constraints nullable="false" />
 			</column>
@@ -579,7 +604,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_asset_creator_fk"
 			baseTableName="hydramodule_asset" baseColumnNames="creator"
@@ -593,11 +620,8 @@
 		<addForeignKeyConstraint constraintName="hydramodule_asset_asset_type_id_fk"
 			baseTableName="hydramodule_asset" baseColumnNames="asset_type_id"
 			referencedTableName="hydramodule_asset_type" referencedColumnNames="asset_type_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_asset_asset_category_id_fk"
-			baseTableName="hydramodule_asset" baseColumnNames="asset_category_id"
-			referencedTableName="hydramodule_asset_category" referencedColumnNames="asset_category_id" />
 	</changeSet>
-	
+
 	<changeSet id="hydra-202001011201" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -629,7 +653,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_service_type_creator_fk"
 			baseTableName="hydramodule_service_type" baseColumnNames="creator"
@@ -641,7 +667,7 @@
 			baseTableName="hydramodule_service_type" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-	
+
 	<changeSet id="hydra-202001011245" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -673,7 +699,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_service_category_creator_fk"
 			baseTableName="hydramodule_service_category" baseColumnNames="creator"
@@ -685,7 +713,7 @@
 			baseTableName="hydramodule_service_category" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-	
+
 	<changeSet id="hydra-202001011202" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -704,7 +732,7 @@
 			<column name="service_type_id" type="int">
 			</column>
 			<column name="service_category_id" type="int" />
-			
+
 			<column name="name" type="varchar(50)">
 				<constraints nullable="false" />
 			</column>
@@ -723,7 +751,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_service_creator_fk"
 			baseTableName="hydramodule_service" baseColumnNames="creator"
@@ -739,9 +769,10 @@
 			referencedTableName="hydramodule_service_type" referencedColumnNames="service_type_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_service_service_category_id_fk"
 			baseTableName="hydramodule_service" baseColumnNames="service_category_id"
-			referencedTableName="hydramodule_service_category" referencedColumnNames="service_category_id" />
+			referencedTableName="hydramodule_service_category"
+			referencedColumnNames="service_category_id" />
 	</changeSet>
-	
+
 	<changeSet id="hydra-202010011100" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -755,7 +786,7 @@
 			<column name="salary_type_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			
+
 			<column name="name" type="varchar(50)">
 				<constraints nullable="false" />
 			</column>
@@ -774,7 +805,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_salary_type_creator_fk"
 			baseTableName="hydramodule_participant_salary_type" baseColumnNames="creator"
@@ -786,7 +819,7 @@
 			baseTableName="hydramodule_participant_salary_type" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-	
+
 	<changeSet id="hydra-202010011058" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -803,7 +836,7 @@
 			<column name="salary_value" type="varchar(8)"></column>
 			<column name="user_id" type="int"></column>
 			<column name="salary_type_id" type="int"></column>
-			
+
 			<column name="name" type="varchar(50)">
 				<constraints nullable="false" />
 			</column>
@@ -822,7 +855,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_participant_creator_fk"
 			baseTableName="hydramodule_participant" baseColumnNames="creator"
@@ -833,18 +868,19 @@
 		<addForeignKeyConstraint constraintName="hydramodule_participant_voided_by_fk"
 			baseTableName="hydramodule_participant" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
-			
+
 		<addForeignKeyConstraint constraintName="hydramodule_participant_salary_type_id_fk"
 			baseTableName="hydramodule_participant" baseColumnNames="salary_type_id"
-			referencedTableName="hydramodule_participant_salary_type" referencedColumnNames="salary_type_id" />
+			referencedTableName="hydramodule_participant_salary_type"
+			referencedColumnNames="salary_type_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_participant_user_id_fk"
 			baseTableName="hydramodule_participant" baseColumnNames="user_id"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-	
-	
-	
-	
+
+
+
+
 
 	<changeSet id="hydra-201905091203" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
@@ -877,7 +913,9 @@
 			<column name="retired_by" type="int" />
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)"><constraints unique="true"/></column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_event_type_creator_fk"
 			baseTableName="hydramodule_event_type" baseColumnNames="creator"
@@ -994,7 +1032,8 @@
 
 		<addForeignKeyConstraint constraintName="hydramodule_event_schedule_fk"
 			baseTableName="hydramodule_event" baseColumnNames="schedule_id"
-			referencedTableName="hydramodule_event_schedule" referencedColumnNames="schedule_id" />
+			referencedTableName="hydramodule_event_schedule"
+			referencedColumnNames="schedule_id" />
 
 		<addForeignKeyConstraint constraintName="hydramodule_event_location_fk"
 			baseTableName="hydramodule_event" baseColumnNames="location_id"
@@ -1070,7 +1109,7 @@
 			baseTableName="hydramodule_event_asset" baseColumnNames="voided_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-	
+
 	<changeSet id="hydra-202014010337" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -1126,7 +1165,7 @@
 			baseTableName="hydramodule_event_service" baseColumnNames="voided_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-	
+
 	<changeSet id="hydra-202014010346" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -1169,18 +1208,20 @@
 		<addForeignKeyConstraint constraintName="hydramodule_event_participants_event_fk"
 			baseTableName="hydramodule_event_participants" baseColumnNames="event_id"
 			referencedTableName="hydramodule_event" referencedColumnNames="event_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_event_participants_participant_fk"
+		<addForeignKeyConstraint
+			constraintName="hydramodule_event_participants_participant_fk"
 			baseTableName="hydramodule_event_participants" baseColumnNames="participant_id"
 			referencedTableName="hydramodule_participant" referencedColumnNames="participant_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_event_participants_creator_fk"
 			baseTableName="hydramodule_event_participants" baseColumnNames="creator"
 			referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_event_participants_changed_by_fk"
+		<addForeignKeyConstraint
+			constraintName="hydramodule_event_participants_changed_by_fk"
 			baseTableName="hydramodule_event_participants" baseColumnNames="changed_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_event_participants_voided_by_fk"
 			baseTableName="hydramodule_event_participants" baseColumnNames="voided_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-	
+
 </databaseChangeLog>
