@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.openmrs.BaseOpenmrsMetadata;
-import org.openmrs.BaseOpenmrsObject;
 
 @Entity
 @Table(name = "hydramodule_participant_salary_type", catalog = "hydra")

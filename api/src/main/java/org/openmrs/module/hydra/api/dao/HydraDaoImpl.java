@@ -20,7 +20,6 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
-import org.openmrs.module.hydra.model.workflow.HydraModuleServiceCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
@@ -300,13 +299,6 @@ public class HydraDaoImpl {
 			serviceType = getServiceType(serviceType.getUuid());
 			service.setServiceType(serviceType);
 		}
-
-		/*
-		 * HydraModuleServiceCategory serviceCategory = service.getServiceCategory(); if
-		 * (serviceCategory != null) { serviceCategory =
-		 * getServiceCategory(serviceCategory.getUuid());
-		 * service.setServiceCategory(serviceCategory);; }
-		 */
 
 		getSession().saveOrUpdate(service);
 		getSession().flush();

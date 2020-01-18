@@ -3,7 +3,6 @@ package org.openmrs.module.hydra.model.workflow;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
