@@ -1076,6 +1076,8 @@
 			</column>
 			<column name="actual_cost" type="text">
 			</column>
+			<column name="planned_for_event" type="int" />
+			<column name="available_in_event" type="int" />
 			<column name="description" type="text">
 			</column>
 			<column defaultValueNumeric="0" name="creator" type="int">
@@ -1137,6 +1139,8 @@
 			</column>
 			<column name="actual_cost" type="text">
 			</column>
+			<column name="planned_for_event" type="int" />
+			<column name="available_in_event" type="int" />
 			<column name="description" type="text">
 			</column>
 			<column defaultValueNumeric="0" name="creator" type="int">

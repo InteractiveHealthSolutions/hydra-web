@@ -71,6 +71,8 @@ public class EventAssetController extends DataDelegatingCrudResource<Hydramodule
 		description.addProperty("eventAssetId");
 		description.addProperty("quantity");
 		description.addProperty("actualCost");
+		description.addProperty("plannedForEvent");
+		description.addProperty("availableInEvent");
 		description.addProperty("description");
 		description.addProperty("asset", Representation.FULL);
 
@@ -103,6 +105,8 @@ public class EventAssetController extends DataDelegatingCrudResource<Hydramodule
 		description.addProperty("event");
 		description.addProperty("quantity");
 		description.addProperty("actualCost");
+		description.addProperty("plannedForEvent");
+		description.addProperty("availableInEvent");
 		description.addProperty("description");
 		return description;
 

@@ -71,6 +71,8 @@ public class EventServiceController extends DataDelegatingCrudResource<Hydramodu
 		description.addProperty("eventServiceId");
 		description.addProperty("quantity");
 		description.addProperty("actualCost");
+		description.addProperty("plannedForEvent");
+		description.addProperty("availableInEvent");
 		description.addProperty("description");
 		description.addProperty("service", Representation.FULL);
 
@@ -103,6 +105,8 @@ public class EventServiceController extends DataDelegatingCrudResource<Hydramodu
 		description.addProperty("service");
 		description.addProperty("quantity");
 		description.addProperty("actualCost");
+		description.addProperty("plannedForEvent");
+		description.addProperty("availableInEvent");
 		description.addProperty("description");
 		return description;
 

@@ -35,13 +35,19 @@ public class HydramoduleEventService extends BaseOpenmrsData {
 	private HydramoduleService service;
 
 	@Column(name = "quantity")
-	private int quantity;
+	private Integer quantity;
 
 	@Column(name = "actual_cost")
 	private String actualCost;
 
 	@Column(name = "description")
 	private String description;
+	
+	@Column(name = "planned_for_event")
+	private Boolean plannedForEvent;
+	
+	@Column(name = "available_in_event")
+	private Boolean availableInEvent;
 
 	public HydramoduleEventService() {
 		super();
@@ -71,11 +77,11 @@ public class HydramoduleEventService extends BaseOpenmrsData {
 		this.service = service;
 	}
 
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
@@ -103,6 +109,22 @@ public class HydramoduleEventService extends BaseOpenmrsData {
 
 	public void setActualCost(String actualCost) {
 		this.actualCost = actualCost;
+	}
+
+	public Boolean getPlannedForEvent() {
+		return plannedForEvent;
+	}
+
+	public void setPlannedForEvent(Boolean plannedForEvent) {
+		this.plannedForEvent = plannedForEvent;
+	}
+
+	public Boolean getAvailableInEvent() {
+		return availableInEvent;
+	}
+
+	public void setAvailableInEvent(Boolean availableInEvent) {
+		this.availableInEvent = availableInEvent;
 	}
 
 }

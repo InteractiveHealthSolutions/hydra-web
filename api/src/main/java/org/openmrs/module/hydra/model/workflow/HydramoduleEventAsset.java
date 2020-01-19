@@ -42,6 +42,12 @@ public class HydramoduleEventAsset extends BaseOpenmrsData {
 
 	@Column(name = "description")
 	private String description;
+	
+	@Column(name = "planned_for_event")
+	private Boolean plannedForEvent;
+	
+	@Column(name = "available_in_event")
+	private Boolean availableInEvent;
 
 	public HydramoduleEventAsset() {
 		super();
@@ -103,5 +109,21 @@ public class HydramoduleEventAsset extends BaseOpenmrsData {
 
 	public void setActualCost(String actualCost) {
 		this.actualCost = actualCost;
+	}
+	
+	public Boolean getPlannedForEvent() {
+		return plannedForEvent;
+	}
+
+	public void setPlannedForEvent(Boolean plannedForEvent) {
+		this.plannedForEvent = plannedForEvent;
+	}
+
+	public Boolean getAvailableInEvent() {
+		return availableInEvent;
+	}
+
+	public void setAvailableInEvent(Boolean availableInEvent) {
+		this.availableInEvent = availableInEvent;
 	}
 }

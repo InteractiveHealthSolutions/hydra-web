@@ -454,15 +454,7 @@ public class HydraDaoImpl {
 	// Event
 	public HydramoduleEvent saveHydramoduleEvent(HydramoduleEvent event) {
 		Integer eventId = event.getEventId();
-		/*
-		 * if (eventId != null) { HydramoduleEventSchedule eventSchedule =
-		 * event.getSchedule(); HydramoduleEvent existingEvent =
-		 * getHydramoduleEvent(eventId);
-		 * eventSchedule.setScheduleId(existingEvent.getSchedule().getScheduleId());
-		 * eventSchedule = saveHydramoduleEventScedule(eventSchedule);
-		 * getSession().saveOrUpdate(event); getSession().flush(); return event; }
-		 */
-
+		
 		HydramoduleEventSchedule schedule = event.getSchedule();
 		schedule = saveHydramoduleEventScedule(schedule);
 		event.setSchedule(schedule);
