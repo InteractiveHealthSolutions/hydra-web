@@ -1072,6 +1072,10 @@
 			<column name="asset_id" type="int">
 				<constraints nullable="false" />
 			</column>
+			<column name="quantity" type="int">
+			</column>
+			<column name="actual_cost" type="text">
+			</column>
 			<column name="description" type="text">
 			</column>
 			<column defaultValueNumeric="0" name="creator" type="int">
@@ -1128,6 +1132,10 @@
 			</column>
 			<column name="service_id" type="int">
 				<constraints nullable="false" />
+			</column>
+			<column name="quantity" type="int">
+			</column>
+			<column name="actual_cost" type="text">
 			</column>
 			<column name="description" type="text">
 			</column>

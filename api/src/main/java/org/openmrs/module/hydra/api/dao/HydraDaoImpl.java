@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.hydra.api.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -451,14 +452,41 @@ public class HydraDaoImpl {
 	}
 
 	// Event
-	public HydramoduleEvent saveHydramoduleEvent(HydramoduleEvent serviceType) {
-		// System.out.println(serviceType.getUuid());
-		HydramoduleEventSchedule schedule = serviceType.getSchedule();
+	public HydramoduleEvent saveHydramoduleEvent(HydramoduleEvent event) {
+
+		HydramoduleEventSchedule schedule = event.getSchedule();
 		schedule = saveHydramoduleEventScedule(schedule);
-		serviceType.setSchedule(schedule);
-		getSession().saveOrUpdate(serviceType);
+		event.setSchedule(schedule);
+		getSession().saveOrUpdate(event);
 		getSession().flush();
-		return serviceType;
+
+		// TODO #BadPractice, code below block should be in service class not there!
+		{
+			// saving EventAssets
+			List<HydramoduleEventAsset> assets = event.getEventAssets();
+			List<HydramoduleEventAsset> persistantAssets = new ArrayList<HydramoduleEventAsset>();
+			if (assets != null) {
+				if (assets.size() > 0) {
+					for (HydramoduleEventAsset asset : assets) {
+						asset.setEvent(event);
+						persistantAssets.add(saveHydramoduleEventAsset(asset));
+					}
+				}
+			}
+
+			// saving EventServices
+			List<HydramoduleEventService> services = event.getEventServices();
+			List<HydramoduleEventService> persistantServices = new ArrayList<HydramoduleEventService>();
+			if (services != null) {
+				if (services.size() > 0) {
+					for (HydramoduleEventService service : services) {
+						service.setEvent(event);
+						persistantServices.add(saveHydramoduleEventService(service));
+					}
+				}
+			}
+		}
+		return event;
 	}
 
 	public HydramoduleEvent getHydramoduleEvent(String uuid) {
@@ -479,7 +507,6 @@ public class HydraDaoImpl {
 
 	// EventScedule
 	public HydramoduleEventSchedule saveHydramoduleEventScedule(HydramoduleEventSchedule serviceType) {
-		// System.out.println(serviceType.getUuid());
 		getSession().saveOrUpdate(serviceType);
 		getSession().flush();
 		return serviceType;
@@ -526,11 +553,18 @@ public class HydraDaoImpl {
 	}
 
 	// EventAsset
-	public HydramoduleEventAsset saveHydramoduleEventAsset(HydramoduleEventAsset serviceType) {
-		// System.out.println(serviceType.getUuid());
-		getSession().saveOrUpdate(serviceType);
+	public HydramoduleEventAsset saveHydramoduleEventAsset(HydramoduleEventAsset eventAsset) {
+		HydramoduleAsset asset = eventAsset.getAsset();
+		asset = getAsset(asset.getUuid());
+		eventAsset.setAsset(asset);
+
+		HydramoduleEvent event = eventAsset.getEvent();
+		event = getHydramoduleEvent(event.getUuid());
+		eventAsset.setEvent(event);
+
+		getSession().saveOrUpdate(eventAsset);
 		getSession().flush();
-		return serviceType;
+		return eventAsset;
 	}
 
 	public HydramoduleEventAsset getHydramoduleEventAsset(String uuid) {

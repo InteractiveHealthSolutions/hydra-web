@@ -2,12 +2,15 @@ package org.openmrs.module.hydra.model.workflow;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -50,6 +53,12 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 	@ManyToOne
 	@JoinColumn(name = "event_type_id")
 	HydramoduleEventType eventType;
+
+	@OneToMany(mappedBy = "event")
+	List<HydramoduleEventAsset> eventAssets;
+
+	@OneToMany(mappedBy = "event")
+	List<HydramoduleEventService> eventServices;
 
 	public HydramoduleEvent() {
 		super();
@@ -119,6 +128,22 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 	@Override
 	public void setId(Integer id) {
 		this.eventId = id;
+	}
+
+	public List<HydramoduleEventAsset> getEventAssets() {
+		return eventAssets;
+	}
+
+	public void setEventAssets(List<HydramoduleEventAsset> eventAssets) {
+		this.eventAssets = eventAssets;
+	}
+
+	public List<HydramoduleEventService> getEventServices() {
+		return eventServices;
+	}
+
+	public void setEventServices(List<HydramoduleEventService> eventServices) {
+		this.eventServices = eventServices;
 	}
 
 }

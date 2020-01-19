@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -15,14 +15,14 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
-import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/assetCategory", supportedClass = HydramoduleAssetCategory.class, supportedOpenmrsVersions = {
+        + "/hydra/eventService", supportedClass = HydramoduleEventService.class, supportedOpenmrsVersions = {
                 "2.0.*,2.1.*,2.2.*" })
-public class AssetCategoryController extends MetadataDelegatingCrudResource<HydramoduleAssetCategory> {
+public class EventServiceController extends DataDelegatingCrudResource<HydramoduleEventService> {
 
 	/**
 	 * Logger for this class
@@ -33,31 +33,31 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 	private HydraService service = Context.getService(HydraService.class);
 
 	@Override
-	public HydramoduleAssetCategory newDelegate() {
-		return new HydramoduleAssetCategory();
+	public HydramoduleEventService newDelegate() {
+		return new HydramoduleEventService();
 	}
 
 	@Override
-	public HydramoduleAssetCategory save(HydramoduleAssetCategory component) {
-		return service.saveAssetCategory(component);
+	public HydramoduleEventService save(HydramoduleEventService component) {
+		return service.saveEventService(component);
 	}
 
 	@Override
-	public HydramoduleAssetCategory getByUniqueId(String uuid) {
-		return service.getAssetCategory(uuid);
+	public HydramoduleEventService getByUniqueId(String uuid) {
+		return service.getEventService(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleAssetCategory> services = service.getAllAssetCategories(true);
-		services.addAll(service.getAllAssetCategories(false));
-		simpleObject.put("services", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
+		List<HydramoduleEventService> services = service.getAllEventServices(true);
+		services.addAll(service.getAllEventServices(false));
+		simpleObject.put("eventServices", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}
 
 	@Override
-	public void purge(HydramoduleAssetCategory component, RequestContext context) throws ResponseException {
+	public void purge(HydramoduleEventService component, RequestContext context) throws ResponseException {
 		// service.purgeComponent(component);
 	}
 
@@ -68,8 +68,11 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("uuid");
-		description.addProperty("assetCategoryId");
-		description.addProperty("name");
+		description.addProperty("eventServiceId");
+		description.addProperty("quantity");
+		description.addProperty("actualCost");
+		description.addProperty("description");
+		description.addProperty("service", Representation.FULL);
 
 		if (representation instanceof DefaultRepresentation) {
 			return description;
@@ -80,11 +83,11 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 			description.addProperty("changedBy");
 			description.addProperty("dateChanged");
 
-			description.addProperty("retired");
-			description.addProperty("dateRetired");
-			description.addProperty("retiredBy");
-			description.addProperty("retireReason");
-			description.addProperty("assetTypes", Representation.DEFAULT);
+			description.addProperty("voided");
+			description.addProperty("dateVoided");
+			description.addProperty("voidedBy");
+			description.addProperty("voidReason");
+
 			return description;
 		}
 		return description;
@@ -93,11 +96,21 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addProperty("name");
-		description.addProperty("retired");
+		description.addProperty("eventServiceId");
+		description.addProperty("voided");
 		description.addProperty("uuid");
-		description.addProperty("assetCategoryId");
+		description.addProperty("service");
+		description.addProperty("service");
+		description.addProperty("quantity");
+		description.addProperty("actualCost");
+		description.addProperty("description");
 		return description;
+
+	}
+
+	@Override
+	protected void delete(HydramoduleEventService delegate, String reason, RequestContext context) throws ResponseException {
+		// TODO Auto-generated method stub
 
 	}
 

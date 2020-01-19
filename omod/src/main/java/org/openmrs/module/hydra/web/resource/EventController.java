@@ -66,11 +66,13 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
-		description.addProperty("uuid");
 		description.addProperty("eventId");
 		description.addProperty("name");
-		description.addProperty("eventType", Representation.REF);
+		description.addProperty("uuid");
 		description.addProperty("schedule", Representation.REF);
+		description.addProperty("eventType", Representation.REF);
+		description.addProperty("eventAssets", Representation.REF);
+		description.addProperty("eventServices", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
 			/*
@@ -108,8 +110,10 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 		description.addProperty("eventType");
 		description.addProperty("location");
 		description.addProperty("schedule");
-		return description;
+		description.addProperty("eventAssets");
+		description.addProperty("eventServices");
 
+		return description;
 	}
 
 	@Override

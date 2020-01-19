@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.model.workflow;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -11,7 +12,7 @@ import javax.persistence.Table;
 
 import org.openmrs.BaseOpenmrsData;
 
-// @Entity
+@Entity
 @Table(name = "hydramodule_event_asset", catalog = "hydra")
 public class HydramoduleEventAsset extends BaseOpenmrsData {
 
@@ -35,6 +36,9 @@ public class HydramoduleEventAsset extends BaseOpenmrsData {
 
 	@Column(name = "quantity")
 	private int quantity;
+
+	@Column(name = "actual_cost")
+	private String actualCost;
 
 	@Column(name = "description")
 	private String description;
@@ -91,5 +95,13 @@ public class HydramoduleEventAsset extends BaseOpenmrsData {
 	@Override
 	public void setId(Integer id) {
 		eventAssetId = id;
+	}
+
+	public String getActualCost() {
+		return actualCost;
+	}
+
+	public void setActualCost(String actualCost) {
+		this.actualCost = actualCost;
 	}
 }
