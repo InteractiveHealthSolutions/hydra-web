@@ -453,6 +453,15 @@ public class HydraDaoImpl {
 
 	// Event
 	public HydramoduleEvent saveHydramoduleEvent(HydramoduleEvent event) {
+		Integer eventId = event.getEventId();
+		/*
+		 * if (eventId != null) { HydramoduleEventSchedule eventSchedule =
+		 * event.getSchedule(); HydramoduleEvent existingEvent =
+		 * getHydramoduleEvent(eventId);
+		 * eventSchedule.setScheduleId(existingEvent.getSchedule().getScheduleId());
+		 * eventSchedule = saveHydramoduleEventScedule(eventSchedule);
+		 * getSession().saveOrUpdate(event); getSession().flush(); return event; }
+		 */
 
 		HydramoduleEventSchedule schedule = event.getSchedule();
 		schedule = saveHydramoduleEventScedule(schedule);
@@ -460,8 +469,9 @@ public class HydraDaoImpl {
 		getSession().saveOrUpdate(event);
 		getSession().flush();
 
-		// TODO #BadPractice, code below block should be in service class not there!
-		{
+		// TODO #BadPractice, code below block should be in service layer not there(data
+		// access layer)!
+		if (eventId == null) {
 			// saving EventAssets
 			List<HydramoduleEventAsset> assets = event.getEventAssets();
 			List<HydramoduleEventAsset> persistantAssets = new ArrayList<HydramoduleEventAsset>();
@@ -493,6 +503,14 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEvent.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
+		criteria.add(Restrictions.eq("voided", false));
+		return (HydramoduleEvent) criteria.uniqueResult();
+	}
+
+	public HydramoduleEvent getHydramoduleEvent(Integer id) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEvent.class);
+		criteria.add(Restrictions.eq("eventId", id));
 		criteria.add(Restrictions.eq("voided", false));
 		return (HydramoduleEvent) criteria.uniqueResult();
 	}

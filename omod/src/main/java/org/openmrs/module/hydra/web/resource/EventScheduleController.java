@@ -92,6 +92,7 @@ public class EventScheduleController extends DataDelegatingCrudResource<Hydramod
 		description.addProperty("plannedDate");
 		description.addProperty("eventDate");
 		description.addProperty("endDate");
+		description.addProperty("scheduleId");
 		description.addProperty("reasonDeferred");
 		return description;
 

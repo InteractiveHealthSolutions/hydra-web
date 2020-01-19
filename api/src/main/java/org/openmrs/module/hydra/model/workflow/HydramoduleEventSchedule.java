@@ -24,7 +24,7 @@ public class HydramoduleEventSchedule extends BaseOpenmrsData {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "schedule_id", unique = true, nullable = false)
-	private int scheduleId;
+	private Integer scheduleId;
 
 	@Column(name = "planned_date")
 	private Date plannedDate;
@@ -42,11 +42,11 @@ public class HydramoduleEventSchedule extends BaseOpenmrsData {
 		super();
 	}
 
-	public int getScheduleId() {
+	public Integer getScheduleId() {
 		return scheduleId;
 	}
 
-	public void setScheduleId(int scheduleId) {
+	public void setScheduleId(Integer scheduleId) {
 		this.scheduleId = scheduleId;
 	}
 

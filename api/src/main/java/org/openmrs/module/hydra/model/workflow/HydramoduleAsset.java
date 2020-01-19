@@ -44,11 +44,11 @@ public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializabl
 	@JoinColumn(name = "asset_type_id")
 	private HydramoduleAssetType assetType;
 
-	public int getAssetId() {
+	public Integer getAssetId() {
 		return assetId;
 	}
 
-	public void setAssetId(int assetId) {
+	public void setAssetId(Integer assetId) {
 		this.assetId = assetId;
 	}
 
@@ -103,7 +103,4 @@ public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializabl
 		this.fixedAsset = fixedAsset;
 	}
 
-	public void setAssetId(Integer assetId) {
-		this.assetId = assetId;
-	}
 }
