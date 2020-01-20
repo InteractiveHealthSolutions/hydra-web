@@ -40,6 +40,9 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 
 	@Column(name = "reference_id")
 	private String referenceId;
+	
+	@Column(name = "closed")
+	private Boolean closed;
 
 	@OneToOne
 	@JoinColumn(name = "schedule_id")
@@ -155,5 +158,13 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 
 	public void setEventParticipants(List<HydramoduleEventParticipants> eventParticipants) {
 		this.eventParticipants = eventParticipants;
+	}
+
+	public Boolean getClosed() {
+		return closed;
+	}
+
+	public void setClosed(Boolean closed) {
+		this.closed = closed;
 	}
 }

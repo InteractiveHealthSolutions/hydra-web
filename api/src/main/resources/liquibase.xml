@@ -1008,7 +1008,8 @@
 			<column name="location_id" type="int">
 				<constraints nullable="false" />
 			</column>
-
+			<column defaultValueBoolean="false" name="closed" type="boolean">
+			</column>
 			<column name="description" type="text">
 			</column>
 			<column defaultValueNumeric="0" name="creator" type="int">

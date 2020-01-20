@@ -461,9 +461,10 @@ public class HydraDaoImpl {
 		getSession().saveOrUpdate(event);
 		getSession().flush();
 
-		// TODO #BadPractice, code below block should be in service layer not there(data
-		// access layer)!
-		if (eventId == null) {
+		// TODO #BadPractice, code below block should be in service layer not there in
+		// data
+		// access layer!
+		/* if (eventId == null) */ {
 			// saving EventAssets
 			List<HydramoduleEventAsset> assets = event.getEventAssets();
 			List<HydramoduleEventAsset> persistantAssets = new ArrayList<HydramoduleEventAsset>();
