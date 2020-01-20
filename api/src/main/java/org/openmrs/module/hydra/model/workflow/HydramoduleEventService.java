@@ -42,10 +42,10 @@ public class HydramoduleEventService extends BaseOpenmrsData {
 
 	@Column(name = "description")
 	private String description;
-	
+
 	@Column(name = "planned_for_event")
 	private Boolean plannedForEvent;
-	
+
 	@Column(name = "available_in_event")
 	private Boolean availableInEvent;
 

@@ -1197,6 +1197,13 @@
 			<column name="participant_id" type="int">
 				<constraints nullable="false" />
 			</column>
+			<column name="planned_for_event" type="boolean">
+			</column>
+			<column name="attendance" type="boolean">
+			</column>
+			<column name="absence_reason" type="varchar(255)"
+				defaultValue="null" />
+
 			<column name="description" type="text">
 			</column>
 			<column defaultValueNumeric="0" name="creator" type="int">

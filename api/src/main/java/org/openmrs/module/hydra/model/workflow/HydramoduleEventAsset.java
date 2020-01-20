@@ -35,17 +35,17 @@ public class HydramoduleEventAsset extends BaseOpenmrsData {
 	private HydramoduleAsset asset;
 
 	@Column(name = "quantity")
-	private int quantity;
+	private Integer quantity;
 
 	@Column(name = "actual_cost")
 	private String actualCost;
 
 	@Column(name = "description")
 	private String description;
-	
+
 	@Column(name = "planned_for_event")
 	private Boolean plannedForEvent;
-	
+
 	@Column(name = "available_in_event")
 	private Boolean availableInEvent;
 
@@ -77,11 +77,11 @@ public class HydramoduleEventAsset extends BaseOpenmrsData {
 		this.asset = asset;
 	}
 
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
@@ -110,7 +110,7 @@ public class HydramoduleEventAsset extends BaseOpenmrsData {
 	public void setActualCost(String actualCost) {
 		this.actualCost = actualCost;
 	}
-	
+
 	public Boolean getPlannedForEvent() {
 		return plannedForEvent;
 	}

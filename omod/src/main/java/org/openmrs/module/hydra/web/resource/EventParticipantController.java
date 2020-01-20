@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -20,8 +20,9 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/event", supportedClass = HydramoduleEvent.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
-public class EventController extends DataDelegatingCrudResource<HydramoduleEvent> {
+        + "/hydra/eventParticipant", supportedClass = HydramoduleEventParticipants.class, supportedOpenmrsVersions = {
+                "2.0.*,2.1.*,2.2.*" })
+public class EventParticipantController extends DataDelegatingCrudResource<HydramoduleEventParticipants> {
 
 	/**
 	 * Logger for this class
@@ -32,31 +33,31 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 	private HydraService service = Context.getService(HydraService.class);
 
 	@Override
-	public HydramoduleEvent newDelegate() {
-		return new HydramoduleEvent();
+	public HydramoduleEventParticipants newDelegate() {
+		return new HydramoduleEventParticipants();
 	}
 
 	@Override
-	public HydramoduleEvent save(HydramoduleEvent component) {
-		return service.saveEvent(component);
+	public HydramoduleEventParticipants save(HydramoduleEventParticipants component) {
+		return service.saveEventParticipant(component);
 	}
 
 	@Override
-	public HydramoduleEvent getByUniqueId(String uuid) {
-		return service.getEvent(uuid);
+	public HydramoduleEventParticipants getByUniqueId(String uuid) {
+		return service.getEventParticipant(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleEvent> services = service.getAllEvents(true);
-		services.addAll(service.getAllEvents(false));
-		simpleObject.put("events", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
+		List<HydramoduleEventParticipants> services = service.getAllEventParticipants(true);
+		services.addAll(service.getAllEventParticipants(false));
+		simpleObject.put("eventServices", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}
 
 	@Override
-	public void purge(HydramoduleEvent component, RequestContext context) throws ResponseException {
+	public void purge(HydramoduleEventParticipants component, RequestContext context) throws ResponseException {
 		// service.purgeComponent(component);
 	}
 
@@ -66,33 +67,23 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
-		description.addProperty("eventId");
-		description.addProperty("name");
 		description.addProperty("uuid");
-		description.addProperty("location", Representation.REF);
-		description.addProperty("schedule", Representation.REF);
-		description.addProperty("eventType", Representation.REF);
-		description.addProperty("eventAssets", Representation.REF);
-		description.addProperty("eventServices", Representation.REF);
-		description.addProperty("eventParticipants", Representation.REF);
+		description.addProperty("eventParticipantId");
+		description.addProperty("attendance");
+		description.addProperty("absenceReason");
+		description.addProperty("plannedForEvent");
+		description.addProperty("participant", Representation.FULL);
+		description.addProperty("voided");
 
 		if (representation instanceof DefaultRepresentation) {
-			/*
-			 * description.addProperty("display"); description.addProperty("concept");
-			 */
 			return description;
-
 		} else if (representation instanceof FullRepresentation) {
 
-			/*
-			 * description.addProperty("display"); description.addProperty("concept");
-			 */
-
 			description.addProperty("dateCreated");
+
 			description.addProperty("changedBy");
 			description.addProperty("dateChanged");
 
-			description.addProperty("voided");
 			description.addProperty("dateVoided");
 			description.addProperty("voidedBy");
 			description.addProperty("voidReason");
@@ -105,22 +96,20 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addProperty("name");
+		description.addProperty("eventParticipantId");
+		description.addProperty("voided");
 		description.addProperty("uuid");
-		description.addProperty("eventId");
-		description.addProperty("location");
-		description.addProperty("schedule");
-		description.addProperty("eventType");
-		description.addProperty("description");
-		description.addProperty("eventAssets");
-		description.addProperty("eventServices");
-		description.addProperty("eventParticipants");
-
+		description.addProperty("attendance");
+		description.addProperty("absenceReason");
+		description.addProperty("plannedForEvent");
 		return description;
+
 	}
 
 	@Override
-	protected void delete(HydramoduleEvent arg0, String arg1, RequestContext arg2) throws ResponseException {
+	protected void delete(HydramoduleEventParticipants delegate, String reason, RequestContext context)
+	        throws ResponseException {
+		// TODO Auto-generated method stub
 
 	}
 

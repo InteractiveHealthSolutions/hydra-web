@@ -60,6 +60,9 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 	@OneToMany(mappedBy = "event")
 	List<HydramoduleEventService> eventServices;
 
+	@OneToMany(mappedBy = "event")
+	List<HydramoduleEventParticipants> eventParticipants;
+
 	public HydramoduleEvent() {
 		super();
 	}
@@ -146,4 +149,11 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 		this.eventServices = eventServices;
 	}
 
+	public List<HydramoduleEventParticipants> getEventParticipants() {
+		return eventParticipants;
+	}
+
+	public void setEventParticipants(List<HydramoduleEventParticipants> eventParticipants) {
+		this.eventParticipants = eventParticipants;
+	}
 }

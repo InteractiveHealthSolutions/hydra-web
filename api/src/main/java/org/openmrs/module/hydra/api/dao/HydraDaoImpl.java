@@ -454,7 +454,7 @@ public class HydraDaoImpl {
 	// Event
 	public HydramoduleEvent saveHydramoduleEvent(HydramoduleEvent event) {
 		Integer eventId = event.getEventId();
-		
+
 		HydramoduleEventSchedule schedule = event.getSchedule();
 		schedule = saveHydramoduleEventScedule(schedule);
 		event.setSchedule(schedule);
@@ -484,6 +484,18 @@ public class HydraDaoImpl {
 					for (HydramoduleEventService service : services) {
 						service.setEvent(event);
 						persistantServices.add(saveHydramoduleEventService(service));
+					}
+				}
+			}
+
+			// saving EventParticipants
+			List<HydramoduleEventParticipants> participants = event.getEventParticipants();
+			List<HydramoduleEventParticipants> persistantParticipants = new ArrayList<HydramoduleEventParticipants>();
+			if (participants != null) {
+				if (participants.size() > 0) {
+					for (HydramoduleEventParticipants eventParticipants : participants) {
+						eventParticipants.setEvent(event);
+						persistantParticipants.add(saveHydramoduleEventParticipant(eventParticipants));
 					}
 				}
 			}

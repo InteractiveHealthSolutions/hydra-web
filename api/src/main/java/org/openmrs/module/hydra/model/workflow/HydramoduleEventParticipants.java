@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.model.workflow;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -11,7 +12,7 @@ import javax.persistence.Table;
 
 import org.openmrs.BaseOpenmrsData;
 
-// @Entity
+@Entity
 @Table(name = "hydramodule_event_participants", catalog = "hydra")
 public class HydramoduleEventParticipants extends BaseOpenmrsData {
 
@@ -34,10 +35,13 @@ public class HydramoduleEventParticipants extends BaseOpenmrsData {
 	private HydramoduleParticipant participant;
 
 	@Column(name = "attendance")
-	private boolean attendance;
+	private Boolean attendance;
 
 	@Column(name = "absence_reason")
-	private String absence_reason;
+	private String absenceReason;
+
+	@Column(name = "planned_for_event")
+	private Boolean plannedForEvent;
 
 	public HydramoduleEventParticipants() {
 		super();
@@ -67,20 +71,16 @@ public class HydramoduleEventParticipants extends BaseOpenmrsData {
 		this.participant = participant;
 	}
 
-	public boolean isAttendance() {
-		return attendance;
-	}
-
-	public void setAttendance(boolean attendance) {
+	public void setAttendance(Boolean attendance) {
 		this.attendance = attendance;
 	}
 
-	public String getAbsence_reason() {
-		return absence_reason;
+	public String getAbsenceReason() {
+		return absenceReason;
 	}
 
-	public void setAbsence_reason(String absence_reason) {
-		this.absence_reason = absence_reason;
+	public void setAbsenceReason(String absenceReason) {
+		this.absenceReason = absenceReason;
 	}
 
 	@Override
@@ -92,4 +92,17 @@ public class HydramoduleEventParticipants extends BaseOpenmrsData {
 	public void setId(Integer id) {
 		eventParticipantId = id;
 	}
+
+	public Boolean getPlannedForEvent() {
+		return plannedForEvent;
+	}
+
+	public void setPlannedForEvent(Boolean plannedForEvent) {
+		this.plannedForEvent = plannedForEvent;
+	}
+
+	public Boolean getAttendance() {
+		return attendance;
+	}
+
 }

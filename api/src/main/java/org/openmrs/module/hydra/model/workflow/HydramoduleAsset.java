@@ -32,7 +32,7 @@ public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializabl
 	private String capitalValue;
 
 	@Column(name = "fixed_asset")
-	private String fixedAsset;
+	private Boolean fixedAsset;
 
 	@Column(name = "reference_id")
 	private String referenceId;
@@ -95,12 +95,11 @@ public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializabl
 
 	}
 
-	public String getFixedAsset() {
+	public Boolean getFixedAsset() {
 		return fixedAsset;
 	}
 
-	public void setFixedAsset(String fixedAsset) {
+	public void setFixedAsset(Boolean fixedAsset) {
 		this.fixedAsset = fixedAsset;
 	}
-
 }
