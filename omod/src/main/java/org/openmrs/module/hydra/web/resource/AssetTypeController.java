@@ -70,6 +70,7 @@ public class AssetTypeController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("uuid");
 		description.addProperty("assetTypeId");
 		description.addProperty("name");
+		description.addProperty("assetCategory", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
 			description.addProperty("assets", Representation.REF);
@@ -87,7 +88,6 @@ public class AssetTypeController extends MetadataDelegatingCrudResource<Hydramod
 			description.addProperty("retiredBy");
 			description.addProperty("retireReason");
 			description.addProperty("assets", Representation.REF);
-			description.addProperty("assetCategory", Representation.REF);
 
 			return description;
 		}

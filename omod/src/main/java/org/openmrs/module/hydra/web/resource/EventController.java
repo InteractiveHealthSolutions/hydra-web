@@ -93,7 +93,6 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 			description.addProperty("changedBy");
 			description.addProperty("dateChanged");
 
-			
 			description.addProperty("dateVoided");
 			description.addProperty("voidedBy");
 			description.addProperty("voidReason");

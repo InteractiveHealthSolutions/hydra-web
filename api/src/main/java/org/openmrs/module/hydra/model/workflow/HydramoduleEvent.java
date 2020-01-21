@@ -40,7 +40,7 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 
 	@Column(name = "reference_id")
 	private String referenceId;
-	
+
 	@Column(name = "closed")
 	private Boolean closed;
 
