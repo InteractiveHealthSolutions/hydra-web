@@ -21,8 +21,8 @@ import org.openmrs.module.webservices.rest.web.response.ObjectNotFoundException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/phasecomponent", supportedClass = HydramodulePhaseComponents.class, supportedOpenmrsVersions = {
-                "2.0.*,2.1.*,2.2.*" })
+		+ "/hydra/phasecomponent", supportedClass = HydramodulePhaseComponents.class, supportedOpenmrsVersions = {
+				"2.0.*,2.1.*,2.2.*"})
 public class PhaseComponentsMapController extends DelegatingCrudResource<HydramodulePhaseComponents> {
 
 	/**
@@ -50,7 +50,7 @@ public class PhaseComponentsMapController extends DelegatingCrudResource<Hydramo
 
 	@Override
 	protected void delete(HydramodulePhaseComponents phaseComponent, String reason, RequestContext context)
-	        throws ResponseException {
+			throws ResponseException {
 		service.deletePhaseComponent(phaseComponent);
 	}
 
@@ -59,7 +59,7 @@ public class PhaseComponentsMapController extends DelegatingCrudResource<Hydramo
 		SimpleObject simpleObject = new SimpleObject();
 		List<HydramodulePhaseComponents> pahseComponent = service.getAllPhaseComponentsRelations();
 		simpleObject.put("PhaseComponentsMap",
-		    ConversionUtil.convertToRepresentation(pahseComponent, context.getRepresentation()));
+				ConversionUtil.convertToRepresentation(pahseComponent, context.getRepresentation()));
 		return simpleObject;
 	}
 

@@ -20,8 +20,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/eventAsset", supportedClass = HydramoduleEventAsset.class, supportedOpenmrsVersions = {
-                "2.0.*,2.1.*,2.2.*" })
+		+ "/hydra/eventAsset", supportedClass = HydramoduleEventAsset.class, supportedOpenmrsVersions = {
+				"2.0.*,2.1.*,2.2.*"})
 public class EventAssetController extends DataDelegatingCrudResource<HydramoduleEventAsset> {
 
 	/**
@@ -113,7 +113,8 @@ public class EventAssetController extends DataDelegatingCrudResource<Hydramodule
 	}
 
 	@Override
-	protected void delete(HydramoduleEventAsset delegate, String reason, RequestContext context) throws ResponseException {
+	protected void delete(HydramoduleEventAsset delegate, String reason, RequestContext context)
+			throws ResponseException {
 		// TODO Auto-generated method stub
 
 	}

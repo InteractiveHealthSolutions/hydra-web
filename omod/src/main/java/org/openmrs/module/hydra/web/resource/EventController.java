@@ -20,7 +20,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/event", supportedClass = HydramoduleEvent.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
+		+ "/hydra/event", supportedClass = HydramoduleEvent.class, supportedOpenmrsVersions = {"2.0.*,2.1.*,2.2.*"})
 public class EventController extends DataDelegatingCrudResource<HydramoduleEvent> {
 
 	/**

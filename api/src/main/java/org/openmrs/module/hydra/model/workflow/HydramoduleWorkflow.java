@@ -26,69 +26,69 @@ import org.openmrs.Concept;
 @Entity
 @Table(name = "hydramodule_workflow", catalog = "hydra")
 public class HydramoduleWorkflow extends BaseOpenmrsMetadata implements java.io.Serializable {
-
+	
 	private static final long serialVersionUID = 4608951679859347816L;
-
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "workflow_id", unique = true, nullable = false)
 	private Integer workflowId;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "concept_id")
 	private Concept concept;
-
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleWorkflow")
 	@JsonManagedReference
 	private Set<HydramoduleWorkflowPhases> hydramoduleWorkflowPhaseses = new HashSet<HydramoduleWorkflowPhases>(0);
-
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleWorkflow")
 	@JsonIgnore
 	private Set<HydramodulePhaseComponents> hydramodulePhaseComponents = new HashSet<HydramodulePhaseComponents>(0);
-
+	
 	public HydramoduleWorkflow() {
 	}
-
+	
 	public Integer getWorkflowId() {
 		return this.workflowId;
 	}
-
+	
 	public void setWorkflowId(Integer workflowId) {
 		this.workflowId = workflowId;
 	}
-
+	
 	public Concept getConcept() {
 		return this.concept;
 	}
-
+	
 	public void setConcept(Concept concept) {
 		this.concept = concept;
 	}
-
+	
 	public Set<HydramoduleWorkflowPhases> getHydramoduleWorkflowPhaseses() {
 		return this.hydramoduleWorkflowPhaseses;
 	}
-
+	
 	public void setHydramoduleWorkflowPhaseses(Set<HydramoduleWorkflowPhases> hydramoduleWorkflowPhaseses) {
 		this.hydramoduleWorkflowPhaseses = hydramoduleWorkflowPhaseses;
 	}
-
+	
 	public Set<HydramodulePhaseComponents> getHydramodulePhaseComponents() {
 		return hydramodulePhaseComponents;
 	}
-
+	
 	public void setHydramodulePhaseComponents(Set<HydramodulePhaseComponents> hydramodulePhaseComponents) {
 		this.hydramodulePhaseComponents = hydramodulePhaseComponents;
 	}
-
+	
 	@Override
 	public Integer getId() {
 		return workflowId;
 	}
-
+	
 	@Override
 	public void setId(Integer id) {
 		this.workflowId = id;
 	}
-
+	
 }

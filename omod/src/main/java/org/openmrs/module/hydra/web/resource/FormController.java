@@ -20,7 +20,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/form", supportedClass = HydramoduleForm.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
+		+ "/hydra/form", supportedClass = HydramoduleForm.class, supportedOpenmrsVersions = {"2.0.*,2.1.*,2.2.*"})
 public class FormController extends MetadataDelegatingCrudResource<HydramoduleForm> {
 
 	/**
@@ -38,7 +38,7 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 
 	@Override
 	public HydramoduleForm save(HydramoduleForm delegate) {
-		return service.saveModuleForm(delegate);
+		return service.saveHydramoduleForm(delegate);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
 		List<HydramoduleForm> moduleForm = service.getAllModuleForm();
-		simpleObject.put("form", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
+		simpleObject.put("forms", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}
 
@@ -67,27 +67,24 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 		description.addSelfLink();
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("uuid");
+		description.addProperty("core");
+		description.addProperty("formActions");
 		description.addProperty("hydramoduleFormId");
 		description.addProperty("name");
 		description.addProperty("program");
 		description.addProperty("form");
+		description.addProperty("component");
 
 		if (representation instanceof DefaultRepresentation) {
 			description.addProperty("display");
-			description.addProperty("concept");
 
 			return description;
 
 		} else if (representation instanceof FullRepresentation) {
 
 			description.addProperty("hydramoduleFormTagMaps");
-			description.addProperty("hydramoduleComponentFormses");
-
-			description.addProperty("program");
-			description.addProperty("form");
 
 			description.addProperty("display");
-			description.addProperty("concept");
 
 			description.addProperty("dateCreated");
 
@@ -112,8 +109,11 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 		description.addProperty("form");
 		description.addProperty("name");
 		description.addProperty("uuid");
+		description.addProperty("formActions");
 		description.addProperty("hydramoduleFormId");
 		description.addProperty("retired");
+		description.addProperty("core");
+		description.addProperty("component");
 
 		return description;
 

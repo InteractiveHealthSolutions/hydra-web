@@ -26,13 +26,13 @@ import static org.junit.Assert.*;
  * rolled back by the end of each test method.
  */
 public class HydraDaoTest extends BaseModuleContextSensitiveTest {
-
+	
 	@Autowired
 	HydraDaoImpl dao;
-
+	
 	@Autowired
 	UserService userService;
-
+	
 	@Test
 	public void saveItem_shouldSaveAllPropertiesInDb() {
 		// Given

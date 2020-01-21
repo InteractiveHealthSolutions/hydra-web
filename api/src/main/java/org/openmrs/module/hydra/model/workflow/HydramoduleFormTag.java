@@ -22,52 +22,52 @@ import org.openmrs.BaseOpenmrsMetadata;
 @Entity
 @Table(name = "hydramodule_form_tag", catalog = "hydra")
 public class HydramoduleFormTag extends BaseOpenmrsMetadata implements java.io.Serializable {
-
+	
 	private static final long serialVersionUID = 4858693656254140516L;
-
+	
 	private Integer formTagId;
-
+	
 	@JsonIgnore
 	private Set<HydramoduleFormTagMap> hydramoduleFormTagMaps = new HashSet<HydramoduleFormTagMap>(0);
-
+	
 	public HydramoduleFormTag() {
 	}
-
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "form_tag_id", unique = true, nullable = false)
 	public Integer getFormTagId() {
 		return this.formTagId;
 	}
-
+	
 	public void setFormTagId(Integer formTagId) {
 		this.formTagId = formTagId;
 	}
-
+	
 	/*
 	 * @Column(name = "name", nullable = false, length = 50) public String getName()
 	 * { return this.name; }
 	 * 
 	 * public void setName(String name) { this.name = name; }
 	 */
-
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleFormTag")
 	public Set<HydramoduleFormTagMap> getHydramoduleFormTagMaps() {
 		return this.hydramoduleFormTagMaps;
 	}
-
+	
 	public void setHydramoduleFormTagMaps(Set<HydramoduleFormTagMap> hydramoduleFormTagMaps) {
 		this.hydramoduleFormTagMaps = hydramoduleFormTagMaps;
 	}
-
+	
 	@Override
 	public Integer getId() {
 		return formTagId;
 	}
-
+	
 	@Override
 	public void setId(Integer id) {
 		this.formTagId = id;
 	}
-
+	
 }

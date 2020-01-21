@@ -20,7 +20,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/workflow", supportedClass = HydramoduleWorkflow.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
+		+ "/hydra/workflow", supportedClass = HydramoduleWorkflow.class, supportedOpenmrsVersions = {
+				"2.0.*,2.1.*,2.2.*"})
 public class WorkflowController extends MetadataDelegatingCrudResource<HydramoduleWorkflow> {
 
 	/**
