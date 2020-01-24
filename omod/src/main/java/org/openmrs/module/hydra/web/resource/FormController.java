@@ -15,12 +15,16 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.Converter;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
+import org.openmrs.module.webservices.rest.web.resource.api.Searchable;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingCrudResource;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-		+ "/hydra/form", supportedClass = HydramoduleForm.class, supportedOpenmrsVersions = {"2.0.*,2.1.*,2.2.*"})
+        + "/hydra/form", supportedClass = HydramoduleForm.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
 public class FormController extends MetadataDelegatingCrudResource<HydramoduleForm> {
 
 	/**
@@ -59,6 +63,14 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 	}
 
 	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String queryParam = context.getParameter("q");
+		List<HydramoduleForm> forms = service.getAllModuleFormsByComponent(queryParam);
+
+		return new NeedsPaging<HydramoduleForm>(forms, context);
+	}
+
+	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
 
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
@@ -71,8 +83,7 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 		description.addProperty("formActions");
 		description.addProperty("hydramoduleFormId");
 		description.addProperty("name");
-		description.addProperty("program");
-		description.addProperty("form");
+		description.addProperty("form", Representation.FULL);
 		description.addProperty("component");
 
 		if (representation instanceof DefaultRepresentation) {

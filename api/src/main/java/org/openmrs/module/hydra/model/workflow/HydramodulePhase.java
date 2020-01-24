@@ -24,69 +24,69 @@ import org.openmrs.Concept;
 @Entity
 @Table(name = "hydramodule_phase", catalog = "hydra")
 public class HydramodulePhase extends BaseOpenmrsMetadata implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = 8819708703129124250L;
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "phase_id", unique = true, nullable = false)
 	private Integer phaseId;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "concept_id")
 	private Concept concept;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramodulePhase")
 	@JsonManagedReference
 	private List<HydramodulePhaseComponents> hydramodulePhaseComponents = new ArrayList<HydramodulePhaseComponents>();
-	
+
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramodulePhase")
 	private List<HydramoduleWorkflowPhases> hydramoduleWorkflowPhases = new ArrayList<HydramoduleWorkflowPhases>();
-	
+
 	public HydramodulePhase() {
 	}
-	
+
 	public Integer getPhaseId() {
 		return this.phaseId;
 	}
-	
+
 	public void setPhaseId(Integer phaseId) {
 		this.phaseId = phaseId;
 	}
-	
+
 	public Concept getConcept() {
 		return this.concept;
 	}
-	
+
 	public void setConcept(Concept concept) {
 		this.concept = concept;
 	}
-	
+
 	public List<HydramodulePhaseComponents> getHydramodulePhaseComponents() {
 		return this.hydramodulePhaseComponents;
 	}
-	
+
 	public void setHydramodulePhaseComponents(List<HydramodulePhaseComponents> hydramodulePhaseComponentses) {
 		this.hydramodulePhaseComponents = hydramodulePhaseComponentses;
 	}
-	
+
 	public List<HydramoduleWorkflowPhases> getHydramoduleWorkflowPhases() {
 		return this.hydramoduleWorkflowPhases;
 	}
-	
+
 	public void setHydramoduleWorkflowPhases(List<HydramoduleWorkflowPhases> hydramoduleWorkflowPhaseses) {
 		this.hydramoduleWorkflowPhases = hydramoduleWorkflowPhaseses;
 	}
-	
+
 	@Override
 	public Integer getId() {
 		return phaseId;
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		this.phaseId = id;
 	}
-	
+
 }

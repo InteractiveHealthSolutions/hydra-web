@@ -29,21 +29,21 @@ import static org.junit.Assert.*;
  * BaseModuleContextSensitiveTest, thus it is run without the in-memory DB and Spring context.
  */
 public class HydraServiceTest {
-	
+
 	@InjectMocks
 	HydraServiceImpl basicModuleService;
-	
+
 	@Mock
 	HydraDaoImpl dao;
-	
+
 	@Mock
 	UserService userService;
-	
+
 	@Before
 	public void setupMocks() {
 		MockitoAnnotations.initMocks(this);
 	}
-	
+
 	@Test
 	public void saveItem_shouldSetOwnerIfNotSet() {
 		HydraForm hydraFrom = new HydraForm();

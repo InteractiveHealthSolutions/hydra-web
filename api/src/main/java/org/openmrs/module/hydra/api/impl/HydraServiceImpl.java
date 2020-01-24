@@ -43,42 +43,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 public class HydraServiceImpl extends BaseOpenmrsService implements HydraService {
-	
+
 	@Autowired
 	private HydraDaoImpl dao;
-	
+
 	// @Autowired
 	// private UserService userService;
-	
+
 	/**
 	 * Injected in moduleApplicationContext.xml
 	 */
 	public void setDao(HydraDaoImpl dao) {
 		this.dao = dao;
 	}
-	
+
 	/**
 	 * Injected in moduleApplicationContext.xml
 	 */
 	public void setUserService(UserService userService) {
 		// this.userService = userService;
 	}
-	
+
 	@Override
 	public HydraForm getHydraFormByUuid(String uuid) throws APIException {
 		return dao.getHydraFormByUuid(uuid);
 	}
-	
+
 	@Override
 	@Transactional
 	public HydraForm saveForm(HydraForm item) throws APIException {
 		return dao.saveForm(item);
 	}
-	
+
 	@Override
 	@Transactional
 	public HydramoduleWorkflow saveWorkflow(HydramoduleWorkflow item) throws APIException {
-		
+
 		// if (item.getRetired()) {
 		// List<HydramoduleWorkflowPhases> workflowPhase =
 		// dao.getWorkflowPhase(item);
@@ -91,7 +91,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		// {
 		// deleteWorkflowPhase(hydramoduleWorkflowPhases);
 		// }
-		
+
 		// if (phaseComp != null) {
 		// for (HydramodulePhaseComponents hydramodulePhaseComponents :
 		// phaseComp) {
@@ -99,27 +99,27 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		// }
 		// }
 		// }
-		
+
 		// return dao.saveWorkflow(item);
 		//
 		// }
 		// else {
 		// return dao.saveWorkflow(item);
 		// }
-		
+
 		return dao.saveWorkflow(item);
 	}
-	
+
 	public HydramoduleComponent saveComponent(HydramoduleComponent component) throws APIException {
 		return dao.saveComponent(component);
 	}
-	
+
 	@Override
 	@Transactional
 	public HydramoduleWorkflowPhases saveWorkflowPhaseRelation(HydramoduleWorkflowPhases item) throws APIException {
 		return dao.saveWorkflowPhaseRelation(item);
 	}
-	
+
 	@Override
 	@Transactional
 	public HydramodulePhase savePhase(HydramodulePhase item) throws APIException {
@@ -145,68 +145,68 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		 * type = (HydramoduleWorkflowPhases) saveableIt.next();
 		 * dao.saveWorkflowPhase(type); }
 		 */
-		
+
 		return phase;
 	}
-	
+
 	@Override
 	public Set<HydraForm> getHydraFormsByTag(String tag) throws APIException {
 		return dao.getHydraFormsByTag(tag);
 	}
-	
+
 	@Override
 	public HydraForm getHydraFormByEncounterName(String encunterName) throws APIException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public HydramoduleWorkflow getWorkflowByUUID(String uuid) throws APIException {
-		
+
 		return dao.getWorkflow(uuid);
 	}
-	
+
 	@Override
 	public List<HydramoduleWorkflow> getAllWorkflows() throws APIException {
-		
+
 		return dao.getAllWorkflows();
 	}
-	
+
 	@Override
 	public HydramodulePhase getPhaseByUUID(String uuid) throws APIException {
-		
+
 		return dao.getPhase(uuid);
 	}
-	
+
 	@Override
 	public List<HydramodulePhase> getAllPhases() throws APIException {
-		
+
 		return dao.getAllPhases();
 	}
-	
+
 	@Override
 	public HydramoduleComponent getComponentByUUID(String uuid) throws APIException {
-		
+
 		return dao.getComponent(uuid);
 	}
-	
+
 	@Override
 	public List<HydramoduleComponent> getAllComponents() throws APIException {
-		
+
 		return dao.getAllComponents();
 	}
-	
+
 	@Override
 	public HydramoduleWorkflowPhases getWorkflowPhasesRelationByUUID(String uuid) throws APIException {
 		// TODO Auto-generated method stub
 		return dao.getWorkflowPhaseRelation(uuid);
 	}
-	
+
 	@Override
 	public List<HydramoduleWorkflowPhases> getAllWorkflowPhaseRelations() throws APIException {
 		return dao.getAllPhasesWorkFlowPhaseRelations();
 	}
-	
+
 	@Override
 	public void purgeComponent(HydramoduleComponent component) throws APIException {
 		component.setRetired(true);
@@ -214,165 +214,170 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		component.setDateRetired(new Date());
 		dao.updateComponent(component);
 	}
-	
+
 	@Override
 	public HydramoduleForm saveHydramoduleForm(HydramoduleForm form) throws APIException {
 		return dao.saveModuleForm(form);
 	}
-	
+
 	@Override
 	public List<HydramoduleForm> getAllModuleForm() throws APIException {
 		return dao.getAllModuleForm();
 	}
-	
+
+	@Override
+	public List<HydramoduleForm> getAllModuleFormsByComponent(String componentUUID) throws APIException {
+		return dao.getAllModuleFormByComponentUUID(componentUUID);
+	}
+
 	@Override
 	public HydramoduleForm getHydraModuleFormByUuid(String uuid) throws APIException {
 		return dao.getModuleForm(uuid);
 	}
-	
+
 	@Override
 	public HydramodulePhaseComponents savePhaseComponentRelation(HydramodulePhaseComponents item) throws APIException {
 		return dao.savePhaseComponentsRelation(item);
 	}
-	
+
 	@Override
 	public HydramodulePhaseComponents getPhasesComponentRelationByUUID(String uuid) throws APIException {
 		return dao.getPhaseComponentRelation(uuid);
 	}
-	
+
 	@Override
 	public List<HydramodulePhaseComponents> getAllPhaseComponentsRelations() throws APIException {
 		return dao.getAllPhaseComponentRelations();
 	}
-	
+
 	@Transactional
 	@Override
 	public void deletePhaseComponent(HydramodulePhaseComponents phaseComponent) throws APIException {
 		dao.deletePhaseComponent(phaseComponent);
-		
+
 	}
-	
+
 	@Transactional
 	@Override
 	public void deleteWorkflowPhase(HydramoduleWorkflowPhases workflowphases) throws APIException {
 		dao.deleteWorkflowPhase(workflowphases);
-		
+
 	}
-	
+
 	@Override
 	public void deleteWorkflow(HydramoduleWorkflow workflow) throws APIException {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
 	public void purgeWorkflow(HydramoduleWorkflow workflow) throws APIException {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	// ServiceType
 	@Override
 	@Transactional
 	public HydramoduleServiceType saveServiceType(HydramoduleServiceType form) throws APIException {
 		return dao.saveServiceType(form);
 	}
-	
+
 	@Override
 	public List<HydramoduleServiceType> getAllServiceTypes(boolean retired) throws APIException {
 		return dao.getAllServiceTypes(retired);
 	}
-	
+
 	@Override
 	public HydramoduleServiceType getServiceType(String uuid) throws APIException {
 		return dao.getServiceType(uuid);
 	}
-	
+
 	// Service
 	@Override
 	@Transactional
 	public HydramoduleService saveService(HydramoduleService service) throws APIException {
 		return dao.saveService(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleService> getAllServices(boolean retired) throws APIException {
 		return dao.getAllServices(retired);
 	}
-	
+
 	@Override
 	public HydramoduleService getService(String uuid) throws APIException {
 		return dao.getService(uuid);
 	}
-	
+
 	// AssetType
 	@Override
 	@Transactional
 	public HydramoduleAssetType saveAssetType(HydramoduleAssetType service) throws APIException {
 		return dao.saveAssetType(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleAssetType> getAllAssetTypes(boolean retired) throws APIException {
 		return dao.getAllAssetTypes(retired);
 	}
-	
+
 	@Override
 	public HydramoduleAssetType getAssetType(String uuid) throws APIException {
 		return dao.getAssetType(uuid);
 	}
-	
+
 	// AssetCategory
 	@Override
 	@Transactional
 	public HydramoduleAssetCategory saveAssetCategory(HydramoduleAssetCategory service) throws APIException {
 		return dao.saveAssetCategory(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleAssetCategory> getAllAssetCategories(boolean retired) throws APIException {
 		return dao.getAllAssetCategories(retired);
 	}
-	
+
 	@Override
 	public HydramoduleAssetCategory getAssetCategory(String uuid) throws APIException {
 		return dao.getAssetCategory(uuid);
 	}
-	
+
 	// Asset
 	@Override
 	@Transactional
 	public HydramoduleAsset saveAsset(HydramoduleAsset service) throws APIException {
 		return dao.saveAsset(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleAsset> getAllAssets(boolean retired) throws APIException {
 		return dao.getAllAssets(retired);
 	}
-	
+
 	@Override
 	public HydramoduleAsset getAsset(String uuid) throws APIException {
 		return dao.getAsset(uuid);
 	}
-	
+
 	// Participant
 	@Override
 	@Transactional
 	public HydramoduleParticipant saveParticipant(HydramoduleParticipant service) throws APIException {
 		return dao.saveParticipant(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleParticipant> getAllParticipants(boolean retired) throws APIException {
 		return dao.getAllParticipants(retired);
 	}
-	
+
 	@Override
 	public HydramoduleParticipant getParticipant(String uuid) throws APIException {
 		return dao.getParticipant(uuid);
 	}
-	
+
 	// ParticipantSalaryType
 	@Override
 	@Transactional
@@ -380,114 +385,114 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	        throws APIException {
 		return dao.saveParticipantSalaryType(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleParticipantSalaryType> getAllParticipantSalaryTypes(boolean retired) throws APIException {
 		return dao.getAllParticipantSalaryTypes(retired);
 	}
-	
+
 	@Override
 	public HydramoduleParticipantSalaryType getParticipantSalaryType(String uuid) throws APIException {
 		return dao.getParticipantSalaryType(uuid);
 	}
-	
+
 	// Event
 	@Override
 	@Transactional
 	public HydramoduleEvent saveEvent(HydramoduleEvent service) throws APIException {
 		return dao.saveHydramoduleEvent(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleEvent> getAllEvents(boolean voided) throws APIException {
 		return dao.getAllHydramoduleEvents(voided);
 	}
-	
+
 	@Override
 	public HydramoduleEvent getEvent(String uuid) throws APIException {
 		return dao.getHydramoduleEvent(uuid);
 	}
-	
+
 	// EventSchedule
 	@Override
 	@Transactional
 	public HydramoduleEventSchedule saveEventSchedule(HydramoduleEventSchedule service) throws APIException {
 		return dao.saveHydramoduleEventScedule(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleEventSchedule> getAllEventSchedules(boolean voided) throws APIException {
 		return dao.getAllHydramoduleEventScedules(voided);
 	}
-	
+
 	@Override
 	public HydramoduleEventSchedule getEventSchedule(String uuid) throws APIException {
 		return dao.getHydramoduleEventScedule(uuid);
 	}
-	
+
 	// EventType
 	@Override
 	@Transactional
 	public HydramoduleEventType saveEventType(HydramoduleEventType service) throws APIException {
 		return dao.saveHydramoduleEventType(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleEventType> getAllEventTypes(boolean voided) throws APIException {
 		return dao.getAllHydramoduleEventTypes(voided);
 	}
-	
+
 	@Override
 	public HydramoduleEventType getEventType(String uuid) throws APIException {
 		return dao.getHydramoduleEventType(uuid);
 	}
-	
+
 	// EventService
 	@Override
 	@Transactional
 	public HydramoduleEventService saveEventService(HydramoduleEventService service) throws APIException {
 		return dao.saveHydramoduleEventService(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleEventService> getAllEventServices(boolean voided) throws APIException {
 		return dao.getAllHydramoduleEventServices(voided);
 	}
-	
+
 	@Override
 	public HydramoduleEventService getEventService(String uuid) throws APIException {
 		return dao.getHydramoduleEventService(uuid);
 	}
-	
+
 	// EventAsset
 	@Override
 	@Transactional
 	public HydramoduleEventAsset saveEventAsset(HydramoduleEventAsset service) throws APIException {
 		return dao.saveHydramoduleEventAsset(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleEventAsset> getAllEventAssets(boolean voided) throws APIException {
 		return dao.getAllHydramoduleEventAssets(voided);
 	}
-	
+
 	@Override
 	public HydramoduleEventAsset getEventAsset(String uuid) throws APIException {
 		return dao.getHydramoduleEventAsset(uuid);
 	}
-	
+
 	// EventParticipant
 	@Override
 	@Transactional
 	public HydramoduleEventParticipants saveEventParticipant(HydramoduleEventParticipants service) throws APIException {
 		return dao.saveHydramoduleEventParticipant(service);
 	}
-	
+
 	@Override
 	public List<HydramoduleEventParticipants> getAllEventParticipants(boolean voided) throws APIException {
 		return dao.getAllHydramoduleEventParticipants(voided);
 	}
-	
+
 	@Override
 	public HydramoduleEventParticipants getEventParticipant(String uuid) throws APIException {
 		return dao.getHydramoduleEventParticipant(uuid);
