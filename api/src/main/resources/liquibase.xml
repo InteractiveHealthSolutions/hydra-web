@@ -577,7 +577,7 @@
 			<column name="service_type_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="encounter_id" type="int">
+			<column name="encounter_type_id" type="int">
 				
 			</column>
 			<column name="name" type="varchar(50)">
@@ -602,9 +602,9 @@
 				<constraints unique="true" />
 			</column>
 		</createTable>
-		<addForeignKeyConstraint constraintName="hydramodule_service_type_encounter_fk"
-			baseTableName="hydramodule_service_type" baseColumnNames="encounter_id"
-			referencedTableName="encounter" referencedColumnNames="encounter_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_service_type_encounter_type_fk"
+			baseTableName="hydramodule_service_type" baseColumnNames="encounter_type_id"
+			referencedTableName="encounter_type" referencedColumnNames="encounter_type_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_service_type_creator_fk"
 			baseTableName="hydramodule_service_type" baseColumnNames="creator"
 			referencedTableName="users" referencedColumnNames="user_id" />

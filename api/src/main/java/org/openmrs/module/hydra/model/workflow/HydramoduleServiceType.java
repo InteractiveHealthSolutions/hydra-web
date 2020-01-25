@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
 
 @Entity
 @Table(name = "hydramodule_service_type", catalog = "hydra")
@@ -28,8 +29,8 @@ public class HydramoduleServiceType extends BaseOpenmrsMetadata implements java.
 	private Integer serviceTypeId;
 
 	@ManyToOne
-	@JoinColumn(name="encounter_id")
-	private Encounter encounter;
+	@JoinColumn(name="encounter_type_id")
+	private EncounterType encounterType;
 	
 	
 	public Integer getServiceTypeId() {
@@ -51,13 +52,15 @@ public class HydramoduleServiceType extends BaseOpenmrsMetadata implements java.
 		serviceTypeId = id;
 	}
 
-	public Encounter getEncounter() {
-		return encounter;
+	public EncounterType getEncounterType() {
+		return encounterType;
 	}
 
-	public void setEncounter(Encounter encounter) {
-		this.encounter = encounter;
+	public void setEncounterType(EncounterType encounterType) {
+		this.encounterType = encounterType;
 	}
+
+	
 	
 	
 }
