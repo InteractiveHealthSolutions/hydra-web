@@ -71,6 +71,7 @@ public class ServiceController extends MetadataDelegatingCrudResource<Hydramodul
 		description.addProperty("unitCost");
 		description.addProperty("referenceId");
 		description.addProperty("name");
+		description.addProperty("description");
 		description.addProperty("serviceType", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
@@ -106,6 +107,7 @@ public class ServiceController extends MetadataDelegatingCrudResource<Hydramodul
 		description.addProperty("name");
 		description.addProperty("uuid");
 		description.addProperty("serviceId");
+		description.addProperty("description");
 		description.addProperty("retired");
 		description.addProperty("unitCost");
 		description.addProperty("serviceType");
