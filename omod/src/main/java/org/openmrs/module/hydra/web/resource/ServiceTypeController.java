@@ -70,6 +70,7 @@ public class ServiceTypeController extends MetadataDelegatingCrudResource<Hydram
 		description.addProperty("uuid");
 		description.addProperty("serviceTypeId");
 		description.addProperty("name");
+		description.addProperty("encounter", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
 			return description;
@@ -97,6 +98,7 @@ public class ServiceTypeController extends MetadataDelegatingCrudResource<Hydram
 		description.addProperty("retired");
 		description.addProperty("uuid");
 		description.addProperty("serviceTypeId");
+		description.addProperty("encounter");
 		return description;
 
 	}

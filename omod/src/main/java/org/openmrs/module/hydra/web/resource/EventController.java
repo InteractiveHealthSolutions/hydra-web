@@ -70,6 +70,7 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 		description.addProperty("name");
 		description.addProperty("uuid");
 		description.addProperty("closed");
+		description.addProperty("closureNotes");
 		description.addProperty("location", Representation.REF);
 		description.addProperty("schedule", Representation.REF);
 		description.addProperty("eventType", Representation.REF);
@@ -107,6 +108,8 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("name");
 		description.addProperty("uuid");
+		description.addProperty("description");
+		description.addProperty("closureNotes");
 		description.addProperty("eventId");
 		description.addProperty("closed");
 		description.addProperty("location");

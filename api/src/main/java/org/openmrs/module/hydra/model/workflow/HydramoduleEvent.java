@@ -34,7 +34,10 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 
 	@Column(name = "name")
 	private String name;
-
+	
+	@Column(name = "closure_notes")
+	private String closureNotes;
+	
 	@Column(name = "description")
 	private String description;
 
@@ -166,5 +169,13 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 
 	public void setClosed(Boolean closed) {
 		this.closed = closed;
+	}
+
+	public String getClosureNotes() {
+		return closureNotes;
+	}
+
+	public void setClosureNotes(String closureNotes) {
+		this.closureNotes = closureNotes;
 	}
 }

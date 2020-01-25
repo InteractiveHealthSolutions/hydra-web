@@ -6,9 +6,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.openmrs.BaseOpenmrsMetadata;
+import org.openmrs.Encounter;
 
 @Entity
 @Table(name = "hydramodule_service_type", catalog = "hydra")
@@ -24,6 +27,11 @@ public class HydramoduleServiceType extends BaseOpenmrsMetadata implements java.
 	@Column(name = "service_type_id", unique = true, nullable = false)
 	private Integer serviceTypeId;
 
+	@ManyToOne
+	@JoinColumn(name="encounter_id")
+	private Encounter encounter;
+	
+	
 	public Integer getServiceTypeId() {
 		return serviceTypeId;
 	}
@@ -42,4 +50,14 @@ public class HydramoduleServiceType extends BaseOpenmrsMetadata implements java.
 	public void setId(Integer id) {
 		serviceTypeId = id;
 	}
+
+	public Encounter getEncounter() {
+		return encounter;
+	}
+
+	public void setEncounter(Encounter encounter) {
+		this.encounter = encounter;
+	}
+	
+	
 }
