@@ -34,10 +34,10 @@ public class HydramoduleEvent extends BaseOpenmrsData {
 
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "closure_notes")
 	private String closureNotes;
-	
+
 	@Column(name = "description")
 	private String description;
 

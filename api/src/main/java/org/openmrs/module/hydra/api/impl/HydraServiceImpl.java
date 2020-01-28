@@ -9,10 +9,14 @@
  */
 package org.openmrs.module.hydra.api.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.openmrs.Field;
+import org.openmrs.FieldAnswer;
+import org.openmrs.FormField;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
@@ -24,12 +28,14 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
@@ -497,4 +503,24 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public HydramoduleEventParticipants getEventParticipant(String uuid) throws APIException {
 		return dao.getHydramoduleEventParticipant(uuid);
 	}
+
+	// Field
+	@Override
+	@Transactional
+	public Field saveField(HydramoduleFieldDTO dto) throws APIException {
+
+		return dao.saveField(dto);
+	}
+
+	public List<HydramoduleFieldDTO> getFieldsByName(String name) throws APIException {
+		List<Field> fields = dao.getAllFieldsByName(name);
+		List<HydramoduleFieldDTO> fieldDTOs = new ArrayList();
+		for (Field f : fields) {
+			HydramoduleFieldDTO dto = new HydramoduleFieldDTO();
+			dto.setField(f);
+			fieldDTOs.add(dto);
+		}
+		return fieldDTOs;
+	}
+
 }

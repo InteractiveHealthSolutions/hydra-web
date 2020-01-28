@@ -17,8 +17,13 @@ import javax.transaction.Transactional;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Concept;
+import org.openmrs.Field;
+import org.openmrs.FieldAnswer;
 import org.openmrs.Form;
+import org.openmrs.FormField;
 import org.openmrs.api.APIException;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.model.event_planner.HydraForm;
@@ -26,12 +31,14 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
@@ -459,7 +466,8 @@ public class HydraDaoImpl {
 		getSession().saveOrUpdate(event);
 		getSession().flush();
 
-		// TODO #BadPractice, code below block should be in service layer not there in
+		// TODO #BadPractice, code below block should be in service layer not
+		// there in
 		// data
 		// access layer!
 		/* if (eventId == null) */ {
@@ -469,7 +477,7 @@ public class HydraDaoImpl {
 				if (assets.size() > 0) {
 					for (HydramoduleEventAsset asset : assets) {
 						asset.setEvent(event);
-						/*persistantAssets.add*/saveHydramoduleEventAsset(asset);
+						/* persistantAssets.add */saveHydramoduleEventAsset(asset);
 					}
 				}
 			}
@@ -480,7 +488,7 @@ public class HydraDaoImpl {
 				if (services.size() > 0) {
 					for (HydramoduleEventService service : services) {
 						service.setEvent(event);
-						/*persistantServices.add*/saveHydramoduleEventService(service);
+						/* persistantServices.add */saveHydramoduleEventService(service);
 					}
 				}
 			}
@@ -491,7 +499,7 @@ public class HydraDaoImpl {
 				if (participants.size() > 0) {
 					for (HydramoduleEventParticipants eventParticipants : participants) {
 						eventParticipants.setEvent(event);
-						/*persistantParticipants.add*/saveHydramoduleEventParticipant(eventParticipants);
+						/* persistantParticipants.add */saveHydramoduleEventParticipant(eventParticipants);
 					}
 				}
 			}
@@ -647,5 +655,44 @@ public class HydraDaoImpl {
 		criteria.addOrder(Order.asc("eventParticipantId"));
 		criteria.add(Restrictions.eq("voided", retired));
 		return criteria.list();
+	}
+
+	// EventParticipant
+	public FieldAnswer saveHydramoduleDTOFieldAnswer(FieldAnswer fieldAnswer) {
+		getSession().saveOrUpdate(fieldAnswer);
+		getSession().flush();
+		return fieldAnswer;
+	}
+
+	// EventParticipant
+	public Field saveField(HydramoduleFieldDTO serviceType) {
+		// System.out.println(serviceType.getUuid());
+		// Field fieldReceived =
+		// Context.getFormService().saveField(serviceType.getField());
+		Field fieldReceived = serviceType.getField();
+		System.out.println("*********************************" + fieldReceived.getConcept().getUuid());
+		getSession().saveOrUpdate(fieldReceived);
+		getSession().flush();
+		for (FieldAnswer a : serviceType.getAnswers()) {
+			a.setField(fieldReceived);
+			saveHydramoduleDTOFieldAnswer(a);
+		}
+		return fieldReceived;
+	}
+
+	public List<Field> getAllFieldsByName(String name) {
+		// HydramoduleComponent component = getComponent(componentUUID);
+		if (name != null) {
+			DbSession session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(Field.class);
+			criteria.add(Restrictions.like("name", "%" + name + "%"));
+			List<Field> fields = criteria.list();
+			System.out.println("Naaaaaaaaaaaaaaaaaaame " + name + fields.size());
+			// criteria.addOrder(Order.asc("hydramoduleFormId"));
+			return fields;
+
+		} else {
+			return new ArrayList<Field>();
+		}
 	}
 }

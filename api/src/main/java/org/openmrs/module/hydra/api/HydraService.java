@@ -12,6 +12,8 @@ package org.openmrs.module.hydra.api;
 import java.util.List;
 import java.util.Set;
 
+import org.openmrs.Field;
+import org.openmrs.FieldAnswer;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
@@ -21,12 +23,14 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
@@ -221,4 +225,9 @@ public interface HydraService extends OpenmrsService {
 	HydramoduleEventParticipants getEventParticipant(String uuid) throws APIException;
 
 	List<HydramoduleForm> getAllModuleFormsByComponent(String componentUUID) throws APIException;
+
+	Field saveField(HydramoduleFieldDTO dto) throws APIException;
+
+	List<HydramoduleFieldDTO> getFieldsByName(String name) throws APIException;
+
 }

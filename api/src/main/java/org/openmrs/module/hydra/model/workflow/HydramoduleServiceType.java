@@ -29,10 +29,9 @@ public class HydramoduleServiceType extends BaseOpenmrsMetadata implements java.
 	private Integer serviceTypeId;
 
 	@ManyToOne
-	@JoinColumn(name="encounter_type_id")
+	@JoinColumn(name = "encounter_type_id")
 	private EncounterType encounterType;
-	
-	
+
 	public Integer getServiceTypeId() {
 		return serviceTypeId;
 	}
@@ -60,7 +59,4 @@ public class HydramoduleServiceType extends BaseOpenmrsMetadata implements java.
 		this.encounterType = encounterType;
 	}
 
-	
-	
-	
 }
