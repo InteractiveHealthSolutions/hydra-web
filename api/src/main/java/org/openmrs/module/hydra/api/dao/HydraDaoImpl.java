@@ -664,7 +664,7 @@ public class HydraDaoImpl {
 		return fieldAnswer;
 	}
 
-	// EventParticipant
+	// Fields
 	public Field saveField(HydramoduleFieldDTO serviceType) {
 		// System.out.println(serviceType.getUuid());
 		// Field fieldReceived =
@@ -680,12 +680,30 @@ public class HydraDaoImpl {
 		return fieldReceived;
 	}
 
+	public List<FieldAnswer> getAllFieldAnswersByID(Field fieldId) {
+		// HydramoduleComponent component = getComponent(componentUUID);
+		if (fieldId != null) {
+			DbSession session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(FieldAnswer.class);
+			criteria.add(Restrictions.eq("field", fieldId)).setMaxResults(25);
+			// criteria.
+			List<FieldAnswer> fields = criteria.list();
+			// System.out.println("Naaaaaaaaaaaaaaaaaaame " + name + fields.size());
+			// criteria.addOrder(Order.asc("hydramoduleFormId"));
+			return fields;
+
+		} else {
+			return new ArrayList<FieldAnswer>();
+		}
+	}
+
 	public List<Field> getAllFieldsByName(String name) {
 		// HydramoduleComponent component = getComponent(componentUUID);
 		if (name != null) {
 			DbSession session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(Field.class);
-			criteria.add(Restrictions.like("name", "%" + name + "%"));
+			criteria.add(Restrictions.like("name", "%" + name + "%")).setMaxResults(25);
+			// criteria.
 			List<Field> fields = criteria.list();
 			System.out.println("Naaaaaaaaaaaaaaaaaaame " + name + fields.size());
 			// criteria.addOrder(Order.asc("hydramoduleFormId"));

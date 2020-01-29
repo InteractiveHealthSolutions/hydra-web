@@ -517,7 +517,9 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		List<HydramoduleFieldDTO> fieldDTOs = new ArrayList();
 		for (Field f : fields) {
 			HydramoduleFieldDTO dto = new HydramoduleFieldDTO();
+			List<FieldAnswer> answers = dao.getAllFieldAnswersByID(f);
 			dto.setField(f);
+			dto.setAnswers(answers);
 			fieldDTOs.add(dto);
 		}
 		return fieldDTOs;

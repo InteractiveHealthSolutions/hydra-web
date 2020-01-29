@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.model.workflow;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -35,7 +36,7 @@ public class HydramoduleFieldDTO extends BaseOpenmrsObject implements Serializab
 	@Column(name = "concept")
 	Concept concept;
 
-	private Set<FieldAnswer> answers;
+	private List<FieldAnswer> answers;
 
 	public Integer getFieldId() {
 		return fieldId;
@@ -64,11 +65,11 @@ public class HydramoduleFieldDTO extends BaseOpenmrsObject implements Serializab
 
 	}
 
-	public Set<FieldAnswer> getAnswers() {
+	public List<FieldAnswer> getAnswers() {
 		return answers;
 	}
 
-	public void setAnswers(Set<FieldAnswer> answers) {
+	public void setAnswers(List<FieldAnswer> answers) {
 		this.answers = answers;
 	}
 
