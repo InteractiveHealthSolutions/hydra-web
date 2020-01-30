@@ -293,6 +293,9 @@
 			<column name="core" type="BOOLEAN" defaultValueBoolean="false" />
 			<column name="component_id" type="int" />
 
+			<column name="encounter_type_id" type="int" />
+
+			
 			<column name="name" type="varchar(50)">
 				<constraints nullable="false" />
 			</column>
@@ -316,6 +319,9 @@
 			</column>
 		</createTable>
 
+		<addForeignKeyConstraint constraintName="hydramodule_form_encounter_type_fk"
+			baseTableName="hydramodule_form" baseColumnNames="encounter_type_id"
+			referencedTableName="encounter_type" referencedColumnNames="encounter_type_id" />
 		<addForeignKeyConstraint constraintName="openmrs_form_fk"
 			baseTableName="hydramodule_form" baseColumnNames="form_id"
 			referencedTableName="form" referencedColumnNames="form_id" />
@@ -577,9 +583,8 @@
 			<column name="service_type_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="encounter_type_id" type="int">
+			<column name="encounter_type_id" type="int" />
 
-			</column>
 			<column name="name" type="varchar(50)">
 				<constraints nullable="false" />
 			</column>
@@ -1212,6 +1217,8 @@
 			<column name="display_order" type="int" />
 			<column name="min_occurrence" type="int" />
 			<column name="max_occurrence" type="int" />
+			<column name="min_value" type="int" />
+			<column name="max_value" type="int" />
 			<column name="min_length" type="int" />
 			<column name="max_length" type="int" />
 			<column name="min_selections" type="int" />
@@ -1219,8 +1226,10 @@
 			<column name="allow_future_date" type="BOOLEAN" />
 			<column name="allow_past_date" type="BOOLEAN" />
 			<column name="mandatory" type="BOOLEAN" />
+			<column name="scoreable" type="BOOLEAN" />
 
 			<column name="default_value" type="varchar(255)" />
+			<column name="error_message" type="varchar(255)" />
 			<column name="regix" type="varchar(100)" />
 			<column name="characters" type="varchar(255)" />
 			<column name="display_text" type="varchar(255)" />
@@ -1266,6 +1275,5 @@
 			baseTableName="hydramodule_form_field" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-
 
 </databaseChangeLog>

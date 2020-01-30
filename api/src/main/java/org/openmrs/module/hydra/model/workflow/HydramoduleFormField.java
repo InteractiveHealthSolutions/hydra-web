@@ -38,6 +38,12 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 	@Column(name = "max_occurrence")
 	private Integer maxOccurrence;
 
+	@Column(name = "min_value")
+	private Integer minValue;
+
+	@Column(name = "max_value")
+	private Integer maxValue;
+
 	@Column(name = "min_length")
 	private Integer minLength;
 
@@ -55,6 +61,12 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	@Column(name = "display_text")
 	private String displayText;
+
+	@Column(name = "error_message")
+	private String errorMessage;
+
+	@Column(name = "scoreable")
+	private Boolean scoreable;
 
 	@Column(name = "mandatory")
 	private Boolean mandatory;
@@ -116,6 +128,22 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	public void setMaxOccurrence(Integer maxOccurrence) {
 		this.maxOccurrence = maxOccurrence;
+	}
+
+	public Integer getMinValue() {
+		return minValue;
+	}
+
+	public void setMinValue(Integer minValue) {
+		this.minValue = minValue;
+	}
+
+	public Integer getMaxValue() {
+		return maxValue;
+	}
+
+	public void setMaxValue(Integer maxValue) {
+		this.maxValue = maxValue;
 	}
 
 	public Integer getMinLength() {
@@ -212,6 +240,22 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	public void setForm(HydramoduleForm form) {
 		this.form = form;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+	public Boolean getScoreable() {
+		return scoreable;
+	}
+
+	public void setScoreable(Boolean scoreable) {
+		this.scoreable = scoreable;
 	}
 
 }

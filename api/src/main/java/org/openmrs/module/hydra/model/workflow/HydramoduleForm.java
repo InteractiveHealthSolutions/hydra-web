@@ -5,6 +5,7 @@ package org.openmrs.module.hydra.model.workflow;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -15,12 +16,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.openmrs.BaseOpenmrsMetadata;
-import org.openmrs.Form;
+import org.openmrs.EncounterType;
 
 @Entity
 @Table(name = "hydramodule_form", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
@@ -33,9 +33,12 @@ public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Seri
 	@Column(name = "hydramodule_form_id", unique = true, nullable = false)
 	private Integer hydramoduleFormId;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "form_id")
-	private Form form;
+	@ManyToOne
+	@JoinColumn(name = "encounter_type_id")
+	private EncounterType encounterType;
+
+	@OneToMany(mappedBy = "form")
+	private List<HydramoduleFormField> formFields;
 
 	@Column(name = "core")
 	private Boolean core = false;
@@ -61,12 +64,20 @@ public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Seri
 		this.hydramoduleFormId = hydramoduleFormId;
 	}
 
-	public Form getForm() {
-		return this.form;
+	public EncounterType getEncounterType() {
+		return encounterType;
 	}
 
-	public void setForm(Form form) {
-		this.form = form;
+	public void setEncounterType(EncounterType encounterType) {
+		this.encounterType = encounterType;
+	}
+
+	public List<HydramoduleFormField> getFormFields() {
+		return formFields;
+	}
+
+	public void setFormFields(List<HydramoduleFormField> formFields) {
+		this.formFields = formFields;
 	}
 
 	public Boolean getCore() {

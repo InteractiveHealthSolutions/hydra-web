@@ -40,6 +40,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
@@ -160,16 +161,24 @@ public class HydraDaoImpl {
 	}
 
 	public HydramoduleForm saveModuleForm(HydramoduleForm form) {
-		Form oForm = form.getForm();
-		if (oForm != null) {
-			oForm.setName(form.getName());
-			getSession().saveOrUpdate(oForm);
-			getSession().flush();
-			form.setForm(oForm);
+		List<HydramoduleFormField> fields = form.getFormFields();
+		getSession().saveOrUpdate(form);
+		if (fields != null) {
+			for (HydramoduleFormField field : fields) {
+				field.setForm(form);
+				saveFormField(field);
+			}
 		}
+
 		getSession().saveOrUpdate(form);
 		getSession().flush();
 		return form;
+	}
+
+	public HydramoduleFormField saveFormField(HydramoduleFormField field) {
+		getSession().saveOrUpdate(field);
+		getSession().flush();
+		return field;
 	}
 
 	public List<HydramoduleForm> getAllModuleForm() {

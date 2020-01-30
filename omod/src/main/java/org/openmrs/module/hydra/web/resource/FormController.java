@@ -83,8 +83,9 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 		description.addProperty("formActions");
 		description.addProperty("hydramoduleFormId");
 		description.addProperty("name");
-		description.addProperty("form", Representation.FULL);
-		description.addProperty("component");
+		description.addProperty("component", Representation.REF);
+		description.addProperty("encounterType", Representation.REF);
+		description.addProperty("formFields", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
 			description.addProperty("display");
@@ -117,7 +118,6 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addProperty("form");
 		description.addProperty("name");
 		description.addProperty("uuid");
 		description.addProperty("formActions");
@@ -125,6 +125,8 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 		description.addProperty("retired");
 		description.addProperty("core");
 		description.addProperty("component");
+		description.addProperty("formFields");
+		description.addProperty("encounterType");
 
 		return description;
 
