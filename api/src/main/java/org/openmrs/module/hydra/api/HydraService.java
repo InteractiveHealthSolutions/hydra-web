@@ -23,6 +23,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
@@ -229,5 +230,13 @@ public interface HydraService extends OpenmrsService {
 	Field saveField(HydramoduleFieldDTO dto) throws APIException;
 
 	List<HydramoduleFieldDTO> getFieldsByName(String name) throws APIException;
+
+	HydramoduleComponentForm saveComponentFormRelation(HydramoduleComponentForm item) throws APIException;
+
+	HydramoduleComponentForm getComponentFormByUUID(String uuid) throws APIException;
+
+	List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException;
+
+	void deleteComponentForm(HydramoduleComponentForm phaseComponent) throws APIException;
 
 }

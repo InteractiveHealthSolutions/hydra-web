@@ -67,6 +67,9 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	@Column(name = "scoreable")
 	private Boolean scoreable;
+	
+	@Column(name="allow_decimal")
+	private String allowDecimal;
 
 	@Column(name = "mandatory")
 	private Boolean mandatory;
@@ -256,6 +259,14 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	public void setScoreable(Boolean scoreable) {
 		this.scoreable = scoreable;
+	}
+
+	public String getAllowDecimal() {
+		return allowDecimal;
+	}
+
+	public void setAllowDecimal(String allowDecimal) {
+		this.allowDecimal = allowDecimal;
 	}
 
 }

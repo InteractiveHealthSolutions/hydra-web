@@ -99,6 +99,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("displayText");
 		description.addProperty("errorMessage");
 		description.addProperty("scoreable");
+		description.addProperty("allowDecimal");
 		description.addProperty("mandatory");
 		description.addProperty("defaultValue");
 		description.addProperty("regix");
@@ -147,6 +148,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("characters");
 		description.addProperty("errorMessage");
 		description.addProperty("scoreable");
+		description.addProperty("allowDecimal");
 		description.addProperty("field");
 		description.addProperty("form");
 		return description;

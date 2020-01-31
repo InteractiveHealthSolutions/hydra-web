@@ -31,6 +31,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
@@ -86,6 +87,13 @@ public class HydraDaoImpl {
 		return (HydramodulePhaseComponents) criteria.uniqueResult();
 	}
 
+	public HydramoduleComponentForm getComponentFormRelation(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (HydramoduleComponentForm) criteria.uniqueResult();
+	}
+
 	public List<HydramoduleWorkflow> getAllWorkflows() {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
@@ -120,6 +128,13 @@ public class HydraDaoImpl {
 	public List<HydramodulePhaseComponents> getAllPhaseComponentRelations() {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePhaseComponents.class);
+		criteria.addOrder(Order.asc("displayOrder"));
+		return criteria.list();
+	}
+
+	public List<HydramoduleComponentForm> getAllComponentFormRelations() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
 		criteria.addOrder(Order.asc("displayOrder"));
 		return criteria.list();
 	}
@@ -221,6 +236,11 @@ public class HydraDaoImpl {
 		return phaseComponent;
 	}
 
+	public HydramoduleComponentForm saveComponentFormRelation(HydramoduleComponentForm phaseComponent) {
+		getSession().saveOrUpdate(phaseComponent);
+		return phaseComponent;
+	}
+
 	public HydramodulePhase savePhase(HydramodulePhase phase) {
 		getSession().saveOrUpdate(phase);
 		getSession().flush();
@@ -248,9 +268,12 @@ public class HydraDaoImpl {
 	}
 
 	// delete map classes
-
 	public void deletePhaseComponent(HydramodulePhaseComponents phaseComponent) {
 		sessionFactory.getCurrentSession().delete(phaseComponent);
+	}
+
+	public void deleteComponentForm(HydramoduleComponentForm componentForm) {
+		sessionFactory.getCurrentSession().delete(componentForm);
 	}
 
 	public void deleteWorkflowPhase(HydramoduleWorkflowPhases workflowphases) {

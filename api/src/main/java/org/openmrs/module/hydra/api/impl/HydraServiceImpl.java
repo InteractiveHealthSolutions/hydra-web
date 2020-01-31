@@ -28,6 +28,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
@@ -247,8 +248,18 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
+	public HydramoduleComponentForm saveComponentFormRelation(HydramoduleComponentForm item) throws APIException {
+		return dao.saveComponentFormRelation(item);
+	}
+
+	@Override
 	public HydramodulePhaseComponents getPhasesComponentRelationByUUID(String uuid) throws APIException {
 		return dao.getPhaseComponentRelation(uuid);
+	}
+
+	@Override
+	public HydramoduleComponentForm getComponentFormByUUID(String uuid) throws APIException {
+		return dao.getComponentFormRelation(uuid);
 	}
 
 	@Override
@@ -256,10 +267,22 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return dao.getAllPhaseComponentRelations();
 	}
 
+	@Override
+	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException {
+		return dao.getAllComponentFormRelations();
+	}
+
 	@Transactional
 	@Override
 	public void deletePhaseComponent(HydramodulePhaseComponents phaseComponent) throws APIException {
 		dao.deletePhaseComponent(phaseComponent);
+
+	}
+
+	@Transactional
+	@Override
+	public void deleteComponentForm(HydramoduleComponentForm phaseComponent) throws APIException {
+		dao.deleteComponentForm(phaseComponent);
 
 	}
 

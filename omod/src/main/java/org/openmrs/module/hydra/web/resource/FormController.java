@@ -83,6 +83,7 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 		description.addProperty("formActions");
 		description.addProperty("hydramoduleFormId");
 		description.addProperty("name");
+		description.addProperty("description");
 		description.addProperty("component", Representation.REF);
 		description.addProperty("encounterType", Representation.REF);
 		description.addProperty("formFields", Representation.REF);
@@ -126,6 +127,7 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 		description.addProperty("core");
 		description.addProperty("component");
 		description.addProperty("formFields");
+		description.addProperty("description");
 		description.addProperty("encounterType");
 
 		return description;
