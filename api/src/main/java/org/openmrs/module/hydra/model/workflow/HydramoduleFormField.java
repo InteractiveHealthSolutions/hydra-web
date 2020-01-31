@@ -67,8 +67,8 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	@Column(name = "scoreable")
 	private Boolean scoreable;
-	
-	@Column(name="allow_decimal")
+
+	@Column(name = "allow_decimal")
 	private String allowDecimal;
 
 	@Column(name = "mandatory")

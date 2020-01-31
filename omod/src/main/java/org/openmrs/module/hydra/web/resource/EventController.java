@@ -79,6 +79,7 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 		description.addProperty("eventServices", Representation.REF);
 		description.addProperty("eventParticipants", Representation.REF);
 		description.addProperty("voided");
+		description.addProperty("voidReason");
 		if (representation instanceof DefaultRepresentation) {
 			/*
 			 * description.addProperty("display"); description.addProperty("concept");
@@ -97,7 +98,6 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 
 			description.addProperty("dateVoided");
 			description.addProperty("voidedBy");
-			description.addProperty("voidReason");
 
 			return description;
 		}
@@ -119,6 +119,7 @@ public class EventController extends DataDelegatingCrudResource<HydramoduleEvent
 		description.addProperty("description");
 		description.addProperty("eventAssets");
 		description.addProperty("eventServices");
+		description.addProperty("voidReason");
 		description.addProperty("eventParticipants");
 		description.addProperty("voided");
 		return description;
