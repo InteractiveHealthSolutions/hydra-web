@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.openmrs.EncounterType;
 import org.openmrs.Field;
 import org.openmrs.FieldAnswer;
 import org.openmrs.FormField;
@@ -224,6 +225,11 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	@Override
 	public HydramoduleForm saveHydramoduleForm(HydramoduleForm form) throws APIException {
+		EncounterType encounterType = new EncounterType();
+		encounterType.setName(form.getName());
+		encounterType.setDescription(form.getDescription());
+		encounterType = Context.getEncounterService().saveEncounterType(encounterType);
+		form.setEncounterType(encounterType);
 		return dao.saveModuleForm(form);
 	}
 

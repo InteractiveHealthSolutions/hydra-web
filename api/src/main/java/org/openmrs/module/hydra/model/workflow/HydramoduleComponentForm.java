@@ -12,12 +12,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.openmrs.BaseOpenmrsMetadata;
-import org.openmrs.Field;
+import org.openmrs.BaseOpenmrsObject;
 
 @Entity
-@Table(name = "hydramodule_form_field", catalog = "hydra")
-public class HydramoduleComponentForm extends BaseOpenmrsMetadata implements Serializable {
+@Table(name = "hydramodule_component_form", catalog = "hydra")
+public class HydramoduleComponentForm extends BaseOpenmrsObject implements Serializable {
 
 	/**
 	 * 

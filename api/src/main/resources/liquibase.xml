@@ -339,6 +339,42 @@
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
 
+<changeSet author="naveed.iqbal" id="hydra-202002011035">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_component_form" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_component_form table
+		</comment>
+		<createTable tableName="hydramodule_component_form">
+			<column name="component_form_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="component_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="form_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="display_order" type="int">
+			</column>
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_component_form_component_fk"
+			baseTableName="hydramodule_component_form" baseColumnNames="component_id"
+			referencedTableName="hydramodule_component" referencedColumnNames="component_id" />
+
+
+		<addForeignKeyConstraint constraintName="hydramodule_component_form_form_fk"
+			baseTableName="hydramodule_component_form" baseColumnNames="form_id"
+			referencedTableName="hydramodule_phase" referencedColumnNames="phase_id" />
+
+	</changeSet>
+
 	<changeSet author="naveed.iqbal" id="hydra-201905091130">
 		<preConditions onFail="MARK_RAN">
 			<not>
