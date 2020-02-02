@@ -84,9 +84,10 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 		description.addProperty("defaultValue");
 		description.addProperty("attributeName");
 		description.addProperty("tableName");
+		description.addProperty("name");
 		description.addProperty("fieldId");
 		description.addProperty("description");
-		description.addProperty("concept", Representation.REF);
+		description.addProperty("concept", Representation.FULL);
 		description.addProperty("fieldType", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
@@ -125,6 +126,7 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 		description.addProperty("attributeName");
 		description.addProperty("tableName");
 		description.addProperty("fieldId");
+		description.addProperty("name");
 		description.addProperty("description");
 		description.addProperty("concept");
 		description.addProperty("fieldType");

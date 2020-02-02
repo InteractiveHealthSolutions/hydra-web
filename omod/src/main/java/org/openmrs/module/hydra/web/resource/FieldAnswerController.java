@@ -22,7 +22,7 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 @Resource(name = RestConstants.VERSION_1
         + "/hydra/hydraFieldAnswer", supportedClass = HydramoduleFieldAnswer.class, supportedOpenmrsVersions = {
                 "2.0.*,2.1.*,2.2.*" })
-public class FieldAnswer extends DelegatingCrudResource<HydramoduleFieldAnswer> {
+public class FieldAnswerController extends DelegatingCrudResource<HydramoduleFieldAnswer> {
 
 	/**
 	 * Logger for this class
@@ -97,10 +97,8 @@ public class FieldAnswer extends DelegatingCrudResource<HydramoduleFieldAnswer> 
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 
-		description.addProperty("uuid");
 		description.addProperty("concept");
 		description.addProperty("field");
-		description.addProperty("fieldAnswerId");
 
 		return description;
 

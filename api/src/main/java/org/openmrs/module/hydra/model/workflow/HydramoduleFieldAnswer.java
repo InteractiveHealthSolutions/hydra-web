@@ -16,6 +16,7 @@ import javax.persistence.UniqueConstraint;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Concept;
 import org.openmrs.Field;
+import org.openmrs.FieldAnswer;
 
 @Entity
 @Table(name = "hydramodule_field_answer", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))

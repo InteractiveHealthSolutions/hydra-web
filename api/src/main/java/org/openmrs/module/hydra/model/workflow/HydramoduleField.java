@@ -18,7 +18,6 @@ import javax.persistence.UniqueConstraint;
 
 import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Concept;
-import org.openmrs.FieldAnswer;
 import org.openmrs.FieldType;
 
 @Entity
