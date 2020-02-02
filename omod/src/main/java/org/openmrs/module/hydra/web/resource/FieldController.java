@@ -6,10 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
-import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
-import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleField;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -18,17 +15,13 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
-import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
-import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
-import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingCrudResource;
-import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/field", supportedClass = HydramoduleFieldDTO.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
-public class FieldController extends DelegatingCrudResource<HydramoduleFieldDTO> {
+        + "/hydra/hydraField", supportedClass = HydramoduleField.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
+public class FieldController extends MetadataDelegatingCrudResource<HydramoduleField> {
 
 	/**
 	 * Logger for this class
@@ -39,72 +32,81 @@ public class FieldController extends DelegatingCrudResource<HydramoduleFieldDTO>
 	private HydraService service = Context.getService(HydraService.class);
 
 	@Override
-	public HydramoduleFieldDTO newDelegate() {
-		return new HydramoduleFieldDTO();
+	public HydramoduleField newDelegate() {
+		return new HydramoduleField();
 	}
 
 	@Override
-	public HydramoduleFieldDTO save(HydramoduleFieldDTO component) {
-
-		service.saveField(component);
-		return new HydramoduleFieldDTO();
+	public HydramoduleField save(HydramoduleField delegate) {
+		return service.saveHydramoduleField(delegate);
 	}
 
 	@Override
-	public HydramoduleFieldDTO getByUniqueId(String uuid) {
-		return /* service.getAssetCategory(uuid) */null;
-	}
-
-	@Override
-	protected PageableResult doSearch(RequestContext context) {
-		String queryParam = context.getParameter("q");
-		List<HydramoduleFieldDTO> forms = service.getFieldsByName(queryParam);
-
-		return new NeedsPaging<HydramoduleFieldDTO>(forms, context);
+	public HydramoduleField getByUniqueId(String uuid) {
+		return service.getHydramoduleField(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
-		/*
-		 * SimpleObject simpleObject = new SimpleObject();
-		 * List<HydramoduleDTOFieldAnswer> services =
-		 * service.getAllAssetCategories(true);
-		 * services.addAll(service.getAllAssetCategories(false));
-		 * simpleObject.put("services", ConversionUtil.convertToRepresentation(services,
-		 * context.getRepresentation())); return simpleObject;
-		 */
-		return null;
+		SimpleObject simpleObject = new SimpleObject();
+		List<HydramoduleField> moduleForm = service.getAllHydramoduleFields(false);
+		simpleObject.put("forms", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
+		return simpleObject;
 	}
 
 	@Override
-	public void purge(HydramoduleFieldDTO component, RequestContext context) throws ResponseException {
-		// service.purgeComponent(component);
+	public void purge(HydramoduleField delegate, RequestContext context) throws ResponseException {
 	}
+
+	/*
+	 * @Override protected PageableResult doSearch(RequestContext context) { String
+	 * queryParam = context.getParameter("q"); List<HydramoduleField> forms =
+	 * service.getAllModuleFormsByComponent(queryParam);
+	 * 
+	 * return new NeedsPaging<HydramoduleField>(forms, context); }
+	 */
 
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
 
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
+		description.addProperty("uuid");
 
+		description.addSelfLink();
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
-		description.addProperty("field");
-		description.addProperty("answers");
+		description.addProperty("uuid");
+		description.addProperty("answers", Representation.REF);
+		description.addProperty("selectMultiple");
+		description.addProperty("defaultValue");
+		description.addProperty("attributeName");
+		description.addProperty("tableName");
+		description.addProperty("fieldId");
+		description.addProperty("description");
+		description.addProperty("concept", Representation.REF);
+		description.addProperty("fieldType", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
+			description.addProperty("display");
+
 			return description;
+
 		} else if (representation instanceof FullRepresentation) {
 
-			/*
-			 * description.addProperty("dateCreated");
-			 * 
-			 * description.addProperty("changedBy"); description.addProperty("dateChanged");
-			 * 
-			 * description.addProperty("retired"); description.addProperty("dateRetired");
-			 * description.addProperty("retiredBy");
-			 * description.addProperty("retireReason");
-			 * description.addProperty("assetTypes", Representation.DEFAULT);
-			 */
+			description.addProperty("display");
+
+			description.addProperty("dateCreated");
+
+			description.addProperty("changedBy");
+			description.addProperty("dateChanged");
+
+			description.addProperty("retired");
+			description.addProperty("dateRetired");
+			description.addProperty("retiredBy");
+			description.addProperty("retireReason");
+
 			return description;
+		} else {
+
 		}
 		return description;
 	}
@@ -112,16 +114,18 @@ public class FieldController extends DelegatingCrudResource<HydramoduleFieldDTO>
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addProperty("field");
+		description.addProperty("uuid");
 		description.addProperty("answers");
+		description.addProperty("selectMultiple");
+		description.addProperty("defaultValue");
+		description.addProperty("attributeName");
+		description.addProperty("tableName");
+		description.addProperty("fieldId");
+		description.addProperty("description");
 		description.addProperty("concept");
+		description.addProperty("fieldType");
+
 		return description;
-
-	}
-
-	@Override
-	protected void delete(HydramoduleFieldDTO delegate, String reason, RequestContext context) throws ResponseException {
-		// TODO Auto-generated method stub
 
 	}
 

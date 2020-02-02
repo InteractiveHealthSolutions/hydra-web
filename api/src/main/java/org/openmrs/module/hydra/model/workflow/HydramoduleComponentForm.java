@@ -32,6 +32,14 @@ public class HydramoduleComponentForm extends BaseOpenmrsObject implements Seria
 	private Integer displayOrder;
 
 	@ManyToOne
+	@JoinColumn(name = "workflow_id")
+	private HydramoduleWorkflow workflow;
+
+	@ManyToOne
+	@JoinColumn(name = "phase_id")
+	private HydramodulePhase phase;
+
+	@ManyToOne
 	@JoinColumn(name = "component_id")
 	private HydramoduleComponent component;
 
@@ -79,6 +87,22 @@ public class HydramoduleComponentForm extends BaseOpenmrsObject implements Seria
 
 	public void setForm(HydramoduleForm form) {
 		this.form = form;
+	}
+
+	public HydramoduleWorkflow getWorkflow() {
+		return workflow;
+	}
+
+	public void setWorkflow(HydramoduleWorkflow workflow) {
+		this.workflow = workflow;
+	}
+
+	public HydramodulePhase getPhase() {
+		return phase;
+	}
+
+	public void setPhase(HydramodulePhase phase) {
+		this.phase = phase;
 	}
 
 }

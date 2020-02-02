@@ -4,12 +4,11 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Concept;
@@ -31,12 +30,13 @@ public class HydramoduleFieldDTO extends BaseOpenmrsObject implements Serializab
 	private Integer fieldId;
 
 	@Column(name = "field")
-	Field field;
+	HydramoduleField field;
 
 	@Column(name = "concept")
 	Concept concept;
 
-	private List<FieldAnswer> answers;
+	@Transient
+	private List<HydramoduleFieldAnswer> answers;
 
 	public Integer getFieldId() {
 		return fieldId;
@@ -46,11 +46,11 @@ public class HydramoduleFieldDTO extends BaseOpenmrsObject implements Serializab
 		this.fieldId = fieldId;
 	}
 
-	public Field getField() {
+	public HydramoduleField getField() {
 		return field;
 	}
 
-	public void setField(Field field) {
+	public void setField(HydramoduleField field) {
 		this.field = field;
 	}
 
@@ -65,11 +65,11 @@ public class HydramoduleFieldDTO extends BaseOpenmrsObject implements Serializab
 
 	}
 
-	public List<FieldAnswer> getAnswers() {
+	public List<HydramoduleFieldAnswer> getAnswers() {
 		return answers;
 	}
 
-	public void setAnswers(List<FieldAnswer> answers) {
+	public void setAnswers(List<HydramoduleFieldAnswer> answers) {
 		this.answers = answers;
 	}
 

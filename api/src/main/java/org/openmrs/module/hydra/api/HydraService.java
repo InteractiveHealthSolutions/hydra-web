@@ -31,6 +31,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
@@ -227,7 +228,7 @@ public interface HydraService extends OpenmrsService {
 
 	List<HydramoduleForm> getAllModuleFormsByComponent(String componentUUID) throws APIException;
 
-	Field saveField(HydramoduleFieldDTO dto) throws APIException;
+	HydramoduleField saveField(HydramoduleFieldDTO dto) throws APIException;
 
 	List<HydramoduleFieldDTO> getFieldsByName(String name) throws APIException;
 
@@ -238,5 +239,11 @@ public interface HydraService extends OpenmrsService {
 	List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException;
 
 	void deleteComponentForm(HydramoduleComponentForm phaseComponent) throws APIException;
+
+	HydramoduleField saveHydramoduleField(HydramoduleField service) throws APIException;
+
+	List<HydramoduleField> getAllHydramoduleFields(boolean voided) throws APIException;
+
+	HydramoduleField getHydramoduleField(String uuid) throws APIException;
 
 }

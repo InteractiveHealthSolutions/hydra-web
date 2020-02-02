@@ -37,6 +37,8 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleField;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
@@ -536,22 +538,39 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	// Field
 	@Override
 	@Transactional
-	public Field saveField(HydramoduleFieldDTO dto) throws APIException {
+	public HydramoduleField saveField(HydramoduleFieldDTO dto) throws APIException {
 
 		return dao.saveField(dto);
 	}
 
 	public List<HydramoduleFieldDTO> getFieldsByName(String name) throws APIException {
-		List<Field> fields = dao.getAllFieldsByName(name);
+		List<HydramoduleField> fields = dao.getAllFieldsByName(name);
 		List<HydramoduleFieldDTO> fieldDTOs = new ArrayList();
-		for (Field f : fields) {
+		for (HydramoduleField f : fields) {
 			HydramoduleFieldDTO dto = new HydramoduleFieldDTO();
-			List<FieldAnswer> answers = dao.getAllFieldAnswersByID(f);
+			List<HydramoduleFieldAnswer> answers = dao.getAllFieldAnswersByID(f);
 			dto.setField(f);
 			dto.setAnswers(answers);
 			fieldDTOs.add(dto);
 		}
 		return fieldDTOs;
+	}
+
+	// EventParticipant
+	@Override
+	@Transactional
+	public HydramoduleField saveHydramoduleField(HydramoduleField service) throws APIException {
+		return dao.saveHydramoduleField(service);
+	}
+
+	@Override
+	public List<HydramoduleField> getAllHydramoduleFields(boolean voided) throws APIException {
+		return dao.getAllHydramoduleFields(voided);
+	}
+
+	@Override
+	public HydramoduleField getHydramoduleField(String uuid) throws APIException {
+		return dao.getHydramoduleField(uuid);
 	}
 
 }

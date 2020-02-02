@@ -295,7 +295,7 @@
 
 			<column name="encounter_type_id" type="int" />
 
-			
+
 			<column name="name" type="varchar(50)">
 				<constraints nullable="false" />
 			</column>
@@ -339,7 +339,7 @@
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
 
-<changeSet author="naveed.iqbal" id="hydra-202002011035">
+	<changeSet author="naveed.iqbal" id="hydra-202002011035">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="hydramodule_component_form" />
@@ -351,6 +351,12 @@
 		<createTable tableName="hydramodule_component_form">
 			<column name="component_form_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="workflow_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="phase_id" type="int">
+				<constraints nullable="false" />
 			</column>
 			<column name="component_id" type="int">
 				<constraints nullable="false" />
@@ -364,11 +370,14 @@
 				<constraints unique="true" />
 			</column>
 		</createTable>
-		<addForeignKeyConstraint constraintName="hydramodule_component_form_component_fk"
+		<addForeignKeyConstraint constraintName="hydramodule_component_form_workflow_fk"
+			baseTableName="hydramodule_component_form" baseColumnNames="workflow_id"
+			referencedTableName="hydramodule_workflow" referencedColumnNames="workflow_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_component_form_phase_fk"
+			baseTableName="hydramodule_component_phase" baseColumnNames="phase_id"
+			referencedTableName="hydramodule_component" referencedColumnNames="phase_id" /><addForeignKeyConstraint constraintName="hydramodule_component_form_component_fk"
 			baseTableName="hydramodule_component_form" baseColumnNames="component_id"
 			referencedTableName="hydramodule_component" referencedColumnNames="component_id" />
-
-
 		<addForeignKeyConstraint constraintName="hydramodule_component_form_form_fk"
 			baseTableName="hydramodule_component_form" baseColumnNames="form_id"
 			referencedTableName="hydramodule_phase" referencedColumnNames="phase_id" />
@@ -1236,6 +1245,127 @@
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
 
+	<changeSet id="hydra-202002021309" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_field" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_field table
+		</comment>
+		<createTable tableName="hydramodule_field">
+			<column name="field_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="field_type_id" type="int" />
+			<column name="concept_id" type="int" />
+
+			<column name="select_multiple" type="BOOLEAN" />
+
+			<column name="table_name" type="varchar(255)" />
+			<column name="attribute_name" type="varchar(255)" />
+			<column name="default_value" type="varchar(100)" />
+
+			<column name="name" type="varchar(255)">
+			</column>
+			<column name="description" type="varchar(255)" defaultValue="null" />
+			<column name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
+		</createTable>
+		
+		<addForeignKeyConstraint constraintName="hydramodule_field_field_type_fk"
+			baseTableName="hydramodule_field" baseColumnNames="field_type_id"
+			referencedTableName="field_type" referencedColumnNames="field_type_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_field_concept_fk"
+			baseTableName="hydramodule_field" baseColumnNames="concept_id"
+			referencedTableName="concept" referencedColumnNames="concept_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_field_creator_fk"
+			baseTableName="hydramodule_field" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_field_changed_by_fk"
+			baseTableName="hydramodule_field" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_field_voided_by_fk"
+			baseTableName="hydramodule_field" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
+	<changeSet id="hydra-202002021322" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_field_answer" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_field_answer table
+		</comment>
+		<createTable tableName="hydramodule_field_answer">
+			<column name="field_answer_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="field_id" type="int" />
+			<column name="concept_id" type="int" />
+
+			<column name="name" type="varchar(255)">
+			</column>
+			<column name="description" type="varchar(255)" defaultValue="null" />
+			<column name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
+		</createTable>
+		
+		<addForeignKeyConstraint constraintName="hydramodule_field_answer_field_fk"
+			baseTableName="hydramodule_field_answer" baseColumnNames="field_id"
+			referencedTableName="hydramodule_field" referencedColumnNames="field_id" />
+		
+		<addForeignKeyConstraint constraintName="hydramodule_field_answer_concept_fk"
+			baseTableName="hydramodule_field_answer" baseColumnNames="concept_id"
+			referencedTableName="concept" referencedColumnNames="concept_id" />
+		
+		
+		<addForeignKeyConstraint constraintName="hydramodule_field_answer_creator_fk"
+			baseTableName="hydramodule_field_answer" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_field_answer_changed_by_fk"
+			baseTableName="hydramodule_field_answer" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_field_answer_voided_by_fk"
+			baseTableName="hydramodule_field_answer" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
 	<changeSet id="hydra-202001300654" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -1274,7 +1404,7 @@
 			<column name="form_id" type="int" />
 			<column name="field_id" type="int" />
 
-			<column name="name" type="varchar(50)">
+			<column name="name" type="varchar(255)">
 				<constraints nullable="false" />
 			</column>
 			<column name="description" type="varchar(255)" defaultValue="null" />
@@ -1301,7 +1431,7 @@
 			referencedTableName="hydramodule_form" referencedColumnNames="hydramodule_form_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_form_field_field_fk"
 			baseTableName="hydramodule_form_field" baseColumnNames="field_id"
-			referencedTableName="field" referencedColumnNames="field_id" />
+			referencedTableName="hydramodule_field" referencedColumnNames="field_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_form_field_creator_fk"
 			baseTableName="hydramodule_form_field" baseColumnNames="creator"
 			referencedTableName="users" referencedColumnNames="user_id" />

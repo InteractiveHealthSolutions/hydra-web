@@ -57,9 +57,10 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleComponentForm> pahseComponent = service.getAllComponentFormsRelations();
+		List<HydramoduleComponentForm> componentForms = service.getAllComponentFormsRelations();
+
 		simpleObject.put("ComponentsFormsMap",
-		    ConversionUtil.convertToRepresentation(pahseComponent, context.getRepresentation()));
+		    ConversionUtil.convertToRepresentation(componentForms, context.getRepresentation()));
 		return simpleObject;
 	}
 
@@ -88,6 +89,8 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		description.addProperty("id");
 		description.addProperty("uuid");
 		description.addProperty("displayOrder");
+		description.addProperty("phase");
+		description.addProperty("workflow");
 		description.addProperty("component");
 		description.addProperty("componentFormId");
 		description.addProperty("form");
@@ -111,6 +114,8 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		description.addProperty("uuid");
 		description.addProperty("displayOrder");
 		description.addProperty("component");
+		description.addProperty("phase");
+		description.addProperty("workflow");
 		description.addProperty("componentFormId");
 		description.addProperty("form");
 

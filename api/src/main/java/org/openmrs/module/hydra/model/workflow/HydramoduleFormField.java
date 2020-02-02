@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.model.workflow;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Field;
@@ -77,6 +79,10 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 	@Column(name = "default_value")
 	private String defaultValue;
 
+	/*
+	 * @Column(name = "disabled") private String disabled;
+	 */
+
 	@Column(name = "regix")
 	private String regix;
 
@@ -85,11 +91,14 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	@ManyToOne
 	@JoinColumn(name = "field_id")
-	private Field field;
+	private HydramoduleField field;
 
 	@ManyToOne
 	@JoinColumn(name = "form_id")
 	private HydramoduleForm form;
+
+	@Transient
+	private List<HydramoduleFieldDTO> fieldData;
 
 	@Override
 	public Integer getId() {
@@ -229,11 +238,11 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 		this.characters = characters;
 	}
 
-	public Field getField() {
+	public HydramoduleField getField() {
 		return field;
 	}
 
-	public void setField(Field field) {
+	public void setField(HydramoduleField field) {
 		this.field = field;
 	}
 
@@ -267,6 +276,14 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	public void setAllowDecimal(Boolean allowDecimal) {
 		this.allowDecimal = allowDecimal;
+	}
+
+	public List<HydramoduleFieldDTO> getFieldData() {
+		return fieldData;
+	}
+
+	public void setFieldData(List<HydramoduleFieldDTO> fieldData) {
+		this.fieldData = fieldData;
 	}
 
 }

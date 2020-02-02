@@ -1,14 +1,9 @@
 package org.openmrs.module.hydra.web.resource;
 
-import java.util.List;
-
-import javax.persistence.Column;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -17,10 +12,8 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
-import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingCrudResource;
-import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
@@ -53,13 +46,13 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		return /* service.getAssetCategory(uuid) */null;
 	}
 
-	@Override
-	protected PageableResult doSearch(RequestContext context) {
-		String queryParam = context.getParameter("q");
-		List<HydramoduleFieldDTO> forms = service.getFieldsByName(queryParam);
-
-		return new NeedsPaging<HydramoduleFieldDTO>(forms, context);
-	}
+	/*
+	 * @Override protected PageableResult doSearch(RequestContext context) { String
+	 * queryParam = context.getParameter("q"); List<HydramoduleFormField> forms =
+	 * service.getFieldsByName(queryParam);
+	 * 
+	 * return new NeedsPaging<HydramoduleFormField>(forms, context); }
+	 */
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
@@ -105,6 +98,8 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("regix");
 		description.addProperty("characters");
 		description.addProperty("field", Representation.FULL);
+		description.addProperty("fieldData", Representation.FULL);
+
 		// description.addProperty("form", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
