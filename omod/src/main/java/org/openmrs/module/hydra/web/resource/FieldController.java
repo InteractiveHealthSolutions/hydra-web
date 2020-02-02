@@ -15,8 +15,10 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingCrudResource;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
@@ -49,8 +51,8 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleField> moduleForm = service.getAllHydramoduleFields(false);
-		simpleObject.put("forms", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
+		List<HydramoduleField> moduleForm = service.getAllHydramoduleFields();
+		simpleObject.put("fields", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}
 
@@ -58,13 +60,14 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 	public void purge(HydramoduleField delegate, RequestContext context) throws ResponseException {
 	}
 
-	/*
-	 * @Override protected PageableResult doSearch(RequestContext context) { String
-	 * queryParam = context.getParameter("q"); List<HydramoduleField> forms =
-	 * service.getAllModuleFormsByComponent(queryParam);
-	 * 
-	 * return new NeedsPaging<HydramoduleField>(forms, context); }
-	 */
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String queryParam = context.getParameter("q");
+		System.out.println(queryParam);
+		List<HydramoduleField> forms = service.getHydramoduleFieldsByName(queryParam);
+
+		return new NeedsPaging<HydramoduleField>(forms, context);
+	}
 
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation representation) {
@@ -76,6 +79,7 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("uuid");
 		description.addProperty("answers", Representation.REF);
+
 		description.addProperty("selectMultiple");
 		description.addProperty("defaultValue");
 		description.addProperty("attributeName");

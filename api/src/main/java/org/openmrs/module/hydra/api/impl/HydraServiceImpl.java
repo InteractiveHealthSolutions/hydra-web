@@ -556,7 +556,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return fieldDTOs;
 	}
 
-	// EventParticipant
+	// HydramoduleField
 	@Override
 	@Transactional
 	public HydramoduleField saveHydramoduleField(HydramoduleField service) throws APIException {
@@ -564,13 +564,36 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
-	public List<HydramoduleField> getAllHydramoduleFields(boolean voided) throws APIException {
-		return dao.getAllHydramoduleFields(voided);
+	public List<HydramoduleField> getAllHydramoduleFields() throws APIException {
+		return dao.getAllHydramoduleFields();
 	}
 
 	@Override
 	public HydramoduleField getHydramoduleField(String uuid) throws APIException {
 		return dao.getHydramoduleField(uuid);
+	}
+
+	// HydramoduleFieldAnswer
+	@Override
+	@Transactional
+	public HydramoduleFieldAnswer saveHydramoduleFieldAnswer(HydramoduleFieldAnswer service) throws APIException {
+		return dao.saveHydramoduleFieldAnswer(service);
+	}
+
+	@Override
+	public List<HydramoduleFieldAnswer> getAllHydramoduleFieldAnswers(boolean voided) throws APIException {
+		return dao.getAllHydramoduleFieldAnswers(voided);
+	}
+
+	@Override
+	public HydramoduleFieldAnswer getHydramoduleFieldAnswer(String uuid) throws APIException {
+		return dao.getHydramoduleFieldAnswer(uuid);
+	}
+
+	@Override
+	public List<HydramoduleField> getHydramoduleFieldsByName(String queryParam) {
+		// TODO Auto-generated method stub
+		return dao.getAllFieldsByName(queryParam);
 	}
 
 }

@@ -52,7 +52,7 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 	@Column(name = "select_multiple")
 	private Boolean selectMultiple = false;
 
-	@OneToMany
+	@OneToMany(mappedBy = "field")
 	private Set<HydramoduleFieldAnswer> answers;
 
 	@OneToMany(mappedBy = "field")
