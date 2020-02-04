@@ -89,7 +89,6 @@ public class FormService {
 		JSONObject authentication = (JSONObject) metadata.get("authentication");
 		username = (String) authentication.get("USERNAME");
 		password = (String) authentication.get("PASSWORD");
-		System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + username);
 		SecretKey sec;
 		String decPassword = null;
 		try {
@@ -101,7 +100,6 @@ public class FormService {
 			return;
 		}
 
-		System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PASS" + decPassword);
 		providerUUID = (String) authentication.get("provider");
 		Context.authenticate(username, decPassword);
 
@@ -294,24 +292,27 @@ public class FormService {
 
 		EncounterType encounterType = new EncounterType();
 		encounterType = encounterService.getEncounterType(encounterTypeString);
-
 		Location location = new Location();
 
-		List<PersonAttribute> personAttributes = new ArrayList();
-		List<PatientIdentifier> patientIdentifiers = new ArrayList();
+		List<PersonAttribute> personAttributes = new ArrayList<PersonAttribute>();
+
+		List<PatientIdentifier> patientIdentifiers = new ArrayList<PatientIdentifier>();
 
 		for (int i = 0; i < data.size(); i++) {
+
 			JSONObject dataItem = (JSONObject) data.get(i);
 			if (dataItem.containsKey(ParamNames.USERNAME) || dataItem.containsKey(ParamNames.PASSWORD))
 				continue;
 			if (!dataItem.containsKey(ParamNames.PAYLOAD_TYPE))
 				continue;
 			DATA_TYPE dataType = DATA_TYPE.valueOf(dataItem.get(ParamNames.PAYLOAD_TYPE).toString());
-			System.out.println("CHanginf the way again!!!!!!!!!!! Data: " + data);
 			switch (dataType) {
 				case IDENTIFIER: {
+
 					String identifierType = dataItem.get(ParamNames.PARAM_NAME).toString();
-					String IdentifierValue = dataItem.get(identifierType).toString();
+
+					String IdentifierValue = dataItem.get(ParamNames.VALUE).toString();
+
 					PatientIdentifierType patientIdentifierType = patientService
 					        .getPatientIdentifierTypeByName(identifierType);
 
@@ -322,22 +323,18 @@ public class FormService {
 					patientIdentifier.setPreferred(true);
 
 					patientIdentifiers.add(patientIdentifier);
+
 				}
 					break;
 
 				case NAME: {
-					String paramName = dataItem.get(ParamNames.VALUE).toString();
-					JSONArray namesArray = (JSONArray) dataItem.get(paramName);
 					String firstName = "";
 					String lastName = "";
 
-					for (int j = 0; j < namesArray.size(); j++) {
-						JSONObject nameObj = (JSONObject) namesArray.get(j);
-						if (nameObj.containsKey(ParamNames.GIVEN_NAME)) {
-							firstName = nameObj.get(ParamNames.GIVEN_NAME).toString();
-						} else if (nameObj.containsKey(ParamNames.FAMILY_NAME)) {
-							lastName = nameObj.get(ParamNames.FAMILY_NAME).toString();
-						}
+					if (dataItem.containsKey(ParamNames.GIVEN_NAME)) {
+						firstName = dataItem.get(ParamNames.GIVEN_NAME).toString();
+					} else if (dataItem.containsKey(ParamNames.FAMILY_NAME)) {
+						lastName = dataItem.get(ParamNames.FAMILY_NAME).toString();
 					}
 					personName = new PersonName();
 					personName.setGivenName(firstName);
@@ -347,13 +344,13 @@ public class FormService {
 				}
 					break;
 				case AGE: {
-					String strAge = dataItem.get(dataItem.get(ParamNames.VALUE).toString()).toString();
+					String strAge = dataItem.get(ParamNames.VALUE).toString();
 					System.out.println(strAge);
 					age = Integer.valueOf(strAge);
 				}
 					break;
 				case GENDER: {
-					gender = dataItem.get(dataItem.get(ParamNames.VALUE).toString()).toString();
+					gender = dataItem.get(ParamNames.VALUE).toString();
 					if (gender.toLowerCase().equals("male")) {
 						gender = "M";
 					} else {
@@ -362,12 +359,12 @@ public class FormService {
 				}
 					break;
 				case DOB: {
-					String date = dataItem.get(dataItem.get(ParamNames.VALUE).toString()).toString();
-					dob = Utils.formatterTimeDate.parse(date);
+					String date = dataItem.get(ParamNames.VALUE).toString();
+					dob = Utils.openMrsDateFormat.parse(date);
 				}
 					break;
 				case DATE_ENTERED: {
-					String date = dataItem.get(dataItem.get(ParamNames.VALUE).toString()).toString();
+					String date = dataItem.get(ParamNames.VALUE).toString();
 					try {
 						dateEntered = Utils.formatterTimeDate.parse(date);
 						Calendar calendar = Calendar.getInstance();
@@ -380,12 +377,14 @@ public class FormService {
 					}
 				}
 					break;
+				case LOCATION:
+					String locationString = dataItem.get(ParamNames.PARAM_NAME).toString();
+					location = findOrCreateLocation(locationString);
+					break;
 				default:
 					break;
 			}
 		}
-
-		System.out.println("3333333333333333333333333333 Out of the loop");
 
 		if (gender == null)
 			gender = "male";
@@ -415,6 +414,9 @@ public class FormService {
 			patient.addAttribute(attribute);
 		}
 
+		System.out.println(patient.getBirthdate());
+		System.out.println(patient.getGender());
+		System.out.println(patient.getPerson().getGivenName());
 		patient = patientService.savePatient(patient);
 		/*
 		 * Encounter encounter = new Encounter();

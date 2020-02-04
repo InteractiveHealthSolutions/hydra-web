@@ -103,6 +103,14 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 		return attributeName;
 	}
 
+	public Set<HydramoduleFormField> getFormFields() {
+		return formFields;
+	}
+
+	public void setFormFields(Set<HydramoduleFormField> formFields) {
+		this.formFields = formFields;
+	}
+
 	public void setAttributeName(String attributeName) {
 		this.attributeName = attributeName;
 	}

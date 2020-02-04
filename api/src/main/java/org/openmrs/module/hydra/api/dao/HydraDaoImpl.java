@@ -42,12 +42,14 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
+import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
 import org.openmrs.module.hydra.model.workflow.HydramoduleService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
@@ -724,7 +726,8 @@ public class HydraDaoImpl {
 			criteria.add(Restrictions.eq("field", fieldId)).setMaxResults(25);
 			// criteria.
 			List<HydramoduleFieldAnswer> fields = criteria.list();
-			// System.out.println("Naaaaaaaaaaaaaaaaaaame " + name + fields.size());
+			// System.out.println("Naaaaaaaaaaaaaaaaaaame " + name +
+			// fields.size());
 			// criteria.addOrder(Order.asc("hydramoduleFormId"));
 			return fields;
 
@@ -797,6 +800,48 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldAnswer.class);
 		criteria.addOrder(Order.asc("fieldAnswerId"));
+		return criteria.list();
+	}
+
+	// HydramoduleFieldRule
+	public HydramoduleFieldRule saveHydramoduleFieldRule(HydramoduleFieldRule serviceType) {
+		// System.out.println(serviceType.getUuid());
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleFieldRule getHydramoduleFieldRule(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
+		return (HydramoduleFieldRule) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleFieldRule> getAllHydramoduleFieldRules(boolean retired) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
+		criteria.add(Restrictions.eq("retired", retired));
+
+		return criteria.list();
+	}
+
+	// HydramoduleRuleToken
+	public HydramoduleRuleToken saveHydramoduleRuleToken(HydramoduleRuleToken serviceType) {
+		// System.out.println(serviceType.getUuid());
+		getSession().saveOrUpdate(serviceType);
+		getSession().flush();
+		return serviceType;
+	}
+
+	public HydramoduleRuleToken getHydramoduleRuleToken(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleRuleToken.class);
+		return (HydramoduleRuleToken) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleRuleToken> getAllHydramoduleRuleTokens() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleRuleToken.class);
 		return criteria.list();
 	}
 }

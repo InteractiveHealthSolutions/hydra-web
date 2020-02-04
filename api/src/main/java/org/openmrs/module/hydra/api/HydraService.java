@@ -34,11 +34,13 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
+import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
 import org.openmrs.module.hydra.model.workflow.HydramoduleService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
@@ -254,5 +256,17 @@ public interface HydraService extends OpenmrsService {
 	HydramoduleFieldAnswer saveHydramoduleFieldAnswer(HydramoduleFieldAnswer service) throws APIException;
 
 	List<HydramoduleField> getHydramoduleFieldsByName(String queryParam);
+
+	HydramoduleFieldRule saveHydramoduleFieldRule(HydramoduleFieldRule service) throws APIException;
+
+	List<HydramoduleFieldRule> getAllHydramoduleFieldRules(boolean voided) throws APIException;
+
+	HydramoduleFieldRule getHydramoduleFieldRule(String uuid) throws APIException;
+
+	HydramoduleRuleToken saveHydramoduleRuleToken(HydramoduleRuleToken service) throws APIException;
+
+	List<HydramoduleRuleToken> getAllHydramoduleRuleTokens() throws APIException;
+
+	HydramoduleRuleToken getHydramoduleRuleToken(String uuid) throws APIException;
 
 }

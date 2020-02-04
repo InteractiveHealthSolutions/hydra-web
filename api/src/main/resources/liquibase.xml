@@ -375,13 +375,13 @@
 			referencedTableName="hydramodule_workflow" referencedColumnNames="workflow_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_component_form_phase_fk"
 			baseTableName="hydramodule_component_form" baseColumnNames="phase_id"
-			referencedTableName="hydramodule_component" referencedColumnNames="phase_id" />
+			referencedTableName="hydramodule_phase" referencedColumnNames="phase_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_component_form_component_fk"
 			baseTableName="hydramodule_component_form" baseColumnNames="component_id"
 			referencedTableName="hydramodule_component" referencedColumnNames="component_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_component_form_form_fk"
 			baseTableName="hydramodule_component_form" baseColumnNames="form_id"
-			referencedTableName="hydramodule_phase" referencedColumnNames="phase_id" />
+			referencedTableName="hydramodule_form" referencedColumnNames="hydramodule_form_id" />
 
 	</changeSet>
 
@@ -1413,4 +1413,129 @@
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<changeSet id="hydra-202002040850" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_field_rule" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_field_rule table
+		</comment>
+		<createTable tableName="hydramodule_field_rule">
+			<column name="rule_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="form_id" type="int" />
+			<column name="target_form_id" type="int" />
+			<column name="target_field_id" type="int" />
+
+			<column name="action_name" type="varchar(255)" />
+
+			<!-- <column name="form_id" type="int" /> <column name="field_id" type="int" 
+				/> -->
+
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="varchar(255)" defaultValue="null" />
+			<column name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_form_field_form_fk"
+			baseTableName="hydramodule_field_rule" baseColumnNames="form_id"
+			referencedTableName="hydramodule_form" referencedColumnNames="hydramodule_form_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_form_field_target_form_fk"
+			baseTableName="hydramodule_field_rule" baseColumnNames="target_form_id"
+			referencedTableName="hydramodule_form" referencedColumnNames="hydramodule_form_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_form_field_field_fk"
+			baseTableName="hydramodule_field_rule" baseColumnNames="target_field_id"
+			referencedTableName="hydramodule_field" referencedColumnNames="field_id" />
+
+
+		<addForeignKeyConstraint constraintName="hydramodule_field_rule_creator_fk"
+			baseTableName="hydramodule_field_rule" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_field_rule_changed_by_fk"
+			baseTableName="hydramodule_field_rule" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_field_rule_voided_by_fk"
+			baseTableName="hydramodule_field_rule" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet id="hydra-202002040911" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_rule_token" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_rule_token table
+		</comment>
+		<createTable tableName="hydramodule_rule_token">
+			<column name="token_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="type" type="varchar(255)">
+			</column>
+			<column name="name" type="varchar(255)">
+			</column>
+			<column name="rule_id" type="int" />
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_rule_token_rule_fk"
+			baseTableName="hydramodule_rule_token" baseColumnNames="rule_id"
+			referencedTableName="hydramodule_field_rule" referencedColumnNames="rule_id" />
+
+	</changeSet>
 </databaseChangeLog>

@@ -40,11 +40,13 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
+import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
 import org.openmrs.module.hydra.model.workflow.HydramoduleService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
@@ -573,6 +575,12 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return dao.getHydramoduleField(uuid);
 	}
 
+	@Override
+	public List<HydramoduleField> getHydramoduleFieldsByName(String queryParam) {
+		// TODO Auto-generated method stub
+		return dao.getAllFieldsByName(queryParam);
+	}
+
 	// HydramoduleFieldAnswer
 	@Override
 	@Transactional
@@ -590,10 +598,38 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return dao.getHydramoduleFieldAnswer(uuid);
 	}
 
+	// HydramoduleFieldRule
 	@Override
-	public List<HydramoduleField> getHydramoduleFieldsByName(String queryParam) {
-		// TODO Auto-generated method stub
-		return dao.getAllFieldsByName(queryParam);
+	@Transactional
+	public HydramoduleFieldRule saveHydramoduleFieldRule(HydramoduleFieldRule service) throws APIException {
+		return dao.saveHydramoduleFieldRule(service);
+	}
+
+	@Override
+	public List<HydramoduleFieldRule> getAllHydramoduleFieldRules(boolean voided) throws APIException {
+		return dao.getAllHydramoduleFieldRules(voided);
+	}
+
+	@Override
+	public HydramoduleFieldRule getHydramoduleFieldRule(String uuid) throws APIException {
+		return dao.getHydramoduleFieldRule(uuid);
+	}
+
+	// HydramoduleRuleToken
+	@Override
+	@Transactional
+	public HydramoduleRuleToken saveHydramoduleRuleToken(HydramoduleRuleToken service) throws APIException {
+		return dao.saveHydramoduleRuleToken(service);
+	}
+
+	@Override
+	public List<HydramoduleRuleToken> getAllHydramoduleRuleTokens() throws APIException {
+		return dao.getAllHydramoduleRuleTokens();
+	}
+
+	@Override
+	public HydramoduleRuleToken getHydramoduleRuleToken(String uuid) throws APIException {
+		return dao.getHydramoduleRuleToken(uuid);
 	}
 
 }

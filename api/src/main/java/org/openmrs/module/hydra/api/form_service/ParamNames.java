@@ -268,9 +268,9 @@ public class ParamNames {
 
 	public static final String SCORE_TYPE = "SCORE_TYPE";
 
-	public static final String GIVEN_NAME = "GIVEN_NAME";
+	public static final String GIVEN_NAME = "givenName";
 
-	public static final String FAMILY_NAME = "FAMILY_NAME";
+	public static final String FAMILY_NAME = "familyName";
 
 	public static final String DATA_TYPE = "DATA_TYPE";
 
