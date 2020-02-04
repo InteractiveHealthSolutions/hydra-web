@@ -804,11 +804,18 @@ public class HydraDaoImpl {
 	}
 
 	// HydramoduleFieldRule
-	public HydramoduleFieldRule saveHydramoduleFieldRule(HydramoduleFieldRule serviceType) {
-		// System.out.println(serviceType.getUuid());
-		getSession().saveOrUpdate(serviceType);
+	public HydramoduleFieldRule saveHydramoduleFieldRule(HydramoduleFieldRule fieldRule) {
+
+		getSession().saveOrUpdate(fieldRule);
 		getSession().flush();
-		return serviceType;
+		if (fieldRule.getTokens() != null) {
+			for (HydramoduleRuleToken token : fieldRule.getTokens()) {
+				token.setRule(fieldRule);
+				saveHydramoduleRuleToken(token);
+			}
+		}
+
+		return fieldRule;
 	}
 
 	public HydramoduleFieldRule getHydramoduleFieldRule(String uuid) {
