@@ -374,7 +374,7 @@
 			baseTableName="hydramodule_component_form" baseColumnNames="workflow_id"
 			referencedTableName="hydramodule_workflow" referencedColumnNames="workflow_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_component_form_phase_fk"
-			baseTableName="hydramodule_component_phase" baseColumnNames="phase_id"
+			baseTableName="hydramodule_component_form" baseColumnNames="phase_id"
 			referencedTableName="hydramodule_component" referencedColumnNames="phase_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_component_form_component_fk"
 			baseTableName="hydramodule_component_form" baseColumnNames="component_id"

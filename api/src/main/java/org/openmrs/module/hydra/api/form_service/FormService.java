@@ -280,25 +280,25 @@ public class FormService {
 	}
 
 	private void createPatient(String encounterTypeString, JSONArray data) throws ParseException {
-		String gender = null;
+		PersonName personName = new PersonName();
+		SortedSet<PersonName> names = new TreeSet<PersonName>();
+		String gender = "M";
 		int age = 0;
-		Date dob = null;
-		Date dateEntered = null;
+		Date dob = new Date();
+		Date dateEntered = new Date();
 		PersonService personService = Context.getPersonService();
 		ConceptService conceptService = Context.getConceptService();
 		PatientService patientService = Context.getPatientService();
 		EncounterService encounterService = Context.getEncounterService();
 		LocationService locationService = Context.getLocationService();
 
-		EncounterType encounterType = null;
+		EncounterType encounterType = new EncounterType();
 		encounterType = encounterService.getEncounterType(encounterTypeString);
 
-		Location location = null;
+		Location location = new Location();
 
 		List<PersonAttribute> personAttributes = new ArrayList();
 		List<PatientIdentifier> patientIdentifiers = new ArrayList();
-		PersonName personName = null;
-		SortedSet<PersonName> names = new TreeSet<PersonName>();
 
 		for (int i = 0; i < data.size(); i++) {
 			JSONObject dataItem = (JSONObject) data.get(i);
@@ -307,24 +307,8 @@ public class FormService {
 			if (!dataItem.containsKey(ParamNames.PAYLOAD_TYPE))
 				continue;
 			DATA_TYPE dataType = DATA_TYPE.valueOf(dataItem.get(ParamNames.PAYLOAD_TYPE).toString());
-			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Data: " + data);
+			System.out.println("CHanginf the way again!!!!!!!!!!! Data: " + data);
 			switch (dataType) {
-				case PERSON_ATTRIBUTE: {
-					String attribType = dataItem.get(ParamNames.VALUE).toString();
-					String attribValue = dataItem.get(attribType).toString();
-
-					PersonAttributeType attributeType = personService.getPersonAttributeTypeByName(attribType);
-					if (attributeType == null) {
-						attributeType = createStringAttributeType(dataItem);
-					}
-
-					PersonAttribute personAttrib = new PersonAttribute();
-					personAttrib.setAttributeType(attributeType);
-					personAttrib.setValue(attribValue);
-
-					personAttributes.add(personAttrib);
-				}
-					break;
 				case IDENTIFIER: {
 					String identifierType = dataItem.get(ParamNames.PARAM_NAME).toString();
 					String IdentifierValue = dataItem.get(identifierType).toString();
@@ -400,6 +384,8 @@ public class FormService {
 					break;
 			}
 		}
+
+		System.out.println("3333333333333333333333333333 Out of the loop");
 
 		if (gender == null)
 			gender = "male";
