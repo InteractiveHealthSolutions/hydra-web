@@ -761,7 +761,6 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleField.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
-		criteria.add(Restrictions.eq("voided", false));
 		return (HydramoduleField) criteria.uniqueResult();
 	}
 

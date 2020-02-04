@@ -375,7 +375,8 @@
 			referencedTableName="hydramodule_workflow" referencedColumnNames="workflow_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_component_form_phase_fk"
 			baseTableName="hydramodule_component_phase" baseColumnNames="phase_id"
-			referencedTableName="hydramodule_component" referencedColumnNames="phase_id" /><addForeignKeyConstraint constraintName="hydramodule_component_form_component_fk"
+			referencedTableName="hydramodule_component" referencedColumnNames="phase_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_component_form_component_fk"
 			baseTableName="hydramodule_component_form" baseColumnNames="component_id"
 			referencedTableName="hydramodule_component" referencedColumnNames="component_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_component_form_form_fk"
@@ -1289,7 +1290,7 @@
 				<constraints unique="true" />
 			</column>
 		</createTable>
-		
+
 		<addForeignKeyConstraint constraintName="hydramodule_field_field_type_fk"
 			baseTableName="hydramodule_field" baseColumnNames="field_type_id"
 			referencedTableName="field_type" referencedColumnNames="field_type_id" />
@@ -1306,7 +1307,7 @@
 			baseTableName="hydramodule_field" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-	
+
 	<changeSet id="hydra-202002021322" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -1334,7 +1335,7 @@
 			baseTableName="hydramodule_field_answer" baseColumnNames="concept_id"
 			referencedTableName="concept" referencedColumnNames="concept_id" />
 	</changeSet>
-	
+
 	<changeSet id="hydra-202001300654" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
