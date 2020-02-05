@@ -282,7 +282,7 @@ public class ParamNames {
 
 	public static Object ENCOUNTER_TYPE = "ENCONTER_TYPE";
 
-	public static Object VALUE = "value";
+	public static final String VALUE = "value";
 
 	public static final byte[] KEY_VALUE = new byte[] { 'T', 'h', 'e', 'B', 'e', 's', 't', 'S', 'e', 'c', 'r', 'e', 't', 'K',
 	        'e', 'y' };

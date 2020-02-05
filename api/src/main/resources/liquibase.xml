@@ -1524,9 +1524,9 @@
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 
-			<column name="type" type="varchar(255)">
+			<column name="type_name" type="varchar(255)">
 			</column>
-			<column name="name" type="varchar(255)">
+			<column name="value" type="varchar(255)">
 			</column>
 			<column name="rule_id" type="int" />
 			<column name="uuid" type="char(38)">

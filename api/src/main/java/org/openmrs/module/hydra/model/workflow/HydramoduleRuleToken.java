@@ -26,11 +26,11 @@ public class HydramoduleRuleToken extends BaseOpenmrsObject implements java.io.S
 	@Column(name = "token_id", unique = true, nullable = false)
 	private Integer tokenId;
 
-	@Column(name = "type")
-	private String type;
+	@Column(name = "type_name")
+	private String typeName;
 
-	@Column(name = "name")
-	private String name;
+	@Column(name = "value")
+	private String value;
 
 	@ManyToOne
 	@JoinColumn(name = "rule_id")
@@ -54,20 +54,20 @@ public class HydramoduleRuleToken extends BaseOpenmrsObject implements java.io.S
 		this.tokenId = tokenId;
 	}
 
-	public String getType() {
-		return type;
+	public String getTypeName() {
+		return typeName;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 
-	public String getName() {
-		return name;
+	public String getValue() {
+		return value;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	public HydramoduleFieldRule getRule() {

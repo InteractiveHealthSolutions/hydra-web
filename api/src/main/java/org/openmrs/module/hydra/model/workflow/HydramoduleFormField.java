@@ -15,7 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.openmrs.BaseOpenmrsMetadata;
-import org.openmrs.Field;
 
 @Entity
 @Table(name = "hydramodule_form_field", catalog = "hydra")

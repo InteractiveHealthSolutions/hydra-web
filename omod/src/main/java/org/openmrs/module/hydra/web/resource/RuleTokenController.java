@@ -56,7 +56,7 @@ public class RuleTokenController extends DelegatingCrudResource<HydramoduleRuleT
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
 		List<HydramoduleRuleToken> moduleForm = service.getAllHydramoduleRuleTokens();
-		simpleObject.put("fields", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
+		simpleObject.put("rules", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}
 
@@ -73,8 +73,8 @@ public class RuleTokenController extends DelegatingCrudResource<HydramoduleRuleT
 
 		description.addProperty("uuid");
 		description.addProperty("tokenId");
-		description.addProperty("type");
-		description.addProperty("name");
+		description.addProperty("typeName");
+		description.addProperty("value");
 		// description.addProperty("rule", Representation.REF);
 
 		if (representation instanceof DefaultRepresentation) {
@@ -94,8 +94,8 @@ public class RuleTokenController extends DelegatingCrudResource<HydramoduleRuleT
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
 		description.addProperty("uuid");
 		description.addProperty("tokenId");
-		description.addProperty("type");
-		description.addProperty("name");
+		description.addProperty("typeName");
+		description.addProperty("value");
 
 		return description;
 

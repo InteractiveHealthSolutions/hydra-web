@@ -821,6 +821,14 @@ public class HydraDaoImpl {
 	public HydramoduleFieldRule getHydramoduleFieldRule(String uuid) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (HydramoduleFieldRule) criteria.uniqueResult();
+	}
+
+	public HydramoduleFieldRule getHydramoduleFieldRuleByTargetField(HydramoduleField field) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
+		criteria.add(Restrictions.eq("targetField", field));
 		return (HydramoduleFieldRule) criteria.uniqueResult();
 	}
 
@@ -849,6 +857,7 @@ public class HydraDaoImpl {
 	public List<HydramoduleRuleToken> getAllHydramoduleRuleTokens() {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleRuleToken.class);
+		criteria.addOrder(Order.asc("tokenId"));
 		return criteria.list();
 	}
 }

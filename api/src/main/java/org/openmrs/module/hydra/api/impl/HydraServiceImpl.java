@@ -42,6 +42,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
@@ -279,7 +280,19 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	@Override
 	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException {
-		return dao.getAllComponentFormRelations();
+		List<HydramoduleComponentForm> componentForms = dao.getAllComponentFormRelations();
+
+		for (HydramoduleComponentForm cf : componentForms) {
+			HydramoduleForm form = cf.getForm();
+			List<HydramoduleFormField> formFields = form.getFormFields();
+			for (HydramoduleFormField ff : formFields) {
+				HydramoduleField field = ff.getField();
+				HydramoduleFieldRule rule = dao.getHydramoduleFieldRuleByTargetField(field);
+				List<HydramoduleRuleToken> tokens = rule.getTokens();
+
+			}
+		}
+		return componentForms;
 	}
 
 	@Transactional

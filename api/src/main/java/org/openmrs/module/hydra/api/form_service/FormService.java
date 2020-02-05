@@ -125,9 +125,6 @@ public class FormService {
 			List<Obs> obsList = new ArrayList();
 			List<PersonAttribute> personAttributes = new ArrayList();
 			List<PatientIdentifier> patientIdentifiers = new ArrayList();
-			PersonName personName = null;
-			SortedSet<PersonName> names = new TreeSet<PersonName>();
-			// Set<PersonName> names = new SortedM();
 
 			Date dateEntered = null;
 			for (int i = 0; i < data.size(); i++) {
@@ -139,7 +136,7 @@ public class FormService {
 				DATA_TYPE dataType = DATA_TYPE.valueOf(dataItem.get(ParamNames.DATA_TYPE).toString());
 				switch (dataType) {
 					case OBS: {
-						String paramName = dataItem.get(ParamNames.PARAM_NAME).toString();
+						String paramName = dataItem.get(ParamNames.VALUE).toString();
 						String value = dataItem.get(paramName).toString();
 
 						Concept concept = conceptService.getConcept(paramName);
@@ -155,7 +152,7 @@ public class FormService {
 						break;
 					case OBS_DATE_TIME: {
 
-						String paramNameDateTime = dataItem.get(ParamNames.PARAM_NAME).toString();
+						String paramNameDateTime = dataItem.get(ParamNames.VALUE).toString();
 						String valueDateTime = dataItem.get(paramNameDateTime).toString();
 						Date dateValue = Utils.formatterTimeDate.parse(valueDateTime);
 
@@ -171,7 +168,7 @@ public class FormService {
 					}
 					case OBS_CODED: {
 
-						String paramNameDateTime = dataItem.get(ParamNames.PARAM_NAME).toString();
+						String paramNameDateTime = dataItem.get(ParamNames.VALUE).toString();
 						String valueDateTime = dataItem.get(paramNameDateTime).toString();
 						Date dateValue = Utils.formatterTimeDate.parse(valueDateTime);
 
@@ -187,7 +184,7 @@ public class FormService {
 					}
 					case OBS_CODED_MULTI: {
 
-						String paramNameDateTime = dataItem.get(ParamNames.PARAM_NAME).toString();
+						String paramNameDateTime = dataItem.get(ParamNames.VALUE).toString();
 						String valueDateTime = dataItem.get(paramNameDateTime).toString();
 						Date dateValue = Utils.formatterTimeDate.parse(valueDateTime);
 
@@ -203,12 +200,12 @@ public class FormService {
 					}
 						break;
 					case LOCATION:
-						String locationString = dataItem.get(dataItem.get(ParamNames.PARAM_NAME)).toString();
+						String locationString = dataItem.get(ParamNames.VALUE).toString();
 						location = findOrCreateLocation(locationString);
 						break;
 
 					case PERSON_ATTRIBUTE: {
-						String attribType = dataItem.get(ParamNames.PARAM_NAME).toString();
+						String attribType = dataItem.get(ParamNames.VALUE).toString();
 						String attribValue = dataItem.get(attribType).toString();
 
 						PersonAttributeType attributeType = personService.getPersonAttributeTypeByName(attribType);
@@ -224,7 +221,7 @@ public class FormService {
 					}
 						break;
 					case DATE_ENTERED: {
-						String date = dataItem.get(dataItem.get(ParamNames.PARAM_NAME).toString()).toString();
+						String date = dataItem.get(ParamNames.VALUE).toString();
 						try {
 							dateEntered = Utils.formatterTimeDate.parse(date);
 							Calendar calendar = Calendar.getInstance();
@@ -245,12 +242,6 @@ public class FormService {
 			if (encounterType == null) {
 				System.out.println("encounter type is null");
 				return;
-			}
-
-			System.out.println(encounterType.getName());
-			if (encounterType.getName().equals(ParamNames.ENCOUNTER_TYPE_TERMINATION)) {
-				if (location == null)
-					location = findOrCreateLocation("Termination");
 			}
 
 			if (location == null) {
