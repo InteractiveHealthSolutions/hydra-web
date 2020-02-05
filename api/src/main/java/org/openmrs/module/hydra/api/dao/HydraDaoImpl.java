@@ -180,6 +180,9 @@ public class HydraDaoImpl {
 	}
 
 	public HydramoduleForm saveModuleForm(HydramoduleForm form) {
+		if (form.getHydramoduleFormId() != null) {
+			deleteFormFields(form);
+		}
 		List<HydramoduleFormField> fields = form.getFormFields();
 
 		getSession().saveOrUpdate(form);
@@ -200,6 +203,23 @@ public class HydraDaoImpl {
 		getSession().flush();
 		return field;
 	}
+
+	public List<HydramoduleFormField> getFormField(HydramoduleForm form) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFormField.class);
+		criteria.add(Restrictions.eq("form", form));
+
+		return criteria.list();
+	}
+	
+	// TODO use criteria
+	public void deleteFormFields(HydramoduleForm form) {
+		List<HydramoduleFormField> formFields = getFormField(form);
+		for(HydramoduleFormField ff: formFields) {
+			sessionFactory.getCurrentSession().delete(ff);
+		}
+	}
+	
 
 	public List<HydramoduleForm> getAllModuleForm() {
 		DbSession session = sessionFactory.getCurrentSession();
@@ -828,7 +848,7 @@ public class HydraDaoImpl {
 	public HydramoduleFieldRule getHydramoduleFieldRuleByTargetField(HydramoduleField field) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
-		criteria.add(Restrictions.eq("targetField", field));
+		criteria.add(Restrictions.eq("targetQuestion", field));
 		return (HydramoduleFieldRule) criteria.uniqueResult();
 	}
 

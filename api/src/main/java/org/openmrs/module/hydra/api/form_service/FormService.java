@@ -324,7 +324,8 @@ public class FormService {
 
 					if (dataItem.containsKey(ParamNames.GIVEN_NAME)) {
 						firstName = dataItem.get(ParamNames.GIVEN_NAME).toString();
-					} else if (dataItem.containsKey(ParamNames.FAMILY_NAME)) {
+					} 
+					if (dataItem.containsKey(ParamNames.FAMILY_NAME)) {
 						lastName = dataItem.get(ParamNames.FAMILY_NAME).toString();
 					}
 					personName = new PersonName();

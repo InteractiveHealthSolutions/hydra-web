@@ -23,7 +23,7 @@ import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.EncounterType;
 
 @Entity
-@Table(name = "hydramodule_form", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
+@Table(name = "hydramodule_form", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid") )
 public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2668916537478185182L;
@@ -121,4 +121,47 @@ public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Seri
 	public void setId(Integer id) {
 		this.hydramoduleFormId = id;
 	}
+
+	@Override
+	public String toString() {
+		return "HydramoduleForm [hydramoduleFormId=" + hydramoduleFormId + ", encounterType=" + encounterType + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((core == null) ? 0 : core.hashCode());
+		result = prime * result + ((encounterType == null) ? 0 : encounterType.hashCode());
+		result = prime * result + ((hydramoduleFormId == null) ? 0 : hydramoduleFormId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HydramoduleForm other = (HydramoduleForm) obj;
+		if (core == null) {
+			if (other.core != null)
+				return false;
+		} else if (!core.equals(other.core))
+			return false;
+		if (encounterType == null) {
+			if (other.encounterType != null)
+				return false;
+		} else if (!encounterType.equals(other.encounterType))
+			return false;
+		if (hydramoduleFormId == null) {
+			if (other.hydramoduleFormId != null)
+				return false;
+		} else if (!hydramoduleFormId.equals(other.hydramoduleFormId))
+			return false;
+		return true;
+	}
+
 }

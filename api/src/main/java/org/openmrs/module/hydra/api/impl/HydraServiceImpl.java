@@ -230,11 +230,13 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	@Override
 	public HydramoduleForm saveHydramoduleForm(HydramoduleForm form) throws APIException {
-		EncounterType encounterType = new EncounterType();
-		encounterType.setName(form.getName());
-		encounterType.setDescription(form.getDescription());
-		encounterType = Context.getEncounterService().saveEncounterType(encounterType);
-		form.setEncounterType(encounterType);
+		if (form.getHydramoduleFormId() != null) {
+			EncounterType encounterType = new EncounterType();
+			encounterType.setName(form.getName());
+			encounterType.setDescription(form.getDescription());
+			encounterType = Context.getEncounterService().saveEncounterType(encounterType);
+			form.setEncounterType(encounterType);
+		}
 		return dao.saveModuleForm(form);
 	}
 
@@ -282,16 +284,16 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException {
 		List<HydramoduleComponentForm> componentForms = dao.getAllComponentFormRelations();
 
-		for (HydramoduleComponentForm cf : componentForms) {
-			HydramoduleForm form = cf.getForm();
-			List<HydramoduleFormField> formFields = form.getFormFields();
-			for (HydramoduleFormField ff : formFields) {
-				HydramoduleField field = ff.getField();
-				HydramoduleFieldRule rule = dao.getHydramoduleFieldRuleByTargetField(field);
-				List<HydramoduleRuleToken> tokens = rule.getTokens();
-
-			}
-		}
+		/*
+		 * for (HydramoduleComponentForm cf : componentForms) { HydramoduleForm form =
+		 * cf.getForm(); List<HydramoduleFormField> formFields = form.getFormFields();
+		 * for (HydramoduleFormField ff : formFields) { HydramoduleField field =
+		 * ff.getField(); HydramoduleFieldRule rule =
+		 * dao.getHydramoduleFieldRuleByTargetField(field); List<HydramoduleRuleToken>
+		 * tokens = rule.getTokens();
+		 * 
+		 * } }
+		 */
 		return componentForms;
 	}
 
