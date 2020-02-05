@@ -73,10 +73,12 @@ public class FormService {
 
 	public void createNewForm(HydramoduleDTOFormSubmissionData formSubmissionData)
 	        throws ParseException, org.json.simple.parser.ParseException {
+
 		JSONParser parser = new JSONParser();
+
 		JSONArray data = (JSONArray) parser.parse(formSubmissionData.getData());
 		JSONObject metadata = (JSONObject) parser.parse(formSubmissionData.getMetadata());
-
+		System.out.println(data + "\n" + metadata);
 		createNewForm(data, metadata);
 	}
 
@@ -105,12 +107,22 @@ public class FormService {
 
 		// getting EncounterType String
 		String encounterTypeString = (String) metadata.get(ParamNames.ENCOUNTER_TYPE);
+		// Patient Creation Form
 		if (encounterTypeString.equals("Create Patient")) {
 			createPatient(encounterTypeString, data);
 			return;
-		} else {
+		}
+		// Rest of the forms
+		else {
+			String patientIdentifier = null;
 			JSONObject patientJson = (JSONObject) metadata.get("patient");
-
+			JSONArray identifiersJSON = (JSONArray) patientJson.get("identifiers");
+			if (identifiersJSON != null) {
+				for (int i = 0; i < identifiersJSON.size(); i++) {
+					JSONObject id = (JSONObject) identifiersJSON.get(i);
+					patientIdentifier = (String) id.get(ParamNames.VALUE);
+				}
+			}
 			PersonService personService = Context.getPersonService();
 			ConceptService conceptService = Context.getConceptService();
 			PatientService patientService = Context.getPatientService();
@@ -154,7 +166,7 @@ public class FormService {
 
 						String paramNameDateTime = dataItem.get(ParamNames.VALUE).toString();
 						String valueDateTime = dataItem.get(paramNameDateTime).toString();
-						Date dateValue = Utils.formatterTimeDate.parse(valueDateTime);
+						Date dateValue = Utils.openMrsDateFormat.parse(valueDateTime);
 
 						Concept conceptDateTime = conceptService.getConcept(paramNameDateTime);
 						/*
@@ -163,40 +175,39 @@ public class FormService {
 						Obs obsDateTime = new Obs();
 						obsDateTime.setConcept(conceptDateTime);
 						obsDateTime.setValueDate(dateValue);
+						obsDateTime.setValueTime(dateValue);
 						obsDateTime.setValueDatetime(dateValue);
 						obsList.add(obsDateTime);
 					}
 					case OBS_CODED: {
+						String questionConceptStr = (String) dataItem.get(ParamNames.PARAM_NAME);
+						String valueConceptStr = dataItem.get(ParamNames.VALUE).toString();
 
-						String paramNameDateTime = dataItem.get(ParamNames.VALUE).toString();
-						String valueDateTime = dataItem.get(paramNameDateTime).toString();
-						Date dateValue = Utils.formatterTimeDate.parse(valueDateTime);
-
-						Concept conceptDateTime = conceptService.getConcept(paramNameDateTime);
+						Concept questionConcept = conceptService.getConcept(questionConceptStr);
+						Concept valueConcept = conceptService.getConcept(valueConceptStr);
 						/*
 						 * if(conceptDateTime == null) { conceptDateTime = createDateConcept(); }
 						 */
-						Obs obsDateTime = new Obs();
-						obsDateTime.setConcept(conceptDateTime);
-						obsDateTime.setValueDate(dateValue);
-						obsDateTime.setValueDatetime(dateValue);
-						obsList.add(obsDateTime);
+						Obs obsCoded = new Obs();
+						obsCoded.setConcept(questionConcept);
+						obsCoded.setValueCoded(valueConcept);
+						obsList.add(obsCoded);
 					}
 					case OBS_CODED_MULTI: {
 
-						String paramNameDateTime = dataItem.get(ParamNames.VALUE).toString();
-						String valueDateTime = dataItem.get(paramNameDateTime).toString();
-						Date dateValue = Utils.formatterTimeDate.parse(valueDateTime);
-
-						Concept conceptDateTime = conceptService.getConcept(paramNameDateTime);
 						/*
+						 * String paramNameDateTime = dataItem.get(ParamNames.VALUE).toString(); String
+						 * valueDateTime = dataItem.get(paramNameDateTime).toString(); Date dateValue =
+						 * Utils.formatterTimeDate.parse(valueDateTime);
+						 * 
+						 * Concept conceptDateTime = conceptService.getConcept(paramNameDateTime);
+						 * 
 						 * if(conceptDateTime == null) { conceptDateTime = createDateConcept(); }
+						 * 
+						 * Obs obsDateTime = new Obs(); obsDateTime.setConcept(conceptDateTime);
+						 * obsDateTime.setValueDate(dateValue); obsDateTime.setValueDatetime(dateValue);
+						 * obsList.add(obsDateTime);
 						 */
-						Obs obsDateTime = new Obs();
-						obsDateTime.setConcept(conceptDateTime);
-						obsDateTime.setValueDate(dateValue);
-						obsDateTime.setValueDatetime(dateValue);
-						obsList.add(obsDateTime);
 					}
 						break;
 					case LOCATION:
@@ -250,20 +261,25 @@ public class FormService {
 			}
 
 			{
-				Patient patient = findPatient(patientIdentifiers.get(0).getIdentifier());
-				Encounter encounter = new Encounter();
-				encounter.setEncounterType(encounterType);
-				encounter.setPatient(patient);
-				encounter.setDateCreated(new Date());
-				encounter.setEncounterDatetime(dateEntered);
-				encounter.setLocation(location);
-				for (Obs obs : obsList) {
-					obs.setLocation(location);
-					obs.setPerson(patient);
-					encounter.addObs(obs);
-				}
+				Patient patient = findPatient(patientIdentifier);
+				if (patient != null) {
+					Encounter encounter = new Encounter();
+					encounter.setEncounterType(encounterType);
+					encounter.setPatient(patient);
+					encounter.setDateCreated(new Date());
+					encounter.setEncounterDatetime(dateEntered);
+					encounter.setLocation(location);
+					for (Obs obs : obsList) {
+						obs.setLocation(location);
+						obs.setPerson(patient);
+						encounter.addObs(obs);
+					}
 
-				encounterService.saveEncounter(encounter);
+					encounterService.saveEncounter(encounter);
+				} else {
+					System.out.println("Patient is null");
+					return;
+				}
 			}
 		}
 	}
@@ -324,7 +340,7 @@ public class FormService {
 
 					if (dataItem.containsKey(ParamNames.GIVEN_NAME)) {
 						firstName = dataItem.get(ParamNames.GIVEN_NAME).toString();
-					} 
+					}
 					if (dataItem.containsKey(ParamNames.FAMILY_NAME)) {
 						lastName = dataItem.get(ParamNames.FAMILY_NAME).toString();
 					}

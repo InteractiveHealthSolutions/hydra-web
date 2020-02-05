@@ -230,7 +230,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	@Override
 	public HydramoduleForm saveHydramoduleForm(HydramoduleForm form) throws APIException {
-		if (form.getHydramoduleFormId() != null) {
+		if (form.getHydramoduleFormId() == null) {
 			EncounterType encounterType = new EncounterType();
 			encounterType.setName(form.getName());
 			encounterType.setDescription(form.getDescription());

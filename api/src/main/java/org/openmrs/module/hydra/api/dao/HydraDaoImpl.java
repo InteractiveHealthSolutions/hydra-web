@@ -179,12 +179,15 @@ public class HydraDaoImpl {
 		return form;
 	}
 
+	// TODO could be done better way, right now deleting all the existing then
+	// adding new in case of edit
 	public HydramoduleForm saveModuleForm(HydramoduleForm form) {
 		if (form.getHydramoduleFormId() != null) {
 			deleteFormFields(form);
 		}
 		List<HydramoduleFormField> fields = form.getFormFields();
 
+		getSession().clear();
 		getSession().saveOrUpdate(form);
 		if (fields != null) {
 			for (HydramoduleFormField field : fields) {
@@ -211,15 +214,17 @@ public class HydraDaoImpl {
 
 		return criteria.list();
 	}
-	
+
 	// TODO use criteria
 	public void deleteFormFields(HydramoduleForm form) {
+		DbSession session = sessionFactory.getCurrentSession();
 		List<HydramoduleFormField> formFields = getFormField(form);
-		for(HydramoduleFormField ff: formFields) {
-			sessionFactory.getCurrentSession().delete(ff);
+		for (HydramoduleFormField ff : formFields) {
+			System.out.println("Deleted!!!");
+			session.delete(ff);
 		}
+		session.flush();
 	}
-	
 
 	public List<HydramoduleForm> getAllModuleForm() {
 		DbSession session = sessionFactory.getCurrentSession();
