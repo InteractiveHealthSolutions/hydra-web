@@ -13,11 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsMetadata;
+import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Encounter;
 
 @Entity
-@Table(name = "hydramodule_form_encounter", catalog = "hydra")
-public class HydramoduleFormEncounter extends BaseOpenmrsMetadata implements Serializable {
+@Table(name = "hydramodule_event_encounter", catalog = "hydra")
+public class HydramoduleEventEncounter extends BaseOpenmrsObject implements Serializable {
 
 	/**
 	 * 
@@ -26,13 +27,12 @@ public class HydramoduleFormEncounter extends BaseOpenmrsMetadata implements Ser
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "form_encounter_id", unique = true, nullable = false)
-	private Integer formEncounterId;
+	@Column(name = "event_encounter_id", unique = true, nullable = false)
+	private Integer eventEncounterId;
 
-	
 	@ManyToOne
-	@JoinColumn(name = "component_form_id")
-	private HydramoduleComponentForm componentForm;
+	@JoinColumn(name = "event_id")
+	private HydramoduleEvent event;
 	
 	@ManyToOne
 	@JoinColumn(name = "encounter_id")
@@ -40,28 +40,28 @@ public class HydramoduleFormEncounter extends BaseOpenmrsMetadata implements Ser
 
 	@Override
 	public Integer getId() {
-		return formEncounterId;
+		return eventEncounterId;
 	}
 
 	@Override
 	public void setId(Integer id) {
-		formEncounterId = id;		
+		eventEncounterId = id;
 	}
 
-	public Integer getFormEncounterId() {
-		return formEncounterId;
+	public Integer getEventEncounterId() {
+		return eventEncounterId;
 	}
 
-	public void setFormEncounterId(Integer forEncounterId) {
-		this.formEncounterId = forEncounterId;
+	public void setEventEncounterId(Integer eventEncounterId) {
+		this.eventEncounterId = eventEncounterId;
 	}
 
-	public HydramoduleComponentForm getComponentForm() {
-		return componentForm;
+	public HydramoduleEvent getEvent() {
+		return event;
 	}
 
-	public void setComponentForm(HydramoduleComponentForm componentForm) {
-		this.componentForm = componentForm;
+	public void setEvent(HydramoduleEvent event) {
+		this.event = event;
 	}
 
 	public Encounter getEncounter() {
@@ -71,4 +71,6 @@ public class HydramoduleFormEncounter extends BaseOpenmrsMetadata implements Ser
 	public void setEncounter(Encounter encounter) {
 		this.encounter = encounter;
 	}
+
+	
 }

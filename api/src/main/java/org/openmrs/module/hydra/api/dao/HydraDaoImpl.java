@@ -850,11 +850,11 @@ public class HydraDaoImpl {
 		return (HydramoduleFieldRule) criteria.uniqueResult();
 	}
 
-	public HydramoduleFieldRule getHydramoduleFieldRuleByTargetField(HydramoduleField field) {
+	public List<HydramoduleFieldRule> getHydramoduleFieldRuleByTargetField(HydramoduleField field) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
 		criteria.add(Restrictions.eq("targetQuestion", field));
-		return (HydramoduleFieldRule) criteria.uniqueResult();
+		return (List<HydramoduleFieldRule>) criteria.list();
 	}
 
 	public List<HydramoduleFieldRule> getAllHydramoduleFieldRules(boolean retired) {

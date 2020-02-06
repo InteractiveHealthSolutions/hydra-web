@@ -29,6 +29,7 @@ import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
+import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
@@ -133,6 +134,7 @@ public class FormService {
 			encounterType = encounterService.getEncounterType(encounterTypeString);
 
 			Location location = null;
+			PersonAddress personAddress = new PersonAddress();
 
 			List<Obs> obsList = new ArrayList();
 			List<PersonAttribute> personAttributes = new ArrayList();
@@ -141,50 +143,78 @@ public class FormService {
 			Date dateEntered = null;
 			for (int i = 0; i < data.size(); i++) {
 				JSONObject dataItem = (JSONObject) data.get(i);
+
 				if (dataItem.containsKey(ParamNames.USERNAME) || dataItem.containsKey(ParamNames.PASSWORD))
 					continue;
-				if (!dataItem.containsKey(ParamNames.DATA_TYPE))
+				if (!dataItem.containsKey(ParamNames.PAYLOAD_TYPE))
 					continue;
-				DATA_TYPE dataType = DATA_TYPE.valueOf(dataItem.get(ParamNames.DATA_TYPE).toString());
-				switch (dataType) {
-					case OBS: {
-						String paramName = dataItem.get(ParamNames.VALUE).toString();
-						String value = dataItem.get(paramName).toString();
+				// System.out.println("There " + dataItem);
 
-						Concept concept = conceptService.getConcept(paramName);
+				DATA_TYPE dataType = DATA_TYPE.valueOf(dataItem.get(ParamNames.PAYLOAD_TYPE).toString());
+				switch (dataType) {
+					case ADDRESS: {
+						JSONObject addressObj = (JSONObject) dataItem.get(ParamNames.VALUE);
+						personAddress = new PersonAddress();
+						personAddress.setStateProvince(addressObj.get("Province/State").toString());
+						personAddress.setCityVillage(addressObj.get("City/Village").toString());
+						personAddress.setAddress2(addressObj.get("address2").toString()); // open address
+						personAddress.setAddress3(addressObj.get("address3").toString()); // nearest landmark
+					}
+						break;
+					case OBS: {
+
+						String paramName = dataItem.get(ParamNames.PARAM_NAME).toString();
+						String value = dataItem.get(ParamNames.VALUE).toString();
+
+						Concept concept = conceptService.getConceptByUuid(paramName);
 						if (concept == null) {
 							concept = createTextConcept(dataItem);
 						}
 						Obs obs = new Obs();
 						obs.setConcept(concept);
 						obs.setValueText(value);
+						if (!value.isEmpty())
+							obsList.add(obs);
+					}
+						break;
+					case OBS_NUMERIC: {
 
-						obsList.add(obs);
+						String paramName = dataItem.get(ParamNames.PARAM_NAME).toString();
+						String value = dataItem.get(ParamNames.VALUE).toString();
+
+						Concept concept = conceptService.getConceptByUuid(paramName);
+						if (concept == null) {
+							concept = createTextConcept(dataItem);
+						}
+						Obs obs = new Obs();
+						obs.setConcept(concept);
+						obs.setValueNumeric(Double.parseDouble(value));
+						if (!value.isEmpty())
+							obsList.add(obs);
 					}
 						break;
 					case OBS_DATE_TIME: {
-
-						String paramNameDateTime = dataItem.get(ParamNames.VALUE).toString();
-						String valueDateTime = dataItem.get(paramNameDateTime).toString();
+						String paramNameDateTime = dataItem.get(ParamNames.PARAM_NAME).toString();
+						String valueDateTime = dataItem.get(ParamNames.VALUE).toString();
 						Date dateValue = Utils.openMrsDateFormat.parse(valueDateTime);
 
-						Concept conceptDateTime = conceptService.getConcept(paramNameDateTime);
+						Concept conceptDateTime = conceptService.getConceptByUuid(paramNameDateTime);
 						/*
 						 * if(conceptDateTime == null) { conceptDateTime = createDateConcept(); }
 						 */
 						Obs obsDateTime = new Obs();
 						obsDateTime.setConcept(conceptDateTime);
-						obsDateTime.setValueDate(dateValue);
-						obsDateTime.setValueTime(dateValue);
 						obsDateTime.setValueDatetime(dateValue);
-						obsList.add(obsDateTime);
+						if (dateValue != null)
+							obsList.add(obsDateTime);
 					}
+						break;
 					case OBS_CODED: {
 						String questionConceptStr = (String) dataItem.get(ParamNames.PARAM_NAME);
 						String valueConceptStr = dataItem.get(ParamNames.VALUE).toString();
 
-						Concept questionConcept = conceptService.getConcept(questionConceptStr);
-						Concept valueConcept = conceptService.getConcept(valueConceptStr);
+						Concept questionConcept = conceptService.getConceptByUuid(questionConceptStr);
+						Concept valueConcept = conceptService.getConceptByUuid(valueConceptStr);
 						/*
 						 * if(conceptDateTime == null) { conceptDateTime = createDateConcept(); }
 						 */
@@ -193,6 +223,7 @@ public class FormService {
 						obsCoded.setValueCoded(valueConcept);
 						obsList.add(obsCoded);
 					}
+						break;
 					case OBS_CODED_MULTI: {
 
 						/*
@@ -261,20 +292,28 @@ public class FormService {
 			}
 
 			{
+				// Fetching patient
 				Patient patient = findPatient(patientIdentifier);
+				
 				if (patient != null) {
+					// Saving address
+					personAddress.setPerson(patient);
+					personService.savePersonAddress(personAddress);
+					// Preparing encounter
 					Encounter encounter = new Encounter();
 					encounter.setEncounterType(encounterType);
 					encounter.setPatient(patient);
 					encounter.setDateCreated(new Date());
 					encounter.setEncounterDatetime(dateEntered);
 					encounter.setLocation(location);
+					// Adding obs in encounter
 					for (Obs obs : obsList) {
 						obs.setLocation(location);
 						obs.setPerson(patient);
 						encounter.addObs(obs);
 					}
 
+					// Save encounter
 					encounterService.saveEncounter(encounter);
 				} else {
 					System.out.println("Patient is null");
@@ -494,12 +533,13 @@ public class FormService {
 	}
 
 	public static Patient findPatient(String patientId) {
-		// List<PatientIdentifierType> typeList = new ArrayList();
 		PatientService patientService = Context.getPatientService();
-		// typeList.add(patientService.getPatientIdentifierTypeByName("SZC
-		// ID"));
-		List<Patient> patients = Context.getPatientService().getPatients(null, patientId,
-		    patientService.getAllPatientIdentifierTypes(), false);
+		List<PatientIdentifierType> typeList = patientService.getAllPatientIdentifierTypes();
+		System.out.println("Type List: " + typeList.size() + "\n" + typeList.toArray().toString());
+
+		List<Patient> patients = Context.getPatientService().getPatients(patientId);
+		System.out.println("Identifier " + patientId + " " + patients.size());
+		// return Context.getPatientService().getPatient(2844);
 		if (patients.size() > 0) {
 			return (Patient) patients.get(0);
 		}

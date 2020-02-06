@@ -284,16 +284,21 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException {
 		List<HydramoduleComponentForm> componentForms = dao.getAllComponentFormRelations();
 
-		/*
-		 * for (HydramoduleComponentForm cf : componentForms) { HydramoduleForm form =
-		 * cf.getForm(); List<HydramoduleFormField> formFields = form.getFormFields();
-		 * for (HydramoduleFormField ff : formFields) { HydramoduleField field =
-		 * ff.getField(); HydramoduleFieldRule rule =
-		 * dao.getHydramoduleFieldRuleByTargetField(field); List<HydramoduleRuleToken>
-		 * tokens = rule.getTokens();
-		 * 
-		 * } }
-		 */
+		for (HydramoduleComponentForm cf : componentForms) {
+			HydramoduleForm form = cf.getForm();
+			List<HydramoduleFormField> formFields = form.getFormFields();
+			for (HydramoduleFormField ff : formFields) {
+				HydramoduleField field = ff.getField();
+				List<HydramoduleFieldRule> rules = dao.getHydramoduleFieldRuleByTargetField(field);
+				if (rules.size() > 0) {
+					HydramoduleFieldRule rule = rules.get(0);
+					List<HydramoduleRuleToken> tokens = rule.getTokens();
+					System.out.println("Tokens Received: " + tokens.size());
+				}
+
+			}
+		}
+
 		return componentForms;
 	}
 
