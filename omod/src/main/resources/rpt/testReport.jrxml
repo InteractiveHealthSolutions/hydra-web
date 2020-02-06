@@ -12,7 +12,7 @@
 	<parameter name="from" class="java.util.Date"/>
 	<queryString>
 		<![CDATA[SELECT date_created, patient_id
-FROM `openmrs`.`patient`
+FROM `hydra`.`patient`
 where
 date(date_created) between date($P{from}) and date($P{to});]]>
 	</queryString>
