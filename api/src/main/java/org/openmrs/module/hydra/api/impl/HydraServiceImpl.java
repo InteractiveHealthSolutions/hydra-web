@@ -11,6 +11,7 @@ package org.openmrs.module.hydra.api.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -281,20 +282,50 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return dao.getAllPhaseComponentRelations();
 	}
 
+	
 	@Override
 	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException {
 		List<HydramoduleComponentForm> componentForms = dao.getAllComponentFormRelations();
-
+		HashMap<String, String> operatorsMap = new HashMap<String, String>();
+		HashMap<String, String> conditionalOperatorsMap = new HashMap<String, String>();
+		operatorsMap.put("!=", "notEquals");
+		operatorsMap.put("=", "equals");
+		operatorsMap.put("<", "lessThan");
+		operatorsMap.put(">", "greaterThan");
+		operatorsMap.put("<=", "lessThanEquals");
+		operatorsMap.put(">=", "greaterThanEquals");
+		conditionalOperatorsMap.put("OR", "OR");
+		conditionalOperatorsMap.put("AND", "AND");
 		for (HydramoduleComponentForm cf : componentForms) {
 			HydramoduleForm form = cf.getForm();
 			List<HydramoduleFormField> formFields = form.getFormFields();
 			for (HydramoduleFormField ff : formFields) {
 				HydramoduleField field = ff.getField();
 				List<HydramoduleFieldRule> rules = dao.getHydramoduleFieldRuleByTargetField(field);
+
+				/**
+					now
+					null 
+				 **/
 				if (rules.size() > 0) {
 					HydramoduleFieldRule rule = rules.get(0);
 					List<HydramoduleRuleToken> tokens = rule.getTokens();
 					System.out.println("Tokens Received: " + tokens.size());
+					for (HydramoduleRuleToken token : tokens) {
+					
+						if(token.getTypeName().equals("Question")) {
+							
+						} else if(token.getTypeName().equals("Operator")) {
+							
+						} else if(token.getTypeName().endsWith("Value")) {
+							if(token.getTypeName().equals("CodedValue")) {
+								
+							} else if(token.getTypeName().equals("OpenValue")) {
+								
+							}
+						}
+						System.out.println("TokenType: " + token.getTypeName() + " , value: " + token.getValue());
+					}
 				}
 
 			}

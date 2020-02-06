@@ -333,7 +333,6 @@ public class FormService {
 					formEncounter.setComponentForm(componentForm);
 					if (componentForm != null) {
 						formEncounter.setEncounter(savedEncoounter);
-						formEncounter.setName(savedEncoounter.getEncounterType().getName());
 						service.saveFormEncounter(formEncounter);
 					}
 				} else {
