@@ -41,7 +41,12 @@ import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
+import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFormSubmissionData;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FormService {
 
@@ -51,6 +56,7 @@ public class FormService {
 		if (instance == null) {
 			instance = new FormService();
 		}
+
 		return instance;
 	}
 
@@ -72,9 +78,11 @@ public class FormService {
 		ADDRESS
 	}
 
-	public void createNewForm(HydramoduleDTOFormSubmissionData formSubmissionData)
-	        throws ParseException, org.json.simple.parser.ParseException {
+	HydraService service;
 
+	public void createNewForm(HydraService service, HydramoduleDTOFormSubmissionData formSubmissionData)
+	        throws ParseException, org.json.simple.parser.ParseException {
+		this.service = service;
 		JSONParser parser = new JSONParser();
 
 		JSONArray data = (JSONArray) parser.parse(formSubmissionData.getData());
@@ -90,6 +98,7 @@ public class FormService {
 		String password;
 		String providerUUID;
 		JSONObject authentication = (JSONObject) metadata.get("authentication");
+		JSONObject formDetails = (JSONObject) metadata.get("formDetails");
 		username = (String) authentication.get("USERNAME");
 		password = (String) authentication.get("PASSWORD");
 		SecretKey sec;
@@ -294,7 +303,7 @@ public class FormService {
 			{
 				// Fetching patient
 				Patient patient = findPatient(patientIdentifier);
-				
+
 				if (patient != null) {
 					// Saving address
 					personAddress.setPerson(patient);
@@ -314,7 +323,19 @@ public class FormService {
 					}
 
 					// Save encounter
-					encounterService.saveEncounter(encounter);
+					Encounter savedEncoounter = encounterService.saveEncounter(encounter);
+					// Saving encounter
+					HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
+					// Mapping encounter with workflow
+					String formDetailsUUID = formDetails.get("uuid").toString(); // UUID of componentForm
+					System.out.println("FormDetailsUUID: " + formDetailsUUID);
+					HydramoduleComponentForm componentForm = service.getComponentFormByUUID(formDetailsUUID);
+					formEncounter.setComponentForm(componentForm);
+					if (componentForm != null) {
+						formEncounter.setEncounter(savedEncoounter);
+						formEncounter.setName(savedEncoounter.getEncounterType().getName());
+						service.saveFormEncounter(formEncounter);
+					}
 				} else {
 					System.out.println("Patient is null");
 					return;

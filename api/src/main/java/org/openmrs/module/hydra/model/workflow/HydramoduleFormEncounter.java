@@ -29,11 +29,10 @@ public class HydramoduleFormEncounter extends BaseOpenmrsMetadata implements Ser
 	@Column(name = "form_encounter_id", unique = true, nullable = false)
 	private Integer formEncounterId;
 
-	
 	@ManyToOne
 	@JoinColumn(name = "component_form_id")
 	private HydramoduleComponentForm componentForm;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "encounter_id")
 	private Encounter encounter;
@@ -45,7 +44,7 @@ public class HydramoduleFormEncounter extends BaseOpenmrsMetadata implements Ser
 
 	@Override
 	public void setId(Integer id) {
-		formEncounterId = id;		
+		formEncounterId = id;
 	}
 
 	public Integer getFormEncounterId() {

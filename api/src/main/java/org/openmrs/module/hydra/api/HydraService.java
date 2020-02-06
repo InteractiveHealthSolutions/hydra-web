@@ -36,6 +36,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
@@ -268,5 +269,7 @@ public interface HydraService extends OpenmrsService {
 	List<HydramoduleRuleToken> getAllHydramoduleRuleTokens() throws APIException;
 
 	HydramoduleRuleToken getHydramoduleRuleToken(String uuid) throws APIException;
+
+	void saveFormEncounter(HydramoduleFormEncounter formEncounter);
 
 }

@@ -40,7 +40,8 @@ public class FormSubmissionDataController extends DelegatingCrudResource<Hydramo
 	@Override
 	public HydramoduleDTOFormSubmissionData save(HydramoduleDTOFormSubmissionData formSubmissionData) {
 		try {
-			FormService.getInstance().createNewForm(formSubmissionData);
+			FormService.getInstance().createNewForm(service, formSubmissionData);
+
 		}
 		catch (ParseException e) {
 			// TODO Auto-generated catch block

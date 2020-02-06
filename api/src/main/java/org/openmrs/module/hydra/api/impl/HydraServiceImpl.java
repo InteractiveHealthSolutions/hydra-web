@@ -42,6 +42,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule;
 import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
@@ -300,6 +301,11 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		}
 
 		return componentForms;
+	}
+
+	@Override
+	public void saveFormEncounter(HydramoduleFormEncounter formEncounter) {
+		dao.saveFormEncounter(formEncounter);
 	}
 
 	@Transactional

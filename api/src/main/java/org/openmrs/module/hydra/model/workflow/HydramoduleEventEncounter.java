@@ -33,7 +33,7 @@ public class HydramoduleEventEncounter extends BaseOpenmrsObject implements Seri
 	@ManyToOne
 	@JoinColumn(name = "event_id")
 	private HydramoduleEvent event;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "encounter_id")
 	private Encounter encounter;
@@ -72,5 +72,4 @@ public class HydramoduleEventEncounter extends BaseOpenmrsObject implements Seri
 		this.encounter = encounter;
 	}
 
-	
 }
