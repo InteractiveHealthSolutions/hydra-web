@@ -11,6 +11,7 @@ package org.openmrs.module.hydra.api.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -650,13 +651,13 @@ public class HydraDaoImpl {
 
 	// EventAsset
 	public HydramoduleEventAsset saveHydramoduleEventAsset(HydramoduleEventAsset eventAsset) {
-		HydramoduleAsset asset = eventAsset.getAsset();
-		asset = getAsset(asset.getUuid());
-		eventAsset.setAsset(asset);
-
-		HydramoduleEvent event = eventAsset.getEvent();
-		event = getHydramoduleEvent(event.getUuid());
-		eventAsset.setEvent(event);
+		/*
+		 * HydramoduleAsset asset = eventAsset.getAsset(); asset =
+		 * getAsset(asset.getUuid()); eventAsset.setAsset(asset);
+		 * 
+		 * HydramoduleEvent event = eventAsset.getEvent(); event =
+		 * getHydramoduleEvent(event.getUuid()); eventAsset.setEvent(event);
+		 */
 
 		getSession().saveOrUpdate(eventAsset);
 		getSession().flush();
@@ -704,11 +705,14 @@ public class HydraDaoImpl {
 	}
 
 	// EventParticipant
-	public HydramoduleEventParticipants saveHydramoduleEventParticipant(HydramoduleEventParticipants serviceType) {
+	public HydramoduleEventParticipants saveHydramoduleEventParticipant(HydramoduleEventParticipants eventParticipants) {
 		// System.out.println(serviceType.getUuid());
-		getSession().saveOrUpdate(serviceType);
+		if (eventParticipants.getParticipant() == null)
+			return null;
+		getSession().saveOrUpdate(eventParticipants);
+
 		getSession().flush();
-		return serviceType;
+		return eventParticipants;
 	}
 
 	public HydramoduleEventParticipants getHydramoduleEventParticipant(String uuid) {
@@ -786,11 +790,17 @@ public class HydraDaoImpl {
 	}
 
 	// HydramoduleField
-	public HydramoduleField saveHydramoduleField(HydramoduleField serviceType) {
+	public HydramoduleField saveHydramoduleField(HydramoduleField field) {
 		// System.out.println(serviceType.getUuid());
-		getSession().saveOrUpdate(serviceType);
+		getSession().saveOrUpdate(field);
 		getSession().flush();
-		return serviceType;
+		Set<HydramoduleFieldAnswer> answers = field.getAnswers();
+		for (HydramoduleFieldAnswer answer : answers) {
+			answer.setField(field);
+			saveHydramoduleFieldAnswer(answer);
+		}
+
+		return field;
 	}
 
 	public HydramoduleField getHydramoduleField(String uuid) {
@@ -798,6 +808,18 @@ public class HydraDaoImpl {
 		Criteria criteria = session.createCriteria(HydramoduleField.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramoduleField) criteria.uniqueResult();
+	}
+
+	public HydramoduleFormField getHydramoduleFormField(String formUUID, String fieldUUID) {
+		HydramoduleForm form = getModuleForm(formUUID);
+		HydramoduleField field = getHydramoduleField(fieldUUID);
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFormField.class);
+		criteria.add(Restrictions.eq("form", form));
+		criteria.add(Restrictions.eq("field", field));
+
+		System.out.println("Dataatatatatatatatatatat " + formUUID + " " + fieldUUID);
+		return (HydramoduleFormField) criteria.uniqueResult();
 	}
 
 	public List<HydramoduleField> getAllHydramoduleFields() {

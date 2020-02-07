@@ -177,13 +177,16 @@ public class FormService {
 
 						Concept concept = conceptService.getConceptByUuid(paramName);
 						if (concept == null) {
-							concept = createTextConcept(dataItem);
+							System.out.println(paramName);
+							break;
+							// concept = createTextConcept(dataItem);
 						}
-						Obs obs = new Obs();
-						obs.setConcept(concept);
-						obs.setValueText(value);
-						if (!value.isEmpty())
+						if (!value.isEmpty()) {
+							Obs obs = new Obs();
+							obs.setConcept(concept);
+							obs.setValueText(value);
 							obsList.add(obs);
+						}
 					}
 						break;
 					case OBS_NUMERIC: {
@@ -193,13 +196,14 @@ public class FormService {
 
 						Concept concept = conceptService.getConceptByUuid(paramName);
 						if (concept == null) {
-							concept = createTextConcept(dataItem);
+							break;
 						}
-						Obs obs = new Obs();
-						obs.setConcept(concept);
-						obs.setValueNumeric(Double.parseDouble(value));
-						if (!value.isEmpty())
+						if (!value.isEmpty()) {
+							Obs obs = new Obs();
+							obs.setConcept(concept);
+							obs.setValueNumeric(Double.parseDouble(value));
 							obsList.add(obs);
+						}
 					}
 						break;
 					case OBS_DATE_TIME: {
@@ -211,11 +215,12 @@ public class FormService {
 						/*
 						 * if(conceptDateTime == null) { conceptDateTime = createDateConcept(); }
 						 */
-						Obs obsDateTime = new Obs();
-						obsDateTime.setConcept(conceptDateTime);
-						obsDateTime.setValueDatetime(dateValue);
-						if (dateValue != null)
+						if (dateValue != null) {
+							Obs obsDateTime = new Obs();
+							obsDateTime.setConcept(conceptDateTime);
+							obsDateTime.setValueDatetime(dateValue);
 							obsList.add(obsDateTime);
+						}
 					}
 						break;
 					case OBS_CODED: {
@@ -227,6 +232,7 @@ public class FormService {
 						/*
 						 * if(conceptDateTime == null) { conceptDateTime = createDateConcept(); }
 						 */
+						
 						Obs obsCoded = new Obs();
 						obsCoded.setConcept(questionConcept);
 						obsCoded.setValueCoded(valueConcept);
@@ -252,7 +258,7 @@ public class FormService {
 						break;
 					case LOCATION:
 						String locationString = dataItem.get(ParamNames.VALUE).toString();
-						location = findOrCreateLocation(locationString);
+						location = findLocation(locationString);
 						break;
 
 					case PERSON_ATTRIBUTE: {
@@ -367,6 +373,7 @@ public class FormService {
 		for (int i = 0; i < data.size(); i++) {
 
 			JSONObject dataItem = (JSONObject) data.get(i);
+			System.out.println(dataItem);
 			if (dataItem.containsKey(ParamNames.USERNAME) || dataItem.containsKey(ParamNames.PASSWORD))
 				continue;
 			if (!dataItem.containsKey(ParamNames.PAYLOAD_TYPE))
@@ -378,7 +385,7 @@ public class FormService {
 					String identifierType = dataItem.get(ParamNames.PARAM_NAME).toString();
 
 					String IdentifierValue = dataItem.get(ParamNames.VALUE).toString();
-
+					System.out.println("Identifier: " + IdentifierValue);
 					PatientIdentifierType patientIdentifierType = patientService
 					        .getPatientIdentifierTypeByName(identifierType);
 
@@ -403,6 +410,7 @@ public class FormService {
 					if (dataItem.containsKey(ParamNames.FAMILY_NAME)) {
 						lastName = dataItem.get(ParamNames.FAMILY_NAME).toString();
 					}
+					System.out.println("First Name: " + firstName + " LastName: " + lastName);
 					personName = new PersonName();
 					personName.setGivenName(firstName);
 					personName.setFamilyName(lastName);
@@ -423,17 +431,20 @@ public class FormService {
 					} else {
 						gender = "F";
 					}
+
+					System.out.println("Gender: " + gender);
 				}
 					break;
 				case DOB: {
 					String date = dataItem.get(ParamNames.VALUE).toString();
 					dob = Utils.openMrsDateFormat.parse(date);
+					System.out.println("date of birth: " + dob.toString());
 				}
 					break;
 				case DATE_ENTERED: {
 					String date = dataItem.get(ParamNames.VALUE).toString();
 					try {
-						dateEntered = Utils.formatterTimeDate.parse(date);
+						dateEntered = Utils.openMrsDateFormat.parse(date);
 						Calendar calendar = Calendar.getInstance();
 						calendar.setTime(dateEntered);
 						calendar.add(Calendar.MINUTE, -5);
@@ -445,8 +456,8 @@ public class FormService {
 				}
 					break;
 				case LOCATION:
-					String locationString = dataItem.get(ParamNames.PARAM_NAME).toString();
-					location = findOrCreateLocation(locationString);
+					String locationString = dataItem.get(ParamNames.VALUE).toString();
+					location = findLocation(locationString);
 					break;
 				default:
 					break;
@@ -462,13 +473,9 @@ public class FormService {
 		patient.addName(personName);
 		// patient.setNames(names);
 		patient.setGender(gender);
-		if (dob == null) {
-			System.out.println(age);
-			patient.setBirthdateFromAge(age, dateEntered);
-		} else {
-			System.out.println(dob);
-			patient.setBirthdate(dob);
-		}
+
+		System.out.println(dob);
+		patient.setBirthdate(dob);
 
 		// patient.setDateCreated(dateEntered);
 		for (PatientIdentifier patientIdentifieri : patientIdentifiers) {
@@ -566,14 +573,12 @@ public class FormService {
 		return null;
 	}
 
-	public Location findOrCreateLocation(String location) {
+	public Location findLocation(String location) {
 		LocationService locationService = Context.getLocationService();
-		Location oLocation = locationService.getLocation(location);
+		Location oLocation = locationService.getLocationByUuid(location);
+		System.out.println("LOCATION UUID: " + location);
 		if (oLocation == null) {
-			oLocation = new Location();
-			oLocation.setName(location);
-			oLocation.setDateCreated(new Date());
-			locationService.saveLocation(oLocation);
+			return null;
 		}
 		return oLocation;
 	}

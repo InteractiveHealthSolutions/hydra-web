@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.openmrs.Concept;
 import org.openmrs.EncounterType;
 import org.openmrs.Field;
 import org.openmrs.FieldAnswer;
@@ -282,50 +285,77 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return dao.getAllPhaseComponentRelations();
 	}
 
-	
 	@Override
 	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException {
 		List<HydramoduleComponentForm> componentForms = dao.getAllComponentFormRelations();
+		HashMap<String, String> actionNames = new HashMap<String, String>();
+		actionNames.put("hide", "hiddenWhen");
+		actionNames.put("Open Form", "openForm");
+
 		HashMap<String, String> operatorsMap = new HashMap<String, String>();
-		HashMap<String, String> conditionalOperatorsMap = new HashMap<String, String>();
 		operatorsMap.put("!=", "notEquals");
 		operatorsMap.put("=", "equals");
 		operatorsMap.put("<", "lessThan");
 		operatorsMap.put(">", "greaterThan");
 		operatorsMap.put("<=", "lessThanEquals");
 		operatorsMap.put(">=", "greaterThanEquals");
+
+		HashMap<String, String> conditionalOperatorsMap = new HashMap<String, String>();
 		conditionalOperatorsMap.put("OR", "OR");
 		conditionalOperatorsMap.put("AND", "AND");
 		for (HydramoduleComponentForm cf : componentForms) {
 			HydramoduleForm form = cf.getForm();
 			List<HydramoduleFormField> formFields = form.getFormFields();
 			for (HydramoduleFormField ff : formFields) {
-				HydramoduleField field = ff.getField();
+				HydramoduleField field = ff.getField(); // Target Field
+
+				JSONObject hiddenWhenObj = new JSONObject();
+				JSONArray hiddenWhenArray = new JSONArray();
+				JSONObject conditionObject = new JSONObject();
+				JSONArray conditionArray = new JSONArray();
 				List<HydramoduleFieldRule> rules = dao.getHydramoduleFieldRuleByTargetField(field);
 
 				/**
-					now
-					null 
+				 * now, null
 				 **/
 				if (rules.size() > 0) {
 					HydramoduleFieldRule rule = rules.get(0);
 					List<HydramoduleRuleToken> tokens = rule.getTokens();
 					System.out.println("Tokens Received: " + tokens.size());
 					for (HydramoduleRuleToken token : tokens) {
-					
-						if(token.getTypeName().equals("Question")) {
-							
-						} else if(token.getTypeName().equals("Operator")) {
-							
-						} else if(token.getTypeName().endsWith("Value")) {
-							if(token.getTypeName().equals("CodedValue")) {
-								
-							} else if(token.getTypeName().equals("OpenValue")) {
-								
+						if (conditionalOperatorsMap.containsKey(token.getTypeName())) {
+							// TODO Handle condition
+						}
+						if (token.getTypeName().equals("Question")) {
+							String questionString = token.getValue();
+							HydramoduleField responseField = dao.getHydramoduleField(questionString);
+							conditionObject.put("id", responseField.getFieldId());
+							conditionObject.put("questionId", responseField.getFieldId());
+
+						} else if (token.getTypeName().equals("Operator")) {
+							String operatorName = operatorsMap.get(token.getValue());
+							conditionObject.put(operatorName, conditionArray);
+
+						} else if (token.getTypeName().endsWith("Value")) {
+							if (token.getTypeName().equals("CodedValue")) {
+								Concept concept = Context.getConceptService().getConceptByUuid(token.getValue());
+								JSONObject responseValueObj = new JSONObject();
+								responseValueObj.put("uuid", concept.getDisplayString());
+								conditionArray.add(responseValueObj);
+							} else if (token.getTypeName().equals("OpenValue")) {
+								JSONObject responseValueObj = new JSONObject();
+								responseValueObj.put("uuid", token.getValue());
+								conditionArray.add(responseValueObj);
 							}
 						}
 						System.out.println("TokenType: " + token.getTypeName() + " , value: " + token.getValue());
 					}
+
+					hiddenWhenArray.add(conditionObject);
+					hiddenWhenArray.add("OR");
+					hiddenWhenObj.put(actionNames.get(rule.getActionName()), hiddenWhenArray);
+					System.out.println("The parsed RULE Object " + hiddenWhenObj);
+					field.setParsedRule(hiddenWhenObj.toString());
 				}
 
 			}

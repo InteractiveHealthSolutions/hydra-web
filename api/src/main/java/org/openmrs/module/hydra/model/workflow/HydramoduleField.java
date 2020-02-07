@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.openmrs.BaseOpenmrsMetadata;
@@ -47,6 +48,9 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 
 	@Column(name = "default_value")
 	private String defaultValue;
+
+	@Transient
+	private String parsedRule;
 
 	@Column(name = "select_multiple")
 	private Boolean selectMultiple = false;
@@ -137,6 +141,14 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 
 	public void setAnswers(Set<HydramoduleFieldAnswer> answers) {
 		this.answers = answers;
+	}
+
+	public String getParsedRule() {
+		return parsedRule;
+	}
+
+	public void setParsedRule(String parsedRule) {
+		this.parsedRule = parsedRule;
 	}
 
 	@Override

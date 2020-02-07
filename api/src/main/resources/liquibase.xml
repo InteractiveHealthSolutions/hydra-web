@@ -1538,7 +1538,7 @@
 			referencedTableName="hydramodule_field_rule" referencedColumnNames="rule_id" />
 
 	</changeSet>
-	
+
 	<changeSet id="hydra-202002051230" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -1559,15 +1559,17 @@
 				<constraints unique="true" />
 			</column>
 		</createTable>
-		<addForeignKeyConstraint constraintName="hydramodule_form_encounter_component_form_fk"
+		<addForeignKeyConstraint
+			constraintName="hydramodule_form_encounter_component_form_fk"
 			baseTableName="hydramodule_form_encounter" baseColumnNames="component_form_id"
-			referencedTableName="hydramodule_component_form" referencedColumnNames="component_form_id" />
+			referencedTableName="hydramodule_component_form"
+			referencedColumnNames="component_form_id" />
 		<addForeignKeyConstraint constraintName="hydramodule_form_encounter_encounter_fk"
 			baseTableName="hydramodule_form_encounter" baseColumnNames="encounter_id"
 			referencedTableName="encounter" referencedColumnNames="encounter_id" />
 
 	</changeSet>
-	
+
 	<changeSet id="hydra-202002050653" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -1588,14 +1590,42 @@
 				<constraints unique="true" />
 			</column>
 		</createTable>
-		
+
 		<addForeignKeyConstraint constraintName="hydramodule_event_encounter_event_fk"
 			baseTableName="hydramodule_event_encounter" baseColumnNames="event_id"
 			referencedTableName="hydramodule_event" referencedColumnNames="event_id" />
-			
+
 		<addForeignKeyConstraint constraintName="hydramodule_event_encounter_encounter_fk"
 			baseTableName="hydramodule_event_encounter" baseColumnNames="encounter_id"
 			referencedTableName="encounter" referencedColumnNames="encounter_id" />
+
+	</changeSet>
+
+	<changeSet id="hydra-202002060954" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_event_summary" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_event_summary table
+		</comment>
+		<createTable tableName="hydramodule_event_summary">
+			<column name="event_summary_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="event_id" type="int" />
+			<column name="total_screen" type="int" />
+			<column name="total_presumptive" type="int" />
+			<column name="sample_collected" type="int" />
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
+		</createTable>
+
+		<addForeignKeyConstraint constraintName="hydramodule_event_summary_event_fk"
+			baseTableName="hydramodule_event_summary" baseColumnNames="event_id"
+			referencedTableName="hydramodule_event" referencedColumnNames="event_id" />
 
 	</changeSet>
 </databaseChangeLog>
