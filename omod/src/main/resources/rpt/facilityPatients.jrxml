@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="School Summary" pageWidth="2000" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="1600" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd89df2e-7286-4f55-8d46-f2aee47cd183">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="School Summary" pageWidth="1850" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="1600" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd89df2e-7286-4f55-8d46-f2aee47cd183">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="1757"/>
 	<property name="ireport.y" value="0"/>
@@ -20,15 +20,14 @@ sec_cont.value as secondary_contact, hlt_ctr_name.name  as location_name,
 per_add.state_province as province, per_add.city_village as city,
 hm_ph.name as current_phase, hm_comp.name as current_stage,
 enc_type.name as last_encounter, lat_enc.encounter_datetime as last_encounter_date
-FROM ( SELECT patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type_id
+FROM ( SELECT patient_id , MAX(encounter_datetime) AS max_enc_datetime
 		 FROM hydra.encounter
-         INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'Patient Information'
-		 WHERE encounter.voided = 0
-         GROUP BY encounter.patient_id) AS encs
+		 WHERE encounter_type = 187 AND voided = 0
+         GROUP BY patient_id ) AS encs
 INNER JOIN hydra.encounter AS pt_info
     ON pt_info.patient_id = encs.patient_id
    AND pt_info.encounter_datetime = encs.max_enc_datetime
-   AND pt_info.encounter_type = encs.encounter_type_id
+   AND pt_info.encounter_type = 187
 inner join hydra.patient pt on pt.patient_id = pt_info.patient_id
 inner join hydra.patient_identifier pt_id on pt.patient_id = pt_id.patient_id and pt_id.identifier_type = 3 and pt_id.voided = 0
 left join hydra.patient_identifier ex_id on pt.patient_id = ex_id.patient_id and ex_id.identifier_type = 5 and ex_id.voided = 0
@@ -37,7 +36,7 @@ left join hydra.person per on pt.patient_id = per.person_id
 left join hydra.person_name per_name on per.person_id = per_name.person_id and per_name.voided = 0 and per_name.preferred = 1
 left join hydra.person_attribute pri_cont on per.person_id = pri_cont.person_id and pri_cont.person_attribute_type_id = 8 and pri_cont.voided = 0
 left join hydra.person_attribute sec_cont on per.person_id = sec_cont.person_id and sec_cont.person_attribute_type_id = 12 and sec_cont.voided = 0
-left join hydra.person_attribute hlt_ctr on per.person_id = hlt_ctr.person_id and hlt_ctr.person_attribute_type_id = 7 and hlt_ctr.voided = 0
+left join hydra.person_attribute hlt_ctr on per.person_id = hlt_ctr.person_id and hlt_ctr.person_attribute_type_id = 7 and sec_cont.voided = 0
 left join hydra.location hlt_ctr_name on hlt_ctr.value = hlt_ctr_name.location_id
 left join hydra.person_address per_add on per.person_id = per_add.person_id and per_add.voided = 0 and per_add.preferred = 1
 left JOIN hydra.encounter lat_enc ON lat_enc.patient_id = per.person_id and lat_enc.voided = 0
