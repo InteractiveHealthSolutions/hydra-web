@@ -217,11 +217,30 @@ public class HydraDaoImpl {
 		return criteria.list();
 	}
 
+	public List<HydramoduleFieldAnswer> getFieldAnswers(HydramoduleField field) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFieldAnswer.class);
+		criteria.add(Restrictions.eq("field", field));
+
+		return criteria.list();
+	}
+
 	// TODO use criteria
 	public void deleteFormFields(HydramoduleForm form) {
 		DbSession session = sessionFactory.getCurrentSession();
 		List<HydramoduleFormField> formFields = getFormField(form);
 		for (HydramoduleFormField ff : formFields) {
+			System.out.println("Deleted!!!");
+			session.delete(ff);
+		}
+		session.flush();
+	}
+
+	// TODO use criteria
+	public void deleteFieldAnswers(HydramoduleField field) {
+		DbSession session = sessionFactory.getCurrentSession();
+		List<HydramoduleFieldAnswer> fieldAnswers = getFieldAnswers(field);
+		for (HydramoduleFieldAnswer ff : fieldAnswers) {
 			System.out.println("Deleted!!!");
 			session.delete(ff);
 		}
@@ -792,6 +811,11 @@ public class HydraDaoImpl {
 	// HydramoduleField
 	public HydramoduleField saveHydramoduleField(HydramoduleField field) {
 		// System.out.println(serviceType.getUuid());
+		if (field.getFieldId() != null) {
+			deleteFieldAnswers(field);
+		}
+
+		getSession().clear();
 		getSession().saveOrUpdate(field);
 		getSession().flush();
 		Set<HydramoduleFieldAnswer> answers = field.getAnswers();
