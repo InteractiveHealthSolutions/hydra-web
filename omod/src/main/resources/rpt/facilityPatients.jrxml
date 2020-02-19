@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="School Summary" pageWidth="1850" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="1600" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd89df2e-7286-4f55-8d46-f2aee47cd183">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
-	<property name="ireport.x" value="1757"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="DejaVu Sans" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="DejaVu Sans" fontSize="18"/>
@@ -137,105 +137,105 @@ and (hm_wf.name = $P{workflow} or $P{workflow} is NULL);]]>
 			</line>
 			<staticText>
 				<reportElement x="0" y="26" width="117" height="20" uuid="c7be40e4-232c-4906-b84c-33aed3316dca"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Patient ID]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="117" y="26" width="117" height="20" uuid="c46208ef-a145-462a-be46-1f8afae809ae"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[External ID]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="234" y="26" width="141" height="20" uuid="335ed8c6-6178-4dd8-a287-551e82db86d2"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Screening Location]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="375" y="26" width="117" height="20" uuid="a3514300-9ba0-41a6-a556-9a53ba5c1b9c"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[First Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="492" y="26" width="117" height="20" uuid="735dbb73-bc90-4346-842e-8c468d3269d6"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Last Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="609" y="26" width="70" height="20" uuid="cb3341b7-ed4a-45dd-bdd5-ce8e0b4584e5"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Gender]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="679" y="26" width="117" height="20" uuid="f15d0f1f-2c50-4fae-92fa-3de755ebc3e7"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Primary Contact]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="796" y="26" width="138" height="20" uuid="e0d7ba06-210b-43d8-b785-75371079865b"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Secondary Contact]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1168" y="26" width="117" height="20" uuid="e27af260-2032-48f4-93d0-6d9b96aa7441"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Facility]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="934" y="26" width="117" height="20" uuid="c90181ca-4eae-43d4-b4fb-1eabab7ed001"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Province]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1636" y="26" width="149" height="20" uuid="d1219d45-00c9-4905-b775-5214f5e89e2e"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Last Encounter Date]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1285" y="26" width="117" height="20" uuid="9ee18789-6cf1-477f-9d47-22f40ca76f2b"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Current Phase]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1402" y="26" width="117" height="20" uuid="cb229b64-4f11-4bce-b36e-6ab02b5e06d7"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Current Stage]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1519" y="26" width="117" height="20" uuid="f6837ad4-7a79-411f-a50b-4e0560f55282"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Last Encounter]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1051" y="26" width="117" height="20" uuid="4e1b4db1-14dc-4e90-b15f-7d21fe169dd9"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[City]]></text>
