@@ -23,6 +23,7 @@ import org.openmrs.ConceptDatatype;
 import org.openmrs.ConceptDescription;
 import org.openmrs.ConceptName;
 import org.openmrs.Encounter;
+import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
 import org.openmrs.Obs;
@@ -33,6 +34,7 @@ import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
+import org.openmrs.Provider;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.ConceptService;
@@ -40,6 +42,7 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
+import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
@@ -47,6 +50,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFormSubmissionData;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jmx.export.naming.ObjectNamingStrategy;
 
 public class FormService {
 
@@ -80,7 +84,7 @@ public class FormService {
 
 	HydraService service;
 
-	public void createNewForm(HydraService service, HydramoduleDTOFormSubmissionData formSubmissionData)
+	public synchronized void createNewForm(HydraService service, HydramoduleDTOFormSubmissionData formSubmissionData)
 	        throws ParseException, org.json.simple.parser.ParseException {
 		this.service = service;
 		JSONParser parser = new JSONParser();
@@ -91,7 +95,7 @@ public class FormService {
 		createNewForm(data, metadata);
 	}
 
-	public void createNewForm(JSONArray data, JSONObject metadata) throws ParseException {
+	public synchronized void createNewForm(JSONArray data, JSONObject metadata) throws ParseException {
 
 		// Getting user info
 		String username;
@@ -123,6 +127,7 @@ public class FormService {
 			return;
 		}
 		// Rest of the forms
+		// TODO this should also moved to a separate function
 		else {
 			String patientIdentifier = null;
 			JSONObject patientJson = (JSONObject) metadata.get("patient");
@@ -133,6 +138,7 @@ public class FormService {
 					patientIdentifier = (String) id.get(ParamNames.VALUE);
 				}
 			}
+			// Getting the required service objects
 			PersonService personService = Context.getPersonService();
 			ConceptService conceptService = Context.getConceptService();
 			PatientService patientService = Context.getPatientService();
@@ -240,19 +246,24 @@ public class FormService {
 					}
 						break;
 					case OBS_CODED_MULTI: {
-
+						// TODO
 						/*
-						 * String paramNameDateTime = dataItem.get(ParamNames.VALUE).toString(); String
-						 * valueDateTime = dataItem.get(paramNameDateTime).toString(); Date dateValue =
-						 * Utils.formatterTimeDate.parse(valueDateTime);
+						 * // Creating a unique value group id Calendar c = Calendar.getInstance(); int
+						 * valueGroupId = c.get(Calendar.YEAR) + c.get(Calendar.MONTH) +
+						 * c.get(Calendar.DAY_OF_MONTH) + c.get(Calendar.HOUR_OF_DAY) +
+						 * c.get(Calendar.MINUTE) + c.get(Calendar.SECOND) + c.get(Calendar.MILLISECOND)
+						 * + (i+1);
 						 * 
-						 * Concept conceptDateTime = conceptService.getConcept(paramNameDateTime);
+						 * String questionConceptStr = (String) dataItem.get(ParamNames.PARAM_NAME);
+						 * String valueConceptStr = dataItem.get(ParamNames.VALUE).toString();
 						 * 
-						 * if(conceptDateTime == null) { conceptDateTime = createDateConcept(); }
+						 * Concept questionConcept =
+						 * conceptService.getConceptByUuid(questionConceptStr); Concept valueConcept =
+						 * conceptService.getConceptByUuid(valueConceptStr);
 						 * 
-						 * Obs obsDateTime = new Obs(); obsDateTime.setConcept(conceptDateTime);
-						 * obsDateTime.setValueDate(dateValue); obsDateTime.setValueDatetime(dateValue);
-						 * obsList.add(obsDateTime);
+						 * Obs obsCoded = new Obs(); obsCoded.setValueGroupId(valueGroupId);
+						 * obsCoded.setConcept(questionConcept); obsCoded.setValueCoded(valueConcept);
+						 * obsList.add(obsCoded);
 						 */
 					}
 						break;
@@ -280,7 +291,7 @@ public class FormService {
 					case DATE_ENTERED: {
 						String date = dataItem.get(ParamNames.VALUE).toString();
 						try {
-							dateEntered = Utils.formatterTimeDate.parse(date);
+							dateEntered = Utils.openMrsDateFormat.parse(date);
 							Calendar calendar = Calendar.getInstance();
 							calendar.setTime(dateEntered);
 							calendar.add(Calendar.MINUTE, -5);
@@ -321,23 +332,31 @@ public class FormService {
 					encounter.setDateCreated(new Date());
 					encounter.setEncounterDatetime(dateEntered);
 					encounter.setLocation(location);
+
 					// Adding obs in encounter
-					for (Obs obs : obsList) {
+					for (int i = 0; i < obsList.size(); i++) {
+						Obs obs = obsList.get(i);
 						obs.setLocation(location);
 						obs.setPerson(patient);
 						encounter.addObs(obs);
 					}
 
-					// Save encounter
-					Encounter savedEncoounter = encounterService.saveEncounter(encounter);
+					// Setting provider for encounter
+					EncounterRole encounterRole = encounterService.getEncounterRole(1);
+					Provider provider = Context.getProviderService().getProviderByUuid(providerUUID);
+					if (encounterRole != null && provider != null)
+						encounter.setProvider(encounterRole, provider);
+
 					// Saving encounter
-					HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
+					Encounter savedEncoounter = encounterService.saveEncounter(encounter);
+
 					// Mapping encounter with workflow
+					HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
 					String formDetailsUUID = formDetails.get("uuid").toString(); // UUID of componentForm
 					System.out.println("FormDetailsUUID: " + formDetailsUUID);
 					HydramoduleComponentForm componentForm = service.getComponentFormByUUID(formDetailsUUID);
-					formEncounter.setComponentForm(componentForm);
 					if (componentForm != null) {
+						formEncounter.setComponentForm(componentForm);
 						formEncounter.setEncounter(savedEncoounter);
 						service.saveFormEncounter(formEncounter);
 					}
