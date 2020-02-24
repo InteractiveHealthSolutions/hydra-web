@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="School Summary" pageWidth="2000" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="1600" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd89df2e-7286-4f55-8d46-f2aee47cd183">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="School Summary" pageWidth="1850" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="1600" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd89df2e-7286-4f55-8d46-f2aee47cd183">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
-	<property name="ireport.x" value="1757"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="DejaVu Sans" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="DejaVu Sans" fontSize="18"/>
@@ -11,7 +11,6 @@
 	<parameter name="to" class="java.util.Date"/>
 	<parameter name="from" class="java.util.Date"/>
 	<parameter name="facility" class="java.lang.String"/>
-	<parameter name="workflow" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select pt_id.identifier as patient_id, ex_id.identifier as patient_external_id, loc.name as patient_location,
 per_name.given_name as patient_first_name, per_name.family_name as patient_last_name, per.gender as patient_gender,
@@ -20,15 +19,7 @@ sec_cont.value as secondary_contact, hlt_ctr_name.name  as location_name,
 per_add.state_province as province, per_add.city_village as city,
 hm_ph.name as current_phase, hm_comp.name as current_stage,
 enc_type.name as last_encounter, lat_enc.encounter_datetime as last_encounter_date
-FROM ( SELECT patient_id , MAX(encounter_datetime) AS max_enc_datetime
-		 FROM hydra.encounter
-		 WHERE encounter_type = 187 AND voided = 0
-         GROUP BY patient_id ) AS encs
-INNER JOIN hydra.encounter AS pt_info
-    ON pt_info.patient_id = encs.patient_id
-   AND pt_info.encounter_datetime = encs.max_enc_datetime
-   AND pt_info.encounter_type = 187
-inner join hydra.patient pt on pt.patient_id = pt_info.patient_id
+FROM hydra.patient pt
 inner join hydra.patient_identifier pt_id on pt.patient_id = pt_id.patient_id and pt_id.identifier_type = 3 and pt_id.voided = 0
 left join hydra.patient_identifier ex_id on pt.patient_id = ex_id.patient_id and ex_id.identifier_type = 5 and ex_id.voided = 0
 left join hydra.location loc on pt_id.location_id = loc.location_id
@@ -36,7 +27,7 @@ left join hydra.person per on pt.patient_id = per.person_id
 left join hydra.person_name per_name on per.person_id = per_name.person_id and per_name.voided = 0 and per_name.preferred = 1
 left join hydra.person_attribute pri_cont on per.person_id = pri_cont.person_id and pri_cont.person_attribute_type_id = 8 and pri_cont.voided = 0
 left join hydra.person_attribute sec_cont on per.person_id = sec_cont.person_id and sec_cont.person_attribute_type_id = 12 and sec_cont.voided = 0
-left join hydra.person_attribute hlt_ctr on per.person_id = hlt_ctr.person_id and hlt_ctr.person_attribute_type_id = 7 and sec_cont.voided = 0
+left join hydra.person_attribute hlt_ctr on per.person_id = hlt_ctr.person_id and hlt_ctr.person_attribute_type_id = 7 and hlt_ctr.voided = 0
 left join hydra.location hlt_ctr_name on hlt_ctr.value = hlt_ctr_name.location_id
 left join hydra.person_address per_add on per.person_id = per_add.person_id and per_add.voided = 0 and per_add.preferred = 1
 left JOIN hydra.encounter lat_enc ON lat_enc.patient_id = per.person_id and lat_enc.voided = 0
@@ -45,17 +36,15 @@ left join hydra.hydramodule_form_encounter hm_form_enc on hm_form_enc.encounter_
 left join hydra.hydramodule_component_form hm_comp_frm on hm_form_enc.component_form_id = hm_comp_frm.component_form_id
 left join hydra.hydramodule_component hm_comp on hm_comp_frm.component_id = hm_comp.component_id
 left join hydra.hydramodule_phase hm_ph on hm_comp_frm.phase_id = hm_ph.phase_id
-left join hydra.hydramodule_workflow hm_wf on hm_comp_frm.workflow_id = hm_wf.workflow_id
 where
-   lat_enc.encounter_id = (
+  ( lat_enc.encounter_id = (
       SELECT enc.encounter_id
       FROM hydra.encounter enc
       WHERE enc.patient_id = per.person_id
       order by encounter_datetime desc limit 1
-   )
-and pt_info.voided= 0 and pt.voided = 0  and (find_in_set(hlt_ctr_name.name, $P{facility}) or $P{facility} is NULL)
-and date(pt_info.encounter_datetime) between date($P{from}) and date($P{to})
-and (hm_wf.name = $P{workflow} or $P{workflow} is NULL);]]>
+   ) or lat_enc.encounter_id is NULL)
+and pt.voided = 0 and (find_in_set(hlt_ctr_name.name, $P{facility}) or $P{facility} is NULL)
+and date(pt.date_created) between date($P{from}) and date($P{to});]]>
 	</queryString>
 	<field name="patient_id" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -137,105 +126,105 @@ and (hm_wf.name = $P{workflow} or $P{workflow} is NULL);]]>
 			</line>
 			<staticText>
 				<reportElement x="0" y="26" width="117" height="20" uuid="c7be40e4-232c-4906-b84c-33aed3316dca"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Patient ID]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="117" y="26" width="117" height="20" uuid="c46208ef-a145-462a-be46-1f8afae809ae"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[External ID]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="234" y="26" width="141" height="20" uuid="335ed8c6-6178-4dd8-a287-551e82db86d2"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Screening Location]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="375" y="26" width="117" height="20" uuid="a3514300-9ba0-41a6-a556-9a53ba5c1b9c"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[First Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="492" y="26" width="117" height="20" uuid="735dbb73-bc90-4346-842e-8c468d3269d6"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Last Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="609" y="26" width="70" height="20" uuid="cb3341b7-ed4a-45dd-bdd5-ce8e0b4584e5"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Gender]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="679" y="26" width="117" height="20" uuid="f15d0f1f-2c50-4fae-92fa-3de755ebc3e7"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Primary Contact]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="796" y="26" width="138" height="20" uuid="e0d7ba06-210b-43d8-b785-75371079865b"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Secondary Contact]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1168" y="26" width="117" height="20" uuid="e27af260-2032-48f4-93d0-6d9b96aa7441"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Facility]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="934" y="26" width="117" height="20" uuid="c90181ca-4eae-43d4-b4fb-1eabab7ed001"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Province]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1636" y="26" width="149" height="20" uuid="d1219d45-00c9-4905-b775-5214f5e89e2e"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Last Encounter Date]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1285" y="26" width="117" height="20" uuid="9ee18789-6cf1-477f-9d47-22f40ca76f2b"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Current Phase]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1402" y="26" width="117" height="20" uuid="cb229b64-4f11-4bce-b36e-6ab02b5e06d7"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Current Stage]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1519" y="26" width="117" height="20" uuid="f6837ad4-7a79-411f-a50b-4e0560f55282"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Last Encounter]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1051" y="26" width="117" height="20" uuid="4e1b4db1-14dc-4e90-b15f-7d21fe169dd9"/>
-				<textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[City]]></text>
