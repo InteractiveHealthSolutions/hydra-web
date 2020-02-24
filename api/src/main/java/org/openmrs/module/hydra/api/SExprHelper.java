@@ -98,28 +98,30 @@ public class SExprHelper {
 				List<HydramoduleRuleToken> tokens = rule.getTokens();
 				System.out.println("Tokens Received: " + tokens.size());
 				for (HydramoduleRuleToken token : tokens) {
-					if (conditionalOperatorsMap.containsKey(token.getTypeName())) {
-						hiddenWhenArray.add(token.getTypeName());
+					System.out.println("Token Value: " + token.getValue());
+					if (conditionalOperatorsMap.containsKey(token.getValue())) {
+						hiddenWhenArray.add(token.getValue());
 						operatorAvailable = true;
-					}
-					// Question part of the expression
-					if (token.getTypeName().equals("Question")) {
-						singleRuleTokens.put("Question", token);
-					}
-					// Operator part of the expression
-					else if (token.getTypeName().equals("Operator")) {
-						singleRuleTokens.put("Operator", token);
-					}
-					// Value part of the expression
-					else if (token.getTypeName().endsWith("Value")) {
-						singleRuleTokens.put("Value", token);
-					}
+					} else {
+						// Question part of the expression
+						if (token.getTypeName().equals("Question")) {
+							singleRuleTokens.put("Question", token);
+						}
+						// Operator part of the expression
+						else if (token.getTypeName().equals("Operator")) {
+							singleRuleTokens.put("Operator", token);
+						}
+						// Value part of the expression
+						else if (token.getTypeName().endsWith("Value")) {
+							singleRuleTokens.put("Value", token);
+						}
 
-					if (singleRuleTokens.size() == 3) {
-						conditionObject = compileSingleObj(singleRuleTokens.get("Operator"),
-						    singleRuleTokens.get("Question"), singleRuleTokens.get("Value"));
-						hiddenWhenArray.add(conditionObject);
-						singleRuleTokens = new HashMap<String, HydramoduleRuleToken>();
+						if (singleRuleTokens.size() == 3) {
+							conditionObject = compileSingleObj(singleRuleTokens.get("Operator"),
+							    singleRuleTokens.get("Question"), singleRuleTokens.get("Value"));
+							hiddenWhenArray.add(conditionObject);
+							singleRuleTokens = new HashMap<String, HydramoduleRuleToken>();
+						}
 					}
 					System.out.println("TokenType: " + token.getTypeName() + " , value: " + token.getValue());
 				}
