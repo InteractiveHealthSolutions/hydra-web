@@ -19,11 +19,13 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
+import org.openmrs.ConceptAnswer;
 import org.openmrs.Field;
 import org.openmrs.FieldAnswer;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.api.APIException;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
@@ -814,7 +816,8 @@ public class HydraDaoImpl {
 		if (field.getFieldId() != null) {
 			deleteFieldAnswers(field);
 		}
-
+		ConceptService conceptService = Context.getConceptService();
+		
 		getSession().clear();
 		getSession().saveOrUpdate(field);
 		getSession().flush();
@@ -822,6 +825,18 @@ public class HydraDaoImpl {
 		for (HydramoduleFieldAnswer answer : answers) {
 			answer.setField(field);
 			saveHydramoduleFieldAnswer(answer);
+			
+			try {
+				// adding in openmrs ConceptAnswer
+				Concept questionConcept = field.getConcept();
+				ConceptAnswer conceptAnswer = new ConceptAnswer();
+				conceptAnswer.setConcept(field.getConcept());
+				conceptAnswer.setAnswerConcept(answer.getConcept());
+				questionConcept.addAnswer(conceptAnswer);
+				conceptService.saveConcept(questionConcept);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return field;
