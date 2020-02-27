@@ -15,6 +15,7 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.h2.engine.User;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -501,6 +502,19 @@ public class HydraDaoImpl {
 	}
 
 	// Participant
+	public HydramoduleParticipant getParticipantByUser(org.openmrs.User user) {
+		if (user != null) {
+			DbSession session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(HydramoduleParticipant.class);
+			criteria.add(Restrictions.eq("user", user));
+			// criteria.
+			List<HydramoduleParticipant> fields = criteria.list();
+			return fields.get(0);
+		}
+		
+		return null;
+	}
+	
 	public HydramoduleParticipant saveParticipant(HydramoduleParticipant serviceType) {
 		// System.out.println(serviceType.getUuid());
 		getSession().saveOrUpdate(serviceType);

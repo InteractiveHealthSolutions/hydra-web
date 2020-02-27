@@ -272,4 +272,6 @@ public interface HydraService extends OpenmrsService {
 
 	void saveFormEncounter(HydramoduleFormEncounter formEncounter);
 
+	List<HydramoduleParticipant> getParticipantByUserUUID(String userUUID) throws APIException;
+
 }

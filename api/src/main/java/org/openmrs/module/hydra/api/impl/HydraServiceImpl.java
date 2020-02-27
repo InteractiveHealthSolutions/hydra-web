@@ -22,6 +22,7 @@ import org.openmrs.EncounterType;
 import org.openmrs.Field;
 import org.openmrs.FieldAnswer;
 import org.openmrs.FormField;
+import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
@@ -460,6 +461,14 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public HydramoduleParticipant getParticipant(String uuid) throws APIException {
 		return dao.getParticipant(uuid);
+	}
+	
+	@Override
+	public List<HydramoduleParticipant> getParticipantByUserUUID(String userUUID) throws APIException {
+		User user = Context.getUserService().getUserByUuid(userUUID);
+		List<HydramoduleParticipant> participantsList = new ArrayList();
+		participantsList.add(dao.getParticipantByUser(user));
+		return participantsList;
 	}
 
 	// ParticipantSalaryType
