@@ -15,7 +15,6 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
-import org.h2.engine.User;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -511,10 +510,10 @@ public class HydraDaoImpl {
 			List<HydramoduleParticipant> fields = criteria.list();
 			return fields.get(0);
 		}
-		
+
 		return null;
 	}
-	
+
 	public HydramoduleParticipant saveParticipant(HydramoduleParticipant serviceType) {
 		// System.out.println(serviceType.getUuid());
 		getSession().saveOrUpdate(serviceType);
@@ -831,7 +830,7 @@ public class HydraDaoImpl {
 			deleteFieldAnswers(field);
 		}
 		ConceptService conceptService = Context.getConceptService();
-		
+
 		getSession().clear();
 		getSession().saveOrUpdate(field);
 		getSession().flush();
@@ -839,7 +838,7 @@ public class HydraDaoImpl {
 		for (HydramoduleFieldAnswer answer : answers) {
 			answer.setField(field);
 			saveHydramoduleFieldAnswer(answer);
-			
+
 			try {
 				// adding in openmrs ConceptAnswer
 				Concept questionConcept = field.getConcept();
@@ -848,7 +847,8 @@ public class HydraDaoImpl {
 				conceptAnswer.setAnswerConcept(answer.getConcept());
 				questionConcept.addAnswer(conceptAnswer);
 				conceptService.saveConcept(questionConcept);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

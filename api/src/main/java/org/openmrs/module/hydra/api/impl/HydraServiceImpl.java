@@ -462,7 +462,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public HydramoduleParticipant getParticipant(String uuid) throws APIException {
 		return dao.getParticipant(uuid);
 	}
-	
+
 	@Override
 	public List<HydramoduleParticipant> getParticipantByUserUUID(String userUUID) throws APIException {
 		User user = Context.getUserService().getUserByUuid(userUUID);

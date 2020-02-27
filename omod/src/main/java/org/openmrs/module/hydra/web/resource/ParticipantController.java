@@ -60,12 +60,12 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 		return simpleObject;
 	}
 
-	/*@Override
-	public SimpleObject search(RequestContext context) throws ResponseException {
-		// TODO Auto-generated method stub
-		return super.search(context);
-	}*/
-	
+	/*
+	 * @Override public SimpleObject search(RequestContext context) throws
+	 * ResponseException { // TODO Auto-generated method stub return
+	 * super.search(context); }
+	 */
+
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
@@ -74,7 +74,7 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 
 		return new NeedsPaging<HydramoduleParticipant>(participants, context);
 	}
-	
+
 	@Override
 	public void purge(HydramoduleParticipant component, RequestContext context) throws ResponseException {
 		// service.purgeComponent(component);
