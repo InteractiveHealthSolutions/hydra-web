@@ -839,8 +839,9 @@ public class HydraDaoImpl {
 			answer.setField(field);
 			saveHydramoduleFieldAnswer(answer);
 
-			try {
-				// adding in openmrs ConceptAnswer
+			// adding in openmrs ConceptAnswer
+			/*try {
+				
 				Concept questionConcept = field.getConcept();
 				ConceptAnswer conceptAnswer = new ConceptAnswer();
 				conceptAnswer.setConcept(field.getConcept());
@@ -850,7 +851,7 @@ public class HydraDaoImpl {
 			}
 			catch (Exception e) {
 				e.printStackTrace();
-			}
+			}*/
 		}
 
 		return field;
