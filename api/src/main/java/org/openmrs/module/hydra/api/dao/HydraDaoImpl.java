@@ -829,7 +829,7 @@ public class HydraDaoImpl {
 		if (field.getFieldId() != null) {
 			deleteFieldAnswers(field);
 		}
-		ConceptService conceptService = Context.getConceptService();
+		// ConceptService conceptService = Context.getConceptService();
 
 		getSession().clear();
 		getSession().saveOrUpdate(field);
