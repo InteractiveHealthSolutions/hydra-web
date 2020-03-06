@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="School Summary" pageWidth="4560" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="4500" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd89df2e-7286-4f55-8d46-f2aee47cd183">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="2550"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="DejaVu Sans" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="DejaVu Sans" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="DejaVu Sans" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="DejaVu Sans" fontSize="12"/>
+	<subDataset name="dataset1" uuid="c45497f2-e740-4347-a1f3-de32585a34cb"/>
+	<parameter name="to" class="java.util.Date"/>
+	<parameter name="from" class="java.util.Date"/>
+	<parameter name="facility" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select pt_id.identifier as patient_id, per_name.given_name as patient_first_name, per_name.family_name as patient_last_name,
+per.birthdate as patient_birthdate, per.gender as patient_gender, loc.name as patient_location,
+obs_alamat_saat_ini.value_text as alamat_saat_ini, desa_atau_kelurahan_concept.name as desa_atau_kelurahan,
+kecamatan_concept.name as kecamatan, hm_wf.name as workflow, obs_kasus_indeks_id_pasien.value_text as kasus_indeks_id_pasien,
+scr_int_enc.max_enc_datetime as screening_interview_datetime, batuk_lebih_dari_2_minggu_concept.name as batuk_lebih_dari_2_minggu,
+batuk_kurang_dari_2_minggu_concept.name as batuk_kurang_dari_2_minggu, batuk_dara_concept.name as batuk_dara,
+demam_concept.name as demam, obs_lamanya_demam.value_numeric as lamanya_demam, berat_badan_menurun_concept.name as berat_badan_menurun,
+keringat_malam_concept.name as keringat_malam, gejala_tb_ekstrapulmonal_concept.name as gejala_tb_ekstrapulmonal,
+status_hiv_concept.name as status_hiv, kesimpulan_pemeriksaan_uji_tuberculin_concept.name as kesimpulan_pemeriksaan_uji_tuberculin,
+hasil_pembacaan_foto_rontgen_concept.name as hasil_pembacaan_foto_rontgen, kelainan_pada_paru_atau_pleura_concept.name as kelainan_pada_paru_atau_pleura,
+mengumpulkan_dahak_concept.name as mengumpulkan_dahak, hasil_xpert_mtb_concept.name as hasil_xpert_mtb, hasil_xpert_rif_concept.name as hasil_xpert_rif
+FROM ( SELECT patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type_id, encounter_id
+		 FROM hydra.encounter
+         INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'GeneXpert Details'
+		 WHERE encounter.voided = 0
+         GROUP BY encounter.patient_id, encounter.encounter_id) AS enc
+inner join hydra.patient pt on pt.patient_id = enc.patient_id
+inner join hydra.patient_identifier pt_id on pt.patient_id = pt_id.patient_id and pt_id.identifier_type = 3 and pt_id.voided = 0
+left join hydra.location loc on pt_id.location_id = loc.location_id
+left join hydra.person per on pt.patient_id = per.person_id
+left join hydra.person_name per_name on per.person_id = per_name.person_id and per_name.voided = 0 and per_name.preferred = 1
+left join hydra.person_attribute hlt_ctr on per.person_id = hlt_ctr.person_id and hlt_ctr.person_attribute_type_id = 7 and hlt_ctr.voided = 0
+left join hydra.location hlt_ctr_name on hlt_ctr.value = hlt_ctr_name.location_id
+LEFT JOIN hydra.obs obs_mengumpulkan_dahak ON enc.encounter_id = obs_mengumpulkan_dahak.encounter_id and obs_mengumpulkan_dahak.concept_id = 166966 and obs_mengumpulkan_dahak.voided = 0
+LEFT JOIN hydra.concept_name mengumpulkan_dahak_concept ON  obs_mengumpulkan_dahak.value_coded = mengumpulkan_dahak_concept.concept_id and mengumpulkan_dahak_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_hasil_xpert_mtb ON enc.encounter_id = obs_hasil_xpert_mtb.encounter_id and obs_hasil_xpert_mtb.concept_id = 166971 and obs_hasil_xpert_mtb.voided = 0
+LEFT JOIN hydra.concept_name hasil_xpert_mtb_concept ON  obs_hasil_xpert_mtb.value_coded = hasil_xpert_mtb_concept.concept_id and hasil_xpert_mtb_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_hasil_xpert_rif ON enc.encounter_id = obs_hasil_xpert_rif.encounter_id and obs_hasil_xpert_rif.concept_id = 166975 and obs_hasil_xpert_rif.voided = 0
+LEFT JOIN hydra.concept_name hasil_xpert_rif_concept ON  obs_hasil_xpert_rif.value_coded = hasil_xpert_rif_concept.concept_id and hasil_xpert_rif_concept.locale_preferred = 1
+LEFT JOIN (select patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type, location_id, encounter_id from hydra.encounter
+			INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'Patient Registration'
+			WHERE encounter.voided = 0
+			GROUP BY encounter.patient_id, encounter_type, location_id, encounter_id) pt_reg_enc ON enc.patient_id = pt_reg_enc.patient_id
+LEFT JOIN hydra.obs obs_alamat_saat_ini ON pt_reg_enc.encounter_id = obs_alamat_saat_ini.encounter_id and obs_alamat_saat_ini.concept_id = 166852 and obs_alamat_saat_ini.voided = 0
+LEFT JOIN hydra.obs obs_desa_atau_kelurahan ON pt_reg_enc.encounter_id = obs_desa_atau_kelurahan.encounter_id and obs_desa_atau_kelurahan.concept_id = 166854 and obs_desa_atau_kelurahan.voided = 0
+LEFT JOIN hydra.concept_name desa_atau_kelurahan_concept ON  obs_desa_atau_kelurahan.value_coded = desa_atau_kelurahan_concept.concept_id and desa_atau_kelurahan_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_kecamatan ON pt_reg_enc.encounter_id = obs_kecamatan.encounter_id and obs_kecamatan.concept_id = 166854 and obs_kecamatan.voided = 0
+LEFT JOIN hydra.concept_name kecamatan_concept ON  obs_kecamatan.value_coded = kecamatan_concept.concept_id and kecamatan_concept.locale_preferred = 1
+LEFT JOIN (select patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type, location_id, encounter_id from hydra.encounter
+			INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'Index Case Details'
+			WHERE encounter.voided = 0
+			GROUP BY encounter.patient_id, encounter_type, location_id, encounter_id) idx_det_enc ON enc.patient_id = idx_det_enc.patient_id
+LEFT JOIN hydra.obs obs_kasus_indeks_id_pasien ON idx_det_enc.encounter_id = obs_kasus_indeks_id_pasien.encounter_id and obs_kasus_indeks_id_pasien.concept_id = 166922 and obs_kasus_indeks_id_pasien.voided = 0
+LEFT JOIN (select patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type, location_id, encounter_id from hydra.encounter
+			INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'Screening Interview'
+			WHERE encounter.voided = 0
+			GROUP BY encounter.patient_id, encounter_type, location_id, encounter_id) scr_int_enc ON enc.patient_id = scr_int_enc.patient_id
+LEFT JOIN hydra.obs obs_batuk_lebih_dari_2_minggu ON scr_int_enc.encounter_id = obs_batuk_lebih_dari_2_minggu.encounter_id and obs_batuk_lebih_dari_2_minggu.concept_id = 166877 and obs_batuk_lebih_dari_2_minggu.voided = 0
+LEFT JOIN hydra.concept_name batuk_lebih_dari_2_minggu_concept ON  obs_batuk_lebih_dari_2_minggu.value_coded = batuk_lebih_dari_2_minggu_concept.concept_id and batuk_lebih_dari_2_minggu_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_batuk_kurang_dari_2_minggu ON scr_int_enc.encounter_id = obs_batuk_kurang_dari_2_minggu.encounter_id and obs_batuk_kurang_dari_2_minggu.concept_id = 166878 and obs_batuk_kurang_dari_2_minggu.voided = 0
+LEFT JOIN hydra.concept_name batuk_kurang_dari_2_minggu_concept ON  obs_batuk_kurang_dari_2_minggu.value_coded = batuk_kurang_dari_2_minggu_concept.concept_id and batuk_kurang_dari_2_minggu_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_batuk_dara ON scr_int_enc.encounter_id = obs_batuk_dara.encounter_id and obs_batuk_dara.concept_id = 166880 and obs_batuk_dara.voided = 0
+LEFT JOIN hydra.concept_name batuk_dara_concept ON  obs_batuk_dara.value_coded = batuk_dara_concept.concept_id and batuk_dara_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_demam ON scr_int_enc.encounter_id = obs_demam.encounter_id and obs_demam.concept_id = 166881 and obs_demam.voided = 0
+LEFT JOIN hydra.concept_name demam_concept ON  obs_demam.value_coded = demam_concept.concept_id and demam_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_lamanya_demam ON scr_int_enc.encounter_id = obs_lamanya_demam.encounter_id and obs_lamanya_demam.concept_id = 166882 and obs_lamanya_demam.voided = 0
+LEFT JOIN hydra.obs obs_berat_badan_menurun ON scr_int_enc.encounter_id = obs_berat_badan_menurun.encounter_id and obs_berat_badan_menurun.concept_id = 166883 and obs_berat_badan_menurun.voided = 0
+LEFT JOIN hydra.concept_name berat_badan_menurun_concept ON  obs_berat_badan_menurun.value_coded = berat_badan_menurun_concept.concept_id and berat_badan_menurun_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_keringat_malam ON scr_int_enc.encounter_id = obs_keringat_malam.encounter_id and obs_keringat_malam.concept_id = 166884 and obs_keringat_malam.voided = 0
+LEFT JOIN hydra.concept_name keringat_malam_concept ON  obs_berat_badan_menurun.value_coded = keringat_malam_concept.concept_id   and keringat_malam_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_gejala_tb_ekstrapulmonal ON scr_int_enc.encounter_id = obs_gejala_tb_ekstrapulmonal.encounter_id and obs_gejala_tb_ekstrapulmonal.concept_id = 166884 and obs_gejala_tb_ekstrapulmonal.voided = 0
+LEFT JOIN hydra.concept_name gejala_tb_ekstrapulmonal_concept ON  obs_gejala_tb_ekstrapulmonal.value_coded = gejala_tb_ekstrapulmonal_concept.concept_id and gejala_tb_ekstrapulmonal_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_status_hiv ON scr_int_enc.encounter_id = obs_status_hiv.encounter_id and obs_status_hiv.concept_id = 166909 and obs_status_hiv.voided = 0
+LEFT JOIN hydra.concept_name status_hiv_concept ON  obs_status_hiv.value_coded = status_hiv_concept.concept_id   and status_hiv_concept.locale_preferred = 1
+LEFT JOIN (select patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type, location_id, encounter_id from hydra.encounter
+			INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'TST Test Details'
+			WHERE encounter.voided = 0
+			GROUP BY encounter.patient_id, encounter_type, location_id, encounter_id) tst_test_enc ON enc.patient_id = tst_test_enc.patient_id
+LEFT JOIN hydra.obs obs_kesimpulan_pemeriksaan_uji_tuberculin ON tst_test_enc.encounter_id = obs_kesimpulan_pemeriksaan_uji_tuberculin.encounter_id and obs_kesimpulan_pemeriksaan_uji_tuberculin.concept_id = 166963 and obs_kesimpulan_pemeriksaan_uji_tuberculin.voided = 0
+LEFT JOIN hydra.concept_name kesimpulan_pemeriksaan_uji_tuberculin_concept ON  obs_kesimpulan_pemeriksaan_uji_tuberculin.value_coded = kesimpulan_pemeriksaan_uji_tuberculin_concept.concept_id  and kesimpulan_pemeriksaan_uji_tuberculin_concept.locale_preferred = 1
+LEFT JOIN (select patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type, location_id, encounter_id from hydra.encounter
+			INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'Chest X-ray'
+			WHERE encounter.voided = 0
+			GROUP BY encounter.patient_id, encounter_type, location_id, encounter_id) chest_xray_enc ON enc.patient_id = chest_xray_enc.patient_id
+LEFT JOIN hydra.obs obs_hasil_pembacaan_foto_rontgen ON tst_test_enc.encounter_id = obs_hasil_pembacaan_foto_rontgen.encounter_id and obs_hasil_pembacaan_foto_rontgen.concept_id = 166948 and obs_hasil_pembacaan_foto_rontgen.voided = 0
+LEFT JOIN hydra.concept_name hasil_pembacaan_foto_rontgen_concept ON  obs_hasil_pembacaan_foto_rontgen.value_coded = hasil_pembacaan_foto_rontgen_concept.concept_id and hasil_pembacaan_foto_rontgen_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_kelainan_pada_paru_atau_pleura ON tst_test_enc.encounter_id = obs_kelainan_pada_paru_atau_pleura.encounter_id and obs_kelainan_pada_paru_atau_pleura.concept_id = 166945 and obs_kelainan_pada_paru_atau_pleura.voided = 0
+LEFT JOIN hydra.concept_name kelainan_pada_paru_atau_pleura_concept ON  obs_kelainan_pada_paru_atau_pleura.value_coded = kelainan_pada_paru_atau_pleura_concept.concept_id  and kelainan_pada_paru_atau_pleura_concept.locale_preferred = 1
+left JOIN hydra.encounter lat_enc ON lat_enc.patient_id = per.person_id and lat_enc.voided = 0
+left join hydra.hydramodule_form_encounter hm_form_enc on hm_form_enc.encounter_id = lat_enc.encounter_id
+left join hydra.hydramodule_component_form hm_comp_frm on hm_form_enc.component_form_id = hm_comp_frm.component_form_id
+left join hydra.hydramodule_workflow hm_wf on hm_comp_frm.workflow_id = hm_wf.workflow_id
+where
+   lat_enc.encounter_id = (
+      SELECT enc.encounter_id
+      FROM hydra.encounter enc
+      WHERE enc.patient_id = per.person_id
+      order by encounter_datetime desc limit 1
+   ) and pt.voided = 0 
+and mengumpulkan_dahak_concept.name = 'Ya' and (hasil_xpert_mtb_concept.name is null or hasil_xpert_mtb_concept.name = 'Error' or hasil_xpert_mtb_concept.name = 'Invalid' or hasil_xpert_mtb_concept.name = 'No Result')
+and (find_in_set(hlt_ctr_name.name, $P{facility}) or $P{facility} is NULL)
+and date(enc.max_enc_datetime) between date($P{from}) and date($P{to});]]>
+	</queryString>
+	<field name="patient_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_location" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_first_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_last_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_gender" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_birthdate" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="alamat_saat_ini" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="desa_atau_kelurahan" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kecamatan" class="java.util.Date"/>
+	<field name="workflow" class="java.lang.String"/>
+	<field name="kasus_indeks_id_pasien" class="java.lang.String"/>
+	<field name="screening_interview_datetime" class="java.lang.String"/>
+	<field name="batuk_lebih_dari_2_minggu" class="java.lang.String"/>
+	<field name="batuk_kurang_dari_2_minggu" class="java.lang.String"/>
+	<field name="batuk_dara" class="java.lang.String"/>
+	<field name="demam" class="java.lang.String"/>
+	<field name="lamanya_demam" class="java.util.Date"/>
+	<field name="berat_badan_menurun" class="java.lang.String"/>
+	<field name="keringat_malam" class="java.lang.String"/>
+	<field name="gejala_tb_ekstrapulmonal" class="java.lang.String"/>
+	<field name="status_hiv" class="java.lang.String"/>
+	<field name="kesimpulan_pemeriksaan_uji_tuberculin" class="java.lang.String"/>
+	<field name="hasil_pembacaan_foto_rontgen" class="java.lang.String"/>
+	<field name="kelainan_pada_paru_atau_pleura" class="java.lang.String"/>
+	<field name="mengumpulkan_dahak" class="java.lang.String"/>
+	<field name="hasil_xpert_mtb" class="java.lang.String"/>
+	<field name="hasil_xpert_rif" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="88" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="0" y="13" width="541" height="33" uuid="db61ed12-cb3d-4017-b714-c841af42d327"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Samples Collected & No Results]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="117" y="46" width="451" height="33" uuid="a8f00ba0-29d5-4d10-badb-97a9c809f185"/>
+				<textElement>
+					<font size="14" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[List of patients with sample collected and no result available]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="46" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="45" width="4520" height="1" uuid="63add86d-f5ed-42b5-b4df-1c380185820a"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="26" width="117" height="20" uuid="c7be40e4-232c-4906-b84c-33aed3316dca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Patient ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="117" y="26" width="117" height="20" uuid="a3514300-9ba0-41a6-a556-9a53ba5c1b9c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama depan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="234" y="26" width="117" height="20" uuid="735dbb73-bc90-4346-842e-8c468d3269d6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama belakang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="468" y="25" width="117" height="20" uuid="cb3341b7-ed4a-45dd-bdd5-ce8e0b4584e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Jenis Kelamin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="726" height="26" uuid="82671da0-cc59-4d38-aef5-0b0198b76fb8"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Patient Attributes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="726" y="26" width="131" height="20" uuid="8be6d123-205a-4d8a-984e-2775f443b5e2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Alamat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="857" y="26" width="153" height="20" uuid="705bbeb4-c4be-4a07-85db-8fdfa2365dd0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kelurahan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1010" y="26" width="97" height="20" uuid="64f3696c-1ca7-4271-821f-ad6ec7bc60b3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kecamatan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1107" y="26" width="267" height="20" uuid="3cb475b3-f029-4c30-8fcf-2474e6b39794"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Populasi yang dilakukan skrining]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1374" y="27" width="209" height="19" uuid="243fc303-538e-4531-9be9-4c5cfd105d33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kasus indeks ID Pasien]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1374" y="1" width="209" height="26" uuid="6ffdefe8-28d4-4da4-a0b8-4ed673a853f2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Index Case Details]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1583" y="26" width="131" height="20" uuid="406920c7-15fd-4553-9a75-f5ac14f6648b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tanggal skrining]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1714" y="25" width="153" height="20" uuid="3a545228-ba2f-4f5a-8b23-1e0d229d12ac"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Batuk >= 2 minggu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1867" y="25" width="153" height="20" uuid="ad8d77da-f462-45e9-a981-685db2ad2c7f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Batuk < 2 minggu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2020" y="25" width="153" height="20" uuid="ad925e84-7a39-4cd0-8d97-b24d5325a0c1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Batuk darah]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2173" y="26" width="153" height="20" uuid="b19af0b0-6798-4c34-8e1a-98ff5e53f9ca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Demam]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2326" y="26" width="153" height="20" uuid="ac9a0929-86ab-4b6e-a691-e50aa8ff4f2a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lamanya demam]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2479" y="25" width="192" height="20" uuid="7f986b10-190b-463f-a5d7-f58075ea19f6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Berat Badan menurun]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4029" y="25" width="185" height="21" uuid="dbe89dfe-d137-47c2-9f5c-eac52eacd5aa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mengumpulkan dahak]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2671" y="25" width="163" height="20" uuid="129eecf5-bd64-48a0-b706-0fd12dd7d5b5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Keringat malam]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4214" y="25" width="153" height="20" uuid="9b28a454-0672-45aa-a47f-85be102ecf40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hasil Xpert MTB]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4367" y="26" width="153" height="20" uuid="590f49f5-a571-49ff-b477-fc96aecb77df"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hasil Xpert RIF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1583" y="1" width="1618" height="26" uuid="c513fde8-af19-42d3-b7fa-6f9aa79d8abd"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Screening Interview]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="351" y="26" width="117" height="20" uuid="10e12ae6-c6b2-4e6f-afbc-0023a0dddcbf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tanggal lahir]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="585" y="25" width="141" height="20" uuid="5ca61bdb-6759-4872-a194-2cd526b52a15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama Lokasi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="726" y="1" width="648" height="26" uuid="d511e2e4-32f0-4e2f-b1e6-50e2cbedefe2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Person Registration]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2834" y="26" width="204" height="20" uuid="2180e2d8-00e7-4f7f-a9fc-ecc235893e3a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gejala TB ekstra pulmonal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3038" y="25" width="163" height="20" uuid="e45a0905-221e-4069-9848-cce4ef60c10c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status HIV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3201" y="1" width="351" height="26" uuid="2fe451e0-d67c-4698-a605-8da2f1fcc60c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TST Test]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3201" y="25" width="351" height="20" uuid="2cbd1276-2adb-45a9-870a-beb02fcaf163"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kesimpulan pemeriksaan uji Tuberkulin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3552" y="1" width="477" height="26" uuid="f0bf58fa-1498-4380-a20f-329add6b3aef"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Chest X-ray]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3552" y="26" width="211" height="20" uuid="7ea19580-a078-4f31-a9b2-7e99ac78f0f1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hasil pembacaan CXR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3763" y="25" width="266" height="20" uuid="425fee84-30b8-461e-a700-b864fc4c1fef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kelainan pada paru atau pleura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4029" y="1" width="491" height="26" uuid="6d49d3b2-7e4d-41cc-b81f-2817a82b7c76"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Genexpert Details]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="4520" height="1" uuid="46296e79-819d-4660-b737-393772fdf506"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="0" y="0" width="117" height="20" uuid="4c824861-3a2f-4b79-83bc-3e5afd259fe3"/>
+				<textFieldExpression><![CDATA[$F{patient_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="234" y="0" width="117" height="20" uuid="e7245406-47de-11ea-b77f-2e728ce88125"/>
+				<textFieldExpression><![CDATA[$F{patient_last_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="468" y="0" width="117" height="20" uuid="ba2839aa-d691-4c20-87b3-2ac92ffb666e"/>
+				<textFieldExpression><![CDATA[$F{patient_gender}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1010" y="0" width="97" height="20" uuid="d0dfbfd4-0cc6-4bae-a450-60ac3e8afb1d"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{kecamatan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1107" y="0" width="267" height="20" uuid="4b56e03d-76b1-4b44-9d7d-382d87c9b4ba"/>
+				<textFieldExpression><![CDATA[$F{workflow}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="726" y="0" width="131" height="20" uuid="0ea33ab3-5597-4693-900c-574dabcd07e5"/>
+				<textFieldExpression><![CDATA[$F{alamat_saat_ini}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="857" y="0" width="153" height="20" uuid="88e4882a-e9f2-4843-8c20-370abeacf315"/>
+				<textFieldExpression><![CDATA[$F{desa_atau_kelurahan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1374" y="0" width="209" height="20" uuid="453e5a69-f611-4edd-a434-34ed8001b842"/>
+				<textFieldExpression><![CDATA[$F{kasus_indeks_id_pasien}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1583" y="0" width="131" height="20" uuid="d0ccc5ff-110d-41eb-959e-fc0e05b91fac"/>
+				<textFieldExpression><![CDATA[$F{screening_interview_datetime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1714" y="0" width="153" height="20" uuid="6b3fe589-45d5-4c40-a664-4230f11ebce1"/>
+				<textFieldExpression><![CDATA[$F{batuk_lebih_dari_2_minggu}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1867" y="0" width="153" height="20" uuid="d943e5d3-f798-463a-805c-84e3cd1814e6"/>
+				<textFieldExpression><![CDATA[$F{batuk_kurang_dari_2_minggu}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2020" y="0" width="153" height="20" uuid="cd466ee9-e326-4a2d-9f2b-9e9d27c01cac"/>
+				<textFieldExpression><![CDATA[$F{batuk_dara}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2479" y="0" width="192" height="20" uuid="9040c022-3b65-465f-9470-c569ab5298c2"/>
+				<textFieldExpression><![CDATA[$F{berat_badan_menurun}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2671" y="0" width="163" height="20" uuid="fc75503b-62dc-466b-a02f-4512e8480266"/>
+				<textFieldExpression><![CDATA[$F{keringat_malam}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4029" y="0" width="185" height="20" uuid="fb7c55b6-ff53-4985-ba77-adbac9c32751"/>
+				<textFieldExpression><![CDATA[$F{mengumpulkan_dahak}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4367" y="0" width="153" height="20" uuid="9a83def6-bd9b-46a8-bab4-e5a0b2fd7111"/>
+				<textFieldExpression><![CDATA[$F{hasil_xpert_rif}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="117" y="0" width="117" height="20" uuid="e72452bc-47de-11ea-b77f-2e728ce88125"/>
+				<textFieldExpression><![CDATA[$F{patient_first_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="351" y="0" width="117" height="20" uuid="f1db782e-4b96-4033-a52c-c5b739cb1bc7"/>
+				<textFieldExpression><![CDATA[$F{patient_birthdate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="585" y="0" width="141" height="20" uuid="446c520f-206f-47fa-9f4e-d62ff50bf232"/>
+				<textFieldExpression><![CDATA[$F{patient_location}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2173" y="0" width="153" height="20" uuid="243cc969-5a84-4b70-997a-99ddeab5ddb3"/>
+				<textFieldExpression><![CDATA[$F{demam}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2326" y="0" width="153" height="20" uuid="64cf7185-8241-4eed-b111-d8bf9fefa66a"/>
+				<textFieldExpression><![CDATA[$F{lamanya_demam}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2834" y="0" width="204" height="20" uuid="f89bcee0-4bf8-4234-a8e6-a741c975a855"/>
+				<textFieldExpression><![CDATA[$F{gejala_tb_ekstrapulmonal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3038" y="0" width="163" height="20" uuid="fe7f9403-9c68-49f8-87fb-89b87ad82bf0"/>
+				<textFieldExpression><![CDATA[$F{status_hiv}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3201" y="0" width="351" height="20" uuid="2f9facc1-bf6a-401e-b30a-90c9ac03a570"/>
+				<textFieldExpression><![CDATA[$F{kesimpulan_pemeriksaan_uji_tuberculin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3552" y="0" width="211" height="20" uuid="fcf8d2a8-8a19-4148-b15d-6a027b8fd704"/>
+				<textFieldExpression><![CDATA[$F{hasil_pembacaan_foto_rontgen}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3763" y="0" width="266" height="20" uuid="469fd8cb-d734-4d7c-824a-1f1d09ed256a"/>
+				<textFieldExpression><![CDATA[$F{kelainan_pada_paru_atau_pleura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4214" y="0" width="153" height="20" uuid="b1a24662-d4ac-4177-bc31-b2dc78423c95"/>
+				<textFieldExpression><![CDATA[$F{hasil_xpert_mtb}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="Column header" x="433" y="0" width="80" height="20" uuid="13a836f8-f7eb-4b1d-9e67-8ba50d72e837"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="Column header" x="513" y="0" width="40" height="20" uuid="28ddcf51-f4cf-4b24-b956-862ec078ffcb"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="0" y="0" width="197" height="20" uuid="43a6b49e-c022-434b-8fb5-1c028f2ff4b8"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
