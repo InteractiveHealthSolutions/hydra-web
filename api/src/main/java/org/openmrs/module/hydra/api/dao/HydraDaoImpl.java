@@ -51,6 +51,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
+import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
@@ -967,6 +968,27 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleRuleToken.class);
 		criteria.addOrder(Order.asc("tokenId"));
+		return criteria.list();
+	}
+	
+	// HydramodulePatientWorkflow
+	public HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow patientWorkflow) {
+		getSession().saveOrUpdate(patientWorkflow);
+		getSession().flush();
+		return patientWorkflow;
+	}
+
+	public HydramodulePatientWorkflow getHydramodulePatientWorkflow(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramodulePatientWorkflow.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (HydramodulePatientWorkflow) criteria.uniqueResult();
+	}
+
+	public List<HydramodulePatientWorkflow> getAllHydramodulePatientWorkflows() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramodulePatientWorkflow.class);
+		criteria.addOrder(Order.asc("patientWorkflowId"));
 		return criteria.list();
 	}
 }

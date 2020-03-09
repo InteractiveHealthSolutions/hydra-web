@@ -52,6 +52,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
+import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
@@ -684,6 +685,23 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public HydramoduleRuleToken getHydramoduleRuleToken(String uuid) throws APIException {
 		return dao.getHydramoduleRuleToken(uuid);
+	}
+	
+	// HydramodulePatientWorkflow
+	@Override
+	@Transactional
+	public HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow service) throws APIException {
+		return dao.saveHydramodulePatientWorkflow(service);
+	}
+
+	@Override
+	public List<HydramodulePatientWorkflow> getAllHydramodulePatientWorkflows() throws APIException {
+		return dao.getAllHydramodulePatientWorkflows();
+	}
+
+	@Override
+	public HydramodulePatientWorkflow getHydramodulePatientWorkflow(String uuid) throws APIException {
+		return dao.getHydramodulePatientWorkflow(uuid);
 	}
 
 }
