@@ -686,11 +686,12 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public HydramoduleRuleToken getHydramoduleRuleToken(String uuid) throws APIException {
 		return dao.getHydramoduleRuleToken(uuid);
 	}
-	
+
 	// HydramodulePatientWorkflow
 	@Override
 	@Transactional
-	public HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow service) throws APIException {
+	public HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow service)
+	        throws APIException {
 		return dao.saveHydramodulePatientWorkflow(service);
 	}
 

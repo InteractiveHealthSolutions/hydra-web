@@ -34,7 +34,6 @@ public class FormSubmissionController {
 	public static final String SQL_DATE = "yyyy-MM-dd";
 
 	public static final String SQL_DATESTAMP = "yyyyMMdd";
-	
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
@@ -59,5 +58,4 @@ public class FormSubmissionController {
 
 	}
 
-	
 }

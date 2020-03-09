@@ -514,9 +514,9 @@ public class FormService {
 		System.out.println(patient.getGender());
 		System.out.println(patient.getPerson().getGivenName());
 		patient = patientService.savePatient(patient);
-		if(patient!=null) {
+		if (patient != null) {
 			HydramoduleWorkflow workflow = service.getWorkflowByUUID(workflowUUID);
-			if(workflow!=null) {
+			if (workflow != null) {
 				HydramodulePatientWorkflow patientWorkflow = new HydramodulePatientWorkflow();
 				patientWorkflow.setWorkflow(workflow);
 				patientWorkflow.setPatient(patient);

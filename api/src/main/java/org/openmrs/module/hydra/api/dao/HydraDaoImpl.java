@@ -841,18 +841,16 @@ public class HydraDaoImpl {
 			saveHydramoduleFieldAnswer(answer);
 
 			// adding in openmrs ConceptAnswer
-			/*try {
-				
-				Concept questionConcept = field.getConcept();
-				ConceptAnswer conceptAnswer = new ConceptAnswer();
-				conceptAnswer.setConcept(field.getConcept());
-				conceptAnswer.setAnswerConcept(answer.getConcept());
-				questionConcept.addAnswer(conceptAnswer);
-				conceptService.saveConcept(questionConcept);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}*/
+			/*
+			 * try {
+			 * 
+			 * Concept questionConcept = field.getConcept(); ConceptAnswer conceptAnswer =
+			 * new ConceptAnswer(); conceptAnswer.setConcept(field.getConcept());
+			 * conceptAnswer.setAnswerConcept(answer.getConcept());
+			 * questionConcept.addAnswer(conceptAnswer);
+			 * conceptService.saveConcept(questionConcept); } catch (Exception e) {
+			 * e.printStackTrace(); }
+			 */
 		}
 
 		return field;
@@ -970,7 +968,7 @@ public class HydraDaoImpl {
 		criteria.addOrder(Order.asc("tokenId"));
 		return criteria.list();
 	}
-	
+
 	// HydramodulePatientWorkflow
 	public HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow patientWorkflow) {
 		getSession().saveOrUpdate(patientWorkflow);
