@@ -10,6 +10,7 @@
 package org.openmrs.module.hydra.api.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -827,10 +828,16 @@ public class HydraDaoImpl {
 	// HydramoduleField
 	public HydramoduleField saveHydramoduleField(HydramoduleField field) {
 		// System.out.println(serviceType.getUuid());
+		ConceptService conceptService = Context.getConceptService();
 		if (field.getFieldId() != null) {
 			deleteFieldAnswers(field);
 		}
-		// ConceptService conceptService = Context.getConceptService();
+
+		Concept fieldConcept = field.getConcept();
+		if (fieldConcept.getId() == null) {
+			fieldConcept = conceptService.saveConcept(fieldConcept);
+		}
+		field.setConcept(fieldConcept);
 
 		getSession().clear();
 		getSession().saveOrUpdate(field);
@@ -841,16 +848,33 @@ public class HydraDaoImpl {
 			saveHydramoduleFieldAnswer(answer);
 
 			// adding in openmrs ConceptAnswer
-			/*
-			 * try {
-			 * 
-			 * Concept questionConcept = field.getConcept(); ConceptAnswer conceptAnswer =
-			 * new ConceptAnswer(); conceptAnswer.setConcept(field.getConcept());
-			 * conceptAnswer.setAnswerConcept(answer.getConcept());
-			 * questionConcept.addAnswer(conceptAnswer);
-			 * conceptService.saveConcept(questionConcept); } catch (Exception e) {
-			 * e.printStackTrace(); }
-			 */
+
+			try {
+				Concept answerConcept = answer.getConcept();
+				Concept questionConcept = field.getConcept();
+				Concept persistedConcept = conceptService.getConcept(questionConcept.getId());
+				Collection<ConceptAnswer> conceptAnswers = persistedConcept.getAnswers();
+				boolean answerFound = false;
+				for (ConceptAnswer conceptAnswer : conceptAnswers) {
+					if (conceptAnswer.getConcept().equals(answerConcept)) {
+						answerFound = true;
+						continue;
+					}
+				}
+				if (!answerFound) {
+					if (!persistedConcept.getAnswers().contains(answer.getConcept())) {
+						ConceptAnswer conceptAnswer = new ConceptAnswer();
+						// conceptAnswer.setConcept(questionConcept);
+						conceptAnswer.setAnswerConcept(answer.getConcept());
+						persistedConcept.addAnswer(conceptAnswer);
+						conceptService.saveConcept(persistedConcept);
+					}
+				}
+
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return field;
