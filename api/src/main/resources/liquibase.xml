@@ -1628,7 +1628,7 @@
 			referencedTableName="hydramodule_event" referencedColumnNames="event_id" />
 
 	</changeSet>
-	
+
 	<changeSet id="hydra-202003013257" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -1665,16 +1665,14 @@
 				<constraints nullable="false" unique="true"></constraints>
 			</column>
 		</createTable>
-		<addForeignKeyConstraint
-			constraintName="hydramodule_patient_workflow_workflow_fk"
+		<addForeignKeyConstraint constraintName="hydramodule_patient_workflow_workflow_fk"
 			baseTableName="hydramodule_patient_workflow" baseColumnNames="patient_id"
 			referencedTableName="patient" referencedColumnNames="patient_id" />
-			
-		<addForeignKeyConstraint 
-			constraintName="hydramodule_patient_workflow_patient_fk"
+
+		<addForeignKeyConstraint constraintName="hydramodule_patient_workflow_patient_fk"
 			baseTableName="hydramodule_patient_workflow" baseColumnNames="workflow_id"
 			referencedTableName="hydramodule_workflow" referencedColumnNames="workflow_id" />
-			
+
 		<addForeignKeyConstraint constraintName="hydramodule_patient_workflow_creator_fk"
 			baseTableName="hydramodule_patient_workflow" baseColumnNames="creator"
 			referencedTableName="users" referencedColumnNames="user_id" />
