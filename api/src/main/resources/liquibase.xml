@@ -1628,4 +1628,60 @@
 			referencedTableName="hydramodule_event" referencedColumnNames="event_id" />
 
 	</changeSet>
+
+	<changeSet id="hydra-202003013257" author="naveed.iqbal">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_patient_workflow" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_patient_workflow table
+		</comment>
+		<createTable tableName="hydramodule_patient_workflow">
+			<column name="patient_workflow_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="workflow_id" type="int" />
+			<column name="patient_id" type="int" />
+			<column name="description" type="text">
+			</column>
+			<column defaultValueNumeric="0" name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column defaultValueBoolean="false" name="voided" type="boolean">
+				<constraints nullable="false" />
+			</column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_patient_workflow_workflow_fk"
+			baseTableName="hydramodule_patient_workflow" baseColumnNames="patient_id"
+			referencedTableName="patient" referencedColumnNames="patient_id" />
+
+		<addForeignKeyConstraint constraintName="hydramodule_patient_workflow_patient_fk"
+			baseTableName="hydramodule_patient_workflow" baseColumnNames="workflow_id"
+			referencedTableName="hydramodule_workflow" referencedColumnNames="workflow_id" />
+
+		<addForeignKeyConstraint constraintName="hydramodule_patient_workflow_creator_fk"
+			baseTableName="hydramodule_patient_workflow" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_patient_workflow_changed_by_fk"
+			baseTableName="hydramodule_patient_workflow" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_patient_workflow_voided_by_fk"
+			baseTableName="hydramodule_patient_workflow" baseColumnNames="voided_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+
+	</changeSet>
 </databaseChangeLog>
