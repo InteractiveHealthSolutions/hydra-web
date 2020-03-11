@@ -10,6 +10,7 @@
 package org.openmrs.module.hydra.api.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -19,11 +20,13 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
+import org.openmrs.ConceptAnswer;
 import org.openmrs.Field;
 import org.openmrs.FieldAnswer;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.api.APIException;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
@@ -49,6 +52,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
+import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
@@ -499,6 +503,19 @@ public class HydraDaoImpl {
 	}
 
 	// Participant
+	public HydramoduleParticipant getParticipantByUser(org.openmrs.User user) {
+		if (user != null) {
+			DbSession session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(HydramoduleParticipant.class);
+			criteria.add(Restrictions.eq("user", user));
+			// criteria.
+			List<HydramoduleParticipant> fields = criteria.list();
+			return fields.get(0);
+		}
+
+		return null;
+	}
+
 	public HydramoduleParticipant saveParticipant(HydramoduleParticipant serviceType) {
 		// System.out.println(serviceType.getUuid());
 		getSession().saveOrUpdate(serviceType);
@@ -811,9 +828,16 @@ public class HydraDaoImpl {
 	// HydramoduleField
 	public HydramoduleField saveHydramoduleField(HydramoduleField field) {
 		// System.out.println(serviceType.getUuid());
+		ConceptService conceptService = Context.getConceptService();
 		if (field.getFieldId() != null) {
 			deleteFieldAnswers(field);
 		}
+
+		Concept fieldConcept = field.getConcept();
+		if (fieldConcept.getId() == null) {
+			fieldConcept = conceptService.saveConcept(fieldConcept);
+		}
+		field.setConcept(fieldConcept);
 
 		getSession().clear();
 		getSession().saveOrUpdate(field);
@@ -822,6 +846,35 @@ public class HydraDaoImpl {
 		for (HydramoduleFieldAnswer answer : answers) {
 			answer.setField(field);
 			saveHydramoduleFieldAnswer(answer);
+
+			// adding in openmrs ConceptAnswer
+
+			try {
+				Concept answerConcept = answer.getConcept();
+				Concept questionConcept = field.getConcept();
+				Concept persistedConcept = conceptService.getConcept(questionConcept.getId());
+				Collection<ConceptAnswer> conceptAnswers = persistedConcept.getAnswers();
+				boolean answerFound = false;
+				for (ConceptAnswer conceptAnswer : conceptAnswers) {
+					if (conceptAnswer.getConcept().equals(answerConcept)) {
+						answerFound = true;
+						continue;
+					}
+				}
+				if (!answerFound) {
+					if (!persistedConcept.getAnswers().contains(answer.getConcept())) {
+						ConceptAnswer conceptAnswer = new ConceptAnswer();
+						// conceptAnswer.setConcept(questionConcept);
+						conceptAnswer.setAnswerConcept(answer.getConcept());
+						persistedConcept.addAnswer(conceptAnswer);
+						conceptService.saveConcept(persistedConcept);
+					}
+				}
+
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return field;
@@ -937,6 +990,27 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleRuleToken.class);
 		criteria.addOrder(Order.asc("tokenId"));
+		return criteria.list();
+	}
+
+	// HydramodulePatientWorkflow
+	public HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow patientWorkflow) {
+		getSession().saveOrUpdate(patientWorkflow);
+		getSession().flush();
+		return patientWorkflow;
+	}
+
+	public HydramodulePatientWorkflow getHydramodulePatientWorkflow(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramodulePatientWorkflow.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (HydramodulePatientWorkflow) criteria.uniqueResult();
+	}
+
+	public List<HydramodulePatientWorkflow> getAllHydramodulePatientWorkflows() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramodulePatientWorkflow.class);
+		criteria.addOrder(Order.asc("patientWorkflowId"));
 		return criteria.list();
 	}
 }

@@ -22,6 +22,7 @@ import org.openmrs.EncounterType;
 import org.openmrs.Field;
 import org.openmrs.FieldAnswer;
 import org.openmrs.FormField;
+import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
@@ -51,6 +52,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
+import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
@@ -462,6 +464,14 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return dao.getParticipant(uuid);
 	}
 
+	@Override
+	public List<HydramoduleParticipant> getParticipantByUserUUID(String userUUID) throws APIException {
+		User user = Context.getUserService().getUserByUuid(userUUID);
+		List<HydramoduleParticipant> participantsList = new ArrayList();
+		participantsList.add(dao.getParticipantByUser(user));
+		return participantsList;
+	}
+
 	// ParticipantSalaryType
 	@Override
 	@Transactional
@@ -675,6 +685,24 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public HydramoduleRuleToken getHydramoduleRuleToken(String uuid) throws APIException {
 		return dao.getHydramoduleRuleToken(uuid);
+	}
+
+	// HydramodulePatientWorkflow
+	@Override
+	@Transactional
+	public HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow service)
+	        throws APIException {
+		return dao.saveHydramodulePatientWorkflow(service);
+	}
+
+	@Override
+	public List<HydramodulePatientWorkflow> getAllHydramodulePatientWorkflows() throws APIException {
+		return dao.getAllHydramodulePatientWorkflows();
+	}
+
+	@Override
+	public HydramodulePatientWorkflow getHydramodulePatientWorkflow(String uuid) throws APIException {
+		return dao.getHydramodulePatientWorkflow(uuid);
 	}
 
 }

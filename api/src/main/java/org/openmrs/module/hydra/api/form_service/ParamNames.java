@@ -287,4 +287,6 @@ public class ParamNames {
 	public static final byte[] KEY_VALUE = new byte[] { 'T', 'h', 'e', 'B', 'e', 's', 't', 'S', 'e', 'c', 'r', 'e', 't', 'K',
 	        'e', 'y' };
 
+	public static final String WORKFLOW = "workflow";
+
 }

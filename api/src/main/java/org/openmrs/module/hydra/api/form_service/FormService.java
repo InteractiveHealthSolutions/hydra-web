@@ -49,6 +49,8 @@ import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFormSubmissionData;
 import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
+import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
+import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.naming.ObjectNamingStrategy;
 
@@ -121,9 +123,10 @@ public class FormService {
 
 		// getting EncounterType String
 		String encounterTypeString = (String) metadata.get(ParamNames.ENCOUNTER_TYPE);
+		String workflowUUID = (String) metadata.get(ParamNames.WORKFLOW);
 		// Patient Creation Form
 		if (encounterTypeString.equals("Create Patient")) {
-			createPatient(encounterTypeString, data);
+			createPatient(workflowUUID, encounterTypeString, data);
 			return;
 		}
 		// Rest of the forms
@@ -368,7 +371,7 @@ public class FormService {
 		}
 	}
 
-	private void createPatient(String encounterTypeString, JSONArray data) throws ParseException {
+	private void createPatient(String workflowUUID, String encounterTypeString, JSONArray data) throws ParseException {
 		PersonName personName = new PersonName();
 		SortedSet<PersonName> names = new TreeSet<PersonName>();
 		String gender = "M";
@@ -511,6 +514,15 @@ public class FormService {
 		System.out.println(patient.getGender());
 		System.out.println(patient.getPerson().getGivenName());
 		patient = patientService.savePatient(patient);
+		if (patient != null) {
+			HydramoduleWorkflow workflow = service.getWorkflowByUUID(workflowUUID);
+			if (workflow != null) {
+				HydramodulePatientWorkflow patientWorkflow = new HydramodulePatientWorkflow();
+				patientWorkflow.setWorkflow(workflow);
+				patientWorkflow.setPatient(patient);
+				service.saveHydramodulePatientWorkflow(patientWorkflow);
+			}
+		}
 		/*
 		 * Encounter encounter = new Encounter();
 		 * encounter.setEncounterType(encounterType); encounter.setPatient(patient);

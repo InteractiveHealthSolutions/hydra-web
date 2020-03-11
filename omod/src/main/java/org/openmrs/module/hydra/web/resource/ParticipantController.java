@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.model.workflow.HydramoduleField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -15,8 +16,10 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingCrudResource;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
@@ -55,6 +58,21 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 		services.addAll(service.getAllParticipants(false));
 		simpleObject.put("participants", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
+	}
+
+	/*
+	 * @Override public SimpleObject search(RequestContext context) throws
+	 * ResponseException { // TODO Auto-generated method stub return
+	 * super.search(context); }
+	 */
+
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String queryParam = context.getParameter("q");
+		System.out.println(queryParam);
+		List<HydramoduleParticipant> participants = service.getParticipantByUserUUID(queryParam);
+
+		return new NeedsPaging<HydramoduleParticipant>(participants, context);
 	}
 
 	@Override
