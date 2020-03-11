@@ -1926,13 +1926,13 @@
 	    <sql
 			splitStatements="true"
 			stripComments="true">         
-		        INSERT IGNORE INTO `privilege` (`privilege`,`description`,`uuid`) VALUES ('Access Administration','HYDRA - To allow a user to access admin panel','b7b42859-f21f-4fa9-afca-ffc8a6de9147');
-				INSERT IGNORE INTO `privilege` (`privilege`,`description`,`uuid`) VALUES ('Manage Events','HYDRA - To allow a user to manage events','5b3fd4e7-0d2c-43bd-95c9-bed5c3c9c089');
-				INSERT IGNORE INTO `privilege` (`privilege`,`description`,`uuid`) VALUES ('Manage Events Metadata','HYDRA - To allow a user to manage events metadata','28fc5f1b-0fc4-48e4-8101-20652192e0e1');
-				INSERT IGNORE INTO `privilege` (`privilege`,`description`,`uuid`) VALUES ('Manage Workflows','HYDRA - TO allow a user to manage workflows','d1ff06c3-263e-412f-86ff-41830ddc2e88');
-				INSERT IGNORE INTO `privilege` (`privilege`,`description`,`uuid`) VALUES ('Manage Workflows Metadata','HYDRA - To allow a user to manage workflows metadata','474917b2-aa0a-4424-9e1c-ba307b042488');
-				INSERT IGNORE INTO `privilege` (`privilege`,`description`,`uuid`) VALUES ('View Dashboard','HYDRA - To allow a user to view dashboard','98dd1940-c04a-4019-be0e-227246a969ad');
-				INSERT IGNORE INTO `privilege` (`privilege`,`description`,`uuid`) VALUES ('View Reports','HYDRA - To allow a user to view reports','cdc1c789-b7b5-11e6-bc7b-08002765b69c');
+		        INSERT IGNORE INTO hydra.`privilege` (`privilege`,`description`,`uuid`) VALUES ('Access Administration','HYDRA - To allow a user to access admin panel','b7b42859-f21f-4fa9-afca-ffc8a6de9147');
+				INSERT IGNORE INTO hydra.`privilege` (`privilege`,`description`,`uuid`) VALUES ('Manage Events','HYDRA - To allow a user to manage events','5b3fd4e7-0d2c-43bd-95c9-bed5c3c9c089');
+				INSERT IGNORE INTO hydra.`privilege` (`privilege`,`description`,`uuid`) VALUES ('Manage Events Metadata','HYDRA - To allow a user to manage events metadata','28fc5f1b-0fc4-48e4-8101-20652192e0e1');
+				INSERT IGNORE INTO hydra.`privilege` (`privilege`,`description`,`uuid`) VALUES ('Manage Workflows','HYDRA - TO allow a user to manage workflows','d1ff06c3-263e-412f-86ff-41830ddc2e88');
+				INSERT IGNORE INTO hydra.`privilege` (`privilege`,`description`,`uuid`) VALUES ('Manage Workflows Metadata','HYDRA - To allow a user to manage workflows metadata','474917b2-aa0a-4424-9e1c-ba307b042488');
+				INSERT IGNORE INTO hydra.`privilege` (`privilege`,`description`,`uuid`) VALUES ('View Dashboard','HYDRA - To allow a user to view dashboard','98dd1940-c04a-4019-be0e-227246a969ad');
+				INSERT IGNORE INTO hydra.`privilege` (`privilege`,`description`,`uuid`) VALUES ('View Reports','HYDRA - To allow a user to view reports','cdc1c789-b7b5-11e6-bc7b-08002765b69c');
 	    </sql>    
 	</changeSet>
 
