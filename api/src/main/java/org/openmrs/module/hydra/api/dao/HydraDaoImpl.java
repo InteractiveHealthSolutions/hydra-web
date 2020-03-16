@@ -63,6 +63,8 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import ca.uhn.hl7v2.conf.spec.message.Component;
+
 @Repository("hydra.HydraDao")
 @Transactional
 public class HydraDaoImpl {
@@ -103,7 +105,7 @@ public class HydraDaoImpl {
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramoduleComponentForm) criteria.uniqueResult();
 	}
-
+	
 	public List<HydramoduleWorkflow> getAllWorkflows() {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
@@ -149,6 +151,13 @@ public class HydraDaoImpl {
 		return criteria.list();
 	}
 
+	public List<HydramoduleComponentForm> getAllComponentFormRelations(HydramoduleForm form) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
+		criteria.addOrder(Order.asc("displayOrder"));
+		criteria.add(Restrictions.eq("form", form));
+		return criteria.list();
+	}
 	public HydramoduleComponent getComponent(String uuid) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponent.class);
@@ -291,9 +300,9 @@ public class HydraDaoImpl {
 		return phaseComponent;
 	}
 
-	public HydramoduleComponentForm saveComponentFormRelation(HydramoduleComponentForm phaseComponent) {
-		getSession().saveOrUpdate(phaseComponent);
-		return phaseComponent;
+	public HydramoduleComponentForm saveComponentFormRelation(HydramoduleComponentForm componentForm) {
+		getSession().saveOrUpdate(componentForm);
+		return componentForm;
 	}
 
 	public HydramodulePhase savePhase(HydramodulePhase phase) {
