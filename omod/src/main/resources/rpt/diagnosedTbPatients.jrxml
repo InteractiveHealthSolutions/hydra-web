@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="School Summary" pageWidth="6000" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="4500" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd89df2e-7286-4f55-8d46-f2aee47cd183">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="4971"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="DejaVu Sans" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="DejaVu Sans" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="DejaVu Sans" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="DejaVu Sans" fontSize="12"/>
+	<subDataset name="dataset1" uuid="c45497f2-e740-4347-a1f3-de32585a34cb"/>
+	<parameter name="to" class="java.util.Date"/>
+	<parameter name="from" class="java.util.Date"/>
+	<parameter name="facility" class="java.lang.String"/>
+	<parameter name="workflow" class="java.lang.String"/>
+	<parameter name="presumptive_tb" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select pt_id.identifier as patient_id, ex_id.identifier as patient_external_id, loc.name as patient_location,
+per_name.given_name as patient_first_name, per_name.family_name as patient_last_name, per.gender as patient_gender,
+TIMESTAMPDIFF(YEAR, per.birthdate, CURDATE()) AS patient_age, pri_cont.value as primary_contact,
+sec_cont.value as secondary_contact, hlt_ctr_name.name  as location_name,
+per_add.state_province as province, per_add.city_village as city,
+enc_tb_diagnosis.encounter_datetime as tb_confirmation_datetime, loc_tb_diagnosis.name as loc_tb_diagnosis_location,
+tbtype_concept.name as tb_type, mtbconfirmation_concept.name as mtb_confirmation, confirmeddiagnosis_concept.name as confirmed_diagnosis,
+drug_resistance_profile_concept.name as drug_resistance_profile, eligible_for_treatment_concept.name as eligible_for_treatment,
+IF(drug_resistance_profile_concept.name = 'confirmed_drug_susceptible' and eligible_for_treatment_concept.name = 'yes','Yes','No') as need_treatment_initiation,
+enc_adlt_treatment_initiation.max_enc_datetime as adlt_treatment_initiation_datetime, loc_adlt_treatment_initiation.name as loc_adlt_treatment_initiation,
+obs_tb_reg_no.value_text as tb_reg_no, treatment_initiation_concept.name as treatment_initiated, reason_treatment_notinitiated_concept.name as reason_treatment_notinitiated,
+sickness_duration_concept.name as duration_of_sickness_prior_to_tb_diagnosis, patient_type_concept.name as patient_type, tb_cat_concept.name as tb_cat, treatment_plan_concept.name as treatment_plan_initiation,
+enc_adlt_treatment_followup.max_enc_datetime as adlt_treatment_followup_datetime, loc_adlt_treatment_followup.name as loc_adlt_treatment_followup,
+obs_treatment_month.value_numeric as treatment_month, treatment_plan_fp_concept.name as treatment_plan_fp, patient_clinical_status_concept.name as patient_clinical_status,
+obs_followup_needed_concept.name as followup_needed, obs_next_appt_date.value_datetime as next_apt_date,
+IF(DATEDIFF(CURDATE(), obs_next_appt_date.value_datetime) < 3,'No',IF(enc_eof.max_enc_datetime >= enc_adlt_treatment_initiation.max_enc_datetime,'No',IF(enc_eof.max_enc_datetime >= enc_adlt_treatment_initiation.max_enc_datetime,'No', 'Yes'))) as missed_followup,
+enc_eof.max_enc_datetime as end_of_followup_datetime, loc_eof.name as loc_end_of_followup, tx_outcome_concept.name as tx_outcome,
+obs_remarks.value_text as remarks
+FROM ( select patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type_id from hydra.encounter
+			INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'TB Disease Confirmation'
+			WHERE encounter.voided = 0
+			GROUP BY encounter.patient_id, encounter_type, location_id, encounter_id) AS encs
+INNER JOIN hydra.encounter AS enc_tb_diagnosis
+    ON enc_tb_diagnosis.patient_id = encs.patient_id
+   AND enc_tb_diagnosis.encounter_datetime = encs.max_enc_datetime
+   AND enc_tb_diagnosis.encounter_type = encs.encounter_type_id
+inner join hydra.patient pt on pt.patient_id = enc_tb_diagnosis.patient_id
+inner join hydra.patient_identifier pt_id on pt.patient_id = pt_id.patient_id and pt_id.identifier_type = 3 and pt_id.voided = 0
+left join hydra.patient_identifier ex_id on pt.patient_id = ex_id.patient_id and ex_id.identifier_type = 5 and ex_id.voided = 0
+left join hydra.location loc on pt_id.location_id = loc.location_id
+left join hydra.person per on pt.patient_id = per.person_id
+left join hydra.person_name per_name on per.person_id = per_name.person_id and per_name.voided = 0 and per_name.preferred = 1
+left join hydra.person_attribute pri_cont on per.person_id = pri_cont.person_id and pri_cont.person_attribute_type_id = 8 and pri_cont.voided = 0
+left join hydra.person_attribute sec_cont on per.person_id = sec_cont.person_id and sec_cont.person_attribute_type_id = 12 and sec_cont.voided = 0
+left join hydra.person_attribute hlt_ctr on per.person_id = hlt_ctr.person_id and hlt_ctr.person_attribute_type_id = 7 and sec_cont.voided = 0
+left join hydra.location hlt_ctr_name on hlt_ctr.value = hlt_ctr_name.location_id
+left join hydra.person_address per_add on per.person_id = per_add.person_id and per_add.voided = 0 and per_add.preferred = 1
+LEFT JOIN hydra.location loc_tb_diagnosis ON enc_tb_diagnosis.location_id = loc_tb_diagnosis.location_id
+LEFT JOIN hydra.obs obs_tbtype ON enc_tb_diagnosis.encounter_id = obs_tbtype.encounter_id and obs_tbtype.concept_id = 160040 and obs_tbtype.voided = 0
+LEFT JOIN hydra.concept_name tbtype_concept ON  obs_tbtype.value_coded = tbtype_concept.concept_id and tbtype_concept.concept_name_type = 'SHORT'  and tbtype_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_mtbconfirmation ON enc_tb_diagnosis.encounter_id = obs_mtbconfirmation.encounter_id and obs_mtbconfirmation.concept_id = 164998 and obs_mtbconfirmation.voided = 0
+LEFT JOIN hydra.concept_name mtbconfirmation_concept ON  obs_mtbconfirmation.value_coded = mtbconfirmation_concept.concept_id and mtbconfirmation_concept.concept_name_type = 'SHORT'  and mtbconfirmation_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_confirmeddiagnosis ON enc_tb_diagnosis.encounter_id = obs_confirmeddiagnosis.encounter_id and obs_confirmeddiagnosis.concept_id = 159392 and obs_confirmeddiagnosis.voided = 0
+LEFT JOIN hydra.concept_name confirmeddiagnosis_concept ON  obs_confirmeddiagnosis.value_coded = confirmeddiagnosis_concept.concept_id and confirmeddiagnosis_concept.concept_name_type = 'SHORT'  and confirmeddiagnosis_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_drug_resistance_profile ON enc_tb_diagnosis.encounter_id = obs_drug_resistance_profile.encounter_id and obs_drug_resistance_profile.concept_id = 165029 and obs_drug_resistance_profile.voided = 0
+LEFT JOIN hydra.concept_name drug_resistance_profile_concept ON  obs_drug_resistance_profile.value_coded = drug_resistance_profile_concept.concept_id and drug_resistance_profile_concept.concept_name_type = 'SHORT'  and drug_resistance_profile_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_eligible_for_treatment ON enc_tb_diagnosis.encounter_id = obs_eligible_for_treatment.encounter_id and obs_eligible_for_treatment.concept_id = 166032 and obs_eligible_for_treatment.voided = 0
+LEFT JOIN hydra.concept_name eligible_for_treatment_concept ON  obs_eligible_for_treatment.value_coded = eligible_for_treatment_concept.concept_id and eligible_for_treatment_concept.concept_name_type = 'SHORT'  and eligible_for_treatment_concept.locale_preferred = 1
+LEFT JOIN (select patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type, location_id, encounter_id from hydra.encounter
+			INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'Adult TB Treatment Initiation Form'
+			WHERE encounter.voided = 0
+			GROUP BY encounter.patient_id, encounter_type, location_id, encounter_id) enc_adlt_treatment_initiation ON enc_adlt_treatment_initiation.patient_id = enc_tb_diagnosis.patient_id
+LEFT JOIN hydra.location loc_adlt_treatment_initiation ON enc_adlt_treatment_initiation.location_id = loc_adlt_treatment_initiation.location_id
+LEFT JOIN hydra.obs obs_tb_reg_no ON enc_adlt_treatment_initiation.encounter_id = obs_tb_reg_no.encounter_id and obs_tb_reg_no.concept_id = 164995 and obs_tb_reg_no.voided = 0
+LEFT JOIN hydra.obs obs_treatment_initiation ON enc_adlt_treatment_initiation.encounter_id = obs_treatment_initiation.encounter_id and obs_treatment_initiation.concept_id = 164647 and obs_treatment_initiation.voided = 0
+LEFT JOIN hydra.concept_name treatment_initiation_concept ON  obs_treatment_initiation.value_coded = treatment_initiation_concept.concept_id and treatment_initiation_concept.concept_name_type = 'SHORT'  and treatment_initiation_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_reason_treatment_notinitiated ON enc_adlt_treatment_initiation.encounter_id = obs_reason_treatment_notinitiated.encounter_id and obs_reason_treatment_notinitiated.concept_id = 164437 and obs_reason_treatment_notinitiated.voided = 0
+LEFT JOIN hydra.concept_name reason_treatment_notinitiated_concept ON  obs_reason_treatment_notinitiated.value_coded = reason_treatment_notinitiated_concept.concept_id and reason_treatment_notinitiated_concept.concept_name_type = 'SHORT'  and reason_treatment_notinitiated_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_sickness_duration ON enc_adlt_treatment_initiation.encounter_id = obs_sickness_duration.encounter_id and obs_sickness_duration.concept_id = 166803 and obs_sickness_duration.voided = 0
+LEFT JOIN hydra.concept_name sickness_duration_concept ON  obs_sickness_duration.value_coded = sickness_duration_concept.concept_id and sickness_duration_concept.concept_name_type = 'SHORT'  and sickness_duration_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_patient_type ON enc_adlt_treatment_initiation.encounter_id = obs_patient_type.encounter_id and obs_patient_type.concept_id = 159990 and obs_patient_type.voided = 0
+LEFT JOIN hydra.concept_name patient_type_concept ON  obs_patient_type.value_coded = patient_type_concept.concept_id and patient_type_concept.concept_name_type = 'SHORT'  and patient_type_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_tb_cat ON enc_adlt_treatment_initiation.encounter_id = obs_tb_cat.encounter_id and obs_tb_cat.concept_id = 164238 and obs_tb_cat.voided = 0
+LEFT JOIN hydra.concept_name tb_cat_concept ON  obs_tb_cat.value_coded = tb_cat_concept.concept_id and tb_cat_concept.concept_name_type = 'SHORT'  and tb_cat_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_treatment_plan ON enc_adlt_treatment_initiation.encounter_id = obs_treatment_plan.encounter_id and obs_treatment_plan.concept_id = 1268 and obs_treatment_plan.voided = 0
+LEFT JOIN hydra.concept_name treatment_plan_concept ON  obs_treatment_plan.value_coded = treatment_plan_concept.concept_id and treatment_plan_concept.concept_name_type = 'SHORT'  and treatment_plan_concept.locale_preferred = 1
+LEFT JOIN (select patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type, location_id, encounter_id from hydra.encounter
+			INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'Adult TB Treatment Followup Form'
+			WHERE encounter.voided = 0
+			GROUP BY encounter.patient_id, encounter_type, location_id, encounter_id) enc_adlt_treatment_followup ON enc_adlt_treatment_followup.patient_id = enc_tb_diagnosis.patient_id
+LEFT JOIN hydra.location loc_adlt_treatment_followup ON enc_adlt_treatment_followup.location_id = loc_adlt_treatment_followup.location_id
+LEFT JOIN hydra.obs obs_treatment_month ON enc_adlt_treatment_followup.encounter_id = obs_treatment_month.encounter_id and obs_treatment_month.concept_id = 164327 and obs_treatment_month.voided = 0
+LEFT JOIN hydra.obs obs_treatment_plan_fp ON enc_adlt_treatment_followup.encounter_id = obs_treatment_plan_fp.encounter_id and obs_treatment_plan_fp.concept_id = 1268 and obs_treatment_plan_fp.voided = 0
+LEFT JOIN hydra.concept_name treatment_plan_fp_concept ON  obs_treatment_plan_fp.value_coded = treatment_plan_fp_concept.concept_id and treatment_plan_fp_concept.concept_name_type = 'SHORT'  and treatment_plan_fp_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_patient_clinical_status ON enc_adlt_treatment_followup.encounter_id = obs_patient_clinical_status.encounter_id and obs_patient_clinical_status.concept_id = 166061 and obs_patient_clinical_status.voided = 0
+LEFT JOIN hydra.concept_name patient_clinical_status_concept ON  obs_patient_clinical_status.value_coded = patient_clinical_status_concept.concept_id and patient_clinical_status_concept.concept_name_type = 'SHORT'  and patient_clinical_status_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_followup_needed ON enc_adlt_treatment_followup.encounter_id = obs_followup_needed.encounter_id and obs_followup_needed.concept_id = 166291 and obs_followup_needed.voided = 0
+LEFT JOIN hydra.concept_name obs_followup_needed_concept ON  obs_followup_needed.value_coded = obs_followup_needed_concept.concept_id and obs_followup_needed_concept.concept_name_type = 'SHORT'  and obs_followup_needed_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_next_appt_date ON enc_adlt_treatment_followup.encounter_id = obs_next_appt_date.encounter_id and obs_next_appt_date.concept_id = 5096 and obs_next_appt_date.voided = 0
+LEFT JOIN (select patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_type, location_id, encounter_id from hydra.encounter
+			INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'End of Followup Form'
+			WHERE encounter.voided = 0
+			GROUP BY encounter.patient_id, encounter_type, location_id, encounter_id) enc_eof ON enc_eof.patient_id = enc_tb_diagnosis.patient_id
+LEFT JOIN hydra.location loc_eof ON enc_eof.location_id = loc_eof.location_id
+LEFT JOIN hydra.obs obs_tx_outcome ON enc_eof.encounter_id = obs_tx_outcome.encounter_id and obs_tx_outcome.concept_id = 159786 and obs_tx_outcome.voided = 0
+LEFT JOIN hydra.concept_name tx_outcome_concept ON  obs_tx_outcome.value_coded = tx_outcome_concept.concept_id and tx_outcome_concept.concept_name_type = 'SHORT'  and tx_outcome_concept.locale_preferred = 1
+LEFT JOIN hydra.obs obs_remarks ON enc_eof.encounter_id = obs_remarks.encounter_id and obs_remarks.concept_id = 16811 and obs_remarks.voided = 0
+LEFT JOIN (select patient_id , MAX(encounter_datetime) AS max_enc_datetime, encounter_id, location_id from hydra.encounter
+			INNER JOIN hydra.encounter_type enc_type ON encounter.encounter_type = enc_type.encounter_type_id AND enc_type.name = 'Adult TB Screening Form'
+			WHERE encounter.voided = 0
+			GROUP BY encounter.patient_id, encounter_id) enc_adlt_screening ON enc_adlt_screening.patient_id = enc_tb_diagnosis.patient_id
+LEFT JOIN hydra.obs obs_adlt_scr_presumptivetb ON enc_adlt_screening.encounter_id = obs_adlt_scr_presumptivetb.encounter_id and obs_adlt_scr_presumptivetb.concept_id = 166778 and obs_adlt_scr_presumptivetb.voided = 0
+LEFT JOIN hydra.concept_name presumptivetb_concept ON obs_adlt_scr_presumptivetb.value_coded = obs_adlt_scr_presumptivetb.concept_id and presumptivetb_concept.concept_name_type = 'SHORT'  and presumptivetb_concept.locale_preferred = 1
+left JOIN hydra.encounter lat_enc ON lat_enc.patient_id = per.person_id and lat_enc.voided = 0
+left join hydra.hydramodule_form_encounter hm_form_enc on hm_form_enc.encounter_id = lat_enc.encounter_id
+left join hydra.hydramodule_component_form hm_comp_frm on hm_form_enc.component_form_id = hm_comp_frm.component_form_id
+left join hydra.hydramodule_workflow hm_wf on hm_comp_frm.workflow_id = hm_wf.workflow_id
+where
+   lat_enc.encounter_id = (
+      SELECT enc.encounter_id
+      FROM hydra.encounter enc
+      WHERE enc.patient_id = per.person_id
+      order by encounter_datetime desc limit 1
+   )
+and enc_tb_diagnosis.voided= 0 and pt.voided = 0 and (find_in_set(hlt_ctr_name.name, $P{facility}) or $P{facility} is NULL)
+and date(enc_tb_diagnosis.encounter_datetime) between date($P{from}) and date($P{to})
+and (hm_wf.name = $P{workflow} or $P{workflow} is NULL)
+and (presumptivetb_concept.name = $P{presumptive_tb} or $P{presumptive_tb} is NULL);]]>
+	</queryString>
+	<field name="patient_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_external_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_location" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_first_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_last_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_gender" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_age" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="primary_contact" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="secondary_contact" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="location_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="province" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="city" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tb_confirmation_datetime" class="java.util.Date"/>
+	<field name="loc_tb_diagnosis_location" class="java.lang.String"/>
+	<field name="tb_type" class="java.lang.String"/>
+	<field name="mtb_confirmation" class="java.lang.String"/>
+	<field name="confirmed_diagnosis" class="java.lang.String"/>
+	<field name="drug_resistance_profile" class="java.lang.String"/>
+	<field name="eligible_for_treatment" class="java.lang.String"/>
+	<field name="need_treatment_initiation" class="java.lang.String"/>
+	<field name="adlt_treatment_initiation_datetime" class="java.util.Date"/>
+	<field name="loc_adlt_treatment_initiation" class="java.lang.String"/>
+	<field name="tb_reg_no" class="java.lang.String"/>
+	<field name="treatment_initiated" class="java.lang.String"/>
+	<field name="reason_treatment_notinitiated" class="java.lang.String"/>
+	<field name="duration_of_sickness_prior_to_tb_diagnosis" class="java.lang.String"/>
+	<field name="patient_type" class="java.lang.String"/>
+	<field name="tb_cat" class="java.lang.String"/>
+	<field name="treatment_plan_initiation" class="java.lang.String"/>
+	<field name="adlt_treatment_followup_datetime" class="java.lang.String"/>
+	<field name="loc_adlt_treatment_followup" class="java.lang.String"/>
+	<field name="treatment_month" class="java.lang.Integer"/>
+	<field name="treatment_plan_fp" class="java.lang.String"/>
+	<field name="patient_clinical_status" class="java.lang.String"/>
+	<field name="followup_needed" class="java.lang.String"/>
+	<field name="next_apt_date" class="java.util.Date"/>
+	<field name="missed_followup" class="java.lang.String"/>
+	<field name="end_of_followup_datetime" class="java.util.Date"/>
+	<field name="loc_end_of_followup" class="java.lang.String"/>
+	<field name="tx_outcome" class="java.lang.String"/>
+	<field name="remarks" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="88" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="0" y="13" width="541" height="33" uuid="db61ed12-cb3d-4017-b714-c841af42d327"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Diagnosed TB Patients]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="117" y="46" width="451" height="33" uuid="a8f00ba0-29d5-4d10-badb-97a9c809f185"/>
+				<textElement>
+					<font size="14" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[To identify diagnosed tb patients in a workflow and whether their next step was carried out]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="46" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="45" width="5960" height="1" uuid="63add86d-f5ed-42b5-b4df-1c380185820a"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="26" width="117" height="20" uuid="c7be40e4-232c-4906-b84c-33aed3316dca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Patient ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="117" y="26" width="117" height="20" uuid="c46208ef-a145-462a-be46-1f8afae809ae"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[External ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="234" y="26" width="141" height="20" uuid="335ed8c6-6178-4dd8-a287-551e82db86d2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Screening Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="375" y="26" width="117" height="20" uuid="a3514300-9ba0-41a6-a556-9a53ba5c1b9c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[First Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="26" width="117" height="20" uuid="735dbb73-bc90-4346-842e-8c468d3269d6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Last Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="609" y="26" width="70" height="20" uuid="cb3341b7-ed4a-45dd-bdd5-ce8e0b4584e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gender]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="679" y="26" width="131" height="20" uuid="f15d0f1f-2c50-4fae-92fa-3de755ebc3e7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Primary Contact]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="810" y="26" width="141" height="20" uuid="e0d7ba06-210b-43d8-b785-75371079865b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Secondary Contact]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="951" y="25" width="117" height="20" uuid="c90181ca-4eae-43d4-b4fb-1eabab7ed001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Province]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1068" y="26" width="100" height="20" uuid="4e1b4db1-14dc-4e90-b15f-7d21fe169dd9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[City]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="1168" height="26" uuid="82671da0-cc59-4d38-aef5-0b0198b76fb8"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Patient Attributes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1168" y="0" width="1289" height="26" uuid="d511e2e4-32f0-4e2f-b1e6-50e2cbedefe2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Adult Disease Confirmation Form]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1168" y="26" width="131" height="20" uuid="8be6d123-205a-4d8a-984e-2775f443b5e2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Encounter Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1299" y="26" width="153" height="20" uuid="705bbeb4-c4be-4a07-85db-8fdfa2365dd0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Encounter Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1452" y="26" width="97" height="20" uuid="64f3696c-1ca7-4271-821f-ad6ec7bc60b3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TB Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1549" y="26" width="153" height="20" uuid="3cb475b3-f029-4c30-8fcf-2474e6b39794"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MTB Confirmation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1702" y="26" width="176" height="20" uuid="1f141899-80d6-4ac1-bfb0-4b13b9ba34e9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Confirmed Diagnosis]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1878" y="26" width="181" height="20" uuid="7cfd5769-2bec-49cb-af1c-3cfbc9ceef78"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Drug Resistance Profile]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2059" y="26" width="176" height="20" uuid="a741269f-2f32-4c83-b745-4ed20f0a6afb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Eligible for treatment]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2235" y="26" width="222" height="20" uuid="f5d22eec-c01f-416b-b6c7-06601e82aa4a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Treatment Initiation Needed]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2457" y="27" width="161" height="19" uuid="243fc303-538e-4531-9be9-4c5cfd105d33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Encounter Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2618" y="26" width="173" height="19" uuid="0af37f6b-f249-46fb-853b-4c15f0c525e4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Encounter Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2945" y="27" width="157" height="19" uuid="87bfd425-fa7c-4c3a-bfe2-67e98fcb5b0f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Treatment Initiated]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3102" y="27" width="251" height="19" uuid="1a3faf6c-92b8-4560-bb07-4c234fdb95fd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reason treatment not initiated]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3353" y="25" width="297" height="19" uuid="f1d99534-2d43-43db-a401-0a49207de90b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Duration of Sickness prior to diagnosis]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3650" y="27" width="157" height="19" uuid="cb71fd5a-8cbd-4d71-9dcd-749374a2f968"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Patient Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3807" y="27" width="125" height="19" uuid="f4d184e3-c088-4451-b41d-9d9e484b198e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TB Category]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3932" y="27" width="157" height="19" uuid="65ef4858-3930-4902-8920-465b68deb3a4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Treatment Plan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2457" y="1" width="1632" height="26" uuid="6ffdefe8-28d4-4da4-a0b8-4ed673a853f2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Treatment Initiation Form]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4089" y="25" width="131" height="20" uuid="406920c7-15fd-4553-9a75-f5ac14f6648b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Encounter Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4220" y="25" width="153" height="20" uuid="3a545228-ba2f-4f5a-8b23-1e0d229d12ac"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Encounter Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4373" y="26" width="153" height="20" uuid="ad8d77da-f462-45e9-a981-685db2ad2c7f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Treatment Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4526" y="25" width="153" height="20" uuid="ad925e84-7a39-4cd0-8d97-b24d5325a0c1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Treatment Plan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4679" y="25" width="153" height="20" uuid="b19af0b0-6798-4c34-8e1a-98ff5e53f9ca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Clinical Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4832" y="25" width="153" height="20" uuid="ac9a0929-86ab-4b6e-a691-e50aa8ff4f2a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Followup needed]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4985" y="25" width="192" height="20" uuid="7f986b10-190b-463f-a5d7-f58075ea19f6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Next appointment date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5340" y="25" width="131" height="21" uuid="dbe89dfe-d137-47c2-9f5c-eac52eacd5aa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Encounter Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5177" y="25" width="163" height="20" uuid="129eecf5-bd64-48a0-b706-0fd12dd7d5b5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Missed Followup?]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5471" y="26" width="153" height="20" uuid="9b28a454-0672-45aa-a47f-85be102ecf40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Encounter Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5624" y="25" width="153" height="20" uuid="590f49f5-a571-49ff-b477-fc96aecb77df"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Outcome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5777" y="25" width="183" height="20" uuid="22a794df-cf32-4c43-bb1b-7d5ccc60e7fd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Remarks]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5340" y="1" width="620" height="26" uuid="6d49d3b2-7e4d-41cc-b81f-2817a82b7c76"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[End of Followup Form]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2791" y="27" width="154" height="19" uuid="2fc93dd3-1379-4a01-8318-6e21f8cc9b72"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TB registration no.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4089" y="0" width="1251" height="26" uuid="c513fde8-af19-42d3-b7fa-6f9aa79d8abd"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Treatment Followup Form]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="5960" height="1" uuid="46296e79-819d-4660-b737-393772fdf506"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="0" y="0" width="117" height="20" uuid="4c824861-3a2f-4b79-83bc-3e5afd259fe3"/>
+				<textFieldExpression><![CDATA[$F{patient_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="117" y="0" width="117" height="20" uuid="e7245064-47de-11ea-b77f-2e728ce88125"/>
+				<textFieldExpression><![CDATA[$F{patient_external_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="234" y="0" width="141" height="20" uuid="446c520f-206f-47fa-9f4e-d62ff50bf232"/>
+				<textFieldExpression><![CDATA[$F{patient_location}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="375" y="0" width="117" height="20" uuid="e72452bc-47de-11ea-b77f-2e728ce88125"/>
+				<textFieldExpression><![CDATA[$F{patient_first_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="492" y="0" width="117" height="20" uuid="e7245406-47de-11ea-b77f-2e728ce88125"/>
+				<textFieldExpression><![CDATA[$F{patient_last_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="609" y="0" width="70" height="20" uuid="ba2839aa-d691-4c20-87b3-2ac92ffb666e"/>
+				<textFieldExpression><![CDATA[$F{patient_gender}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="679" y="0" width="131" height="20" uuid="24572346-3f33-49d2-b898-ee57acb39dc7"/>
+				<textFieldExpression><![CDATA[$F{primary_contact}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="813" y="0" width="138" height="20" uuid="3e96b015-4622-4d98-8c8b-d9657d63937f"/>
+				<textFieldExpression><![CDATA[$F{secondary_contact}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1068" y="0" width="100" height="20" uuid="61b881bc-3b75-4157-bc88-019d1abd7547"/>
+				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1452" y="0" width="97" height="20" uuid="d0dfbfd4-0cc6-4bae-a450-60ac3e8afb1d"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{tb_type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1549" y="0" width="153" height="20" uuid="4b56e03d-76b1-4b44-9d7d-382d87c9b4ba"/>
+				<textFieldExpression><![CDATA[$F{mtb_confirmation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1702" y="0" width="176" height="20" uuid="2b70f5d5-4c54-42b4-98fe-2e1d8067c111"/>
+				<textFieldExpression><![CDATA[$F{confirmed_diagnosis}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2059" y="0" width="176" height="20" uuid="12b0f490-255f-4204-9d36-78b91d03efdd"/>
+				<textElement>
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{eligible_for_treatment}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1168" y="0" width="131" height="20" uuid="0ea33ab3-5597-4693-900c-574dabcd07e5"/>
+				<textFieldExpression><![CDATA[$F{tb_confirmation_datetime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1878" y="0" width="181" height="20" uuid="e6170ae5-6db3-4ff1-9485-3392c150150e"/>
+				<textFieldExpression><![CDATA[$F{drug_resistance_profile}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2235" y="0" width="222" height="20" uuid="1f7da45c-81fd-45d7-9b43-ff394e89aa5e"/>
+				<textFieldExpression><![CDATA[$F{need_treatment_initiation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1299" y="0" width="153" height="20" uuid="88e4882a-e9f2-4843-8c20-370abeacf315"/>
+				<textFieldExpression><![CDATA[$F{loc_tb_diagnosis_location}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="951" y="0" width="117" height="20" uuid="232189cf-3687-4b1c-b245-f068594cf097"/>
+				<textFieldExpression><![CDATA[$F{province}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2457" y="0" width="161" height="20" uuid="453e5a69-f611-4edd-a434-34ed8001b842"/>
+				<textFieldExpression><![CDATA[$F{adlt_treatment_initiation_datetime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2618" y="0" width="173" height="20" uuid="ec0a7d5e-aa92-4f26-8238-e18607156397"/>
+				<textFieldExpression><![CDATA[$F{loc_adlt_treatment_initiation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2791" y="0" width="154" height="20" uuid="27ba2a99-676c-42fd-9037-a219967b8247"/>
+				<textFieldExpression><![CDATA[$F{tb_reg_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2945" y="0" width="157" height="20" uuid="33430f1c-5536-4476-97a0-22923f6e4dea"/>
+				<textFieldExpression><![CDATA[$F{treatment_initiated}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3102" y="0" width="251" height="20" uuid="76cfcede-7f91-4b90-9305-d03a34d13f2f"/>
+				<textFieldExpression><![CDATA[$F{reason_treatment_notinitiated}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3353" y="0" width="297" height="20" uuid="e2b91573-d84b-45cd-8ea6-f8877e2e29a0"/>
+				<textFieldExpression><![CDATA[$F{duration_of_sickness_prior_to_tb_diagnosis}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3650" y="0" width="157" height="20" uuid="432ea38f-f0ca-4c13-ad38-6e4f28662cc3"/>
+				<textFieldExpression><![CDATA[$F{patient_type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3807" y="0" width="125" height="20" uuid="03405db4-c0cf-4e0b-a990-162ec6ef5052"/>
+				<textFieldExpression><![CDATA[$F{tb_cat}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3932" y="0" width="157" height="20" uuid="f065509d-8926-4d44-9ea4-12440b15956f"/>
+				<textFieldExpression><![CDATA[$F{treatment_plan_initiation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4089" y="0" width="131" height="20" uuid="d0ccc5ff-110d-41eb-959e-fc0e05b91fac"/>
+				<textFieldExpression><![CDATA[$F{adlt_treatment_followup_datetime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4220" y="0" width="153" height="20" uuid="6b3fe589-45d5-4c40-a664-4230f11ebce1"/>
+				<textFieldExpression><![CDATA[$F{loc_adlt_treatment_followup}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4373" y="0" width="153" height="20" uuid="d943e5d3-f798-463a-805c-84e3cd1814e6"/>
+				<textFieldExpression><![CDATA[$F{treatment_month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4526" y="0" width="153" height="20" uuid="cd466ee9-e326-4a2d-9f2b-9e9d27c01cac"/>
+				<textFieldExpression><![CDATA[$F{treatment_plan_fp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4679" y="0" width="153" height="20" uuid="243cc969-5a84-4b70-997a-99ddeab5ddb3"/>
+				<textFieldExpression><![CDATA[$F{patient_clinical_status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4832" y="0" width="153" height="20" uuid="64cf7185-8241-4eed-b111-d8bf9fefa66a"/>
+				<textFieldExpression><![CDATA[$F{followup_needed}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4985" y="0" width="192" height="20" uuid="9040c022-3b65-465f-9470-c569ab5298c2"/>
+				<textFieldExpression><![CDATA[$F{next_apt_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5177" y="0" width="163" height="20" uuid="fc75503b-62dc-466b-a02f-4512e8480266"/>
+				<textFieldExpression><![CDATA[$F{missed_followup}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5340" y="0" width="131" height="20" uuid="fb7c55b6-ff53-4985-ba77-adbac9c32751"/>
+				<textFieldExpression><![CDATA[$F{end_of_followup_datetime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5471" y="0" width="153" height="20" uuid="b1a24662-d4ac-4177-bc31-b2dc78423c95"/>
+				<textFieldExpression><![CDATA[$F{loc_end_of_followup}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5624" y="0" width="153" height="20" uuid="9a83def6-bd9b-46a8-bab4-e5a0b2fd7111"/>
+				<textFieldExpression><![CDATA[$F{tx_outcome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5777" y="0" width="183" height="20" uuid="b447ccb5-c2c0-467b-bc05-0ff7f1c7f122"/>
+				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="Column header" x="433" y="0" width="80" height="20" uuid="13a836f8-f7eb-4b1d-9e67-8ba50d72e837"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="Column header" x="513" y="0" width="40" height="20" uuid="28ddcf51-f4cf-4b24-b956-862ec078ffcb"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="0" y="0" width="197" height="20" uuid="43a6b49e-c022-434b-8fb5-1c028f2ff4b8"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
