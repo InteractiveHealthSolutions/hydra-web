@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="School Summary" pageWidth="1850" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="1600" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd89df2e-7286-4f55-8d46-f2aee47cd183">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="DejaVu Sans" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="DejaVu Sans" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="DejaVu Sans" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="DejaVu Sans" fontSize="12"/>
+	<subDataset name="dataset1" uuid="c45497f2-e740-4347-a1f3-de32585a34cb"/>
+	<parameter name="to" class="java.util.Date"/>
+	<parameter name="from" class="java.util.Date"/>
+	<parameter name="facility" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select pt_id.identifier as patient_id, ex_id.identifier as patient_external_id, loc.name as patient_location,
+per_name.given_name as patient_first_name, per_name.family_name as patient_last_name, per.gender as patient_gender,
+TIMESTAMPDIFF(YEAR, per.birthdate, CURDATE()) AS patient_age, pri_cont.value as primary_contact,
+sec_cont.value as secondary_contact, hlt_ctr_name.name  as location_name,
+per_add.state_province as province, per_add.city_village as city,
+hm_ph.name as current_phase, hm_comp.name as current_stage,
+enc_type.name as last_encounter, lat_enc.encounter_datetime as last_encounter_date
+FROM hydra.patient pt
+inner join hydra.patient_identifier pt_id on pt.patient_id = pt_id.patient_id and pt_id.identifier_type = 3 and pt_id.voided = 0
+left join hydra.patient_identifier ex_id on pt.patient_id = ex_id.patient_id and ex_id.identifier_type = 5 and ex_id.voided = 0
+left join hydra.location loc on pt_id.location_id = loc.location_id
+left join hydra.person per on pt.patient_id = per.person_id
+left join hydra.person_name per_name on per.person_id = per_name.person_id and per_name.voided = 0 and per_name.preferred = 1
+left join hydra.person_attribute pri_cont on per.person_id = pri_cont.person_id and pri_cont.person_attribute_type_id = 8 and pri_cont.voided = 0
+left join hydra.person_attribute sec_cont on per.person_id = sec_cont.person_id and sec_cont.person_attribute_type_id = 12 and sec_cont.voided = 0
+left join hydra.person_attribute hlt_ctr on per.person_id = hlt_ctr.person_id and hlt_ctr.person_attribute_type_id = 7 and hlt_ctr.voided = 0
+left join hydra.location hlt_ctr_name on hlt_ctr.value = hlt_ctr_name.location_id
+left join hydra.person_address per_add on per.person_id = per_add.person_id and per_add.voided = 0 and per_add.preferred = 1
+left JOIN hydra.encounter lat_enc ON lat_enc.patient_id = per.person_id and lat_enc.voided = 0
+left join hydra.encounter_type enc_type on lat_enc.encounter_type = enc_type.encounter_type_id
+left join hydra.hydramodule_form_encounter hm_form_enc on hm_form_enc.encounter_id = lat_enc.encounter_id
+left join hydra.hydramodule_component_form hm_comp_frm on hm_form_enc.component_form_id = hm_comp_frm.component_form_id
+left join hydra.hydramodule_component hm_comp on hm_comp_frm.component_id = hm_comp.component_id
+left join hydra.hydramodule_phase hm_ph on hm_comp_frm.phase_id = hm_ph.phase_id
+where
+  ( lat_enc.encounter_id = (
+      SELECT enc.encounter_id
+      FROM hydra.encounter enc
+      WHERE enc.patient_id = per.person_id
+      order by encounter_datetime desc limit 1
+   ) or lat_enc.encounter_id is NULL)
+and pt.voided = 0 and (find_in_set(hlt_ctr_name.name, $P{facility}) or $P{facility} is NULL)
+and date(pt.date_created) between date($P{from}) and date($P{to});]]>
+	</queryString>
+	<field name="patient_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_external_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_location" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_first_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_last_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_gender" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="patient_age" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="primary_contact" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="secondary_contact" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="location_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="province" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="city" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="current_phase" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="current_stage" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="last_encounter" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="last_encounter_date" class="java.util.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="88" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="0" y="13" width="541" height="33" uuid="db61ed12-cb3d-4017-b714-c841af42d327"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Facility Patients]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="117" y="46" width="451" height="33" uuid="a8f00ba0-29d5-4d10-badb-97a9c809f185"/>
+				<textElement>
+					<font size="14" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[To identify patients belonging to a facility]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="46" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="45" width="2400" height="1" uuid="63add86d-f5ed-42b5-b4df-1c380185820a"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="26" width="117" height="20" uuid="c7be40e4-232c-4906-b84c-33aed3316dca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Patient ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="117" y="26" width="117" height="20" uuid="c46208ef-a145-462a-be46-1f8afae809ae"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[External ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="234" y="26" width="141" height="20" uuid="335ed8c6-6178-4dd8-a287-551e82db86d2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Screening Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="375" y="26" width="117" height="20" uuid="a3514300-9ba0-41a6-a556-9a53ba5c1b9c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[First Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="26" width="117" height="20" uuid="735dbb73-bc90-4346-842e-8c468d3269d6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Last Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="609" y="26" width="70" height="20" uuid="cb3341b7-ed4a-45dd-bdd5-ce8e0b4584e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gender]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="679" y="26" width="117" height="20" uuid="f15d0f1f-2c50-4fae-92fa-3de755ebc3e7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Primary Contact]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="796" y="26" width="138" height="20" uuid="e0d7ba06-210b-43d8-b785-75371079865b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Secondary Contact]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1168" y="26" width="117" height="20" uuid="e27af260-2032-48f4-93d0-6d9b96aa7441"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Facility]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="934" y="26" width="117" height="20" uuid="c90181ca-4eae-43d4-b4fb-1eabab7ed001"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Province]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1636" y="26" width="149" height="20" uuid="d1219d45-00c9-4905-b775-5214f5e89e2e"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Last Encounter Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1285" y="26" width="117" height="20" uuid="9ee18789-6cf1-477f-9d47-22f40ca76f2b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Current Phase]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1402" y="26" width="117" height="20" uuid="cb229b64-4f11-4bce-b36e-6ab02b5e06d7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Current Stage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1519" y="26" width="117" height="20" uuid="f6837ad4-7a79-411f-a50b-4e0560f55282"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Last Encounter]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1051" y="26" width="117" height="20" uuid="4e1b4db1-14dc-4e90-b15f-7d21fe169dd9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[City]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="2400" height="1" uuid="46296e79-819d-4660-b737-393772fdf506"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="0" y="0" width="117" height="20" uuid="4c824861-3a2f-4b79-83bc-3e5afd259fe3"/>
+				<textFieldExpression><![CDATA[$F{patient_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="117" y="0" width="117" height="20" uuid="e7245064-47de-11ea-b77f-2e728ce88125"/>
+				<textFieldExpression><![CDATA[$F{patient_external_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="234" y="0" width="141" height="20" uuid="446c520f-206f-47fa-9f4e-d62ff50bf232"/>
+				<textFieldExpression><![CDATA[$F{patient_location}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="375" y="0" width="117" height="20" uuid="e72452bc-47de-11ea-b77f-2e728ce88125"/>
+				<textFieldExpression><![CDATA[$F{patient_first_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="492" y="0" width="117" height="20" uuid="e7245406-47de-11ea-b77f-2e728ce88125"/>
+				<textFieldExpression><![CDATA[$F{patient_last_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="609" y="0" width="70" height="20" uuid="ba2839aa-d691-4c20-87b3-2ac92ffb666e"/>
+				<textFieldExpression><![CDATA[$F{patient_gender}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="679" y="0" width="117" height="20" uuid="24572346-3f33-49d2-b898-ee57acb39dc7"/>
+				<textFieldExpression><![CDATA[$F{primary_contact}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="796" y="0" width="138" height="20" uuid="3e96b015-4622-4d98-8c8b-d9657d63937f"/>
+				<textFieldExpression><![CDATA[$F{secondary_contact}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1051" y="0" width="117" height="20" uuid="61b881bc-3b75-4157-bc88-019d1abd7547"/>
+				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1168" y="0" width="117" height="20" uuid="e7927ee0-cb56-4559-b328-a9de598ccede"/>
+				<textFieldExpression><![CDATA[$F{location_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="934" y="0" width="117" height="20" uuid="232189cf-3687-4b1c-b245-f068594cf097"/>
+				<textFieldExpression><![CDATA[$F{province}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1519" y="0" width="117" height="20" uuid="0913b7b6-f4bc-47d5-b1c0-afdef6668c03"/>
+				<textFieldExpression><![CDATA[$F{last_encounter}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1636" y="0" width="149" height="20" uuid="0e12b961-7cc1-4f13-bc8c-abbad9c893b5"/>
+				<textFieldExpression><![CDATA[$F{last_encounter_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1285" y="0" width="117" height="20" uuid="6dac05d3-8a9e-4925-81a5-9cac60457e76"/>
+				<textFieldExpression><![CDATA[$F{current_phase}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1402" y="0" width="117" height="20" uuid="b20440d9-0cce-4311-ade8-cc63e72d945a"/>
+				<textFieldExpression><![CDATA[$F{current_stage}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="Column header" x="433" y="0" width="80" height="20" uuid="13a836f8-f7eb-4b1d-9e67-8ba50d72e837"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="Column header" x="513" y="0" width="40" height="20" uuid="28ddcf51-f4cf-4b24-b956-862ec078ffcb"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="0" y="0" width="197" height="20" uuid="43a6b49e-c022-434b-8fb5-1c028f2ff4b8"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
