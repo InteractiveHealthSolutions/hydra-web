@@ -54,8 +54,7 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleParticipant> services = service.getAllParticipants(true);
-		services.addAll(service.getAllParticipants(false));
+		List<HydramoduleParticipant> services = service.getAllParticipants(false);
 		simpleObject.put("participants", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}
