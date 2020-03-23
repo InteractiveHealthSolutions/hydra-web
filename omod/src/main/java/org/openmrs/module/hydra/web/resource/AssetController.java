@@ -50,8 +50,7 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleAsset> services = service.getAllAssets(true);
-		services.addAll(service.getAllAssets(false));
+		List<HydramoduleAsset> services = service.getAllAssets(false);
 		simpleObject.put("assets", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}
