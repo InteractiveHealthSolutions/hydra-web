@@ -353,14 +353,14 @@ public class FormService {
 							Obs obsIdentifier = new Obs();
 							Obs obsRelationship = new Obs();
 
-							/*
-							 * obsAge.setValueGroupId(valueGroupId);
-							 * obsGender.setValueGroupId(valueGroupId);
-							 * obsGivenName.setValueGroupId(valueGroupId);
-							 * obsFamilyName.setValueGroupId(valueGroupId);
-							 * obsIdentifier.setValueGroupId(valueGroupId);
-							 * obsRelationship.setValueGroupId(valueGroupId);
-							 */
+							
+							obsAge.setValueGroupId(valueGroupId);
+							obsGender.setValueGroupId(valueGroupId);
+							obsGivenName.setValueGroupId(valueGroupId);
+							obsFamilyName.setValueGroupId(valueGroupId);
+							obsIdentifier.setValueGroupId(valueGroupId);
+							obsRelationship.setValueGroupId(valueGroupId);
+							
 
 							obsAge.setConcept(questionConceptAge);
 							obsGender.setConcept(questionConceptGender);
@@ -369,7 +369,7 @@ public class FormService {
 							obsIdentifier.setConcept(questionConceptIdentifier);
 							obsRelationship.setConcept(questionConceptRelationship);
 
-							obsAge.setValueNumeric(1d);
+							obsAge.setValueNumeric(Double.parseDouble("1"));
 							obsGender.setValueText(gender);
 							obsGivenName.setValueText(givenName);
 							obsFamilyName.setValueText(familyName);
