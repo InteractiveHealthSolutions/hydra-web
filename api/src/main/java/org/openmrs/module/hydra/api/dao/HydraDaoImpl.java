@@ -610,7 +610,7 @@ public class HydraDaoImpl {
 				if (services.size() > 0) {
 					for (HydramoduleEventService service : services) {
 						service.setEvent(event);
-						/* persistantServices.add */saveHydramoduleEventService(service);
+						saveHydramoduleEventService(service);
 					}
 				}
 			}

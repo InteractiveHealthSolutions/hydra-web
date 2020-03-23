@@ -49,8 +49,8 @@ public class ServiceController extends MetadataDelegatingCrudResource<Hydramodul
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleService> services = service.getAllServices(true);
-		services.addAll(service.getAllServices(false));
+		List<HydramoduleService> services = service.getAllServices(false);
+		// services.addAll(service.getAllServices(false));
 		simpleObject.put("services", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

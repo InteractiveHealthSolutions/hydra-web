@@ -353,14 +353,12 @@ public class FormService {
 							Obs obsIdentifier = new Obs();
 							Obs obsRelationship = new Obs();
 
-							
 							obsAge.setValueGroupId(valueGroupId);
 							obsGender.setValueGroupId(valueGroupId);
 							obsGivenName.setValueGroupId(valueGroupId);
 							obsFamilyName.setValueGroupId(valueGroupId);
 							obsIdentifier.setValueGroupId(valueGroupId);
 							obsRelationship.setValueGroupId(valueGroupId);
-							
 
 							obsAge.setConcept(questionConceptAge);
 							obsGender.setConcept(questionConceptGender);
