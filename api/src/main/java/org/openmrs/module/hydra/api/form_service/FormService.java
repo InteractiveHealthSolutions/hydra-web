@@ -46,6 +46,7 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
@@ -122,8 +123,11 @@ public class FormService {
 		}
 
 		providerUUID = (String) authentication.get("provider");
-		Context.authenticate(username, decPassword);
-
+		try{
+			Context.authenticate(username, decPassword);
+		} catch(ContextAuthenticationException exception) {
+			Context.authenticate(username, password);
+		}
 		// getting EncounterType String
 		String encounterTypeString = (String) metadata.get(ParamNames.ENCOUNTER_TYPE);
 		String workflowUUID = (String) metadata.get(ParamNames.WORKFLOW);
