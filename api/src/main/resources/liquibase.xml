@@ -2156,4 +2156,13 @@
 	    </sql>    
 	</changeSet>
 
+	<changeSet author="naveed.iqbal" id="hydra-metadata-202003242340">  
+	    <comment>insert queries for relationship_type missing metadata</comment>
+	    <sql
+			splitStatements="true"
+			stripComments="true">   
+				INSERT IGNORE INTO hydra.relationship_type (a_is_to_b,b_is_to_a,preferred,weight,description,creator,date_created,retired,retired_by,date_retired,retire_reason,uuid,date_changed,changed_by) VALUES ('Child','Parent',0,0,'Relationship from a child to the parent',1,'2020-03-24 21:58:31.0',0,NULL,NULL,NULL,'701eebed-edfc-d6d4-a8a5-512c67179ef0',NULL,NULL);
+				INSERT IGNORE INTO hydra.relationship_type (a_is_to_b,b_is_to_a,preferred,weight,description,creator,date_created,retired,retired_by,date_retired,retire_reason,uuid,date_changed,changed_by) VALUES ('Spouse','Spouse',0,0,'Relationship between husband/wife or wife/husband',1,'2020-03-24 23:11:31.0',0,NULL,NULL,NULL,'451ebffd-edfc-d6d4-a8a5-512c67179ef0',NULL,NULL);
+		</sql>    
+	</changeSet>
 </databaseChangeLog>
