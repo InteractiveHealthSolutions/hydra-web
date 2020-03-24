@@ -469,7 +469,7 @@ public class FormService {
 		patientIdentifier.setPreferred(true);
 		patientIdentifiers.add(patientIdentifier);
 
-		String givenName = (String) contactObj.get("patientFirstName");
+		String givenName = (String) contactObj.get("patientGivenName");
 		String familyName = (String) contactObj.get("patientFamilyName");
 		SortedSet<PersonName> names = new TreeSet<PersonName>();
 		PersonName personName = new PersonName();
