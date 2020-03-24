@@ -469,8 +469,8 @@ public class FormService {
 		patientIdentifier.setPreferred(true);
 		patientIdentifiers.add(patientIdentifier);
 
-		String givenName = (String) contactObj.get("PatientFirstName");
-		String familyName = (String) contactObj.get("PatientFamilyName");
+		String givenName = (String) contactObj.get("patientFirstName");
+		String familyName = (String) contactObj.get("patientFamilyName");
 		SortedSet<PersonName> names = new TreeSet<PersonName>();
 		PersonName personName = new PersonName();
 		personName.setGivenName(givenName);
@@ -479,6 +479,7 @@ public class FormService {
 
 		String gender = (String) contactObj.get("gender");
 		String dob = (String) contactObj.get("age");
+		String birthDate = (String) contactObj.get("dob");
 		String relationship = (String) contactObj.get("relation");
 
 		gender = gender.toLowerCase().startsWith("m") ? "M" : "F";
