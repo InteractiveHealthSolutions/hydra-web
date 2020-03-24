@@ -35,6 +35,8 @@ import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.Provider;
+import org.openmrs.Relationship;
+import org.openmrs.RelationshipType;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.ConceptService;
@@ -142,6 +144,8 @@ public class FormService {
 					patientIdentifier = (String) id.get(ParamNames.VALUE);
 				}
 			}
+			// Fetching patient
+			Patient patient = findPatient(patientIdentifier);
 			// Getting the required service objects
 			PersonService personService = Context.getPersonService();
 			ConceptService conceptService = Context.getConceptService();
@@ -324,7 +328,7 @@ public class FormService {
 							String relationship = (String) contactObj.get("relation");
 
 							if (createPatient) {
-								createContactPatient(contactObj, location, workflowUUID, data);
+								createContactPatient(patient, contactObj, location, workflowUUID, data);
 							}
 
 							// Creating a unique value group id
@@ -400,8 +404,7 @@ public class FormService {
 			}
 
 			{
-				// Fetching patient
-				Patient patient = findPatient(patientIdentifier);
+				
 
 				if (patient != null) {
 					// Saving address
@@ -452,8 +455,7 @@ public class FormService {
 		}
 	}
 
-	private void createContactPatient(JSONObject contactObj, Location location, String workflowUUID, JSONArray data)
-	        throws ParseException {
+	private void createContactPatient(Patient indexPatient, JSONObject contactObj, Location location, String workflowUUID, JSONArray data) throws ParseException {
 		PersonService personService = Context.getPersonService();
 		ConceptService conceptService = Context.getConceptService();
 		PatientService patientService = Context.getPatientService();
@@ -496,8 +498,9 @@ public class FormService {
 		// patient.setNames(names);
 		patient.setGender(gender);
 
-		System.out.println(dob);
-		patient.setBirthdate(new Date());
+		// System.out.println();
+		Date dateOfBirth = Utils.formatterDate.parse(dob);
+		patient.setBirthdate(dateOfBirth);
 
 		// patient.setDateCreated(dateEntered);
 		for (PatientIdentifier patientIdentifieri : patientIdentifiers) {
@@ -517,6 +520,14 @@ public class FormService {
 				patientWorkflow.setWorkflow(workflow);
 				patientWorkflow.setPatient(patient);
 				service.saveHydramodulePatientWorkflow(patientWorkflow);
+			}
+			
+			// Save relationship
+			RelationshipType relationshipType = personService.getRelationshipTypeByName(relationship);
+			if(relationshipType != null) {
+				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(), relationshipType);
+				personService.saveRelationship(relationshipObj);
+				
 			}
 		}
 	}
@@ -558,8 +569,7 @@ public class FormService {
 
 					String IdentifierValue = dataItem.get(ParamNames.VALUE).toString();
 					System.out.println("Identifier: " + IdentifierValue);
-					PatientIdentifierType patientIdentifierType = patientService
-					        .getPatientIdentifierTypeByName(identifierType);
+					PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(identifierType);
 
 					PatientIdentifier patientIdentifier = new PatientIdentifier();
 					patientIdentifier.setIdentifier(IdentifierValue);
