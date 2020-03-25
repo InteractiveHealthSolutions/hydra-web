@@ -322,12 +322,12 @@ public class FormService {
 					case CONTACT_TRACING: {
 						JSONArray contactsArray = (JSONArray) dataItem.get(ParamNames.VALUE);
 						boolean createPatient = (Boolean) dataItem.get("createPatient");
-						int numberOfPeople = (Integer) dataItem.get("numberOfPeople");
+						double numberOfPeople = (Double) dataItem.get("numberOfPeople");
 						Concept questionNumberOfContacts = conceptService
 						        .getConceptByUuid("0e594b8c-cd8c-4437-9c6e-bc4e30ec7598");
 						Obs obsNumberOfContacts = new Obs();
 						obsNumberOfContacts.setConcept(questionNumberOfContacts);
-						obsNumberOfContacts.setValueNumeric((double) numberOfPeople);
+						obsNumberOfContacts.setValueNumeric(numberOfPeople);
 						obsList.add(obsNumberOfContacts);
 
 						for (int j = 0; j < contactsArray.size(); j++) {
