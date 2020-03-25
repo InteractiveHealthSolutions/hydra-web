@@ -123,9 +123,10 @@ public class FormService {
 		}
 
 		providerUUID = (String) authentication.get("provider");
-		try{
+		try {
 			Context.authenticate(username, decPassword);
-		} catch(ContextAuthenticationException exception) {
+		}
+		catch (ContextAuthenticationException exception) {
 			Context.authenticate(username, password);
 		}
 		// getting EncounterType String
@@ -321,6 +322,13 @@ public class FormService {
 					case CONTACT_TRACING: {
 						JSONArray contactsArray = (JSONArray) dataItem.get(ParamNames.VALUE);
 						boolean createPatient = (Boolean) dataItem.get("createPatient");
+						int numberOfPeople = (Integer) dataItem.get("numberOfPeople");
+						Concept questionNumberOfContacts = conceptService
+						        .getConceptByUuid("0e594b8c-cd8c-4437-9c6e-bc4e30ec7598");
+						Obs obsNumberOfContacts = new Obs();
+						obsNumberOfContacts.setConcept(questionNumberOfContacts);
+						obsNumberOfContacts.setValueNumeric((double) numberOfPeople);
+						obsList.add(obsNumberOfContacts);
 
 						for (int j = 0; j < contactsArray.size(); j++) {
 							JSONObject contactObj = (JSONObject) contactsArray.get(j);
@@ -328,8 +336,11 @@ public class FormService {
 							String givenName = (String) contactObj.get("PatientFirstName");
 							String familyName = (String) contactObj.get("PatientFamilyName");
 							String gender = (String) contactObj.get("gender");
-							String dob = (String) contactObj.get("age");
+							String age = (String) contactObj.get("age");
+							String dob = (String) contactObj.get("dob");
 							String relationship = (String) contactObj.get("relation");
+
+							Date birthDate = Utils.formatterDate.parse(dob);
 
 							if (createPatient) {
 								createContactPatient(patient, contactObj, location, workflowUUID, data);
@@ -341,8 +352,8 @@ public class FormService {
 							        + c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) + c.get(Calendar.SECOND)
 							        + c.get(Calendar.MILLISECOND) + (i + 1)) * (j + 2);
 
-							Concept questionConceptAge = conceptService
-							        .getConceptByUuid("d3d9e77a-cb7c-431a-9457-bcc0e4ac9a91");
+							Concept questionConceptDOB = conceptService
+							        .getConceptByUuid("160751AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 							Concept questionConceptGender = conceptService
 							        .getConceptByUuid("75a17321-fd69-47be-831e-cd773dc9c3cc");
 							Concept questionConceptGivenName = conceptService
@@ -354,35 +365,35 @@ public class FormService {
 							Concept questionConceptRelationship = conceptService
 							        .getConceptByUuid("7579f93d-ebe7-423f-822b-dbe792248499");
 
-							Obs obsAge = new Obs();
+							Obs obsDOB = new Obs();
 							Obs obsGender = new Obs();
 							Obs obsGivenName = new Obs();
 							Obs obsFamilyName = new Obs();
 							Obs obsIdentifier = new Obs();
 							Obs obsRelationship = new Obs();
 
-							obsAge.setValueGroupId(valueGroupId);
+							obsDOB.setValueGroupId(valueGroupId);
 							obsGender.setValueGroupId(valueGroupId);
 							obsGivenName.setValueGroupId(valueGroupId);
 							obsFamilyName.setValueGroupId(valueGroupId);
 							obsIdentifier.setValueGroupId(valueGroupId);
 							obsRelationship.setValueGroupId(valueGroupId);
 
-							obsAge.setConcept(questionConceptAge);
+							obsDOB.setConcept(questionConceptDOB);
 							obsGender.setConcept(questionConceptGender);
 							obsGivenName.setConcept(questionConceptGivenName);
 							obsFamilyName.setConcept(questionConceptFamilyName);
 							obsIdentifier.setConcept(questionConceptIdentifier);
 							obsRelationship.setConcept(questionConceptRelationship);
 
-							obsAge.setValueNumeric(Double.parseDouble("1"));
+							obsDOB.setValueDate(birthDate);
 							obsGender.setValueText(gender);
 							obsGivenName.setValueText(givenName);
 							obsFamilyName.setValueText(familyName);
 							obsIdentifier.setValueText(identifier);
 							obsRelationship.setValueText(relationship);
 
-							obsList.add(obsAge);
+							obsList.add(obsDOB);
 							obsList.add(obsGender);
 							obsList.add(obsGivenName);
 							obsList.add(obsFamilyName);
@@ -408,7 +419,6 @@ public class FormService {
 			}
 
 			{
-				
 
 				if (patient != null) {
 					// Saving address
@@ -459,7 +469,8 @@ public class FormService {
 		}
 	}
 
-	private void createContactPatient(Patient indexPatient, JSONObject contactObj, Location location, String workflowUUID, JSONArray data) throws ParseException {
+	private void createContactPatient(Patient indexPatient, JSONObject contactObj, Location location, String workflowUUID,
+	        JSONArray data) throws ParseException {
 		PersonService personService = Context.getPersonService();
 		ConceptService conceptService = Context.getConceptService();
 		PatientService patientService = Context.getPatientService();
@@ -525,13 +536,14 @@ public class FormService {
 				patientWorkflow.setPatient(patient);
 				service.saveHydramodulePatientWorkflow(patientWorkflow);
 			}
-			
+
 			// Save relationship
 			RelationshipType relationshipType = personService.getRelationshipTypeByName(relationship);
-			if(relationshipType != null) {
-				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(), relationshipType);
+			if (relationshipType != null) {
+				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(),
+				        relationshipType);
 				personService.saveRelationship(relationshipObj);
-				
+
 			}
 		}
 	}
@@ -573,7 +585,8 @@ public class FormService {
 
 					String IdentifierValue = dataItem.get(ParamNames.VALUE).toString();
 					System.out.println("Identifier: " + IdentifierValue);
-					PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(identifierType);
+					PatientIdentifierType patientIdentifierType = patientService
+					        .getPatientIdentifierTypeByName(identifierType);
 
 					PatientIdentifier patientIdentifier = new PatientIdentifier();
 					patientIdentifier.setIdentifier(IdentifierValue);
