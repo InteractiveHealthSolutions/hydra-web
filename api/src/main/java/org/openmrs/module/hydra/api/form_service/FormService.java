@@ -322,13 +322,13 @@ public class FormService {
 					case CONTACT_TRACING: {
 						JSONArray contactsArray = (JSONArray) dataItem.get(ParamNames.VALUE);
 						boolean createPatient = (Boolean) dataItem.get("createPatient");
-						double numberOfPeople = (Double) dataItem.get("numberOfPeople");
+						/*double numberOfPeople = (Double) dataItem.get("numberOfPeople");
 						Concept questionNumberOfContacts = conceptService
 						        .getConceptByUuid("0e594b8c-cd8c-4437-9c6e-bc4e30ec7598");
 						Obs obsNumberOfContacts = new Obs();
 						obsNumberOfContacts.setConcept(questionNumberOfContacts);
 						obsNumberOfContacts.setValueNumeric(numberOfPeople);
-						obsList.add(obsNumberOfContacts);
+						obsList.add(obsNumberOfContacts);*/
 
 						for (int j = 0; j < contactsArray.size(); j++) {
 							JSONObject contactObj = (JSONObject) contactsArray.get(j);
@@ -514,7 +514,7 @@ public class FormService {
 		patient.setGender(gender);
 
 		// System.out.println();
-		Date dateOfBirth = Utils.formatterDate.parse(dob);
+		Date dateOfBirth = Utils.formatterDate.parse(birthDate);
 		patient.setBirthdate(dateOfBirth);
 
 		// patient.setDateCreated(dateEntered);
