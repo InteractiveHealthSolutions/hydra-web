@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
@@ -940,6 +941,7 @@ public class HydraDaoImpl {
 	public HydramoduleFieldAnswer getHydramoduleFieldAnswer(String uuid) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldAnswer.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramoduleFieldAnswer) criteria.uniqueResult();
 	}
 
