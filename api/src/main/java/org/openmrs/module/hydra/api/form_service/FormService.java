@@ -509,6 +509,7 @@ public class FormService {
 		if (gender == null || names.size() == 0 || patientIdentifiers.size() == 0) {
 			return;
 		}
+
 		Patient patient = new Patient();
 		patient.addName(personName);
 		// patient.setNames(names);
@@ -544,7 +545,6 @@ public class FormService {
 				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(),
 				        relationshipType);
 				personService.saveRelationship(relationshipObj);
-
 			}
 		}
 	}

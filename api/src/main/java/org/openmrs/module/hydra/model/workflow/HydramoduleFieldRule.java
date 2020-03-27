@@ -44,8 +44,16 @@ public class HydramoduleFieldRule extends BaseOpenmrsMetadata implements java.io
 	private HydramoduleForm targetForm;
 
 	@ManyToOne
+	@JoinColumn(name = "target_form_field_id")
+	private HydramoduleFormField targetFormField;
+
+	@ManyToOne
 	@JoinColumn(name = "target_field_id")
 	private HydramoduleField targetQuestion;
+
+	@ManyToOne
+	@JoinColumn(name = "target_field_answer_id")
+	private HydramoduleFieldAnswer fieldAnswer;
 
 	@OneToMany(mappedBy = "rule")
 	private List<HydramoduleRuleToken> tokens;
@@ -106,6 +114,14 @@ public class HydramoduleFieldRule extends BaseOpenmrsMetadata implements java.io
 
 	public void setTokens(List<HydramoduleRuleToken> tokens) {
 		this.tokens = tokens;
+	}
+
+	public HydramoduleFieldAnswer getFieldAnswer() {
+		return fieldAnswer;
+	}
+
+	public void setFieldAnswer(HydramoduleFieldAnswer fieldAnswer) {
+		this.fieldAnswer = fieldAnswer;
 	}
 
 }
