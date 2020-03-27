@@ -1731,27 +1731,7 @@
 	
 	</changeSet>
 	
-	<changeSet author="naveed.iqbal" id="hydra-202003271056">
-		<preConditions onFail="MARK_RAN">
-			<not>
-				<columnExists tableName="hydramodule_field_rule" columnName="target_field_answer_id" />
-			</not>                       
-		</preConditions>
-		<comment>
-			Adding new columns in hydramodule_field_rule table
-		</comment>
-		<addColumn tableName="hydramodule_field_rule">
-			<column name="target_field_answer_id" type="int" />
-			<column name="target_form_field_id" type="int" />
-		</addColumn>
-		<addForeignKeyConstraint constraintName="hydramodule_field_rule_target_field_answer_fk"
-			baseTableName="hydramodule_field_rule" baseColumnNames="target_field_answer_id"
-			referencedTableName="hydramodule_field_answer" referencedColumnNames="field_answer_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_field_rule_target_form_field_fk"
-			baseTableName="hydramodule_field_rule" baseColumnNames="target_form_field_id"
-			referencedTableName="hydramodule_from_field" referencedColumnNames="form_field_id" />
 	
-	</changeSet>
 	
 	<changeSet author="naveed.iqbal" id="hydra-202003192129">
 		<preConditions onFail="MARK_RAN">

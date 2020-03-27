@@ -124,4 +124,12 @@ public class HydramoduleFieldRule extends BaseOpenmrsMetadata implements java.io
 		this.fieldAnswer = fieldAnswer;
 	}
 
+	public HydramoduleFormField getTargetFormField() {
+		return targetFormField;
+	}
+
+	public void setTargetFormField(HydramoduleFormField targetFormField) {
+		this.targetFormField = targetFormField;
+	}
+
 }
