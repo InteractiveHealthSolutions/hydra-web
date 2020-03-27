@@ -98,6 +98,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("regix");
 		description.addProperty("characters");
 		description.addProperty("scoreField");
+		description.addProperty("uuid");
 		description.addProperty("createPatient");
 		description.addProperty("field", Representation.FULL);
 		description.addProperty("fieldData", Representation.FULL);
