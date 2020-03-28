@@ -34,7 +34,8 @@ public class SExprHelper {
 
 	private SExprHelper() {
 		actionNames.put("hide", "hiddenWhen");
-		actionNames.put("Open Form", "openForm");
+		actionNames.put("Open Form", "openFormWhen");
+		actionNames.put("autoselect", "autoselectWhen");
 
 		operatorsMap.put("!=", "notEquals");
 		operatorsMap.put("=", "equals");
@@ -128,69 +129,6 @@ public class SExprHelper {
 
 				if (!operatorAvailable)
 					hiddenWhenArray.add("OR");
-				hiddenWhenObj.put(actionNames.get(actionName), hiddenWhenArray);
-				System.out.println("The parsed RULE Object " + hiddenWhenObj);
-				return hiddenWhenObj.toString();
-			}
-		}
-
-		return null;
-	}
-
-	public String compile(HydraDaoImpl dao, HydramoduleFormField ff) {
-		this.dao = dao;
-		HydramoduleField field = ff.getField();
-		JSONObject hiddenWhenObj = new JSONObject();
-		JSONArray hiddenWhenArray = new JSONArray();
-		JSONObject conditionObject = new JSONObject();
-		JSONArray conditionArray = new JSONArray();
-		List<HydramoduleFieldRule> rules = dao.getHydramoduleFieldRuleByTargetField(field);
-
-		/**
-		 * now, null
-		 **/
-		if (rules.size() > 0) {
-			HydramoduleFieldRule rule = rules.get(0); // Currently expecting only one rule from a field
-			String actionName = rule.getActionName();
-			if (actionName.equals("hide")) { // TODO this only controls hard coded value right now
-				List<HydramoduleRuleToken> tokens = rule.getTokens();
-				System.out.println("Tokens Received: " + tokens.size());
-				for (HydramoduleRuleToken token : tokens) {
-					if (conditionalOperatorsMap.containsKey(token.getTypeName())) {
-						// TODO Handle condition
-					}
-					// Question part of the expression
-					if (token.getTypeName().equals("Question")) {
-						String questionString = token.getValue();
-						HydramoduleField responseField = dao.getHydramoduleField(questionString);
-						conditionObject.put("id", responseField.getFieldId());
-						conditionObject.put("questionId", responseField.getFieldId());
-
-					}
-					// Operator part of the expression
-					else if (token.getTypeName().equals("Operator")) {
-						String operatorName = operatorsMap.get(token.getValue());
-						conditionObject.put(operatorName, conditionArray);
-
-					}
-					// Value part of the expression
-					else if (token.getTypeName().endsWith("Value")) {
-						if (token.getTypeName().equals("CodedValue")) {
-							Concept concept = Context.getConceptService().getConceptByUuid(token.getValue());
-							JSONObject responseValueObj = new JSONObject();
-							responseValueObj.put("uuid", concept.getDisplayString());
-							conditionArray.add(responseValueObj);
-						} else if (token.getTypeName().equals("OpenValue")) {
-							JSONObject responseValueObj = new JSONObject();
-							responseValueObj.put("uuid", token.getValue());
-							conditionArray.add(responseValueObj);
-						}
-					}
-					System.out.println("TokenType: " + token.getTypeName() + " , value: " + token.getValue());
-				}
-
-				hiddenWhenArray.add(conditionObject);
-				hiddenWhenArray.add("OR");
 				hiddenWhenObj.put(actionNames.get(actionName), hiddenWhenArray);
 				System.out.println("The parsed RULE Object " + hiddenWhenObj);
 				return hiddenWhenObj.toString();

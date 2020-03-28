@@ -86,6 +86,8 @@ public class FieldRuleController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("form", Representation.REF);
 		description.addProperty("targetForm", Representation.REF);
 		description.addProperty("targetQuestion", Representation.REF);
+		description.addProperty("targetFormField", Representation.REF);
+		description.addProperty("targetFieldAnswer", Representation.REF);
 		description.addProperty("tokens", Representation.FULL);
 
 		if (representation instanceof DefaultRepresentation) {
@@ -125,7 +127,9 @@ public class FieldRuleController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("form");
 		description.addProperty("targetForm");
 		description.addProperty("targetQuestion");
+		description.addProperty("targetFormField");
 		description.addProperty("tokens");
+		description.addProperty("targetFieldAnswer");
 
 		return description;
 

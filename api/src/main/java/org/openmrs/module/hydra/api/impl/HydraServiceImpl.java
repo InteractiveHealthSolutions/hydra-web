@@ -295,21 +295,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException {
 		List<HydramoduleComponentForm> componentForms = dao.getAllComponentFormRelations();
-		HashMap<String, String> actionNames = new HashMap<String, String>();
-		actionNames.put("hide", "hiddenWhen");
-		actionNames.put("Open Form", "openForm");
 
-		HashMap<String, String> operatorsMap = new HashMap<String, String>();
-		operatorsMap.put("!=", "notEquals");
-		operatorsMap.put("=", "equals");
-		operatorsMap.put("<", "lessThan");
-		operatorsMap.put(">", "greaterThan");
-		operatorsMap.put("<=", "lessThanEquals");
-		operatorsMap.put(">=", "greaterThanEquals");
-
-		HashMap<String, String> conditionalOperatorsMap = new HashMap<String, String>();
-		conditionalOperatorsMap.put("OR", "OR");
-		conditionalOperatorsMap.put("AND", "AND");
 		SExprHelper exprHelper = SExprHelper.getInstance();
 
 		for (HydramoduleComponentForm cf : componentForms) {
