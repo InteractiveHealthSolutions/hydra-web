@@ -240,8 +240,9 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldAnswer.class);
 		criteria.add(Restrictions.eq("field", field));
-
-		return criteria.list();
+		List<HydramoduleFieldAnswer> results = criteria.list();
+		// session.clear();
+		return results;
 	}
 
 	// TODO use criteria
@@ -254,6 +255,11 @@ public class HydraDaoImpl {
 			session.delete(ff);
 		}
 		session.flush();
+	}
+
+	public void deleteFieldAnswers(int fieldId) {
+		DbSession session = sessionFactory.getCurrentSession();
+		session.createQuery("delete from HydramoduleFieldAnswer f where f.field.fieldId=" + fieldId).executeUpdate();
 	}
 
 	// TODO use criteria
@@ -845,19 +851,20 @@ public class HydraDaoImpl {
 	public HydramoduleField saveHydramoduleField(HydramoduleField field) {
 		// System.out.println(serviceType.getUuid());
 		ConceptService conceptService = Context.getConceptService();
+
+		/*
+		 * Concept fieldConcept = field.getConcept(); if (fieldConcept.getId() == null)
+		 * { fieldConcept = conceptService.saveConcept(fieldConcept); }
+		 * field.setConcept(fieldConcept);
+		 */
+		// fieldConcept.getNames(); // to avoid lazyload issue
+		// getSession().clear();
 		if (field.getFieldId() != null) {
-			deleteFieldAnswers(field);
+			deleteFieldAnswers(field.getFieldId());
 		}
-
-		Concept fieldConcept = field.getConcept();
-		if (fieldConcept.getId() == null) {
-			fieldConcept = conceptService.saveConcept(fieldConcept);
-		}
-		field.setConcept(fieldConcept);
-
-		getSession().clear();
 		getSession().saveOrUpdate(field);
 		getSession().flush();
+
 		Set<HydramoduleFieldAnswer> answers = field.getAnswers();
 		for (HydramoduleFieldAnswer answer : answers) {
 			answer.setField(field);
