@@ -43,7 +43,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleFormField getByUniqueId(String uuid) {
-		return /* service.getAssetCategory(uuid) */null;
+		return service.getFormFieldByUUID(uuid);
 	}
 
 	/*
