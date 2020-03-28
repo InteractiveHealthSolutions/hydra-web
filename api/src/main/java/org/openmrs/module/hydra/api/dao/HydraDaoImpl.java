@@ -228,12 +228,20 @@ public class HydraDaoImpl {
 		return field;
 	}
 
-	public List<HydramoduleFormField> getFormField(HydramoduleForm form) {
+	public List<HydramoduleFormField> getFormFields(HydramoduleForm form) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFormField.class);
 		criteria.add(Restrictions.eq("form", form));
 
 		return criteria.list();
+	}
+
+	public HydramoduleFormField getFormField(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFormField.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return (HydramoduleFormField) criteria.uniqueResult();
 	}
 
 	public List<HydramoduleFieldAnswer> getFieldAnswers(HydramoduleField field) {
@@ -248,7 +256,7 @@ public class HydraDaoImpl {
 	// TODO use criteria
 	public void deleteFormFields(HydramoduleForm form) {
 		DbSession session = sessionFactory.getCurrentSession();
-		List<HydramoduleFormField> formFields = getFormField(form);
+		List<HydramoduleFormField> formFields = getFormFields(form);
 		for (HydramoduleFormField ff : formFields) {
 
 			System.out.println("Deleted!!!");

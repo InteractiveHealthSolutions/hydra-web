@@ -311,6 +311,11 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
+	public HydramoduleFormField getFormFieldByUUID(String uuid) throws APIException {
+		return dao.getFormField(uuid);
+	}
+
+	@Override
 	public void saveFormEncounter(HydramoduleFormEncounter formEncounter) {
 		dao.saveFormEncounter(formEncounter);
 	}

@@ -5,7 +5,6 @@ package org.openmrs.module.hydra.model.workflow;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,8 +17,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.openmrs.BaseOpenmrsMetadata;
-import org.openmrs.Concept;
-import org.openmrs.FieldType;
 
 @Entity
 @Table(name = "hydramodule_field_rule", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
