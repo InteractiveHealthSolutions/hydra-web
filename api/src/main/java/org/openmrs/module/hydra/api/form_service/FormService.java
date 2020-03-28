@@ -119,13 +119,14 @@ public class FormService {
 		}
 		catch (Exception e1) {
 			e1.printStackTrace();
-			return;
+			// return;
 		}
 
 		providerUUID = (String) authentication.get("provider");
-		try{
+		try {
 			Context.authenticate(username, decPassword);
-		} catch(ContextAuthenticationException exception) {
+		}
+		catch (ContextAuthenticationException exception) {
 			Context.authenticate(username, password);
 		}
 		// getting EncounterType String
@@ -321,73 +322,84 @@ public class FormService {
 					case CONTACT_TRACING: {
 						JSONArray contactsArray = (JSONArray) dataItem.get(ParamNames.VALUE);
 						boolean createPatient = (Boolean) dataItem.get("createPatient");
+						/*
+						 * double numberOfPeople = (Double) dataItem.get("numberOfPeople"); Concept
+						 * questionNumberOfContacts = conceptService
+						 * .getConceptByUuid("0e594b8c-cd8c-4437-9c6e-bc4e30ec7598"); Obs
+						 * obsNumberOfContacts = new Obs();
+						 * obsNumberOfContacts.setConcept(questionNumberOfContacts);
+						 * obsNumberOfContacts.setValueNumeric(numberOfPeople);
+						 * obsList.add(obsNumberOfContacts);
+						 */
 
+						List<String> identifiers = new ArrayList<String>();
 						for (int j = 0; j < contactsArray.size(); j++) {
 							JSONObject contactObj = (JSONObject) contactsArray.get(j);
 							String identifier = (String) contactObj.get("patientID");
+							if (identifiers.contains(identifier))
+								continue;
+							identifiers.add(identifier);
+
 							String givenName = (String) contactObj.get("PatientFirstName");
 							String familyName = (String) contactObj.get("PatientFamilyName");
 							String gender = (String) contactObj.get("gender");
-							String dob = (String) contactObj.get("age");
+							String age = (String) contactObj.get("age");
+							String dob = (String) contactObj.get("dob");
 							String relationship = (String) contactObj.get("relation");
+
+							Date birthDate = Utils.formatterDate.parse(dob);
 
 							if (createPatient) {
 								createContactPatient(patient, contactObj, location, workflowUUID, data);
 							}
 
 							// Creating a unique value group id
-							Calendar c = Calendar.getInstance();
-							int valueGroupId = (c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DAY_OF_MONTH)
-							        + c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) + c.get(Calendar.SECOND)
-							        + c.get(Calendar.MILLISECOND) + (i + 1)) * (j + 2);
-
-							Concept questionConceptAge = conceptService
-							        .getConceptByUuid("d3d9e77a-cb7c-431a-9457-bcc0e4ac9a91");
-							Concept questionConceptGender = conceptService
-							        .getConceptByUuid("75a17321-fd69-47be-831e-cd773dc9c3cc");
-							Concept questionConceptGivenName = conceptService
-							        .getConceptByUuid("85fc8b27-8a08-4bdc-bf91-e34af50265aa");
-							Concept questionConceptFamilyName = conceptService
-							        .getConceptByUuid("82c65f7c-b9e8-4775-a8bd-f7ad55ab8bf0");
-							Concept questionConceptIdentifier = conceptService
-							        .getConceptByUuid("a24d649b-fb89-4b8c-beeb-aacf2872cf22");
-							Concept questionConceptRelationship = conceptService
-							        .getConceptByUuid("7579f93d-ebe7-423f-822b-dbe792248499");
-
-							Obs obsAge = new Obs();
-							Obs obsGender = new Obs();
-							Obs obsGivenName = new Obs();
-							Obs obsFamilyName = new Obs();
-							Obs obsIdentifier = new Obs();
-							Obs obsRelationship = new Obs();
-
-							obsAge.setValueGroupId(valueGroupId);
-							obsGender.setValueGroupId(valueGroupId);
-							obsGivenName.setValueGroupId(valueGroupId);
-							obsFamilyName.setValueGroupId(valueGroupId);
-							obsIdentifier.setValueGroupId(valueGroupId);
-							obsRelationship.setValueGroupId(valueGroupId);
-
-							obsAge.setConcept(questionConceptAge);
-							obsGender.setConcept(questionConceptGender);
-							obsGivenName.setConcept(questionConceptGivenName);
-							obsFamilyName.setConcept(questionConceptFamilyName);
-							obsIdentifier.setConcept(questionConceptIdentifier);
-							obsRelationship.setConcept(questionConceptRelationship);
-
-							obsAge.setValueNumeric(Double.parseDouble("1"));
-							obsGender.setValueText(gender);
-							obsGivenName.setValueText(givenName);
-							obsFamilyName.setValueText(familyName);
-							obsIdentifier.setValueText(identifier);
-							obsRelationship.setValueText(relationship);
-
-							obsList.add(obsAge);
-							obsList.add(obsGender);
-							obsList.add(obsGivenName);
-							obsList.add(obsFamilyName);
-							obsList.add(obsIdentifier);
-							obsList.add(obsRelationship);
+							/*
+							 * Calendar c = Calendar.getInstance(); int valueGroupId = (c.get(Calendar.YEAR)
+							 * + c.get(Calendar.MONTH) + c.get(Calendar.DAY_OF_MONTH) +
+							 * c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) + c.get(Calendar.SECOND)
+							 * + c.get(Calendar.MILLISECOND) + (i + 1)) * (j + 2);
+							 * 
+							 * Concept questionConceptDOB = conceptService
+							 * .getConceptByUuid("160751AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"); Concept
+							 * questionConceptGender = conceptService
+							 * .getConceptByUuid("75a17321-fd69-47be-831e-cd773dc9c3cc"); Concept
+							 * questionConceptGivenName = conceptService
+							 * .getConceptByUuid("85fc8b27-8a08-4bdc-bf91-e34af50265aa"); Concept
+							 * questionConceptFamilyName = conceptService
+							 * .getConceptByUuid("82c65f7c-b9e8-4775-a8bd-f7ad55ab8bf0"); Concept
+							 * questionConceptIdentifier = conceptService
+							 * .getConceptByUuid("a24d649b-fb89-4b8c-beeb-aacf2872cf22"); Concept
+							 * questionConceptRelationship = conceptService
+							 * .getConceptByUuid("7579f93d-ebe7-423f-822b-dbe792248499");
+							 * 
+							 * Obs obsDOB = new Obs(); Obs obsGender = new Obs(); Obs obsGivenName = new
+							 * Obs(); Obs obsFamilyName = new Obs(); Obs obsIdentifier = new Obs(); Obs
+							 * obsRelationship = new Obs();
+							 * 
+							 * obsDOB.setValueGroupId(valueGroupId);
+							 * obsGender.setValueGroupId(valueGroupId);
+							 * obsGivenName.setValueGroupId(valueGroupId);
+							 * obsFamilyName.setValueGroupId(valueGroupId);
+							 * obsIdentifier.setValueGroupId(valueGroupId);
+							 * obsRelationship.setValueGroupId(valueGroupId);
+							 * 
+							 * obsDOB.setConcept(questionConceptDOB);
+							 * obsGender.setConcept(questionConceptGender);
+							 * obsGivenName.setConcept(questionConceptGivenName);
+							 * obsFamilyName.setConcept(questionConceptFamilyName);
+							 * obsIdentifier.setConcept(questionConceptIdentifier);
+							 * obsRelationship.setConcept(questionConceptRelationship);
+							 * 
+							 * obsDOB.setValueDate(birthDate); obsGender.setValueText(gender);
+							 * obsGivenName.setValueText(givenName); obsFamilyName.setValueText(familyName);
+							 * obsIdentifier.setValueText(identifier);
+							 * obsRelationship.setValueText(relationship);
+							 * 
+							 * obsList.add(obsDOB); obsList.add(obsGender); obsList.add(obsGivenName);
+							 * obsList.add(obsFamilyName); obsList.add(obsIdentifier);
+							 * obsList.add(obsRelationship);
+							 */
 
 						}
 					}
@@ -408,7 +420,6 @@ public class FormService {
 			}
 
 			{
-				
 
 				if (patient != null) {
 					// Saving address
@@ -459,7 +470,8 @@ public class FormService {
 		}
 	}
 
-	private void createContactPatient(Patient indexPatient, JSONObject contactObj, Location location, String workflowUUID, JSONArray data) throws ParseException {
+	private void createContactPatient(Patient indexPatient, JSONObject contactObj, Location location, String workflowUUID,
+	        JSONArray data) throws ParseException {
 		PersonService personService = Context.getPersonService();
 		ConceptService conceptService = Context.getConceptService();
 		PatientService patientService = Context.getPatientService();
@@ -497,13 +509,14 @@ public class FormService {
 		if (gender == null || names.size() == 0 || patientIdentifiers.size() == 0) {
 			return;
 		}
+
 		Patient patient = new Patient();
 		patient.addName(personName);
 		// patient.setNames(names);
 		patient.setGender(gender);
 
 		// System.out.println();
-		Date dateOfBirth = Utils.formatterDate.parse(dob);
+		Date dateOfBirth = Utils.formatterDate.parse(birthDate);
 		patient.setBirthdate(dateOfBirth);
 
 		// patient.setDateCreated(dateEntered);
@@ -525,13 +538,13 @@ public class FormService {
 				patientWorkflow.setPatient(patient);
 				service.saveHydramodulePatientWorkflow(patientWorkflow);
 			}
-			
+
 			// Save relationship
 			RelationshipType relationshipType = personService.getRelationshipTypeByName(relationship);
-			if(relationshipType != null) {
-				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(), relationshipType);
+			if (relationshipType != null) {
+				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(),
+				        relationshipType);
 				personService.saveRelationship(relationshipObj);
-				
 			}
 		}
 	}
@@ -573,7 +586,8 @@ public class FormService {
 
 					String IdentifierValue = dataItem.get(ParamNames.VALUE).toString();
 					System.out.println("Identifier: " + IdentifierValue);
-					PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName(identifierType);
+					PatientIdentifierType patientIdentifierType = patientService
+					        .getPatientIdentifierTypeByName(identifierType);
 
 					PatientIdentifier patientIdentifier = new PatientIdentifier();
 					patientIdentifier.setIdentifier(IdentifierValue);
