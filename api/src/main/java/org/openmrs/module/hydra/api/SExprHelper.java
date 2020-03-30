@@ -136,7 +136,7 @@ public class SExprHelper {
 		HashMap<String, HydramoduleRuleToken> singleRuleTokens = new HashMap<String, HydramoduleRuleToken>();
 		boolean operatorAvailable = false;
 		List<HydramoduleRuleToken> tokens = rule.getTokens();
-		System.out.println("Tokens Received: " + tokens.size());
+		// System.out.println("Tokens Received: " + tokens.size());
 		for (HydramoduleRuleToken token : tokens) {
 			// System.out.println("Token Value: " + token.getValue());
 			if (conditionalOperatorsMap.containsKey(token.getValue())) {
@@ -164,7 +164,7 @@ public class SExprHelper {
 					singleRuleTokens.clear();
 				}
 			}
-			System.out.println("TokenType: " + token.getTypeName() + " , value: " + token.getValue());
+			// System.out.println("TokenType: " + token.getTypeName() + " , value: " + token.getValue());
 		}
 
 		if (!operatorAvailable)
