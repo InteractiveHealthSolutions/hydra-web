@@ -102,22 +102,30 @@ public class SExprHelper {
 			for (int i = 0; i < rules.size(); i++) {
 				HydramoduleFieldRule rule = rules.get(i);
 				String actionName = rule.getActionName();
-				if (actionName.equals("hide")) { // TODO this only controls hard coded value right now
-					ruleObj.put(actionNames.get(actionName), compile(rule, actionName));
-				} else if (actionName.equals("autoselect")) {
-					JSONObject object = new JSONObject();
-					object.put("targetFieldAnswer", rule.getTargetFieldAnswer().getConcept().getDisplayString());
-					object.put("when", compile(rule, actionName));
-
-					JSONArray array;
-					if (ruleObj.containsKey(actionNames.get(actionName))) {
-						array = (JSONArray) ruleObj.get(actionNames.get(actionName));
-					} else {
-						array = new JSONArray();
+				if (actionName.equals("hide")) { 
+					try {
+						ruleObj.put(actionNames.get(actionName), compile(rule, actionName));
+					} catch(Exception e) {
+						e.printStackTrace(); // TODO a NullPointErexception needs to be avoided in #compile()
 					}
-
-					array.add(object);
-					ruleObj.put(actionNames.get(actionName), array);
+				} else if (actionName.equals("autoselect")) {
+					try {
+						JSONObject object = new JSONObject();
+						object.put("targetFieldAnswer", rule.getTargetFieldAnswer().getConcept().getDisplayString());
+						object.put("when", compile(rule, actionName));
+	
+						JSONArray array;
+						if (ruleObj.containsKey(actionNames.get(actionName))) {
+							array = (JSONArray) ruleObj.get(actionNames.get(actionName));
+						} else {
+							array = new JSONArray();
+						}
+	
+						array.add(object);
+						ruleObj.put(actionNames.get(actionName), array);
+					} catch(Exception e) {
+						e.printStackTrace(); // TODO a NullPointErexception needs to be avoided in #compile()
+					}
 				}
 			}
 
@@ -157,8 +165,10 @@ public class SExprHelper {
 				}
 
 				if (singleRuleTokens.size() == 3) {
-					conditionObject = compileSingleObj(singleRuleTokens.get("Operator"), singleRuleTokens.get("Question"),
-					    singleRuleTokens.get("Value"));
+					conditionObject = compileSingleObj(
+							singleRuleTokens.get("Operator"), 
+							singleRuleTokens.get("Question"),
+							singleRuleTokens.get("Value"));
 
 					whenArray.add(conditionObject);
 					singleRuleTokens.clear();
