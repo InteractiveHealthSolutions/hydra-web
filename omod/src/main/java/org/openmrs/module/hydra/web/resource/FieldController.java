@@ -87,7 +87,7 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 		description.addProperty("name");
 		description.addProperty("fieldId");
 		description.addProperty("description");
-		description.addProperty("concept", Representation.FULL);
+		description.addProperty("concept", Representation.REF);
 		description.addProperty("fieldType", Representation.REF);
 		description.addProperty("parsedRule");
 

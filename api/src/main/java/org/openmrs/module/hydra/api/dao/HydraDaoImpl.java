@@ -989,10 +989,23 @@ public class HydraDaoImpl {
 		return (HydramoduleFieldRule) criteria.uniqueResult();
 	}
 
+	/**
+	 * Does same thing the wrong way.
+	 * 
+	 * @deprecated use {@link #getHydramoduleFieldRuleByTargetFormField()} instead.
+	 */
+	@Deprecated
 	public List<HydramoduleFieldRule> getHydramoduleFieldRuleByTargetField(HydramoduleField field) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
 		criteria.add(Restrictions.eq("targetQuestion", field));
+		return (List<HydramoduleFieldRule>) criteria.list();
+	}
+
+	public List<HydramoduleFieldRule> getHydramoduleFieldRuleByTargetFormField(HydramoduleFormField field) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
+		criteria.add(Restrictions.eq("targetFormField", field));
 		return (List<HydramoduleFieldRule>) criteria.list();
 	}
 
