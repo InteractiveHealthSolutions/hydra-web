@@ -116,8 +116,7 @@ public class FormService {
 		try {
 			sec = AES256Endec.getInstance().generateKey();
 			decPassword = AES256Endec.getInstance().decrypt(password, sec);
-		}
-		catch (Exception e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 			// return;
 		}
@@ -289,8 +288,8 @@ public class FormService {
 						break;
 
 					case PERSON_ATTRIBUTE: {
-						String attribType = dataItem.get(ParamNames.VALUE).toString();
-						String attribValue = dataItem.get(attribType).toString();
+						String attribType = (String) dataItem.get(ParamNames.PARAM_NAME);
+						String attribValue = dataItem.get(ParamNames.VALUE).toString();
 
 						PersonAttributeType attributeType = personService.getPersonAttributeTypeByName(attribType);
 						if (attributeType == null) {
