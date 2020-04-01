@@ -56,6 +56,7 @@ import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
 import org.openmrs.module.hydra.model.workflow.HydramoduleService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleUserWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1066,4 +1067,26 @@ public class HydraDaoImpl {
 		criteria.addOrder(Order.asc("groupId"));
 		return criteria.list();
 	}
+	
+	//HydramoduleUserWorkflow
+	public HydramoduleUserWorkflow saveHydramoduleUserWorkflow(HydramoduleUserWorkflow hydramoduleUserWorkflow) {
+		getSession().saveOrUpdate(hydramoduleUserWorkflow);
+		getSession().flush();
+		return hydramoduleUserWorkflow;
+	}
+	
+	public HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (HydramoduleUserWorkflow) criteria.uniqueResult();
+	}
+	
+	public List<HydramoduleUserWorkflow> getAllHydramoduleUserWorkflow() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
+		criteria.addOrder(Order.asc("userWorkflowId"));
+		return criteria.list();
+	}
+	//HydramoduleUserWorkflow
 }

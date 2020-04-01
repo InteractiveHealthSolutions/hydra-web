@@ -58,6 +58,7 @@ import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
 import org.openmrs.module.hydra.model.workflow.HydramoduleService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleUserWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -696,4 +697,21 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return dao.getHydramodulePatientWorkflow(uuid);
 	}
 
+	//HydramoduleUserWorkflow
+	@Override
+	public HydramoduleUserWorkflow saveHydramoduleUserWorkflow(HydramoduleUserWorkflow hydramoduleUserWorkflow)
+			throws APIException {
+		return dao.saveHydramoduleUserWorkflow(hydramoduleUserWorkflow);
+	}
+
+	@Override
+	public List<HydramoduleUserWorkflow> getAllHydramoduleUserWorkflow() throws APIException {
+		return dao.getAllHydramoduleUserWorkflow();
+	}
+
+	@Override
+	public HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) throws APIException {
+		return dao.getHydramoduleUserWorkflow(uuid);
+	}
+    
 }

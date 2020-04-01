@@ -1706,6 +1706,59 @@
 			</column>
 		</createTable>
 	</changeSet>
+	<changeSet id="hydra-202003311111" author="hareem.ajaz">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_user_workflow" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_user_workflow table
+		</comment>
+		<createTable tableName="hydramodule_user_workflow">
+			<column name="user_workflow_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="workflow_id" type="int" />
+			<column name="user_id" type="int" />
+			<column defaultValueNumeric="0" name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column defaultValueBoolean="false" name="voided" type="boolean">
+				<constraints nullable="false" />
+			</column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"></constraints>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_workflow_fk"
+			baseTableName="hydramodule_user_workflow" baseColumnNames="user_id"
+			referencedTableName="users" referencedColumnNames="user_id" />
+
+		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_patient_fk"
+			baseTableName="hydramodule_user_workflow" baseColumnNames="workflow_id"
+			referencedTableName="hydramodule_workflow" referencedColumnNames="workflow_id" />
+
+		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_creator_fk"
+			baseTableName="hydramodule_user_workflow" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_changed_by_fk"
+			baseTableName="hydramodule_user_workflow" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_voided_by_fk"
+			baseTableName="hydramodule_user_workflow" baseColumnNames="voided_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+
+	</changeSet>
 	
 	<changeSet author="naveed.iqbal" id="hydra-202003192129">
 		<preConditions onFail="MARK_RAN">
@@ -1752,6 +1805,8 @@
 			referencedTableName="hydramodule_from_field" referencedColumnNames="form_field_id" />
 	
 	</changeSet>
+	
+	
 	
 	<!-- <changeSet id="hydra-202003190151" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
@@ -2185,4 +2240,4 @@
 				INSERT IGNORE INTO hydra.relationship_type (a_is_to_b,b_is_to_a,preferred,weight,description,creator,date_created,retired,retired_by,date_retired,retire_reason,uuid,date_changed,changed_by) VALUES ('Spouse','Spouse',0,0,'Relationship between husband/wife or wife/husband',1,'2020-03-24 23:11:31.0',0,NULL,NULL,NULL,'451ebffd-edfc-d6d4-a8a5-512c67179ef0',NULL,NULL);
 		</sql>    
 	</changeSet>
-</databaseChangeLog>
+	</databaseChangeLog>

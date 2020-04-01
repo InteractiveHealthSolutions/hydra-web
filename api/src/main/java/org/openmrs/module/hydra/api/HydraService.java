@@ -46,6 +46,7 @@ import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
 import org.openmrs.module.hydra.model.workflow.HydramoduleService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
+import org.openmrs.module.hydra.model.workflow.HydramoduleUserWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.transaction.annotation.Transactional;
@@ -283,5 +284,10 @@ public interface HydraService extends OpenmrsService {
 	HydramodulePatientWorkflow getHydramodulePatientWorkflow(String uuid) throws APIException;
 
 	HydramoduleFormField getFormFieldByUUID(String uuid) throws APIException;
-
+	
+	HydramoduleUserWorkflow saveHydramoduleUserWorkflow(HydramoduleUserWorkflow hydramoduleUserWorkflow) throws APIException;
+	
+	List<HydramoduleUserWorkflow> getAllHydramoduleUserWorkflow() throws APIException;
+	
+	HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) throws APIException;
 }
