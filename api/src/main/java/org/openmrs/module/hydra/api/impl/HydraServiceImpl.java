@@ -697,10 +697,10 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return dao.getHydramodulePatientWorkflow(uuid);
 	}
 
-	//HydramoduleUserWorkflow
+	// HydramoduleUserWorkflow
 	@Override
 	public HydramoduleUserWorkflow saveHydramoduleUserWorkflow(HydramoduleUserWorkflow hydramoduleUserWorkflow)
-			throws APIException {
+	        throws APIException {
 		return dao.saveHydramoduleUserWorkflow(hydramoduleUserWorkflow);
 	}
 
@@ -713,5 +713,5 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	public HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) throws APIException {
 		return dao.getHydramoduleUserWorkflow(uuid);
 	}
-    
+
 }

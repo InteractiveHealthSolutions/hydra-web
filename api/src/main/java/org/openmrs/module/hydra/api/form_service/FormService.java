@@ -116,7 +116,8 @@ public class FormService {
 		try {
 			sec = AES256Endec.getInstance().generateKey();
 			decPassword = AES256Endec.getInstance().decrypt(password, sec);
-		} catch (Exception e1) {
+		}
+		catch (Exception e1) {
 			e1.printStackTrace();
 			// return;
 		}
@@ -293,7 +294,7 @@ public class FormService {
 
 						PersonAttributeType attributeType = personService.getPersonAttributeTypeByName(attribType);
 						if (attributeType == null) {
-							attributeType = createStringAttributeType(dataItem);
+							attributeType = createStringAttributeType(attribType);
 						}
 
 						PersonAttribute personAttrib = new PersonAttribute();
@@ -713,9 +714,9 @@ public class FormService {
 		 */
 	}
 
-	private PersonAttributeType createStringAttributeType(JSONObject dataItem) {
-		String name = dataItem.get(ParamNames.PARAM_NAME).toString();
-		String description = dataItem.get(ParamNames.QUESTION).toString();
+	private PersonAttributeType createStringAttributeType(String dataItem) {
+		String name = dataItem;
+		String description = "Attribute type "+dataItem+" created by Hydra";
 
 		PersonService personService = Context.getPersonService();
 		PersonAttributeType type = new PersonAttributeType();

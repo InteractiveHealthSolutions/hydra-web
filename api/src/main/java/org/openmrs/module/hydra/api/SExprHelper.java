@@ -102,10 +102,11 @@ public class SExprHelper {
 			for (int i = 0; i < rules.size(); i++) {
 				HydramoduleFieldRule rule = rules.get(i);
 				String actionName = rule.getActionName();
-				if (actionName.equals("hide")) { 
+				if (actionName.equals("hide")) {
 					try {
 						ruleObj.put(actionNames.get(actionName), compile(rule, actionName));
-					} catch(Exception e) {
+					}
+					catch (Exception e) {
 						e.printStackTrace(); // TODO a NullPointErexception needs to be avoided in #compile()
 					}
 				} else if (actionName.equals("autoselect")) {
@@ -113,17 +114,18 @@ public class SExprHelper {
 						JSONObject object = new JSONObject();
 						object.put("targetFieldAnswer", rule.getTargetFieldAnswer().getConcept().getDisplayString());
 						object.put("when", compile(rule, actionName));
-	
+
 						JSONArray array;
 						if (ruleObj.containsKey(actionNames.get(actionName))) {
 							array = (JSONArray) ruleObj.get(actionNames.get(actionName));
 						} else {
 							array = new JSONArray();
 						}
-	
+
 						array.add(object);
 						ruleObj.put(actionNames.get(actionName), array);
-					} catch(Exception e) {
+					}
+					catch (Exception e) {
 						e.printStackTrace(); // TODO a NullPointErexception needs to be avoided in #compile()
 					}
 				}
@@ -165,16 +167,15 @@ public class SExprHelper {
 				}
 
 				if (singleRuleTokens.size() == 3) {
-					conditionObject = compileSingleObj(
-							singleRuleTokens.get("Operator"), 
-							singleRuleTokens.get("Question"),
-							singleRuleTokens.get("Value"));
+					conditionObject = compileSingleObj(singleRuleTokens.get("Operator"), singleRuleTokens.get("Question"),
+					    singleRuleTokens.get("Value"));
 
 					whenArray.add(conditionObject);
 					singleRuleTokens.clear();
 				}
 			}
-			// System.out.println("TokenType: " + token.getTypeName() + " , value: " + token.getValue());
+			// System.out.println("TokenType: " + token.getTypeName() + " , value: " +
+			// token.getValue());
 		}
 
 		if (!operatorAvailable)

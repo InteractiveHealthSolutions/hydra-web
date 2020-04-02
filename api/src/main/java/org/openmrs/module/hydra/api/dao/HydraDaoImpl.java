@@ -1080,26 +1080,26 @@ public class HydraDaoImpl {
 		criteria.addOrder(Order.asc("groupId"));
 		return criteria.list();
 	}
-	
-	//HydramoduleUserWorkflow
+
+	// HydramoduleUserWorkflow
 	public HydramoduleUserWorkflow saveHydramoduleUserWorkflow(HydramoduleUserWorkflow hydramoduleUserWorkflow) {
 		getSession().saveOrUpdate(hydramoduleUserWorkflow);
 		getSession().flush();
 		return hydramoduleUserWorkflow;
 	}
-	
+
 	public HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramoduleUserWorkflow) criteria.uniqueResult();
 	}
-	
+
 	public List<HydramoduleUserWorkflow> getAllHydramoduleUserWorkflow() {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
 		criteria.addOrder(Order.asc("userWorkflowId"));
 		return criteria.list();
 	}
-	//HydramoduleUserWorkflow
+	// HydramoduleUserWorkflow
 }

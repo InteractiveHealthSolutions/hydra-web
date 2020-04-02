@@ -17,9 +17,9 @@ import org.openmrs.User;
 @Entity
 @Table(name = "hydramodule_user_workflow", catalog = "hydra")
 public class HydramoduleUserWorkflow extends BaseOpenmrsData implements Serializable {
-	
+
 	private static final long serialVersionUID = 8825939626685522359L;
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "user_workflow_id", unique = true, nullable = false)
@@ -64,7 +64,7 @@ public class HydramoduleUserWorkflow extends BaseOpenmrsData implements Serializ
 
 	@Override
 	public void setId(Integer id) {
-        this.userWorkflowId = id;		
+		this.userWorkflowId = id;
 	}
-	
+
 }
