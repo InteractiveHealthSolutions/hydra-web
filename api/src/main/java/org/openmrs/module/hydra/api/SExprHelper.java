@@ -80,62 +80,108 @@ public class SExprHelper {
 	}
 
 	public String compileComplex(HydraDaoImpl dao, HydramoduleFormField ff) {
+		// "parsedRule":
+		// "{\"hiddenWhen\":[{\"questionId\":10,\"notEquals\":[{\"uuid\":\"OTHER\"}],\"id\":10},\"OR\"]}"
 		this.dao = dao;
 		HydramoduleField field = ff.getField();
-		JSONObject hiddenWhenObj = new JSONObject();
-		JSONArray hiddenWhenArray = new JSONArray();
-		JSONObject conditionObject = new JSONObject();
-		JSONArray conditionArray = new JSONArray();
-		List<HydramoduleFieldRule> rules = dao.getHydramoduleFieldRuleByTargetField(field);
-		boolean operatorAvailable = false;
+		JSONObject ruleObj = new JSONObject();
+
+		List<HydramoduleFieldRule> rules = dao.getHydramoduleFieldRuleByTargetFormField(ff);
+		if (rules.size() == 0) {
+			rules = dao.getHydramoduleFieldRuleByTargetField(field); // for the old rules which are mapped to field
+			                                                         // instead of formField
+		}
+
+		// {"hiddenWhen":[{"questionId":10,"notEquals":[{"uuid":"OTHER"}],"id":10},"OR"]}
+		// {"autoSelect":[{"questionId":10,"notEquals":[{"uuid":"OTHER"}],"id":10},"OR"]}
 		/**
-		 * now, null
+		 * now, null needs to be handled
 		 **/
-		HashMap<String, HydramoduleRuleToken> singleRuleTokens = new HashMap<String, HydramoduleRuleToken>();
+
 		if (rules.size() > 0) {
-			HydramoduleFieldRule rule = rules.get(0); // Currently expecting only one rule from a field
-			String actionName = rule.getActionName();
-			if (actionName.equals("hide")) { // TODO this only controls hard coded value right now
-				List<HydramoduleRuleToken> tokens = rule.getTokens();
-				System.out.println("Tokens Received: " + tokens.size());
-				for (HydramoduleRuleToken token : tokens) {
-					System.out.println("Token Value: " + token.getValue());
-					if (conditionalOperatorsMap.containsKey(token.getValue())) {
-						hiddenWhenArray.add(token.getValue());
-						operatorAvailable = true;
-					} else {
-						// Question part of the expression
-						if (token.getTypeName().equals("Question")) {
-							singleRuleTokens.put("Question", token);
-						}
-						// Operator part of the expression
-						else if (token.getTypeName().equals("Operator")) {
-							singleRuleTokens.put("Operator", token);
-						}
-						// Value part of the expression
-						else if (token.getTypeName().endsWith("Value")) {
-							singleRuleTokens.put("Value", token);
-						}
-
-						if (singleRuleTokens.size() == 3) {
-							conditionObject = compileSingleObj(singleRuleTokens.get("Operator"),
-							    singleRuleTokens.get("Question"), singleRuleTokens.get("Value"));
-							hiddenWhenArray.add(conditionObject);
-							singleRuleTokens = new HashMap<String, HydramoduleRuleToken>();
-						}
+			for (int i = 0; i < rules.size(); i++) {
+				HydramoduleFieldRule rule = rules.get(i);
+				String actionName = rule.getActionName();
+				if (actionName.equals("hide")) {
+					try {
+						ruleObj.put(actionNames.get(actionName), compile(rule, actionName));
 					}
-					System.out.println("TokenType: " + token.getTypeName() + " , value: " + token.getValue());
-				}
+					catch (Exception e) {
+						e.printStackTrace(); // TODO a NullPointErexception needs to be avoided in #compile()
+					}
+				} else if (actionName.equals("autoselect")) {
+					try {
+						JSONObject object = new JSONObject();
+						object.put("targetFieldAnswer", rule.getTargetFieldAnswer().getConcept().getDisplayString());
+						object.put("when", compile(rule, actionName));
 
-				if (!operatorAvailable)
-					hiddenWhenArray.add("OR");
-				hiddenWhenObj.put(actionNames.get(actionName), hiddenWhenArray);
-				System.out.println("The parsed RULE Object " + hiddenWhenObj);
-				return hiddenWhenObj.toString();
+						JSONArray array;
+						if (ruleObj.containsKey(actionNames.get(actionName))) {
+							array = (JSONArray) ruleObj.get(actionNames.get(actionName));
+						} else {
+							array = new JSONArray();
+						}
+
+						array.add(object);
+						ruleObj.put(actionNames.get(actionName), array);
+					}
+					catch (Exception e) {
+						e.printStackTrace(); // TODO a NullPointErexception needs to be avoided in #compile()
+					}
+				}
 			}
+
+			System.out.println("The parsed RULE Object " + ruleObj);
+			return ruleObj.toString();
 		}
 
 		return null;
+	}
+
+	public JSONArray compile(HydramoduleFieldRule rule, String actionName) {
+		JSONObject ruleObj = new JSONObject();
+		JSONArray whenArray = new JSONArray();
+		JSONObject conditionObject = new JSONObject();
+		JSONArray conditionArray = new JSONArray();
+		HashMap<String, HydramoduleRuleToken> singleRuleTokens = new HashMap<String, HydramoduleRuleToken>();
+		boolean operatorAvailable = false;
+		List<HydramoduleRuleToken> tokens = rule.getTokens();
+		// System.out.println("Tokens Received: " + tokens.size());
+		for (HydramoduleRuleToken token : tokens) {
+			// System.out.println("Token Value: " + token.getValue());
+			if (conditionalOperatorsMap.containsKey(token.getValue())) {
+				whenArray.add(token.getValue());
+				operatorAvailable = true;
+			} else {
+				// Question part of the expression
+				if (token.getTypeName().equals("Question")) {
+					singleRuleTokens.put("Question", token);
+				}
+				// Operator part of the expression
+				else if (token.getTypeName().equals("Operator")) {
+					singleRuleTokens.put("Operator", token);
+				}
+				// Value part of the expression
+				else if (token.getTypeName().endsWith("Value")) {
+					singleRuleTokens.put("Value", token);
+				}
+
+				if (singleRuleTokens.size() == 3) {
+					conditionObject = compileSingleObj(singleRuleTokens.get("Operator"), singleRuleTokens.get("Question"),
+					    singleRuleTokens.get("Value"));
+
+					whenArray.add(conditionObject);
+					singleRuleTokens.clear();
+				}
+			}
+			// System.out.println("TokenType: " + token.getTypeName() + " , value: " +
+			// token.getValue());
+		}
+
+		if (!operatorAvailable)
+			whenArray.add("OR");
+
+		return whenArray;
 	}
 
 }
