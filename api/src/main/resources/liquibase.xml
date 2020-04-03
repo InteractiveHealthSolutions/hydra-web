@@ -1412,38 +1412,6 @@
 			baseTableName="hydramodule_form_field" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	<changeSet id="hydra-202002040850" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -1722,7 +1690,7 @@
 
 			<column name="workflow_id" type="int" />
 			<column name="user_id" type="int" />
-			<column defaultValueNumeric="0" name="creator" type="int">
+			<column name="creator" type="int">
 				<constraints nullable="false" />
 			</column>
 			<column name="date_created" type="datetime">
@@ -1730,14 +1698,14 @@
 			</column>
 			<column name="changed_by" type="int" />
 			<column name="date_changed" type="datetime" />
-			<column defaultValueBoolean="false" name="voided" type="boolean">
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
 				<constraints nullable="false" />
 			</column>
-			<column name="voided_by" type="int" />
-			<column name="date_voided" type="datetime" />
-			<column name="void_reason" type="varchar(255)" />
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
 			<column name="uuid" type="char(38)">
-				<constraints nullable="false" unique="true"></constraints>
+				<constraints unique="true" />
 			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_workflow_fk"

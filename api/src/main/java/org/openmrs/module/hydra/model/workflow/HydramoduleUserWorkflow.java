@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsData;
+import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.User;
 
 @Entity
