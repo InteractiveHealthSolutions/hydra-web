@@ -289,12 +289,12 @@ public class FormService {
 						break;
 
 					case PERSON_ATTRIBUTE: {
-						String attribType = dataItem.get(ParamNames.VALUE).toString();
-						String attribValue = dataItem.get(attribType).toString();
+						String attribType = (String) dataItem.get(ParamNames.PARAM_NAME);
+						String attribValue = dataItem.get(ParamNames.VALUE).toString();
 
 						PersonAttributeType attributeType = personService.getPersonAttributeTypeByName(attribType);
 						if (attributeType == null) {
-							attributeType = createStringAttributeType(dataItem);
+							attributeType = createStringAttributeType(attribType);
 						}
 
 						PersonAttribute personAttrib = new PersonAttribute();
@@ -714,9 +714,9 @@ public class FormService {
 		 */
 	}
 
-	private PersonAttributeType createStringAttributeType(JSONObject dataItem) {
-		String name = dataItem.get(ParamNames.PARAM_NAME).toString();
-		String description = dataItem.get(ParamNames.QUESTION).toString();
+	private PersonAttributeType createStringAttributeType(String dataItem) {
+		String name = dataItem;
+		String description = "Attribute type "+dataItem+" created by Hydra";
 
 		PersonService personService = Context.getPersonService();
 		PersonAttributeType type = new PersonAttributeType();
