@@ -77,6 +77,9 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	@Column(name = "mandatory")
 	private Boolean mandatory;
+	
+	@Column(name = "disabled")
+	private Boolean disabled;
 
 	@Column(name = "default_value")
 	private String defaultValue;
@@ -348,6 +351,14 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	public void setCreatePatient(Boolean createPatient) {
 		this.createPatient = createPatient;
+	}
+
+	public Boolean getDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
 	}
 
 }

@@ -1774,6 +1774,20 @@
 	
 	</changeSet>
 	
+	<changeSet author="naveed.iqbal" id="hydra-202004030931">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="hydramodule_form_field" columnName="disabled" />
+			</not>                       
+		</preConditions>
+		<comment>
+			Adding new columns in hydramodule_form_field table
+		</comment>
+		<addColumn tableName="hydramodule_form_field">
+			<column name="disabled" type="BOOLEAN" />
+		</addColumn>
+	</changeSet>
+	
 	
 	
 	<!-- <changeSet id="hydra-202003190151" author="naveed.iqbal">
