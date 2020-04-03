@@ -12,11 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsData;
+import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.User;
 
 @Entity
 @Table(name = "hydramodule_user_workflow", catalog = "hydra")
-public class HydramoduleUserWorkflow extends BaseOpenmrsData implements Serializable {
+public class HydramoduleUserWorkflow extends BaseOpenmrsMetadata implements Serializable {
 	
 	private static final long serialVersionUID = 8825939626685522359L;
 	
