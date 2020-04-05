@@ -1412,38 +1412,6 @@
 			baseTableName="hydramodule_form_field" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	<changeSet id="hydra-202002040850" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -1722,7 +1690,7 @@
 
 			<column name="workflow_id" type="int" />
 			<column name="user_id" type="int" />
-			<column defaultValueNumeric="0" name="creator" type="int">
+			<column name="creator" type="int">
 				<constraints nullable="false" />
 			</column>
 			<column name="date_created" type="datetime">
@@ -1730,14 +1698,14 @@
 			</column>
 			<column name="changed_by" type="int" />
 			<column name="date_changed" type="datetime" />
-			<column defaultValueBoolean="false" name="voided" type="boolean">
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
 				<constraints nullable="false" />
 			</column>
-			<column name="voided_by" type="int" />
-			<column name="date_voided" type="datetime" />
-			<column name="void_reason" type="varchar(255)" />
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
 			<column name="uuid" type="char(38)">
-				<constraints nullable="false" unique="true"></constraints>
+				<constraints unique="true" />
 			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_workflow_fk"
@@ -1804,6 +1772,20 @@
 			baseTableName="hydramodule_field_rule" baseColumnNames="target_form_field_id"
 			referencedTableName="hydramodule_from_field" referencedColumnNames="form_field_id" />
 	
+	</changeSet>
+	
+	<changeSet author="naveed.iqbal" id="hydra-202004030931">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="hydramodule_form_field" columnName="disabled" />
+			</not>                       
+		</preConditions>
+		<comment>
+			Adding new columns in hydramodule_form_field table
+		</comment>
+		<addColumn tableName="hydramodule_form_field">
+			<column name="disabled" type="BOOLEAN" />
+		</addColumn>
 	</changeSet>
 	
 	
@@ -2163,32 +2145,32 @@
 	    <sql
 			splitStatements="true"
 			stripComments="true">         
-		       	INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (10000001,0,NULL,NULL,NULL,1,7,0,1,'2020-03-20 08:47:53',NULL,1,'2020-03-20 08:47:53',NULL,NULL,NULL,'d3d9e77a-cb7c-431a-9457-bcc0e4ac9a91');
-				INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (10000002,0,NULL,NULL,NULL,3,7,0,1,'2020-03-20 08:49:19',NULL,1,'2020-03-20 08:49:19',NULL,NULL,NULL,'75a17321-fd69-47be-831e-cd773dc9c3cc');
-				INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (10000003,0,NULL,NULL,NULL,3,7,0,1,'2020-03-20 08:51:12',NULL,1,'2020-03-20 08:51:12',NULL,NULL,NULL,'85fc8b27-8a08-4bdc-bf91-e34af50265aa');
-				INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (10000004,0,NULL,NULL,NULL,3,7,0,1,'2020-03-20 08:51:53',NULL,1,'2020-03-20 08:51:53',NULL,NULL,NULL,'82c65f7c-b9e8-4775-a8bd-f7ad55ab8bf0');
-				INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (10000005,0,NULL,NULL,NULL,3,7,0,1,'2020-03-20 08:52:23',NULL,1,'2020-03-20 08:52:23',NULL,NULL,NULL,'a24d649b-fb89-4b8c-beeb-aacf2872cf22');
-				INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (10000006,0,NULL,NULL,NULL,3,7,0,1,'2020-03-20 09:17:00',NULL,1,'2020-03-20 09:17:00',NULL,NULL,NULL,'7579f93d-ebe7-423f-822b-dbe792248499');
+		       	INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (168079,0,NULL,NULL,NULL,1,7,0,1,'2020-03-20 08:47:53',NULL,1,'2020-03-20 08:47:53',NULL,NULL,NULL,'d3d9e77a-cb7c-431a-9457-bcc0e4ac9a91');
+				INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (168080,0,NULL,NULL,NULL,3,7,0,1,'2020-03-20 08:49:19',NULL,1,'2020-03-20 08:49:19',NULL,NULL,NULL,'75a17321-fd69-47be-831e-cd773dc9c3cc');
+				INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (168081,0,NULL,NULL,NULL,3,7,0,1,'2020-03-20 08:51:12',NULL,1,'2020-03-20 08:51:12',NULL,NULL,NULL,'85fc8b27-8a08-4bdc-bf91-e34af50265aa');
+				INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (168082,0,NULL,NULL,NULL,3,7,0,1,'2020-03-20 08:51:53',NULL,1,'2020-03-20 08:51:53',NULL,NULL,NULL,'82c65f7c-b9e8-4775-a8bd-f7ad55ab8bf0');
+				INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (168083,0,NULL,NULL,NULL,3,7,0,1,'2020-03-20 08:52:23',NULL,1,'2020-03-20 08:52:23',NULL,NULL,NULL,'a24d649b-fb89-4b8c-beeb-aacf2872cf22');
+				INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (168084,0,NULL,NULL,NULL,3,7,0,1,'2020-03-20 09:17:00',NULL,1,'2020-03-20 09:17:00',NULL,NULL,NULL,'7579f93d-ebe7-423f-822b-dbe792248499');
 				
-				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (10000001,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 08:47:53',NULL,NULL,'42ced4dd-56b6-4379-904a-4b11e96a52de');
-				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (10000002,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 08:49:19',NULL,NULL,'6701f093-671a-47ab-bfaf-8b3ac4dc019d');
-				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (10000003,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 08:51:12',NULL,NULL,'e69e3e5d-eb99-4c72-bf6f-df37e8db33fe');
-				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (10000004,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 08:51:53',NULL,NULL,'24a1bc4f-648a-4328-95fc-c6ec6d596895');
-				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (10000005,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 08:52:23',NULL,NULL,'aef45797-2569-4179-914e-ecf518c3ee0d');
-				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (10000006,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 09:17:00',NULL,NULL,'5f53232b-a32c-48bd-9d78-b87d97627573');
+				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (168079,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 08:47:53',NULL,NULL,'42ced4dd-56b6-4379-904a-4b11e96a52de');
+				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (168080,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 08:49:19',NULL,NULL,'6701f093-671a-47ab-bfaf-8b3ac4dc019d');
+				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (168081,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 08:51:12',NULL,NULL,'e69e3e5d-eb99-4c72-bf6f-df37e8db33fe');
+				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (168082,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 08:51:53',NULL,NULL,'24a1bc4f-648a-4328-95fc-c6ec6d596895');
+				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (168083,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 08:52:23',NULL,NULL,'aef45797-2569-4179-914e-ecf518c3ee0d');
+				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (168084,'Concept used by Hydra Contact Tracing Widget','en',1,'2020-03-20 09:17:00',NULL,NULL,'5f53232b-a32c-48bd-9d78-b87d97627573');
 				
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000001,'CONTACT TRACING - CONTACT AGE','en',1,'2020-03-20 08:47:53',0,NULL,NULL,NULL,'d614878c-e02f-4e1d-8d3e-3a918f182097','FULLY_SPECIFIED',1,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000001,'Contact Age','en',1,'2020-03-20 08:47:53',0,NULL,NULL,NULL,'cd3b56b6-9c39-4dbc-a200-e606a647d557','SHORT',0,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000002,'CONTACT TRACING - CONTACT GENDER','en',1,'2020-03-20 08:49:19',0,NULL,NULL,NULL,'2f86f4c3-1458-4735-936c-2f4a3bd7c7c5','FULLY_SPECIFIED',1,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000002,'Contact Gender','en',1,'2020-03-20 08:49:19',0,NULL,NULL,NULL,'910b87eb-e1ad-4424-8d54-80eef1c9b854','SHORT',0,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000003,'CONTACT TRACING - CONTACT GIVEN NAME','en',1,'2020-03-20 08:51:12',0,NULL,NULL,NULL,'1d500744-248b-40df-b97e-ee2819551744','FULLY_SPECIFIED',1,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000003,'Contact Given Name','en',1,'2020-03-20 08:51:12',0,NULL,NULL,NULL,'20f66150-6799-42d7-a263-b975bede3b4e','SHORT',0,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000004,'Contact Family Name','en',1,'2020-03-20 08:51:53',0,NULL,NULL,NULL,'dac2334f-ee1b-43c7-aeed-9b37701902f3','SHORT',0,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000004,'CONTACT TRACING - CONTACT FAMILY NAME','en',1,'2020-03-20 08:51:53',0,NULL,NULL,NULL,'2e5251de-470b-4374-bcf5-3c7acf5f9d6f','FULLY_SPECIFIED',1,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000005,'CONTACT TRACING - CONTACT IDENTIFIER','en',1,'2020-03-20 08:52:23',0,NULL,NULL,NULL,'62a174c9-e8a0-40bb-b702-3a646340885e','FULLY_SPECIFIED',1,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000005,'Contact Identifier','en',1,'2020-03-20 08:52:23',0,NULL,NULL,NULL,'c216463f-5847-4f1f-941d-719bd4321c15','SHORT',0,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000006,'CONTACT TRACING - CONTACT RELATIONSHIP','en',1,'2020-03-20 09:17:00',0,NULL,NULL,NULL,'518b3170-d5f0-43b9-8bae-1e38d5f4e420','FULLY_SPECIFIED',1,NULL,NULL);
-				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (10000006,'Contact Relationship','en',1,'2020-03-20 09:17:00',0,NULL,NULL,NULL,'5e7cc9ce-18a4-4e93-a20b-d0ffac2c2a22','SHORT',0,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168079,'CONTACT TRACING - CONTACT AGE','en',1,'2020-03-20 08:47:53',0,NULL,NULL,NULL,'d614878c-e02f-4e1d-8d3e-3a918f182097','FULLY_SPECIFIED',1,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168079,'Contact Age','en',1,'2020-03-20 08:47:53',0,NULL,NULL,NULL,'cd3b56b6-9c39-4dbc-a200-e606a647d557','SHORT',0,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168080,'CONTACT TRACING - CONTACT GENDER','en',1,'2020-03-20 08:49:19',0,NULL,NULL,NULL,'2f86f4c3-1458-4735-936c-2f4a3bd7c7c5','FULLY_SPECIFIED',1,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168080,'Contact Gender','en',1,'2020-03-20 08:49:19',0,NULL,NULL,NULL,'910b87eb-e1ad-4424-8d54-80eef1c9b854','SHORT',0,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168081,'CONTACT TRACING - CONTACT GIVEN NAME','en',1,'2020-03-20 08:51:12',0,NULL,NULL,NULL,'1d500744-248b-40df-b97e-ee2819551744','FULLY_SPECIFIED',1,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168081,'Contact Given Name','en',1,'2020-03-20 08:51:12',0,NULL,NULL,NULL,'20f66150-6799-42d7-a263-b975bede3b4e','SHORT',0,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168082,'Contact Family Name','en',1,'2020-03-20 08:51:53',0,NULL,NULL,NULL,'dac2334f-ee1b-43c7-aeed-9b37701902f3','SHORT',0,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168082,'CONTACT TRACING - CONTACT FAMILY NAME','en',1,'2020-03-20 08:51:53',0,NULL,NULL,NULL,'2e5251de-470b-4374-bcf5-3c7acf5f9d6f','FULLY_SPECIFIED',1,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168083,'CONTACT TRACING - CONTACT IDENTIFIER','en',1,'2020-03-20 08:52:23',0,NULL,NULL,NULL,'62a174c9-e8a0-40bb-b702-3a646340885e','FULLY_SPECIFIED',1,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168083,'Contact Identifier','en',1,'2020-03-20 08:52:23',0,NULL,NULL,NULL,'c216463f-5847-4f1f-941d-719bd4321c15','SHORT',0,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168084,'CONTACT TRACING - CONTACT RELATIONSHIP','en',1,'2020-03-20 09:17:00',0,NULL,NULL,NULL,'518b3170-d5f0-43b9-8bae-1e38d5f4e420','FULLY_SPECIFIED',1,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168084,'Contact Relationship','en',1,'2020-03-20 09:17:00',0,NULL,NULL,NULL,'5e7cc9ce-18a4-4e93-a20b-d0ffac2c2a22','SHORT',0,NULL,NULL);
 	
 	    </sql>    
 	</changeSet>
@@ -2221,12 +2203,12 @@
 			stripComments="true">         
 		        INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (11,NULL,NULL,NULL,'Address',NULL,'Address','Default field required by Hydra',1,'2020-01-31 13:55:58',NULL,NULL,0,NULL,NULL,NULL,'97c5dc2b-a352-4847-b7f6-c0717e9b3dc7');
 				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (12,NULL,NULL,NULL,'Heading',NULL,'Heading','Default field required by Hydra',1,'2020-01-31 13:55:58',NULL,NULL,0,NULL,NULL,NULL,'4e1640ca-d264-4f8f-9210-66c535053393');  
-	    		INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,10000001,NULL,NULL,'Numeric',NULL,'Contact Age','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'73e557b7-0be7-4e96-b1f2-11c39534ec29');
-				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,10000002,NULL,NULL,'Text',NULL,'Contact Gender','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'73eb7357-7eb0-4e96-b1f2-11c39534ec29');
-				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,10000003,NULL,NULL,'Text',NULL,'Contact Given Name','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'73e557b7-7eb0-4e96-2f1b-11c39534ec29');
-				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,10000004,NULL,NULL,'Text',NULL,'Contact Family Name','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'73e557b7-7eb0-4e96-b1f2-11c39534e92c');
-				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,10000005,NULL,NULL,'Text',NULL,'Contact Identifier','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'37e557b7-7eb0-4e96-b1f2-11c395ec4329');
-				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,10000006,NULL,NULL,'Text',NULL,'Contact Relationship','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'37e557b7-0be7-4e96-b1f2-11c395ec4329');
+	    		INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,168079,NULL,NULL,'Numeric',NULL,'Contact Age','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'73e557b7-0be7-4e96-b1f2-11c39534ec29');
+				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,168080,NULL,NULL,'Text',NULL,'Contact Gender','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'73eb7357-7eb0-4e96-b1f2-11c39534ec29');
+				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,168081,NULL,NULL,'Text',NULL,'Contact Given Name','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'73e557b7-7eb0-4e96-2f1b-11c39534ec29');
+				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,168082,NULL,NULL,'Text',NULL,'Contact Family Name','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'73e557b7-7eb0-4e96-b1f2-11c39534e92c');
+				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,168083,NULL,NULL,'Text',NULL,'Contact Identifier','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'37e557b7-7eb0-4e96-b1f2-11c395ec4329');
+				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (NULL,168084,NULL,NULL,'Text',NULL,'Contact Relationship','Default field required by Hydra',1,'2020-03-20 09:06:33',NULL,NULL,0,NULL,NULL,NULL,'37e557b7-0be7-4e96-b1f2-11c395ec4329');
 				INSERT IGNORE INTO hydra.`hydramodule_field` (`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (13,1474,NULL,NULL,'Contact Tracing',NULL,'Contact Tracing','Default field required by Hydra',1,'2020-03-21 10:14:58',NULL,NULL,0,NULL,NULL,NULL,'1e4640ca-d264-4f8f-9210-66c053553933');
 	    </sql>    
 	</changeSet>
