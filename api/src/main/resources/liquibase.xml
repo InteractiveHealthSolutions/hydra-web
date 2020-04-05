@@ -1712,7 +1712,7 @@
 			baseTableName="hydramodule_user_workflow" baseColumnNames="user_id"
 			referencedTableName="users" referencedColumnNames="user_id" />
 
-		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_patient_fk"
+		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_user_fk"
 			baseTableName="hydramodule_user_workflow" baseColumnNames="workflow_id"
 			referencedTableName="hydramodule_workflow" referencedColumnNames="workflow_id" />
 
@@ -1722,8 +1722,8 @@
 		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_changed_by_fk"
 			baseTableName="hydramodule_user_workflow" baseColumnNames="changed_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_voided_by_fk"
-			baseTableName="hydramodule_user_workflow" baseColumnNames="voided_by"
+		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_retired_by_fk"
+			baseTableName="hydramodule_user_workflow" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 
 	</changeSet>
