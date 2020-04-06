@@ -408,12 +408,13 @@ public class FormService {
 							obsIdentifier.setValueText(identifier);
 							obsRelationship.setValueText(relationship);
 
-							/*obsList.add(obsDOB);
+							obsList.add(obsDOB);
 							obsList.add(obsGender);
 							obsList.add(obsGivenName);
 							obsList.add(obsFamilyName);
-							obsList.add(obsIdentifier);
-							obsList.add(obsRelationship);*/
+							if(identifier!=null)
+								obsList.add(obsIdentifier);
+							obsList.add(obsRelationship);
 
 						}
 					}
