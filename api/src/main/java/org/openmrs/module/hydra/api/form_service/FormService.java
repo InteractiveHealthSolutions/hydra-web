@@ -337,7 +337,7 @@ public class FormService {
 						Obs obsNumberOfContacts = new Obs();
 						obsNumberOfContacts.setConcept(questionNumberOfContacts);
 						obsNumberOfContacts.setValueNumeric(numberOfPeople);
-						//obsList.add(obsNumberOfContacts);
+						// obsList.add(obsNumberOfContacts);
 
 						List<String> identifiers = new ArrayList<String>();
 						for (int j = 0; j < contactsArray.size(); j++) {
@@ -408,12 +408,12 @@ public class FormService {
 							obsIdentifier.setValueText(identifier);
 							obsRelationship.setValueText(relationship);
 
-							/*obsList.add(obsDOB);
+							obsList.add(obsDOB);
 							obsList.add(obsGender);
 							obsList.add(obsGivenName);
 							obsList.add(obsFamilyName);
 							obsList.add(obsIdentifier);
-							obsList.add(obsRelationship);*/
+							obsList.add(obsRelationship);
 
 						}
 					}
