@@ -77,7 +77,7 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	@Column(name = "mandatory")
 	private Boolean mandatory;
-	
+
 	@Column(name = "disabled")
 	private Boolean disabled;
 

@@ -171,13 +171,19 @@ public class FormService {
 			Date dateEntered = null;
 			for (int i = 0; i < data.size(); i++) {
 				JSONObject dataItem = (JSONObject) data.get(i);
-
+				
 				if (dataItem.containsKey(ParamNames.USERNAME) || dataItem.containsKey(ParamNames.PASSWORD))
 					continue;
 				if (!dataItem.containsKey(ParamNames.PAYLOAD_TYPE))
 					continue;
 				System.out.println("There " + dataItem);
-
+				if(dataItem.containsKey("person_attribute")) {
+					boolean isAttribute = (Boolean) dataItem.get("person_attribute");
+					if(isAttribute) {
+						PersonAttribute personAttrib = saveAttribute(personService, dataItem);
+						personAttributes.add(personAttrib);
+					}
+				}
 				DATA_TYPE dataType = DATA_TYPE.valueOf(dataItem.get(ParamNames.PAYLOAD_TYPE).toString());
 				switch (dataType) {
 					case ADDRESS: {
@@ -289,6 +295,8 @@ public class FormService {
 						break;
 
 					case PERSON_ATTRIBUTE: {
+						// this check(code block) is deprecated, kept for backwards compatibility only 
+						// should be removed if date is after 20th April 2020
 						String attribType = (String) dataItem.get(ParamNames.PARAM_NAME);
 						String attribValue = dataItem.get(ParamNames.VALUE).toString();
 
@@ -322,14 +330,14 @@ public class FormService {
 					case CONTACT_TRACING: {
 						JSONArray contactsArray = (JSONArray) dataItem.get(ParamNames.VALUE);
 						boolean createPatient = (Boolean) dataItem.get("createPatient");
-						
+
 						double numberOfPeople = (Double) dataItem.get("numberOfPeople");
-						Concept questionNumberOfContacts = conceptService.getConceptByUuid("0e594b8c-cd8c-4437-9c6e-bc4e30ec7598");
+						Concept questionNumberOfContacts = conceptService
+						        .getConceptByUuid("0e594b8c-cd8c-4437-9c6e-bc4e30ec7598");
 						Obs obsNumberOfContacts = new Obs();
 						obsNumberOfContacts.setConcept(questionNumberOfContacts);
 						obsNumberOfContacts.setValueNumeric(numberOfPeople);
 						obsList.add(obsNumberOfContacts);
-						
 
 						List<String> identifiers = new ArrayList<String>();
 						for (int j = 0; j < contactsArray.size(); j++) {
@@ -353,60 +361,59 @@ public class FormService {
 							}
 
 							// Creating a unique value group id
-							
-						Calendar c = Calendar.getInstance();
-						int valueGroupId = (c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DAY_OF_MONTH)
-								+ c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) + c.get(Calendar.SECOND)
-								+ c.get(Calendar.MILLISECOND) + (i + 1)) * (j + 2);
 
-						Concept questionConceptDOB = conceptService
-								.getConceptByUuid("160751AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-						Concept questionConceptGender = conceptService
-								.getConceptByUuid("75a17321-fd69-47be-831e-cd773dc9c3cc");
-						Concept questionConceptGivenName = conceptService
-								.getConceptByUuid("85fc8b27-8a08-4bdc-bf91-e34af50265aa");
-						Concept questionConceptFamilyName = conceptService
-								.getConceptByUuid("82c65f7c-b9e8-4775-a8bd-f7ad55ab8bf0");
-						Concept questionConceptIdentifier = conceptService
-								.getConceptByUuid("a24d649b-fb89-4b8c-beeb-aacf2872cf22");
-						Concept questionConceptRelationship = conceptService
-								.getConceptByUuid("7579f93d-ebe7-423f-822b-dbe792248499");
+							Calendar c = Calendar.getInstance();
+							int valueGroupId = (c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DAY_OF_MONTH)
+							        + c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) + c.get(Calendar.SECOND)
+							        + c.get(Calendar.MILLISECOND) + (i + 1)) * (j + 2);
 
-						Obs obsDOB = new Obs();
-						Obs obsGender = new Obs();
-						Obs obsGivenName = new Obs();
-						Obs obsFamilyName = new Obs();
-						Obs obsIdentifier = new Obs();
-						Obs obsRelationship = new Obs();
+							Concept questionConceptDOB = conceptService
+							        .getConceptByUuid("d3d9e77a-cb7c-431a-9457-bcc0e4ac9a91");
+							Concept questionConceptGender = conceptService
+							        .getConceptByUuid("75a17321-fd69-47be-831e-cd773dc9c3cc");
+							Concept questionConceptGivenName = conceptService
+							        .getConceptByUuid("85fc8b27-8a08-4bdc-bf91-e34af50265aa");
+							Concept questionConceptFamilyName = conceptService
+							        .getConceptByUuid("82c65f7c-b9e8-4775-a8bd-f7ad55ab8bf0");
+							Concept questionConceptIdentifier = conceptService
+							        .getConceptByUuid("a24d649b-fb89-4b8c-beeb-aacf2872cf22");
+							Concept questionConceptRelationship = conceptService
+							        .getConceptByUuid("7579f93d-ebe7-423f-822b-dbe792248499");
 
-						obsDOB.setValueGroupId(valueGroupId);
-						obsGender.setValueGroupId(valueGroupId);
-						obsGivenName.setValueGroupId(valueGroupId);
-						obsFamilyName.setValueGroupId(valueGroupId);
-						obsIdentifier.setValueGroupId(valueGroupId);
-						obsRelationship.setValueGroupId(valueGroupId);
+							Obs obsDOB = new Obs();
+							Obs obsGender = new Obs();
+							Obs obsGivenName = new Obs();
+							Obs obsFamilyName = new Obs();
+							Obs obsIdentifier = new Obs();
+							Obs obsRelationship = new Obs();
 
-						obsDOB.setConcept(questionConceptDOB);
-						obsGender.setConcept(questionConceptGender);
-						obsGivenName.setConcept(questionConceptGivenName);
-						obsFamilyName.setConcept(questionConceptFamilyName);
-						obsIdentifier.setConcept(questionConceptIdentifier);
-						obsRelationship.setConcept(questionConceptRelationship);
+							obsDOB.setValueGroupId(valueGroupId);
+							obsGender.setValueGroupId(valueGroupId);
+							obsGivenName.setValueGroupId(valueGroupId);
+							obsFamilyName.setValueGroupId(valueGroupId);
+							obsIdentifier.setValueGroupId(valueGroupId);
+							obsRelationship.setValueGroupId(valueGroupId);
 
-						obsDOB.setValueDate(birthDate);
-						obsGender.setValueText(gender);
-						obsGivenName.setValueText(givenName);
-						obsFamilyName.setValueText(familyName);
-						obsIdentifier.setValueText(identifier);
-						obsRelationship.setValueText(relationship);
+							obsDOB.setConcept(questionConceptDOB);
+							obsGender.setConcept(questionConceptGender);
+							obsGivenName.setConcept(questionConceptGivenName);
+							obsFamilyName.setConcept(questionConceptFamilyName);
+							obsIdentifier.setConcept(questionConceptIdentifier);
+							obsRelationship.setConcept(questionConceptRelationship);
 
-						obsList.add(obsDOB);
-						obsList.add(obsGender);
-						obsList.add(obsGivenName);
-						obsList.add(obsFamilyName);
-						obsList.add(obsIdentifier);
-						obsList.add(obsRelationship);
-							
+							obsDOB.setValueDate(birthDate);
+							obsGender.setValueText(gender);
+							obsGivenName.setValueText(givenName);
+							obsFamilyName.setValueText(familyName);
+							obsIdentifier.setValueText(identifier);
+							obsRelationship.setValueText(relationship);
+
+							obsList.add(obsDOB);
+							obsList.add(obsGender);
+							obsList.add(obsGivenName);
+							obsList.add(obsFamilyName);
+							obsList.add(obsIdentifier);
+							obsList.add(obsRelationship);
 
 						}
 					}
@@ -475,6 +482,23 @@ public class FormService {
 				}
 			}
 		}
+	}
+
+	private PersonAttribute saveAttribute(PersonService personService, JSONObject dataItem) {
+		String attribType = (String) dataItem.get(ParamNames.PARAM_NAME);
+		String attribValue = dataItem.get(ParamNames.VALUE).toString();
+
+		PersonAttributeType attributeType = personService.getPersonAttributeTypeByName(attribType);
+		if (attributeType == null) {
+			attributeType = createStringAttributeType(attribType);
+		}
+
+		PersonAttribute personAttrib = new PersonAttribute();
+		personAttrib.setAttributeType(attributeType);
+		personAttrib.setValue(attribValue);
+
+		return personAttrib;
+		
 	}
 
 	private void createContactPatient(Patient indexPatient, JSONObject contactObj, Location location, String workflowUUID,
@@ -723,7 +747,7 @@ public class FormService {
 
 	private PersonAttributeType createStringAttributeType(String dataItem) {
 		String name = dataItem;
-		String description = "Attribute type "+dataItem+" created by Hydra";
+		String description = "Attribute type " + dataItem + " created by Hydra";
 
 		PersonService personService = Context.getPersonService();
 		PersonAttributeType type = new PersonAttributeType();
