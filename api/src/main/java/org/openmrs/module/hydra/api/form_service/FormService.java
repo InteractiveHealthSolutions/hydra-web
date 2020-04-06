@@ -330,8 +330,8 @@ public class FormService {
 					case CONTACT_TRACING: {
 						JSONArray contactsArray = (JSONArray) dataItem.get(ParamNames.VALUE);
 						boolean createPatient = (Boolean) dataItem.get("createPatient");
-
-						double numberOfPeople = (Double) dataItem.get("numberOfPeople");
+						Long numberOfPeopleLong = (Long) dataItem.get("numberOfPeople");
+						double numberOfPeople = numberOfPeopleLong.doubleValue();
 						Concept questionNumberOfContacts = conceptService
 						        .getConceptByUuid("0e594b8c-cd8c-4437-9c6e-bc4e30ec7598");
 						Obs obsNumberOfContacts = new Obs();
