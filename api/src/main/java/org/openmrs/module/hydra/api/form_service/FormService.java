@@ -401,7 +401,7 @@ public class FormService {
 							obsIdentifier.setConcept(questionConceptIdentifier);
 							obsRelationship.setConcept(questionConceptRelationship);
 
-							obsDOB.setValueDate(birthDate);
+							obsDOB.setValueDatetime(birthDate);
 							obsGender.setValueText(gender);
 							obsGivenName.setValueText(givenName);
 							obsFamilyName.setValueText(familyName);
