@@ -30,6 +30,7 @@ import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
+import org.openmrs.Person;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
@@ -73,6 +74,7 @@ public class FormService {
 		IDENTIFIER,
 		PERSON_ATTRIBUTE,
 		NAME,
+		GPS,
 		OBS,
 		OBS_CODED,
 		OBS_NUMERIC,
@@ -113,22 +115,10 @@ public class FormService {
 		password = (String) authentication.get("PASSWORD");
 		SecretKey sec;
 		String decPassword = null;
-		try {
-			sec = AES256Endec.getInstance().generateKey();
-			decPassword = AES256Endec.getInstance().decrypt(password, sec);
-		}
-		catch (Exception e1) {
-			e1.printStackTrace();
-			// return;
-		}
 
 		providerUUID = (String) authentication.get("provider");
-		try {
-			Context.authenticate(username, decPassword);
-		}
-		catch (ContextAuthenticationException exception) {
-			Context.authenticate(username, password);
-		}
+		Context.authenticate(username, password);
+
 		// getting EncounterType String
 		String encounterTypeString = (String) metadata.get(ParamNames.ENCOUNTER_TYPE);
 		String workflowUUID = (String) metadata.get(ParamNames.WORKFLOW);
@@ -162,29 +152,23 @@ public class FormService {
 			encounterType = encounterService.getEncounterType(encounterTypeString);
 
 			Location location = null;
-			PersonAddress personAddress = new PersonAddress();
+			PersonAddress personAddress = null;
 
 			List<Obs> obsList = new ArrayList();
-			List<PersonAttribute> personAttributes = new ArrayList();
+			Set<PersonAttribute> personAttributes = new HashSet<PersonAttribute>();
 			List<PatientIdentifier> patientIdentifiers = new ArrayList();
 
 			Date dateEntered = null;
 			for (int i = 0; i < data.size(); i++) {
 				JSONObject dataItem = (JSONObject) data.get(i);
-				
+
 				if (dataItem.containsKey(ParamNames.USERNAME) || dataItem.containsKey(ParamNames.PASSWORD))
 					continue;
 				if (!dataItem.containsKey(ParamNames.PAYLOAD_TYPE))
 					continue;
-				System.out.println("There " + dataItem);
-				if(dataItem.containsKey("person_attribute")) {
-					boolean isAttribute = (Boolean) dataItem.get("person_attribute");
-					if(isAttribute) {
-						PersonAttribute personAttrib = saveAttribute(personService, dataItem);
-						personAttributes.add(personAttrib);
-					}
-				}
+
 				DATA_TYPE dataType = DATA_TYPE.valueOf(dataItem.get(ParamNames.PAYLOAD_TYPE).toString());
+				System.out.println("\n\n\nDATATYPE: " + dataType.toString() + "\n" + dataItem.toString() + "\n\n\n");
 				switch (dataType) {
 					case ADDRESS: {
 						JSONObject addressObj = (JSONObject) dataItem.get(ParamNames.VALUE);
@@ -195,6 +179,17 @@ public class FormService {
 						                                                                  // address
 						personAddress.setAddress3(addressObj.get("address3").toString()); // nearest
 						                                                                  // landmark
+					}
+						break;
+					case GPS: {
+						String value = dataItem.get(ParamNames.VALUE).toString();
+						Concept concept = conceptService.getConceptByUuid("163277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+						if (!value.isEmpty()) {
+							Obs obs = new Obs();
+							obs.setConcept(concept);
+							obs.setValueText(value);
+							obsList.add(obs);
+						}
 					}
 						break;
 					case OBS: {
@@ -213,7 +208,16 @@ public class FormService {
 							obs.setConcept(concept);
 							obs.setValueText(value);
 							obsList.add(obs);
+							if (dataItem.containsKey("person_attribute")) {
+								boolean isAttribute = (Boolean) dataItem.get("person_attribute");
+								if (isAttribute) {
+									PersonAttribute personAttrib = saveAttribute(personService, concept.getDisplayString(),
+									    value);
+									personAttributes.add(personAttrib);
+								}
+							}
 						}
+
 					}
 						break;
 					case OBS_NUMERIC: {
@@ -230,6 +234,14 @@ public class FormService {
 							obs.setConcept(concept);
 							obs.setValueNumeric(Double.parseDouble(value));
 							obsList.add(obs);
+							if (dataItem.containsKey("person_attribute")) {
+								boolean isAttribute = (Boolean) dataItem.get("person_attribute");
+								if (isAttribute) {
+									PersonAttribute personAttrib = saveAttribute(personService, concept.getDisplayString(),
+									    value);
+									personAttributes.add(personAttrib);
+								}
+							}
 						}
 					}
 						break;
@@ -247,6 +259,14 @@ public class FormService {
 							obsDateTime.setConcept(conceptDateTime);
 							obsDateTime.setValueDatetime(dateValue);
 							obsList.add(obsDateTime);
+							if (dataItem.containsKey("person_attribute")) {
+								boolean isAttribute = (Boolean) dataItem.get("person_attribute");
+								if (isAttribute) {
+									PersonAttribute personAttrib = saveAttribute(personService,
+									    conceptDateTime.getDisplayString(), valueDateTime);
+									personAttributes.add(personAttrib);
+								}
+							}
 						}
 					}
 						break;
@@ -264,6 +284,14 @@ public class FormService {
 						obsCoded.setConcept(questionConcept);
 						obsCoded.setValueCoded(valueConcept);
 						obsList.add(obsCoded);
+						if (dataItem.containsKey("person_attribute")) {
+							boolean isAttribute = (Boolean) dataItem.get("person_attribute");
+							if (isAttribute) {
+								PersonAttribute personAttrib = saveAttribute(personService,
+								    questionConcept.getDisplayString(), valueConcept.getDisplayString());
+								personAttributes.add(personAttrib);
+							}
+						}
 					}
 						break;
 					case OBS_CODED_MULTI: {
@@ -295,7 +323,7 @@ public class FormService {
 						break;
 
 					case PERSON_ATTRIBUTE: {
-						// this check(code block) is deprecated, kept for backwards compatibility only 
+						// this check(code block) is deprecated, kept for backwards compatibility only
 						// should be removed if date is after 20th April 2020
 						String attribType = (String) dataItem.get(ParamNames.PARAM_NAME);
 						String attribValue = dataItem.get(ParamNames.VALUE).toString();
@@ -337,22 +365,29 @@ public class FormService {
 						Obs obsNumberOfContacts = new Obs();
 						obsNumberOfContacts.setConcept(questionNumberOfContacts);
 						obsNumberOfContacts.setValueNumeric(numberOfPeople);
-						// obsList.add(obsNumberOfContacts);
+						obsList.add(obsNumberOfContacts);
 
+						// Concept contactRegistryDate
 						List<String> identifiers = new ArrayList<String>();
 						for (int j = 0; j < contactsArray.size(); j++) {
 							JSONObject contactObj = (JSONObject) contactsArray.get(j);
 							String identifier = (String) contactObj.get("patientID");
-							if (identifiers.contains(identifier))
-								continue;
-							identifiers.add(identifier);
+							if (identifier == null) {
+								identifier = "n/a";
+							}
+							/*
+							 * if (identifiers.contains(identifier)) continue; identifiers.add(identifier);
+							 */
 
-							String givenName = (String) contactObj.get("PatientFirstName");
-							String familyName = (String) contactObj.get("PatientFamilyName");
+							String givenName = (String) contactObj.get("patientGivenName");
+							String familyName = (String) contactObj.get("patientFamilyName");
 							String gender = (String) contactObj.get("gender");
 							String age = (String) contactObj.get("age");
 							String dob = (String) contactObj.get("dob");
 							String relationship = (String) contactObj.get("relation");
+
+							System.out.println(contactsArray.size() + "\nfirstName: " + givenName + "\nlast:" + familyName
+							        + "\ngender: " + gender + "\ndob: " + dob + "\nrelation: " + relationship + "\n\n\n");
 
 							Date birthDate = Utils.formatterDate.parse(dob);
 
@@ -408,14 +443,19 @@ public class FormService {
 							obsIdentifier.setValueText(identifier);
 							obsRelationship.setValueText(relationship);
 
-							obsList.add(obsDOB);
-							obsList.add(obsGender);
-							obsList.add(obsGivenName);
-							obsList.add(obsFamilyName);
-							if(identifier!=null)
-								obsList.add(obsIdentifier);
-							obsList.add(obsRelationship);
+							Set<Obs> setMembers = new HashSet<Obs>();
+							setMembers.add(obsDOB);
+							setMembers.add(obsGender);
+							setMembers.add(obsGivenName);
+							setMembers.add(obsFamilyName);
+							setMembers.add(obsRelationship);
+							setMembers.add(obsIdentifier);
 
+							Concept parentConcept = conceptService.getConceptByUuid("9757f93d-ebe7-423f-822b-dbe792248488");
+							Obs parentObs = new Obs();
+							parentObs.setConcept(parentConcept);
+							parentObs.setGroupMembers(setMembers);
+							obsList.add(parentObs);
 						}
 					}
 						break;
@@ -438,8 +478,11 @@ public class FormService {
 
 				if (patient != null) {
 					// Saving address
-					personAddress.setPerson(patient);
-					personService.savePersonAddress(personAddress);
+					if (personAddress != null) {
+						personAddress.setPerson(patient);
+						personService.savePersonAddress(personAddress);
+					}
+
 					// Preparing encounter
 					Encounter encounter = new Encounter();
 					encounter.setEncounterType(encounterType);
@@ -477,6 +520,11 @@ public class FormService {
 						formEncounter.setEncounter(savedEncoounter);
 						service.saveFormEncounter(formEncounter);
 					}
+
+					if (personAttributes.size() > 0) {
+						// patient.setAttributes(personAttributes);
+						// patientService.savePatient(patient);
+					}
 				} else {
 					System.out.println("Patient is null");
 					return;
@@ -485,10 +533,7 @@ public class FormService {
 		}
 	}
 
-	private PersonAttribute saveAttribute(PersonService personService, JSONObject dataItem) {
-		String attribType = (String) dataItem.get(ParamNames.PARAM_NAME);
-		String attribValue = dataItem.get(ParamNames.VALUE).toString();
-
+	private PersonAttribute saveAttribute(PersonService personService, String attribType, String attribValue) {
 		PersonAttributeType attributeType = personService.getPersonAttributeTypeByName(attribType);
 		if (attributeType == null) {
 			attributeType = createStringAttributeType(attribType);
@@ -499,7 +544,7 @@ public class FormService {
 		personAttrib.setValue(attribValue);
 
 		return personAttrib;
-		
+
 	}
 
 	private void createContactPatient(Patient indexPatient, JSONObject contactObj, Location location, String workflowUUID,
