@@ -87,10 +87,6 @@ public class SExprHelper {
 		JSONObject ruleObj = new JSONObject();
 
 		List<HydramoduleFieldRule> rules = dao.getHydramoduleFieldRuleByTargetFormField(ff);
-		if (rules.size() == 0) {
-			rules = dao.getHydramoduleFieldRuleByTargetField(field); // for the old rules which are mapped to field
-			                                                         // instead of formField
-		}
 
 		// {"hiddenWhen":[{"questionId":10,"notEquals":[{"uuid":"OTHER"}],"id":10},"OR"]}
 		// {"autoSelect":[{"questionId":10,"notEquals":[{"uuid":"OTHER"}],"id":10},"OR"]}
@@ -150,7 +146,8 @@ public class SExprHelper {
 		for (HydramoduleRuleToken token : tokens) {
 			// System.out.println("Token Value: " + token.getValue());
 			if (conditionalOperatorsMap.containsKey(token.getValue())) {
-				whenArray.add(token.getValue());
+				if (!operatorAvailable)
+					whenArray.add(token.getValue());
 				operatorAvailable = true;
 			} else {
 				// Question part of the expression

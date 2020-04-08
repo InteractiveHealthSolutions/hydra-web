@@ -90,12 +90,13 @@ public class FormService {
 		CONTACT_TRACING
 	}
 
-	HydraService service;
+	private HydraService service;
+	JSONParser parser;
 
 	public synchronized void createNewForm(HydraService service, HydramoduleDTOFormSubmissionData formSubmissionData)
 	        throws ParseException, org.json.simple.parser.ParseException {
 		this.service = service;
-		JSONParser parser = new JSONParser();
+		parser = new JSONParser();
 
 		JSONArray data = (JSONArray) parser.parse(formSubmissionData.getData());
 		JSONObject metadata = (JSONObject) parser.parse(formSubmissionData.getMetadata());
@@ -103,7 +104,7 @@ public class FormService {
 		createNewForm(data, metadata);
 	}
 
-	public synchronized void createNewForm(JSONArray data, JSONObject metadata) throws ParseException {
+	public synchronized void createNewForm(JSONArray data, JSONObject metadata) throws ParseException, org.json.simple.parser.ParseException {
 
 		// Getting user info
 		String username;
@@ -295,26 +296,31 @@ public class FormService {
 					}
 						break;
 					case OBS_CODED_MULTI: {
-						// TODO
-
-						// Creating a unique value group id
-						Calendar c = Calendar.getInstance();
-						int valueGroupId = c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DAY_OF_MONTH)
-						        + c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) + c.get(Calendar.SECOND)
-						        + c.get(Calendar.MILLISECOND) + (i + 1);
-
+						
 						String questionConceptStr = (String) dataItem.get(ParamNames.PARAM_NAME);
-						String valueConceptStr = dataItem.get(ParamNames.VALUE).toString();
-
+						String valueStr = dataItem.get(ParamNames.VALUE).toString();
+						
 						Concept questionConcept = conceptService.getConceptByUuid(questionConceptStr);
-						Concept valueConcept = conceptService.getConceptByUuid(valueConceptStr);
+						JSONArray valuesArray = (JSONArray) parser.parse(valueStr);
+						
+						// setting member obs
+						Set<Obs> members = new HashSet<Obs>();
+						for(int k=0; k<valuesArray.size(); k++) {
+							String value = (String) valuesArray.get(k);
+							Concept valueConcept = conceptService.getConceptByUuid(value);
+							
+							Obs obs = new Obs();
+							obs.setConcept(questionConcept);
+							obs.setValueCoded(valueConcept);
+							members.add(obs);
+						}						
 
-						Obs obsCoded = new Obs();
-						obsCoded.setValueGroupId(valueGroupId);
-						obsCoded.setConcept(questionConcept);
-						obsCoded.setValueCoded(valueConcept);
-						obsList.add(obsCoded);
-
+						// createing an adding parent obs
+						Obs parent = new Obs();
+						parent.setConcept(questionConcept);
+						parent.setGroupMembers(members);
+						
+						obsList.add(parent);
 					}
 						break;
 					case LOCATION:

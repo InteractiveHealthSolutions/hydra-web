@@ -304,7 +304,11 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 			List<HydramoduleFormField> formFields = form.getFormFields();
 			for (HydramoduleFormField ff : formFields) {
 				HydramoduleField field = ff.getField(); // This is the targetField of a rule
-				field.setParsedRule(exprHelper.compileComplex(dao, ff));
+				String parsedRule = exprHelper.compileComplex(dao, ff);
+				if (parsedRule != null) {
+					field.setParsedRule(parsedRule);
+					System.out.println(ff.getForm().getName() + "\n" + field.getName() + "\n\n\n");
+				}
 			}
 		}
 
