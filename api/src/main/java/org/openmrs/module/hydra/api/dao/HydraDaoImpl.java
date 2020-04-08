@@ -199,20 +199,21 @@ public class HydraDaoImpl {
 		
 		if(form.getHydramoduleFormId()!=null) {
 			List<HydramoduleFormField> existingFormFields = getFormFields(form.getHydramoduleFormId());
+			List<HydramoduleFormField> existingToDelete = new ArrayList<HydramoduleFormField>();
 			
 			for(HydramoduleFormField existingField: existingFormFields) {
 				for(HydramoduleFormField newField: fields) {
 					if(existingField.getField().getFieldId() == newField.getField().getFieldId()) {
 						newField.setFormFieldId(existingField.getFormFieldId());
 						newField.setUuid(existingField.getUuid());
-						existingFormFields.remove(existingField);
+						existingToDelete.add(existingField);
 						break;
 					}
 				}
 			}
 			
 			if (form.getHydramoduleFormId() != null) {
-				deleteFormFields(existingFormFields);
+				deleteFormFields(existingToDelete);
 			}
 			// List<HydramoduleFormField> fields = form.getFormFields();
 	

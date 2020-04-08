@@ -11,17 +11,10 @@ package org.openmrs.module.hydra.api.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.openmrs.Concept;
 import org.openmrs.EncounterType;
-import org.openmrs.Field;
-import org.openmrs.FieldAnswer;
-import org.openmrs.FormField;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
@@ -36,7 +29,6 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
-import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
