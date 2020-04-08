@@ -195,26 +195,29 @@ public class HydraDaoImpl {
 	// TODO could be done better way, right now deleting all the existing then
 	// adding new in case of edit
 	public HydramoduleForm saveModuleForm(HydramoduleForm form) {
-		List<HydramoduleFormField> existingFormFields = getFormFields(form);
 		List<HydramoduleFormField> fields = form.getFormFields();
 		
-		for(HydramoduleFormField existingField: existingFormFields) {
-			for(HydramoduleFormField newField: fields) {
-				if(existingField.getField().getFieldId() == newField.getField().getFieldId()) {
-					newField.setFormFieldId(existingField.getFormFieldId());
-					newField.setUuid(existingField.getUuid());
-					existingFormFields.remove(existingField);
-					break;
+		if(form.getHydramoduleFormId()!=null) {
+			List<HydramoduleFormField> existingFormFields = getFormFields(form.getHydramoduleFormId());
+			
+			for(HydramoduleFormField existingField: existingFormFields) {
+				for(HydramoduleFormField newField: fields) {
+					if(existingField.getField().getFieldId() == newField.getField().getFieldId()) {
+						newField.setFormFieldId(existingField.getFormFieldId());
+						newField.setUuid(existingField.getUuid());
+						existingFormFields.remove(existingField);
+						break;
+					}
 				}
 			}
+			
+			if (form.getHydramoduleFormId() != null) {
+				deleteFormFields(existingFormFields);
+			}
+			// List<HydramoduleFormField> fields = form.getFormFields();
+	
+			getSession().clear();
 		}
-		
-		if (form.getHydramoduleFormId() != null) {
-			deleteFormFields(existingFormFields);
-		}
-		// List<HydramoduleFormField> fields = form.getFormFields();
-
-		getSession().clear();
 		getSession().saveOrUpdate(form);
 		if (fields != null) {
 			for (HydramoduleFormField field : fields) {
@@ -249,6 +252,11 @@ public class HydraDaoImpl {
 		criteria.add(Restrictions.eq("form", form));
 
 		return criteria.list();
+	}
+	
+	public List<HydramoduleFormField> getFormFields(Integer formId) {
+		DbSession session = sessionFactory.getCurrentSession();
+		return	session.createQuery("from HydramoduleFormField f where f.form.hydramoduleFormId=" + formId).list();
 	}
 
 	public HydramoduleFormField getFormField(String uuid) {
