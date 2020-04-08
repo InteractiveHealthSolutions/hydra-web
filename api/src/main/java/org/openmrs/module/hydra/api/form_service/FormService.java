@@ -315,7 +315,7 @@ public class FormService {
 							members.add(obs);
 						}						
 
-						// createing an adding parent obs
+						// createing and adding parent obs
 						Obs parent = new Obs();
 						parent.setConcept(questionConcept);
 						parent.setGroupMembers(members);
