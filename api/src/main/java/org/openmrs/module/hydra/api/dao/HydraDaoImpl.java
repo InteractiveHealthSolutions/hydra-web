@@ -216,8 +216,10 @@ public class HydraDaoImpl {
 			}
 			// List<HydramoduleFormField> fields = form.getFormFields();
 	
-			getSession().clear();
+			
 		}
+		
+		getSession().clear();
 		getSession().saveOrUpdate(form);
 		if (fields != null) {
 			for (HydramoduleFormField field : fields) {
