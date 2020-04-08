@@ -206,7 +206,6 @@ public class HydraDaoImpl {
 					if(existingField.getField().getFieldId() == newField.getField().getFieldId()) {
 						newField.setFormFieldId(existingField.getFormFieldId());
 						newField.setUuid(existingField.getUuid());
-						existingToDelete.add(existingField);
 						break;
 					}
 				}
