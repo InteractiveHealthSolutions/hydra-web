@@ -300,6 +300,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 				String parsedRule = exprHelper.compileComplex(dao, ff);
 				// if (parsedRule != null) {
 				field.setParsedRule(parsedRule);
+				ff.setField(field);
 				// }
 			}
 		}
