@@ -123,6 +123,9 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 	// its not working the
 	// expected way
 	private List<HydramoduleFormField> children;
+	
+	@OneToMany(mappedBy = "targetFormField", fetch = FetchType.LAZY)
+	private List<HydramoduleFieldRule> rules;
 
 	@Transient
 	private List<HydramoduleFieldDTO> fieldData;
@@ -359,6 +362,14 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	public void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
+	}
+
+	public List<HydramoduleFieldRule> getRules() {
+		return rules;
+	}
+
+	public void setRules(List<HydramoduleFieldRule> rules) {
+		this.rules = rules;
 	}
 
 	@Override

@@ -293,14 +293,15 @@ public class HydraDaoImpl {
 	}
 
 	// TODO use criteria
-		public void deleteFormFields(List<HydramoduleFormField> formFields) {
-			DbSession session = sessionFactory.getCurrentSession();
-			for (HydramoduleFormField ff : formFields) {
-				System.out.println("Deleted!!!");
-				session.delete(ff);
-			}
-			session.flush();
+	public void deleteFormFields(List<HydramoduleFormField> formFields) {
+		DbSession session = sessionFactory.getCurrentSession();
+		for (HydramoduleFormField ff : formFields) {
+			System.out.println("Deleted!!!");
+			deleteFieldRules(ff.getRules());
+			session.delete(ff);
 		}
+		session.flush();
+	}
 		
 	public void deleteFieldAnswers(int fieldId) {
 		DbSession session = sessionFactory.getCurrentSession();
@@ -1005,6 +1006,17 @@ public class HydraDaoImpl {
 	}
 
 	// HydramoduleFieldRule
+	
+	public void deleteFieldRules(List<HydramoduleFieldRule> rules) {
+		DbSession session = sessionFactory.getCurrentSession();
+		for (HydramoduleFieldRule ff : rules) {
+			deleteRuleTokensByFieldRuleId(ff.getRuleId());
+			session.delete(ff);
+		}
+		session.flush();
+	}
+
+	
 	public HydramoduleFieldRule saveHydramoduleFieldRule(HydramoduleFieldRule fieldRule) {
 
 		getSession().saveOrUpdate(fieldRule);
@@ -1055,6 +1067,11 @@ public class HydraDaoImpl {
 	}
 
 	// HydramoduleRuleToken
+	public void deleteRuleTokensByFieldRuleId(Integer fieldRuleId) {
+		DbSession session = sessionFactory.getCurrentSession();
+		session.createQuery("delete from HydramoduleRuleToken f where f.rule.ruleId =" + fieldRuleId).executeUpdate();
+	}
+	
 	public HydramoduleRuleToken saveHydramoduleRuleToken(HydramoduleRuleToken serviceType) {
 		// System.out.println(serviceType.getUuid());
 		getSession().saveOrUpdate(serviceType);
