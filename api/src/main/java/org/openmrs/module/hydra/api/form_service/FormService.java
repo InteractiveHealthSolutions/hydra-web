@@ -91,6 +91,7 @@ public class FormService {
 	}
 
 	private HydraService service;
+
 	JSONParser parser;
 
 	public synchronized void createNewForm(HydraService service, HydramoduleDTOFormSubmissionData formSubmissionData)
@@ -104,7 +105,8 @@ public class FormService {
 		createNewForm(data, metadata);
 	}
 
-	public synchronized void createNewForm(JSONArray data, JSONObject metadata) throws ParseException, org.json.simple.parser.ParseException {
+	public synchronized void createNewForm(JSONArray data, JSONObject metadata)
+	        throws ParseException, org.json.simple.parser.ParseException {
 
 		// Getting user info
 		String username;
@@ -296,30 +298,30 @@ public class FormService {
 					}
 						break;
 					case OBS_CODED_MULTI: {
-						
+
 						String questionConceptStr = (String) dataItem.get(ParamNames.PARAM_NAME);
 						String valueStr = dataItem.get(ParamNames.VALUE).toString();
-						
+
 						Concept questionConcept = conceptService.getConceptByUuid(questionConceptStr);
 						JSONArray valuesArray = (JSONArray) parser.parse(valueStr);
-						
+
 						// setting member obs
 						Set<Obs> members = new HashSet<Obs>();
-						for(int k=0; k<valuesArray.size(); k++) {
+						for (int k = 0; k < valuesArray.size(); k++) {
 							String value = (String) valuesArray.get(k);
 							Concept valueConcept = conceptService.getConceptByUuid(value);
-							
+
 							Obs obs = new Obs();
 							obs.setConcept(questionConcept);
 							obs.setValueCoded(valueConcept);
 							members.add(obs);
-						}						
+						}
 
 						// createing and adding parent obs
 						Obs parent = new Obs();
 						parent.setConcept(questionConcept);
 						parent.setGroupMembers(members);
-						
+
 						obsList.add(parent);
 					}
 						break;

@@ -196,13 +196,13 @@ public class HydraDaoImpl {
 	// adding new in case of edit
 	public HydramoduleForm saveModuleForm(HydramoduleForm form) {
 		List<HydramoduleFormField> fields = form.getFormFields();
-		
-		if(form.getHydramoduleFormId()!=null) {
+
+		if (form.getHydramoduleFormId() != null) {
 			List<HydramoduleFormField> existingFormFields = getFormFields(form.getHydramoduleFormId());
 			List<Integer> toKeepIds = new ArrayList<Integer>();
-			for(HydramoduleFormField existingField: existingFormFields) {
-				for(HydramoduleFormField newField: fields) {
-					if(existingField.getField().getFieldId() == newField.getField().getFieldId()) {
+			for (HydramoduleFormField existingField : existingFormFields) {
+				for (HydramoduleFormField newField : fields) {
+					if (existingField.getField().getFieldId() == newField.getField().getFieldId()) {
 						newField.setFormFieldId(existingField.getFormFieldId());
 						newField.setUuid(existingField.getUuid());
 						toKeepIds.add(existingField.getFormFieldId());
@@ -210,21 +210,20 @@ public class HydraDaoImpl {
 					}
 				}
 			}
-			
+
 			if (form.getHydramoduleFormId() != null) {
 				List<HydramoduleFormField> existingToDelete = new ArrayList<HydramoduleFormField>();
-				for(HydramoduleFormField existingField: existingFormFields) {
-					if(!toKeepIds.contains(existingField.getFormFieldId())) {
+				for (HydramoduleFormField existingField : existingFormFields) {
+					if (!toKeepIds.contains(existingField.getFormFieldId())) {
 						existingToDelete.add(existingField);
 					}
 				}
 				deleteFormFields(existingToDelete);
 			}
 			// List<HydramoduleFormField> fields = form.getFormFields();
-	
-			
+
 		}
-		
+
 		getSession().clear();
 		getSession().saveOrUpdate(form);
 		if (fields != null) {
@@ -261,10 +260,10 @@ public class HydraDaoImpl {
 
 		return criteria.list();
 	}
-	
+
 	public List<HydramoduleFormField> getFormFields(Integer formId) {
 		DbSession session = sessionFactory.getCurrentSession();
-		return	session.createQuery("from HydramoduleFormField f where f.form.hydramoduleFormId=" + formId).list();
+		return session.createQuery("from HydramoduleFormField f where f.form.hydramoduleFormId=" + formId).list();
 	}
 
 	public HydramoduleFormField getFormField(String uuid) {
@@ -302,7 +301,7 @@ public class HydraDaoImpl {
 		}
 		session.flush();
 	}
-		
+
 	public void deleteFieldAnswers(int fieldId) {
 		DbSession session = sessionFactory.getCurrentSession();
 		session.createQuery("delete from HydramoduleFieldAnswer f where f.field.fieldId=" + fieldId).executeUpdate();
@@ -1006,7 +1005,7 @@ public class HydraDaoImpl {
 	}
 
 	// HydramoduleFieldRule
-	
+
 	public void deleteFieldRules(List<HydramoduleFieldRule> rules) {
 		DbSession session = sessionFactory.getCurrentSession();
 		for (HydramoduleFieldRule ff : rules) {
@@ -1016,7 +1015,6 @@ public class HydraDaoImpl {
 		session.flush();
 	}
 
-	
 	public HydramoduleFieldRule saveHydramoduleFieldRule(HydramoduleFieldRule fieldRule) {
 
 		getSession().saveOrUpdate(fieldRule);
@@ -1071,7 +1069,7 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		session.createQuery("delete from HydramoduleRuleToken f where f.rule.ruleId =" + fieldRuleId).executeUpdate();
 	}
-	
+
 	public HydramoduleRuleToken saveHydramoduleRuleToken(HydramoduleRuleToken serviceType) {
 		// System.out.println(serviceType.getUuid());
 		getSession().saveOrUpdate(serviceType);

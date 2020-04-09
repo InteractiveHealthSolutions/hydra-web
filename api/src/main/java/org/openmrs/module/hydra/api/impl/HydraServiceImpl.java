@@ -286,7 +286,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
-	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException {
+	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException, CloneNotSupportedException {
 		List<HydramoduleComponentForm> componentForms = dao.getAllComponentFormRelations();
 
 		SExprHelper exprHelper = SExprHelper.getInstance();
@@ -295,12 +295,12 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 			HydramoduleForm form = cf.getForm();
 			List<HydramoduleFormField> formFields = form.getFormFields();
 			for (HydramoduleFormField ff : formFields) {
-				HydramoduleField field = ff.getField(); // This is the targetField of a rule
+				// HydramoduleField field = dao.getHydramoduleField(ff.getField().getUuid()); 
+				HydramoduleField field = ff.getField().clone(); // This is the targetField of a rule
 				String parsedRule = exprHelper.compileComplex(dao, ff);
-				if (parsedRule != null) {
+				// if (parsedRule != null) {
 					field.setParsedRule(parsedRule);
-					System.out.println(ff.getForm().getName() + "\n" + field.getName() + "\n\n\n");
-				}
+				// }
 			}
 		}
 

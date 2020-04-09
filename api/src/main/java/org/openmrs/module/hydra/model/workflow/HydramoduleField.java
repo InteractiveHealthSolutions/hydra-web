@@ -23,7 +23,7 @@ import org.openmrs.FieldType;
 
 @Entity
 @Table(name = "hydramodule_field", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
-public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Serializable {
+public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Serializable, Cloneable {
 
 	private static final long serialVersionUID = -2668916537478185182L;
 
@@ -191,6 +191,12 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 		return "HydramoduleField [fieldId=" + fieldId + ", fieldType=" + fieldType + ", concept=" + concept + ", tableName="
 		        + tableName + ", attributeName=" + attributeName + ", defaultValue=" + defaultValue + ", selectMultiple="
 		        + selectMultiple + "]";
+	}
+	
+	@Override
+	public HydramoduleField clone() throws CloneNotSupportedException {
+		// A shallow copy because I do not need to change the inner objects
+		return (HydramoduleField) super.clone();
 	}
 
 }
