@@ -192,7 +192,7 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 		        + tableName + ", attributeName=" + attributeName + ", defaultValue=" + defaultValue + ", selectMultiple="
 		        + selectMultiple + "]";
 	}
-	
+
 	@Override
 	public HydramoduleField clone() throws CloneNotSupportedException {
 		// A shallow copy because I do not need to change the inner objects
