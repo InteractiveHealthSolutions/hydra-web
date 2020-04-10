@@ -77,7 +77,7 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	@Column(name = "mandatory")
 	private Boolean mandatory;
-	
+
 	@Column(name = "disabled")
 	private Boolean disabled;
 
@@ -123,6 +123,9 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 	// its not working the
 	// expected way
 	private List<HydramoduleFormField> children;
+
+	@OneToMany(mappedBy = "targetFormField", fetch = FetchType.LAZY)
+	private List<HydramoduleFieldRule> rules;
 
 	@Transient
 	private List<HydramoduleFieldDTO> fieldData;
@@ -359,6 +362,57 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	public void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
+	}
+
+	public List<HydramoduleFieldRule> getRules() {
+		return rules;
+	}
+
+	public void setRules(List<HydramoduleFieldRule> rules) {
+		this.rules = rules;
+	}
+
+	@Override
+	public String toString() {
+		return "HydramoduleFormField [formFieldId=" + formFieldId + ", displayOrder=" + displayOrder + ", field=" + field
+		        + ", form=" + form + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((field == null) ? 0 : field.hashCode());
+		result = prime * result + ((form == null) ? 0 : form.hashCode());
+		result = prime * result + ((formFieldId == null) ? 0 : formFieldId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HydramoduleFormField other = (HydramoduleFormField) obj;
+		if (field == null) {
+			if (other.field != null)
+				return false;
+		} else if (!field.equals(other.field))
+			return false;
+		if (form == null) {
+			if (other.form != null)
+				return false;
+		} else if (!form.equals(other.form))
+			return false;
+		if (formFieldId == null) {
+			if (other.formFieldId != null)
+				return false;
+		} else if (!formFieldId.equals(other.formFieldId))
+			return false;
+		return true;
 	}
 
 }

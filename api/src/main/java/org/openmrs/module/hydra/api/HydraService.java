@@ -240,7 +240,7 @@ public interface HydraService extends OpenmrsService {
 
 	HydramoduleComponentForm getComponentFormByUUID(String uuid) throws APIException;
 
-	List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException;
+	List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException, CloneNotSupportedException;
 
 	void deleteComponentForm(HydramoduleComponentForm phaseComponent) throws APIException;
 
