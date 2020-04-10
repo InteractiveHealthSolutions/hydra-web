@@ -11,17 +11,10 @@ package org.openmrs.module.hydra.api.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.openmrs.Concept;
 import org.openmrs.EncounterType;
-import org.openmrs.Field;
-import org.openmrs.FieldAnswer;
-import org.openmrs.FormField;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
@@ -36,7 +29,6 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
-import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
@@ -294,7 +286,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
-	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException {
+	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException, CloneNotSupportedException {
 		List<HydramoduleComponentForm> componentForms = dao.getAllComponentFormRelations();
 
 		SExprHelper exprHelper = SExprHelper.getInstance();
@@ -303,8 +295,13 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 			HydramoduleForm form = cf.getForm();
 			List<HydramoduleFormField> formFields = form.getFormFields();
 			for (HydramoduleFormField ff : formFields) {
-				HydramoduleField field = ff.getField(); // This is the targetField of a rule
-				field.setParsedRule(exprHelper.compileComplex(dao, ff));
+				// HydramoduleField field = dao.getHydramoduleField(ff.getField().getUuid());
+				HydramoduleField field = ff.getField().clone(); // This is the targetField of a rule
+				String parsedRule = exprHelper.compileComplex(dao, ff);
+				// if (parsedRule != null) {
+				field.setParsedRule(parsedRule);
+				ff.setField(field);
+				// }
 			}
 		}
 

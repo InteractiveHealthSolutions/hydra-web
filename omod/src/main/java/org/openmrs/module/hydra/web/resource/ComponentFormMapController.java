@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
@@ -57,10 +58,16 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleComponentForm> componentForms = service.getAllComponentFormsRelations();
+		List<HydramoduleComponentForm> componentForms;
+		try {
+			componentForms = service.getAllComponentFormsRelations();
+			simpleObject.put("ComponentsFormsMap",
+			    ConversionUtil.convertToRepresentation(componentForms, context.getRepresentation()));
+		}
+		catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 
-		simpleObject.put("ComponentsFormsMap",
-		    ConversionUtil.convertToRepresentation(componentForms, context.getRepresentation()));
 		return simpleObject;
 	}
 
