@@ -625,7 +625,8 @@ public class FormService {
 			// Save relationship
 			RelationshipType relationshipType = personService.getRelationshipTypeByName(relationship);
 			if (relationshipType != null) {
-				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(), relationshipType);
+				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(),
+				        relationshipType);
 				personService.saveRelationship(relationshipObj);
 			}
 		}
@@ -758,7 +759,7 @@ public class FormService {
 		
 		System.out.println(dob);
 		patient.setBirthdate(dob);
-		if(location == null) {
+		if (location == null) {
 			location = findOrCreateLocation("Default Location");
 		}
 		// patient.setDateCreated(dateEntered);

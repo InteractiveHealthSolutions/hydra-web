@@ -18,8 +18,6 @@ import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Retireable;
 import org.openmrs.User;
 
-import freemarker.core.ReturnInstruction.Return;
-
 @Entity
 @Table(name = "hydramodule_component_form", catalog = "hydra")
 public class HydramoduleComponentForm extends BaseOpenmrsObject implements Retireable, Serializable {
