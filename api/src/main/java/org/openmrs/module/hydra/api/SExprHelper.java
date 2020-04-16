@@ -14,56 +14,56 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
 import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
 
 public class SExprHelper {
-
+	
 	HashMap<String, String> conditionalOperatorsMap = new HashMap<String, String>();
-
+	
 	HashMap<String, String> operatorsMap = new HashMap<String, String>();
-
+	
 	HashMap<String, String> actionNames = new HashMap<String, String>();
-
+	
 	private static SExprHelper instance;
-
+	
 	private HydraDaoImpl dao;
-
+	
 	public static synchronized SExprHelper getInstance() {
 		if (instance == null)
 			instance = new SExprHelper();
-
+		
 		return instance;
 	}
-
+	
 	private SExprHelper() {
 		actionNames.put("hide", "hiddenWhen");
 		actionNames.put("Open Form", "openFormWhen");
 		actionNames.put("autoselect", "autoselectWhen");
-
+		
 		operatorsMap.put("!=", "notEquals");
 		operatorsMap.put("=", "equals");
 		operatorsMap.put("<", "lessThan");
 		operatorsMap.put(">", "greaterThan");
 		operatorsMap.put("<=", "lessThanEquals");
 		operatorsMap.put(">=", "greaterThanEquals");
-
+		
 		conditionalOperatorsMap.put("OR", "OR");
 		conditionalOperatorsMap.put("AND", "AND");
 	}
-
+	
 	private JSONObject compileSingleObj(HydramoduleRuleToken operatorToken, HydramoduleRuleToken questionToken,
 	        HydramoduleRuleToken answerToken) {
-
+		
 		JSONObject conditionObject = new JSONObject();
 		JSONArray conditionArray = new JSONArray();
-
+		
 		// Question part of the expression
 		String questionString = questionToken.getValue();
 		HydramoduleField responseField = dao.getHydramoduleField(questionString);
 		conditionObject.put("id", responseField.getFieldId());
 		conditionObject.put("questionId", responseField.getFieldId());
-
+		
 		// Operator part of the expression
 		String operatorName = operatorsMap.get(operatorToken.getValue());
 		conditionObject.put(operatorName, conditionArray);
-
+		
 		// Value part of the expression
 		if (answerToken.getTypeName().equals("CodedValue")) {
 			Concept concept = Context.getConceptService().getConceptByUuid(answerToken.getValue());
@@ -75,25 +75,25 @@ public class SExprHelper {
 			responseValueObj.put("uuid", answerToken.getValue());
 			conditionArray.add(responseValueObj);
 		}
-
+		
 		return conditionObject;
 	}
-
+	
 	public String compileComplex(HydraDaoImpl dao, HydramoduleFormField ff) {
 		// "parsedRule":
 		// "{\"hiddenWhen\":[{\"questionId\":10,\"notEquals\":[{\"uuid\":\"OTHER\"}],\"id\":10},\"OR\"]}"
 		this.dao = dao;
 		HydramoduleField field = ff.getField();
 		JSONObject ruleObj = new JSONObject();
-
+		
 		List<HydramoduleFieldRule> rules = dao.getHydramoduleFieldRuleByTargetFormField(ff);
-
+		
 		// {"hiddenWhen":[{"questionId":10,"notEquals":[{"uuid":"OTHER"}],"id":10},"OR"]}
 		// {"autoSelect":[{"questionId":10,"notEquals":[{"uuid":"OTHER"}],"id":10},"OR"]}
 		/**
 		 * now, null needs to be handled
 		 **/
-
+		
 		if (rules.size() > 0) {
 			for (int i = 0; i < rules.size(); i++) {
 				HydramoduleFieldRule rule = rules.get(i);
@@ -110,14 +110,14 @@ public class SExprHelper {
 						JSONObject object = new JSONObject();
 						object.put("targetFieldAnswer", rule.getTargetFieldAnswer().getConcept().getDisplayString());
 						object.put("when", compile(rule, actionName));
-
+						
 						JSONArray array;
 						if (ruleObj.containsKey(actionNames.get(actionName))) {
 							array = (JSONArray) ruleObj.get(actionNames.get(actionName));
 						} else {
 							array = new JSONArray();
 						}
-
+						
 						array.add(object);
 						ruleObj.put(actionNames.get(actionName), array);
 					}
@@ -126,14 +126,14 @@ public class SExprHelper {
 					}
 				}
 			}
-
+			
 			System.out.println("The parsed RULE Object " + ruleObj);
 			return ruleObj.toString();
 		}
-
+		
 		return null;
 	}
-
+	
 	public JSONArray compile(HydramoduleFieldRule rule, String actionName) {
 		JSONObject ruleObj = new JSONObject();
 		JSONArray whenArray = new JSONArray();
@@ -162,11 +162,11 @@ public class SExprHelper {
 				else if (token.getTypeName().endsWith("Value")) {
 					singleRuleTokens.put("Value", token);
 				}
-
+				
 				if (singleRuleTokens.size() == 3) {
 					conditionObject = compileSingleObj(singleRuleTokens.get("Operator"), singleRuleTokens.get("Question"),
 					    singleRuleTokens.get("Value"));
-
+					
 					whenArray.add(conditionObject);
 					singleRuleTokens.clear();
 				}
@@ -174,11 +174,11 @@ public class SExprHelper {
 			// System.out.println("TokenType: " + token.getTypeName() + " , value: " +
 			// token.getValue());
 		}
-
+		
 		if (!operatorAvailable)
 			whenArray.add("OR");
-
+		
 		return whenArray;
 	}
-
+	
 }

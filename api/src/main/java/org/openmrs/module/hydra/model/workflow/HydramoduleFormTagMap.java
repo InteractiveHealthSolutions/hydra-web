@@ -20,53 +20,53 @@ import org.codehaus.jackson.annotate.JsonBackReference;
 @Entity
 @Table(name = "hydramodule_form_tag_map", catalog = "hydra")
 public class HydramoduleFormTagMap implements java.io.Serializable {
-
+	
 	private static final long serialVersionUID = -5939617019084047405L;
-
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	private Integer id;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "hydramodule_form_id", nullable = false)
 	@JsonBackReference
 	private HydramoduleForm hydramoduleForm;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "form_tag_id", nullable = false)
 	private HydramoduleFormTag hydramoduleFormTag;
-
+	
 	public HydramoduleFormTagMap() {
 	}
-
+	
 	public HydramoduleFormTagMap(HydramoduleForm hydramoduleForm, HydramoduleFormTag hydramoduleFormTag) {
 		this.hydramoduleForm = hydramoduleForm;
 		this.hydramoduleFormTag = hydramoduleFormTag;
 	}
-
+	
 	public Integer getId() {
 		return this.id;
 	}
-
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
+	
 	public HydramoduleForm getHydramoduleForm() {
 		return this.hydramoduleForm;
 	}
-
+	
 	public void setHydramoduleForm(HydramoduleForm hydramoduleForm) {
 		this.hydramoduleForm = hydramoduleForm;
 	}
-
+	
 	public HydramoduleFormTag getHydramoduleFormTag() {
 		return this.hydramoduleFormTag;
 	}
-
+	
 	public void setHydramoduleFormTag(HydramoduleFormTag hydramoduleFormTag) {
 		this.hydramoduleFormTag = hydramoduleFormTag;
 	}
-
+	
 }

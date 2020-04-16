@@ -39,8 +39,8 @@ public class MainController {
 	}
 
 	@RequestMapping(value = "/index.form", method = RequestMethod.POST)
-	public String onSubmit(Model model, HttpSession httpSession, @ModelAttribute("anyRequestObject") Object anyRequestObject,
-	        BindingResult errors) {
+	public String onSubmit(Model model, HttpSession httpSession,
+			@ModelAttribute("anyRequestObject") Object anyRequestObject, BindingResult errors) {
 
 		if (errors.hasErrors()) {
 

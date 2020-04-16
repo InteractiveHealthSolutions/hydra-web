@@ -20,8 +20,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/hydraFieldAnswer", supportedClass = HydramoduleFieldAnswer.class, supportedOpenmrsVersions = {
-                "2.0.*,2.1.*,2.2.*" })
+		+ "/hydra/hydraFieldAnswer", supportedClass = HydramoduleFieldAnswer.class, supportedOpenmrsVersions = {
+				"2.0.*,2.1.*,2.2.*"})
 public class FieldAnswerController extends DelegatingCrudResource<HydramoduleFieldAnswer> {
 
 	/**
@@ -51,7 +51,8 @@ public class FieldAnswerController extends DelegatingCrudResource<HydramoduleFie
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
 		List<HydramoduleFieldAnswer> moduleForm = service.getAllHydramoduleFieldAnswers(false);
-		simpleObject.put("fieldAnswers", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
+		simpleObject.put("fieldAnswers",
+				ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}
 
@@ -105,7 +106,8 @@ public class FieldAnswerController extends DelegatingCrudResource<HydramoduleFie
 	}
 
 	@Override
-	protected void delete(HydramoduleFieldAnswer delegate, String reason, RequestContext context) throws ResponseException {
+	protected void delete(HydramoduleFieldAnswer delegate, String reason, RequestContext context)
+			throws ResponseException {
 		// TODO Auto-generated method stub
 
 	}

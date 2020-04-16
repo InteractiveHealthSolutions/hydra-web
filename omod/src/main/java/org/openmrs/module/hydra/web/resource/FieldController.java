@@ -22,7 +22,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/hydraField", supportedClass = HydramoduleField.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
+		+ "/hydra/hydraField", supportedClass = HydramoduleField.class, supportedOpenmrsVersions = {
+				"2.0.*,2.1.*,2.2.*"})
 public class FieldController extends MetadataDelegatingCrudResource<HydramoduleField> {
 
 	/**

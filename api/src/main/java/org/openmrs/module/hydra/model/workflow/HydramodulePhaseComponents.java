@@ -24,111 +24,111 @@ import org.openmrs.BaseOpenmrsObject;
 @Entity
 @Table(name = "hydramodule_phase_components", catalog = "hydra")
 public class HydramodulePhaseComponents extends BaseOpenmrsObject implements java.io.Serializable {
-
+	
 	private static final long serialVersionUID = -1558943664233602349L;
-
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	private Integer id;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "component_id", nullable = false)
 	@JsonBackReference
 	private HydramoduleComponent hydramoduleComponent;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "phase_id", nullable = false)
 	@JsonBackReference
 	private HydramodulePhase hydramodulePhase;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "workflow_id", nullable = false)
 	@JsonBackReference
 	private HydramoduleWorkflow hydramoduleWorkflow;
-
+	
 	@Transient
 	private String phaseUUID;
-
+	
 	@Transient
 	private String componentUUID;
-
+	
 	@Transient
 	private String workflowUUID;
-
+	
 	@Column(name = "display_order")
 	private Integer displayOrder;
-
+	
 	public Integer getDisplayOrder() {
 		return displayOrder;
 	}
-
+	
 	public void setDisplayOrder(Integer displayOrder) {
 		this.displayOrder = displayOrder;
 	}
-
+	
 	public HydramodulePhaseComponents() {
 	}
-
+	
 	public HydramodulePhaseComponents(HydramoduleComponent hydramoduleComponent, HydramodulePhase hydramodulePhase) {
 		this.hydramoduleComponent = hydramoduleComponent;
 		this.hydramodulePhase = hydramodulePhase;
 	}
-
+	
 	public Integer getId() {
 		return this.id;
 	}
-
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
+	
 	public HydramoduleComponent getHydramoduleComponent() {
 		return this.hydramoduleComponent;
 	}
-
+	
 	public void setHydramoduleComponent(HydramoduleComponent hydramoduleComponent) {
 		this.hydramoduleComponent = hydramoduleComponent;
 	}
-
+	
 	public HydramodulePhase getHydramodulePhase() {
 		return this.hydramodulePhase;
 	}
-
+	
 	public void setHydramodulePhase(HydramodulePhase hydramodulePhase) {
 		this.hydramodulePhase = hydramodulePhase;
 	}
-
+	
 	public HydramoduleWorkflow getHydramoduleWorkflow() {
 		return this.hydramoduleWorkflow;
 	}
-
+	
 	public void setHydramoduleWorkflow(HydramoduleWorkflow hydramoduleWorkflow) {
 		this.hydramoduleWorkflow = hydramoduleWorkflow;
 	}
-
+	
 	public String getPhaseUUID() {
 		return hydramodulePhase.getUuid();
 	}
-
+	
 	public String getComponentUUID() {
 		return hydramoduleComponent.getUuid();
 	}
-
+	
 	public void setPhaseUUID(String phaseUUID) {
 		this.phaseUUID = phaseUUID;
 	}
-
+	
 	public void setComponentUUID(String componentUUID) {
 		this.componentUUID = componentUUID;
 	}
-
+	
 	public String getWorkflowUUID() {
 		return hydramoduleWorkflow.getUuid();
 	}
-
+	
 	public void setWorkflowUUID(String workflowUUID) {
 		this.workflowUUID = workflowUUID;
 	}
-
+	
 }

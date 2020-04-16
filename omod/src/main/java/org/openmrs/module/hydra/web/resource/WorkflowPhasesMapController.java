@@ -21,8 +21,8 @@ import org.openmrs.module.webservices.rest.web.response.ObjectNotFoundException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/workflowphases", supportedClass = HydramoduleWorkflowPhases.class, supportedOpenmrsVersions = {
-                "2.0.*,2.1.*,2.2.*" })
+		+ "/hydra/workflowphases", supportedClass = HydramoduleWorkflowPhases.class, supportedOpenmrsVersions = {
+				"2.0.*,2.1.*,2.2.*"})
 public class WorkflowPhasesMapController extends DelegatingCrudResource<HydramoduleWorkflowPhases> {
 
 	/**
@@ -104,7 +104,7 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 
 	@Override
 	protected void delete(HydramoduleWorkflowPhases workflowphases, String reason, RequestContext context)
-	        throws ResponseException {
+			throws ResponseException {
 		service.deleteWorkflowPhase(workflowphases);
 	}
 

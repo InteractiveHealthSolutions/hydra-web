@@ -25,8 +25,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/ruleToken", supportedClass = HydramoduleRuleToken.class, supportedOpenmrsVersions = {
-                "2.0.*,2.1.*,2.2.*" })
+		+ "/hydra/ruleToken", supportedClass = HydramoduleRuleToken.class, supportedOpenmrsVersions = {
+				"2.0.*,2.1.*,2.2.*"})
 public class RuleTokenController extends DelegatingCrudResource<HydramoduleRuleToken> {
 
 	/**
@@ -102,7 +102,8 @@ public class RuleTokenController extends DelegatingCrudResource<HydramoduleRuleT
 	}
 
 	@Override
-	protected void delete(HydramoduleRuleToken delegate, String reason, RequestContext context) throws ResponseException {
+	protected void delete(HydramoduleRuleToken delegate, String reason, RequestContext context)
+			throws ResponseException {
 		// TODO Auto-generated method stub
 
 	}

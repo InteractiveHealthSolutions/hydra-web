@@ -23,7 +23,7 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 @Deprecated
 // Use FieldController.java instead
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/field", supportedClass = HydramoduleFieldDTO.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
+		+ "/hydra/field", supportedClass = HydramoduleFieldDTO.class, supportedOpenmrsVersions = {"2.0.*,2.1.*,2.2.*"})
 public class FieldDTOController extends DelegatingCrudResource<HydramoduleFieldDTO> {
 
 	/**
@@ -116,7 +116,8 @@ public class FieldDTOController extends DelegatingCrudResource<HydramoduleFieldD
 	}
 
 	@Override
-	protected void delete(HydramoduleFieldDTO delegate, String reason, RequestContext context) throws ResponseException {
+	protected void delete(HydramoduleFieldDTO delegate, String reason, RequestContext context)
+			throws ResponseException {
 		// TODO Auto-generated method stub
 
 	}
