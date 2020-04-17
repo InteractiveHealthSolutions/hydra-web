@@ -1906,6 +1906,13 @@
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet> -->
 
+
+
+
+
+
+<!-- 
+
 <changeSet author="rabbia.hassan" id="createFunction-alphanum">
 	    <createProcedure>
 	    	CREATE FUNCTION `alphanum`( str VARCHAR(255) ) RETURNS varchar(255) CHARSET latin1
@@ -2481,6 +2488,20 @@
 	    
 	    </createProcedure>
 	</changeSet>
+	
+ -->	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<changeSet author="naveed.iqbal" id="hydra-metadata-202003110215">  
 	    <comment>insert queries for hydra privileges</comment>
 	    <sql
