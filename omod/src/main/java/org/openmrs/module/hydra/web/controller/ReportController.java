@@ -168,7 +168,7 @@ public class ReportController {
 				srcFile.delete();
 
 			}
-			
+
 			SQLQuery dropSql = sessionFactory.getCurrentSession()
 			        .createSQLQuery("drop table if exists " + encounterTable + "_" + prefix);
 			dropSql.executeUpdate();
