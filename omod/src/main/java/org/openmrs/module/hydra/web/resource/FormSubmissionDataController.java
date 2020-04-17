@@ -20,8 +20,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-		+ "/hydra/formSubmission", supportedClass = HydramoduleDTOFormSubmissionData.class, supportedOpenmrsVersions = {
-				"2.0.*,2.1.*,2.2.*"})
+        + "/hydra/formSubmission", supportedClass = HydramoduleDTOFormSubmissionData.class, supportedOpenmrsVersions = {
+                "2.0.*,2.1.*,2.2.*" })
 public class FormSubmissionDataController extends DelegatingCrudResource<HydramoduleDTOFormSubmissionData> {
 
 	/**
@@ -42,10 +42,12 @@ public class FormSubmissionDataController extends DelegatingCrudResource<Hydramo
 		try {
 			FormService.getInstance().createNewForm(service, formSubmissionData);
 
-		} catch (ParseException e) {
+		}
+		catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (org.json.simple.parser.ParseException e) {
+		}
+		catch (org.json.simple.parser.ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -113,7 +115,7 @@ public class FormSubmissionDataController extends DelegatingCrudResource<Hydramo
 
 	@Override
 	protected void delete(HydramoduleDTOFormSubmissionData delegate, String reason, RequestContext context)
-			throws ResponseException {
+	        throws ResponseException {
 		// TODO Auto-generated method stub
 
 	}

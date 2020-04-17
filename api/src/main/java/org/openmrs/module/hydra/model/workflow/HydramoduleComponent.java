@@ -27,68 +27,68 @@ import org.openmrs.Concept;
 @Entity
 @Table(name = "hydramodule_component", catalog = "hydra")
 public class HydramoduleComponent extends BaseOpenmrsMetadata implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = 1969581011447190685L;
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "component_id", unique = true, nullable = false)
 	private Integer componentId;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "concept_id")
 	private Concept concept;
-	
+
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "hydramoduleComponent")
 	private Set<HydramodulePhaseComponents> hydramodulePhaseComponents = new HashSet<HydramodulePhaseComponents>(0);
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "component")
 	private Set<HydramoduleForm> hydramoduleForms = new HashSet<HydramoduleForm>(0);
-	
+
 	public HydramoduleComponent() {
 	}
-	
+
 	public Integer getComponentId() {
 		return this.componentId;
 	}
-	
+
 	public void setComponentId(Integer componentId) {
 		this.componentId = componentId;
 	}
-	
+
 	public Concept getConcept() {
 		return this.concept;
 	}
-	
+
 	public void setConcept(Concept concept) {
 		this.concept = concept;
 	}
-	
+
 	public Set<HydramodulePhaseComponents> getHydramodulePhaseComponents() {
 		return this.hydramodulePhaseComponents;
 	}
-	
+
 	public void setHydramodulePhaseComponents(Set<HydramodulePhaseComponents> hydramodulePhaseComponentses) {
 		this.hydramodulePhaseComponents = hydramodulePhaseComponentses;
 	}
-	
+
 	public Set<HydramoduleForm> getHydramoduleForms() {
 		return hydramoduleForms;
 	}
-	
+
 	public void setHydramoduleForms(Set<HydramoduleForm> hydramoduleForms) {
 		this.hydramoduleForms = hydramoduleForms;
 	}
-	
+
 	@Override
 	public Integer getId() {
 		return componentId;
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		this.componentId = id;
 	}
-	
+
 }

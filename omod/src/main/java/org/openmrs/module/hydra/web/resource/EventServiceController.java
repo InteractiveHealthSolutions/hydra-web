@@ -20,8 +20,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-		+ "/hydra/eventService", supportedClass = HydramoduleEventService.class, supportedOpenmrsVersions = {
-				"2.0.*,2.1.*,2.2.*"})
+        + "/hydra/eventService", supportedClass = HydramoduleEventService.class, supportedOpenmrsVersions = {
+                "2.0.*,2.1.*,2.2.*" })
 public class EventServiceController extends DataDelegatingCrudResource<HydramoduleEventService> {
 
 	/**
@@ -52,8 +52,7 @@ public class EventServiceController extends DataDelegatingCrudResource<Hydramodu
 		SimpleObject simpleObject = new SimpleObject();
 		List<HydramoduleEventService> services = service.getAllEventServices(true);
 		services.addAll(service.getAllEventServices(false));
-		simpleObject.put("eventServices",
-				ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
+		simpleObject.put("eventServices", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}
 
@@ -113,8 +112,7 @@ public class EventServiceController extends DataDelegatingCrudResource<Hydramodu
 	}
 
 	@Override
-	protected void delete(HydramoduleEventService delegate, String reason, RequestContext context)
-			throws ResponseException {
+	protected void delete(HydramoduleEventService delegate, String reason, RequestContext context) throws ResponseException {
 		// TODO Auto-generated method stub
 
 	}

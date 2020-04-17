@@ -16,8 +16,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudR
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
-@Resource(name = RestConstants.VERSION_1
-		+ "/hydra/phases", supportedClass = PhasesList.class, supportedOpenmrsVersions = {"2.0.*,2.1.*"})
+@Resource(name = RestConstants.VERSION_1 + "/hydra/phases", supportedClass = PhasesList.class, supportedOpenmrsVersions = {
+        "2.0.*,2.1.*" })
 public class PhaseListController extends DataDelegatingCrudResource<PhasesList> {
 
 	/**

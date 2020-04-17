@@ -7,20 +7,20 @@ import org.json.simple.JSONObject;
 import org.openmrs.Location;
 
 public class JSONUtils {
-	
+
 	private static JSONUtils instance;
-	
+
 	private JSONUtils() {
 	}
-	
+
 	public static JSONUtils getInstance() {
 		if (instance == null) {
 			instance = new JSONUtils();
 		}
-		
+
 		return instance;
 	}
-	
+
 	public JSONObject findJSONObjectInJSONArray(JSONArray data, String key) {
 		JSONObject object;
 		for (int i = 0; i < data.size(); i++) {
@@ -29,43 +29,43 @@ public class JSONUtils {
 				return object;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public String getParamValue(JSONArray data, String key) {
 		JSONObject param = findJSONObjectInJSONArray(data, key);
 		if (param != null && param.containsKey(key)) {
 			return param.get(key).toString();
 		}
-		
+
 		return null;
 	}
-	
+
 	public JSONArray getParamArrayValue(JSONArray data, String key) {
 		return (JSONArray) findJSONObjectInJSONArray(data, key).get(key);
 	}
-	
+
 	public JSONArray getLocationsJSON(List<Location> locations) {
-		
+
 		JSONArray array = new JSONArray();
 		int i = 0;
 		JSONObject object = new JSONObject();
 		for (Location location : locations) {
 			JSONObject temp = getLocationJSON(location);
-			
+
 			array.add(temp);
 		}
-		
+
 		return array;
-		
+
 	}
-	
+
 	private JSONObject getLocationJSON(Location location) {
-		
+
 		if (location == null)
 			return null;
-		
+
 		JSONObject temp = new JSONObject();
 		try {
 			temp.put("name", location.getName());
@@ -89,7 +89,7 @@ public class JSONUtils {
 			temp.put("address10", location.getAddress10());
 			temp.put("address11", location.getAddress11());
 			temp.put("parentLocation", getLocationJSON(location.getParentLocation()));
-			
+
 		}
 		catch (Exception e) {
 			e.printStackTrace();

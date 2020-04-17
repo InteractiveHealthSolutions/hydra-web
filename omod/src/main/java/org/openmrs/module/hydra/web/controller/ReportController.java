@@ -100,9 +100,9 @@ public class ReportController {
 	@RequestMapping(value = "/dump/encounters", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getEncounterDumps(HttpServletRequest request,
-			@RequestParam(value = "workflow", required = true) String workflow,
-			@RequestParam(value = "from", required = true) String from,
-			@RequestParam(value = "to", required = true) String to) throws JRException, IOException {
+	        @RequestParam(value = "workflow", required = true) String workflow,
+	        @RequestParam(value = "from", required = true) String from,
+	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
@@ -118,7 +118,7 @@ public class ReportController {
 		call.getOutputs().getCurrent();
 
 		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery(
-				"select CONCAT('enc_',alphanum(LOWER(encounter_type.name))) from encounter_type where retired = 0");
+		    "select CONCAT('enc_',alphanum(LOWER(encounter_type.name))) from encounter_type where retired = 0");
 		List<String> encounterTables = sql.list();
 
 		String zipFile = System.getProperty("java.io.tmpdir") + File.separator + "encounters_dump.zip";
@@ -176,9 +176,9 @@ public class ReportController {
 	@RequestMapping(value = "/dump/patients", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getPatientDumps(HttpServletRequest request,
-			@RequestParam(value = "workflow", required = true) String workflow,
-			@RequestParam(value = "from", required = true) String from,
-			@RequestParam(value = "to", required = true) String to) throws JRException, IOException {
+	        @RequestParam(value = "workflow", required = true) String workflow,
+	        @RequestParam(value = "from", required = true) String from,
+	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
@@ -216,8 +216,8 @@ public class ReportController {
 	@RequestMapping(value = "/dump/providers", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getProviderDumps(HttpServletRequest request,
-			@RequestParam(value = "from", required = true) String from,
-			@RequestParam(value = "to", required = true) String to) throws JRException, IOException {
+	        @RequestParam(value = "from", required = true) String from,
+	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
@@ -254,8 +254,8 @@ public class ReportController {
 	@RequestMapping(value = "/dump/locations", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getLocationDumps(HttpServletRequest request,
-			@RequestParam(value = "from", required = true) String from,
-			@RequestParam(value = "to", required = true) String to) throws JRException, IOException {
+	        @RequestParam(value = "from", required = true) String from,
+	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
@@ -324,7 +324,8 @@ public class ReportController {
 			}
 
 			writer.close();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -333,11 +334,11 @@ public class ReportController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getReportByName(HttpServletRequest request,
-			@RequestParam(value = "name", required = true) String name,
-			@RequestParam(value = "ext", required = true) String ext,
-			@RequestParam(value = "from", required = true) String from,
-			@RequestParam(value = "to", required = true) String to,
-			@RequestParam(required = false) Map<String, String> params) throws JRException, IOException {
+	        @RequestParam(value = "name", required = true) String name,
+	        @RequestParam(value = "ext", required = true) String ext,
+	        @RequestParam(value = "from", required = true) String from,
+	        @RequestParam(value = "to", required = true) String to,
+	        @RequestParam(required = false) Map<String, String> params) throws JRException, IOException {
 
 		String filePath = generateJasperReport(name, ext, params);
 		String fileName = name + "." + ext;
@@ -353,8 +354,7 @@ public class ReportController {
 
 	}
 
-	public String generateJasperReport(String reportName, String extension, Map<String, String> params)
-			throws JRException {
+	public String generateJasperReport(String reportName, String extension, Map<String, String> params) throws JRException {
 
 		InputStream reportStream = getClass().getResourceAsStream("/rpt/" + reportName + ".jrxml");
 		JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
@@ -366,7 +366,8 @@ public class ReportController {
 		Connection conn;
 		try {
 			conn = connect(url);
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) {
 			log.error("Error connecting to DB.", e);
 			return "Error connecting to DB.";
 		}
@@ -416,7 +417,7 @@ public class ReportController {
 	 * @throws JRException
 	 */
 	private static void exportPDFFormat(JasperPrint jasperPrint, String exportPath, boolean pdfAutoPrint)
-			throws JRException {
+	        throws JRException {
 		JRPdfExporter exporter = new JRPdfExporter();
 		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
 		exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, exportPath);
@@ -448,7 +449,8 @@ public class ReportController {
 		// Step 1: Load the JDBC driver.
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			log.error("Could not find JDBC driver class.", e);
 			throw (SQLException) e.fillInStackTrace();
 		}
@@ -456,8 +458,7 @@ public class ReportController {
 		// Step 2: Establish the connection to the database.
 		String username = Context.getRuntimeProperties().getProperty("connection.username");
 		String password = Context.getRuntimeProperties().getProperty("connection.password");
-		log.debug("connecting to DATABASE: " + OpenmrsConstants.DATABASE_NAME + " USERNAME: " + username + " URL: "
-				+ url);
+		log.debug("connecting to DATABASE: " + OpenmrsConstants.DATABASE_NAME + " USERNAME: " + username + " URL: " + url);
 		return DriverManager.getConnection(url, username, password);
 	}
 
@@ -484,11 +485,13 @@ public class ReportController {
 		Date date;
 		try {
 			date = simpleDateFormat.parse(string);
-		} catch (ParseException e) {
+		}
+		catch (ParseException e) {
 			try {
 				simpleDateFormat = new SimpleDateFormat(detectDateFormat(string));
 				date = simpleDateFormat.parse(string);
-			} catch (ParseException e2) {
+			}
+			catch (ParseException e2) {
 				log.error(e2.getMessage());
 				return null;
 			}

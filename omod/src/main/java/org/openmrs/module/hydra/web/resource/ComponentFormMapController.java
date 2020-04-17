@@ -22,8 +22,8 @@ import org.openmrs.module.webservices.rest.web.response.ObjectNotFoundException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-		+ "/hydra/componentform", supportedClass = HydramoduleComponentForm.class, supportedOpenmrsVersions = {
-				"2.0.*,2.1.*,2.2.*"})
+        + "/hydra/componentform", supportedClass = HydramoduleComponentForm.class, supportedOpenmrsVersions = {
+                "2.0.*,2.1.*,2.2.*" })
 public class ComponentFormMapController extends DelegatingCrudResource<HydramoduleComponentForm> {
 
 	/**
@@ -51,7 +51,7 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 
 	@Override
 	protected void delete(HydramoduleComponentForm phaseComponent, String reason, RequestContext context)
-			throws ResponseException {
+	        throws ResponseException {
 		service.deleteComponentForm(phaseComponent);
 	}
 
@@ -62,8 +62,9 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		try {
 			componentForms = service.getAllComponentFormsRelations();
 			simpleObject.put("ComponentsFormsMap",
-					ConversionUtil.convertToRepresentation(componentForms, context.getRepresentation()));
-		} catch (CloneNotSupportedException e) {
+			    ConversionUtil.convertToRepresentation(componentForms, context.getRepresentation()));
+		}
+		catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
 
