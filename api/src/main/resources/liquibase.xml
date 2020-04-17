@@ -1935,10 +1935,9 @@
 	    
 	    <changeSet author="rabbia.hassan" id="createProcedure-deencounterised">
 	    <createProcedure>
-		CREATE PROCEDURE `deencountrised`(IN datefrom datetime, IN dateto datetime, IN workflow varchar(50))
+		CREATE PROCEDURE `deencountrised`(IN datefrom datetime, IN dateto datetime, IN workflow varchar(50), IN prefix varchar(50))
 		
-		BEGIN
-			
+		BEGIN			
 			DECLARE n,i,enc_n,enc_i,obs_n,obs_i INT DEFAULT 0;
 			DECLARE tab_name,concept_name,colName, wf VARCHAR(60);
 			DECLARE enc_type_id,pid,lid,eid,c,c_id, prov_id INT;
@@ -1954,7 +1953,7 @@
 			WHILE i &lt; n DO 
 			
 				/** name for de-encounterised table **/
-				SELECT CONCAT('enc_',alphanum(LOWER(encounter_type.name))), encounter_type_id  into tab_name,enc_type_id FROM encounter_type where retired = 0 LIMIT i,1; 
+				SELECT CONCAT('enc_',alphanum(LOWER(encounter_type.name)),'_',prefix), encounter_type_id  into tab_name,enc_type_id FROM encounter_type where retired = 0 LIMIT i,1; 
 				
 				/** drop de-encountrised table **/
 				SET @drop_table:=CONCAT('DROP TABLE IF EXISTS ', tab_name);
@@ -1973,7 +1972,8 @@
 				left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id
 				left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id
 				where encounter_type = enc_type_id and encounter.voided = 0 
-		        and hydramodule_workflow.name = workflow and encounter.encounter_datetime between datefrom and dateto INTO enc_n;
+                and hydramodule_workflow.name = workflow and encounter.encounter_datetime between datefrom and dateto
+				INTO enc_n;
 		        
 				SET enc_i=0;
 				WHILE enc_i &lt; enc_n DO 
@@ -1984,7 +1984,7 @@
 					left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id 
 					left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id 
 					where encounter_type = enc_type_id and encounter.voided = 0
-					and hydramodule_workflow.name =  workflow and encounter.encounter_datetime between datefrom and dateto
+                    and hydramodule_workflow.name =  workflow and encounter.encounter_datetime between datefrom and dateto
 					LIMIT enc_i, 1;
 		            
 					/** Get encounter metadata info and insert into de-encountrised table **/
@@ -2002,7 +2002,8 @@
 					/** For all the obs of the specific encounter **/
 					SELECT count(*) from obs where encounter_id = eid and voided = 0 into obs_n;
 					SET obs_i=0;
-					WHILE obs_i &lt; obs_n DO 
+					
+                    WHILE obs_i &lt; obs_n DO 
 						
 						/** Get concept_id (question) and answers from value columns **/
 						SELECT concept_id, value_numeric, value_coded, value_text, value_datetime into c_id, v_numeric, v_coded, v_text, v_datetime from obs where encounter_id = eid and voided = 0 LIMIT obs_i,1;
@@ -2021,23 +2022,14 @@
 						SELECT concept_datatype.name into datatype from concept 
 						join concept_datatype on concept.datatype_id = concept_datatype.concept_datatype_id
 						where concept_id = c_id;
-									  
+															
 						/** alter to add column to de-encounterised table  and insert data according to datatype **/
 						CASE datatype
-							WHEN 'Numeric' THEN
 							
-								IF colName is null THEN 
-									SET @alter_query:=CONCAT('ALTER TABLE ',tab_name,' ADD ', concept_name , ' double');
-									PREPARE stmt from @alter_query;
-									EXECUTE stmt;
-								END IF;
-								
-								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = IF(',concept_name,' is NULL,', v_numeric, ',' , concept_name, ' + '', '' +', v_numeric,') WHERE encounter_id = ' , eid);
-								PREPARE stmt from @insert_value;
-								EXECUTE stmt;
-								
 							WHEN 'Coded' THEN 
-							
+                            
+                                IF v_coded is not null then
+					
 								IF colName is null THEN 
 									SET @alter_query:=CONCAT('ALTER TABLE ',tab_name,' ADD ', concept_name , ' text');
 									PREPARE stmt from @alter_query;
@@ -2046,33 +2038,54 @@
 													
 								/** Get concept name for the coded_value **/
 								SELECT name FROM concept_name where concept_id = v_coded and concept_name_type = 'FULLY_SPECIFIED' limit 1 into concept_answer;
-								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = IF(',concept_name,' is NULL,''', concept_answer, ''',' , concept_name, ' + '', '' +''', concept_answer,''') WHERE encounter_id = ' , eid);
-								PREPARE stmt from @insert_value;
+								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = IF(',concept_name,' is NULL,''', concept_answer, ''', CONCAT(' , concept_name,  ', '', '' ''', concept_answer,''')) WHERE encounter_id = ' , eid);
+                                PREPARE stmt from @insert_value;
 								EXECUTE stmt;
+                                
+                                end if;
+                                
+                            WHEN 'Numeric' THEN
+							
+								IF v_numeric is not null then
+								IF colName is null THEN 
+									SET @alter_query:=CONCAT('ALTER TABLE ',tab_name,' ADD ', concept_name , ' double');
+									PREPARE stmt from @alter_query;
+									EXECUTE stmt;
+								END IF;
+								                                
+								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = ',  v_numeric ,' WHERE encounter_id = ' , eid);
+								PREPARE stmt from @insert_value;
+								EXECUTE stmt; 
+                                end if;
+														
+                            WHEN 'Text' THEN 
 								
-							WHEN 'Text' THEN 
-								
+                                IF v_text is not null then
 								IF colName is null THEN 
 									SET @alter_query:=CONCAT('ALTER TABLE ',tab_name,' ADD ', concept_name , ' text');
 									PREPARE stmt from @alter_query;
 									EXECUTE stmt;
 								END IF;
 							
-								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = IF(',concept_name,' is NULL,''', v_text, ''',' , concept_name, ' + '', '' +''', v_text,''') WHERE encounter_id = ' , eid);
+								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = IF(',concept_name,' is NULL,''', v_text, ''', CONCAT(' , concept_name,  ', '', '' ''', v_text,''')) WHERE encounter_id = ' , eid);
 								PREPARE stmt from @insert_value;
 								EXECUTE stmt;
-								
+								END IF;
+                                
 							WHEN 'Date' || 'Time' || 'Datetime' THEN 
 							
+								IF v_datetime is not null then
 								IF colName is null THEN 
 									SET @alter_query:=CONCAT('ALTER TABLE ',tab_name,' ADD ', concept_name , ' datetime');
 									PREPARE stmt from @alter_query;
 									EXECUTE stmt;
 								END IF;
 							
-								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = IF(',concept_name,' is NULL,''', v_datetime, ''',' , concept_name, ' + '', '' +''', v_datetime,''') WHERE encounter_id = ' , eid);
+								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = ''',  v_datetime ,''' WHERE encounter_id = ' , eid);
 								PREPARE stmt from @insert_value;
-								EXECUTE stmt;  
+								EXECUTE stmt;
+                                end if;
+								
 						END CASE;
 									
 						SET obs_i = obs_i + 1;
@@ -2091,7 +2104,7 @@
 	
 	<changeSet author="rabbia.hassan" id="createProcedure-norm-patient">
 	    <createProcedure>
-		CREATE PROCEDURE `norm_patient`(IN datefrom datetime, IN dateto datetime, IN workflow varchar(50))
+		CREATE PROCEDURE `norm_patient`(IN datefrom datetime, IN dateto datetime, IN workflow varchar(50), IN prefix varchar(50))
 		
 		BEGIN
 		
@@ -2099,37 +2112,49 @@
 		    DECLARE pid INT;
 		    DECLARE idn_type, idn, loc, colName, loc_colName, attr_type, attr_value, format varchar(50);
 		    DECLARE location_value, concept_value TEXT;
-		
-			DROP TABLE IF EXISTS norm_patient;
-		
-			CREATE TABLE `norm_patient` (
-			`id` int(11) NOT NULL AUTO_INCREMENT,
-			`patient_id` int(11) NOT NULL,
-		    `workflow` varchar(50),
-		    `gender` varchar(50),
-			`birthdate` date,
-			`given_name` varchar(50),
-		    `family_name` varchar(50),
-		    `date_created` datetime,
-			`creator` int(11) NOT NULL,
-		     PRIMARY KEY (`id`)
-		    );
-			
-		    Insert into norm_patient (patient_id,workflow,gender,birthdate,given_name,family_name,date_created,creator)
+            DECLARE tab_name varchar(50);
+            
+            SET tab_name = CONCAT('normpatient', '_' , prefix);
+            
+            SET @drop_qurey:=CONCAT('DROP TABLE IF EXISTS ', tab_name);
+			PREPARE stmt from @drop_qurey;
+			EXECUTE stmt;
+            
+            SET @create_qurey:=CONCAT('CREATE TABLE ',tab_name,' (id int(11) NOT NULL AUTO_INCREMENT,patient_id int(11) NOT NULL,workflow varchar(50),gender varchar(50),birthdate date,given_name varchar(50),family_name varchar(50),date_created datetime,creator int(11) NOT NULL,PRIMARY KEY (id));');
+		    PREPARE stmt from @create_qurey;
+			EXECUTE stmt;
+            
+            SET @insert_qurey:=CONCAT('Insert into ', tab_name ,' (patient_id,workflow,gender,birthdate,given_name,family_name,date_created,creator)
 		    select patient.patient_id, hydramodule_workflow.name, person.gender, person.birthdate, person_name.given_name, person_name.family_name, 
 			patient.date_created, patient.creator from patient
 			left join person_name on patient.patient_id = person_name.person_id
 			left join person on patient.patient_id = person.person_id
 			left join hydramodule_patient_workflow on patient.patient_id = hydramodule_patient_workflow.patient_id
 			left join hydramodule_workflow on hydramodule_patient_workflow.workflow_id = hydramodule_workflow.workflow_id
-			where patient.voided = 0 and hydramodule_workflow.name = workflow and patient.date_created between datefrom and dateto;
-				
-			SELECT COUNT(*) FROM norm_patient INTO n;
-		    SET i=0;
+			where patient.voided = 0 and hydramodule_workflow.name = ''',workflow,''' and patient.date_created between ''',datefrom,''' and ''',dateto,''';');
+            PREPARE stmt from @insert_qurey;
+			EXECUTE stmt;
+            
+            select count(*) from patient
+			left join person_name on patient.patient_id = person_name.person_id
+			left join person on patient.patient_id = person.person_id
+			left join hydramodule_patient_workflow on patient.patient_id = hydramodule_patient_workflow.patient_id
+			left join hydramodule_workflow on hydramodule_patient_workflow.workflow_id = hydramodule_workflow.workflow_id
+			where patient.voided = 0 and hydramodule_workflow.name = workflow and patient.date_created between datefrom and dateto
+            into n;
+            
+            SET i=0;
 			WHILE i &lt; n DO 
 		    
-				SELECT patient_id into pid FROM norm_patient limit i,1;
-		        select count(*) from patient_identifier where patient_id = pid into idn_n;
+				select person.person_id into pid from patient
+				left join person_name on patient.patient_id = person_name.person_id
+				left join person on patient.patient_id = person.person_id
+				left join hydramodule_patient_workflow on patient.patient_id = hydramodule_patient_workflow.patient_id
+				left join hydramodule_workflow on hydramodule_patient_workflow.workflow_id = hydramodule_workflow.workflow_id
+				where patient.voided = 0 and hydramodule_workflow.name = workflow and patient.date_created between datefrom and dateto
+				limit i,1;
+                
+                select count(*) from patient_identifier where patient_id = pid into idn_n;
 		
 				SET idn_i=0;
 				WHILE idn_i &lt; idn_n DO
@@ -2145,11 +2170,11 @@
 					SELECT column_name INTO colName
 					FROM information_schema.columns 
 					WHERE table_schema = 'hydra'
-						AND table_name = 'norm_patient'
+						AND table_name = tab_name
 					AND column_name = idn_type;
 		            
 		            IF colName is null THEN 
-						SET @alter_query:=CONCAT('ALTER TABLE norm_patient ADD (', idn_type , ' varchar(50), ', loc_colName, ' varchar(50))');
+						SET @alter_query:=CONCAT('ALTER TABLE ', tab_name ,' ADD (', idn_type , ' varchar(50), ', loc_colName, ' varchar(50))');
 						PREPARE stmt from @alter_query;
 						EXECUTE stmt;
 					END IF;
@@ -2157,14 +2182,14 @@
                     if loc is NULL then SET loc = "";
                     end if;
                     
-		            SET @update_identifier_query:=CONCAT('update norm_patient set ', idn_type , ' = ''', idn , ''', ', loc_colName, ' = ''', loc , ''' where patient_id = ' , pid);
+		            SET @update_identifier_query:=CONCAT('update ', tab_name ,' set ', idn_type , ' = ''', idn , ''', ', loc_colName, ' = ''', loc , ''' where patient_id = ' , pid);
 		            PREPARE stmt from @update_identifier_query;
 					EXECUTE stmt;
 		        
 					SET idn_i = idn_i + 1;
 				END WHILE;
-		        
-		        select count(*) from person_attribute where person_id = pid into attr_n;
+                
+                select count(*) from person_attribute where person_id = pid into attr_n;
 		
 				SET attr_i=0;
 				WHILE attr_i &lt; attr_n DO 
@@ -2177,11 +2202,11 @@
 					SELECT column_name INTO colName
 					FROM information_schema.columns 
 					WHERE table_schema = 'hydra'
-						AND table_name = 'norm_patient'
+						AND table_name = tab_name
 					AND column_name = attr_type;
 		            
 		            IF colName is null THEN 
-						SET @alter_query:=CONCAT('ALTER TABLE norm_patient ADD ', attr_type , ' varchar(50)');
+						SET @alter_query:=CONCAT('ALTER TABLE ', tab_name ,' ADD ', attr_type , ' varchar(50)');
 						PREPARE stmt from @alter_query;
 						EXECUTE stmt;
 					END IF;
@@ -2192,7 +2217,7 @@
 		                
 							SELECT name FROM concept_name where concept_id = attr_value and concept_name_type = 'FULLY_SPECIFIED' limit 1 into concept_value;
 		
-							SET @update_attribute_query:=CONCAT('update norm_patient set ', attr_type , ' = ''', concept_value , ''' where patient_id = ' , pid);
+							SET @update_attribute_query:=CONCAT('update ', tab_name ,' set ', attr_type , ' = ''', concept_value , ''' where patient_id = ' , pid);
 							PREPARE stmt from @update_attribute_query;
 							EXECUTE stmt;
 		                    
@@ -2200,13 +2225,13 @@
 		                
 							SELECT name FROM location where location_id = attr_value limit 1 into location_value;
 		
-							SET @update_attribute_query:=CONCAT('update norm_patient set ', attr_type , ' = ''', location_value , ''' where patient_id = ' , pid);
+							SET @update_attribute_query:=CONCAT('update ', tab_name ,' set ', attr_type , ' = ''', location_value , ''' where patient_id = ' , pid);
 							PREPARE stmt from @update_attribute_query;
 							EXECUTE stmt;
 		                
 		                ELSE
 		                
-							SET @update_attribute_query:=CONCAT('update norm_patient set ', attr_type , ' = ''', attr_value , ''' where patient_id = ' , pid);
+							SET @update_attribute_query:=CONCAT('update ', tab_name ,' set ', attr_type , ' = ''', attr_value , ''' where patient_id = ' , pid);
 							PREPARE stmt from @update_attribute_query;
 							EXECUTE stmt;
 		            
@@ -2214,18 +2239,19 @@
 		            
 					SET attr_i = attr_i + 1;
 				END WHILE;
-		    
-				SET i = i + 1;
-		    END WHILE;
-		    
-		END;  
+                
+                SET i = i + 1;
+            END WHILE;
+            
+            
+		END;
 	    </createProcedure>
 	</changeSet>   
 	
 	<changeSet author="rabbia.hassan" id="createProcedure-norm-provider">
 	    <createProcedure>
 	    
-	    CREATE PROCEDURE `norm_provider`(IN datefrom datetime, IN dateto datetime)
+	    CREATE PROCEDURE `norm_provider`(IN datefrom datetime, IN dateto datetime, IN prefix varchar(50))
 		
 		BEGIN
 		
@@ -2233,40 +2259,60 @@
 		    DECLARE pid INT;
 			DECLARE attr_type, attr_value, format, colName varchar(50);
 		    DECLARE location_value, concept_value TEXT;
+            DECLARE tab_name, roles varchar(50);
 		
-			DROP TABLE IF EXISTS norm_provider;
-		    
-		    CREATE TABLE `norm_provider` (
-			`id` int(11) NOT NULL AUTO_INCREMENT,
-		    `provider_id` int(11) NOT NULL,
-			`person_id` int(11) NOT NULL,
-			`name` varchar(255),
-			`identifier` varchar(255) NOT NULL DEFAULT '',
-			`creator` int(11) NOT NULL,
-			`gender` varchar(50),
-			`given_name` varchar(50),
-			`family_name` varchar(50),
-			`username` varchar(50),
-		     PRIMARY KEY (`id`)
-		    );
-		    
-		   Insert into norm_provider (person_id, provider_id, name,identifier,creator,username,given_name,family_name,gender)
+			SET tab_name = CONCAT('normprovider', '_' , prefix);
+             
+			SET @drop_qurey:=CONCAT('DROP TABLE IF EXISTS ', tab_name);
+			PREPARE stmt from @drop_qurey;
+			EXECUTE stmt;
+            
+            SET @create_qurey:=CONCAT('CREATE TABLE ', tab_name , ' (id int(11) NOT NULL AUTO_INCREMENT, provider_id int(11) NOT NULL, person_id int(11) NOT NULL, name varchar(255), identifier varchar(255) NOT NULL, creator int(11) NOT NULL, gender varchar(50), given_name varchar(50), family_name varchar(50), username varchar(50), assigned_roles varchar(255), PRIMARY KEY (id));' );
+            PREPARE stmt from @create_qurey;
+			EXECUTE stmt;
+            
+            SET @insert_qurey:=CONCAT('Insert into ', tab_name ,' (person_id, provider_id, name,identifier,creator,username,given_name,family_name,gender)
 		   select provider.person_id, provider.provider_id, provider.name, provider.identifier, provider.creator, users.username, person_name.given_name,
 			person_name.family_name, gender from provider
 			left join users on users.system_id = provider.identifier
 			left join person_name on provider.person_id = person_name.person_id
 			left join person on provider.person_id = person.person_id
-			where provider.retired = 0 and users.date_created between datefrom and dateto;
-		    
-			SELECT COUNT(*) FROM norm_provider INTO n;
-		    SET i=0;
-			WHILE i&lt;n DO
-		
-			    SELECT person_id into pid FROM norm_provider limit i,1;
-			    SELECT COUNT(*) FROM person_attribute where person_id = pid INTO attr_n;
+			where provider.retired = 0 and provider.date_created between ''',datefrom,''' and ''',dateto,''';');
+            PREPARE stmt from @insert_qurey;
+			EXECUTE stmt;
+            
+            select count(*) from provider
+			left join users on users.system_id = provider.identifier
+			left join person_name on provider.person_id = person_name.person_id
+			left join person on provider.person_id = person.person_id
+			where provider.retired = 0 and provider.date_created between datefrom and dateto
+            INTO n;
+            
+            SET i=0;
+			WHILE i &lt; n DO
+            
+				select person.person_id into pid from provider
+				left join users on users.system_id = provider.identifier
+				left join person_name on provider.person_id = person_name.person_id
+				left join person on provider.person_id = person.person_id
+				where provider.retired = 0 and provider.date_created between datefrom and dateto
+                limit i,1;
+                
+                select GROUP_CONCAT(role SEPARATOR ', ') into roles from person 
+                left join users on person.person_id = users.person_id
+                left join user_role on users.user_id = user_role.user_id
+                where person.person_id = pid;
+                           
+                 if roles is not null then          
+					SET @update_role_query:=CONCAT('update ',tab_name,' set assigned_roles = ''', roles , ''' where person_id = ' , pid);
+					PREPARE stmt from @update_role_query;
+					EXECUTE stmt;
+                end if;
+                
+                SELECT COUNT(*) FROM person_attribute where person_id = pid INTO attr_n;
 				SET attr_i=0;
-				WHILE attr_i&lt;attr_n DO 
-				
+				WHILE attr_i &lt; attr_n DO 
+                
 					select alphanum(LOWER(name)), value, format into attr_type, attr_value, format from person_attribute
 					left join person_attribute_type on person_attribute.person_attribute_type_id = person_attribute_type.person_attribute_type_id
 		            where person_id = pid limit attr_i,1;
@@ -2275,11 +2321,11 @@
 					SELECT column_name INTO colName
 					FROM information_schema.columns 
 					WHERE table_schema = 'hydra'
-						AND table_name = 'norm_provider'
+						AND table_name = tab_name
 					AND column_name = attr_type;
 		            
 		            IF colName is null THEN 
-						SET @alter_query:=CONCAT('ALTER TABLE norm_provider ADD ', attr_type , ' varchar(50)');
+						SET @alter_query:=CONCAT('ALTER TABLE ', tab_name ,' ADD ', attr_type , ' varchar(50)');
 						PREPARE stmt from @alter_query;
 						EXECUTE stmt;
 					END IF;
@@ -2290,7 +2336,7 @@
 		                
 							SELECT name FROM concept_name where concept_id = attr_value and concept_name_type = 'FULLY_SPECIFIED' limit 1 into concept_value;
 		
-							SET @update_attribute_query:=CONCAT('update norm_provider set ', attr_type , ' = ''', concept_value , ''' where location_id = ' , loc_id);
+							SET @update_attribute_query:=CONCAT('update ',tab_name,' set ', attr_type , ' = ''', concept_value , ''' where person_id = ' , pid);
 							PREPARE stmt from @update_attribute_query;
 							EXECUTE stmt;
 		                    
@@ -2298,24 +2344,24 @@
 		                
 							SELECT name FROM location where location_id = attr_value limit 1 into location_value;
 		
-							SET @update_attribute_query:=CONCAT('update norm_provider set ', attr_type , ' = ''', location_value , ''' where location_id = ' , loc_id);
+							SET @update_attribute_query:=CONCAT('update ',tab_name,' set ', attr_type , ' = ''', location_value , ''' where person_id = ' , pid);
 							PREPARE stmt from @update_attribute_query;
 							EXECUTE stmt;
 		                
 		                ELSE
 		                
-							SET @update_attribute_query:=CONCAT('update norm_provider set ', attr_type , ' = ''', attr_value , ''' where location_id = ' , loc_id);
+							SET @update_attribute_query:=CONCAT('update ',tab_name,' set ', attr_type , ' = ''', attr_value , ''' where person_id = ' , pid);
 							PREPARE stmt from @update_attribute_query;
 							EXECUTE stmt;
 		            
 		            END CASE;
-		            
+                
 					SET attr_i = attr_i + 1;
 				END WHILE;
-		        
+            
 				SET i = i + 1;
 			END WHILE;
-		
+			
 		END;
 	    
 	    </createProcedure>
@@ -2324,7 +2370,7 @@
 	<changeSet author="rabbia.hassan" id="createProcedure-norm-location">
 	    <createProcedure>
 	    
-	    CREATE PROCEDURE `norm_location`(IN datefrom datetime, IN dateto datetime)
+	    CREATE PROCEDURE `norm_location`(IN datefrom datetime, IN dateto datetime, IN prefix varchar(50))
 		
 		BEGIN
 		
@@ -2332,43 +2378,19 @@
 			DECLARE loc_id int;
 		    DECLARE attr_type, attr_value, format, colName varchar(50);
 		    DECLARE location_value, concept_value TEXT;
+            DECLARE tab_name, tags varchar(50);
 		
-			DROP TABLE IF EXISTS norm_location;
-		    
-		   CREATE TABLE `norm_location` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `location_id` int(11) NOT NULL,
-		  `name` varchar(255) NOT NULL DEFAULT '',
-		  `description` varchar(255) DEFAULT NULL,
-		  `address1` varchar(255) DEFAULT NULL,
-		  `address2` varchar(255) DEFAULT NULL,
-		  `city_village` varchar(255) DEFAULT NULL,
-		  `state_province` varchar(255) DEFAULT NULL,
-		  `postal_code` varchar(50) DEFAULT NULL,
-		  `country` varchar(50) DEFAULT NULL,
-		  `latitude` varchar(50) DEFAULT NULL,
-		  `longitude` varchar(50) DEFAULT NULL,
-		  `creator` int(11) NOT NULL DEFAULT '0',
-		  `date_created` datetime NOT NULL,
-		  `county_district` varchar(255) DEFAULT NULL,
-		  `address3` varchar(255) DEFAULT NULL,
-		  `address4` varchar(255) DEFAULT NULL,
-		  `address5` varchar(255) DEFAULT NULL,
-		  `address6` varchar(255) DEFAULT NULL,
-		  `parent_location` int(11) DEFAULT NULL,
-		  `address7` varchar(255) DEFAULT NULL,
-		  `address8` varchar(255) DEFAULT NULL,
-		  `address9` varchar(255) DEFAULT NULL,
-		  `address10` varchar(255) DEFAULT NULL,
-		  `address11` varchar(255) DEFAULT NULL,
-		  `address12` varchar(255) DEFAULT NULL,
-		  `address13` varchar(255) DEFAULT NULL,
-		  `address14` varchar(255) DEFAULT NULL,
-		  `address15` varchar(255) DEFAULT NULL,
-		  PRIMARY KEY (`id`)
-		);
-		    
-		   Insert into norm_location (location_id,name,description,address1,address2,city_village,state_province,postal_code,country,latitude,longitude,
+			SET tab_name = CONCAT('normlocation', '_' , prefix);
+             
+			SET @drop_qurey:=CONCAT('DROP TABLE IF EXISTS ', tab_name);
+			PREPARE stmt from @drop_qurey;
+			EXECUTE stmt;
+            
+            SET @create_qurey:=CONCAT('CREATE TABLE ', tab_name , ' (id int(11) NOT NULL AUTO_INCREMENT,location_id int(11) NOT NULL,name varchar(255) NOT NULL, description varchar(255) DEFAULT NULL, associated_tags varchar(255) DEFAULT NULL,address1 varchar(255) DEFAULT NULL, address2 varchar(255) DEFAULT NULL, city_village varchar(255) DEFAULT NULL, state_province varchar(255) DEFAULT NULL,postal_code varchar(50) DEFAULT NULL,country varchar(50) DEFAULT NULL,latitude varchar(50) DEFAULT NULL, longitude varchar(50) DEFAULT NULL, creator int(11) NOT NULL,date_created datetime NOT NULL,county_district varchar(255) DEFAULT NULL,address3 varchar(255) DEFAULT NULL,address4 varchar(255) DEFAULT NULL,address5 varchar(255) DEFAULT NULL,address6 varchar(255) DEFAULT NULL, parent_location int(11) DEFAULT NULL,address7 varchar(255) DEFAULT NULL,address8 varchar(255) DEFAULT NULL,address9 varchar(255) DEFAULT NULL,address10 varchar(255) DEFAULT NULL,address11 varchar(255) DEFAULT NULL,address12 varchar(255) DEFAULT NULL, address13 varchar(255) DEFAULT NULL,address14 varchar(255) DEFAULT NULL,address15 varchar(255) DEFAULT NULL,PRIMARY KEY (id));' );
+            PREPARE stmt from @create_qurey;
+			EXECUTE stmt;
+            
+		  SET @insert_qurey:=CONCAT('Insert into ', tab_name ,' (location_id,name,description,address1,address2,city_village,state_province,postal_code,country,latitude,longitude,
 		   creator,date_created,county_district,address3,address4,address5,address6,parent_location,address7,address8,address9,
 		   address10,address11,address12,address13, address14, address15)
 		   select 
@@ -2376,14 +2398,33 @@
 		   creator,date_created,county_district,address3,address4,address5,address6,parent_location,address7,address8,address9,
 		   address10,address11,address12,address13, address14, address15
 		   from location
-		   where location.retired = 0 and location.date_created between datefrom and dateto;
-		   
-		    SELECT COUNT(*) FROM norm_location INTO n;
-		    SET i=0;
+		   where location.retired = 0 and location.date_created between ''',datefrom,''' and ''',dateto,''';');
+            PREPARE stmt from @insert_qurey;
+			EXECUTE stmt;
+            
+		   select count(*)
+		   from location
+		   where location.retired = 0 and location.date_created between datefrom and dateto into  n;
+           
+            SET i=0;
 			WHILE i&lt;n DO
-		
-			    SELECT location_id into loc_id FROM norm_location limit i,1;
-			    SELECT COUNT(*) FROM location_attribute where location_id = loc_id INTO loc_n;
+                            
+                 select location_id into loc_id
+				   from location
+				   where location.retired = 0 and location.date_created between datefrom and dateto limit i,1;
+
+				select GROUP_CONCAT(location_tag.name SEPARATOR ', ') into tags from location 
+                 left join location_tag_map on location.location_id = location_tag_map.location_id
+				 left join location_tag on location_tag_map.location_tag_id = location_tag.location_tag_id
+                 where location.location_id = loc_id;
+                 
+                 if tags is not null then
+					 SET @update_tag_query:=CONCAT('update ',tab_name,' set associated_tags = ''', tags , ''' where location_id = ' , loc_id);
+					PREPARE stmt from @update_tag_query;
+					EXECUTE stmt;
+                end if;
+                
+                SELECT COUNT(*) FROM location_attribute where location_id = loc_id INTO loc_n;
 				SET loc_i=0;
 				WHILE loc_i&lt;loc_n DO 
 				
@@ -2432,7 +2473,7 @@
 		            
 					SET loc_i = loc_i + 1;
 				END WHILE;
-		        
+            
 				SET i = i + 1;
 			END WHILE;
 		

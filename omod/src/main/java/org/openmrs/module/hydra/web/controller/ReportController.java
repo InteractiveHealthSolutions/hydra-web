@@ -31,6 +31,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -73,6 +74,8 @@ public class ReportController {
 
 	public static final String SQL_DATESTAMP = "yyyyMMdd";
 
+	public static final String SQL_DATEIMESTAMP = "yyyyMMddHHmmss";
+
 	private static final Map<String, String> DATE_FORMATS;
 
 	@Autowired
@@ -110,31 +113,37 @@ public class ReportController {
 		String format1 = detectDateFormat(to);
 		Date eDate = fromString(to, format1);
 
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
+		String prefix = sdf.format(cal.getTime());
+
 		ProcedureCall call = sessionFactory.getCurrentSession().createStoredProcedureCall("deencountrised");
 
 		call.registerParameter(1, Date.class, ParameterMode.IN).bindValue(sDate);
 		call.registerParameter(2, Date.class, ParameterMode.IN).bindValue(eDate);
 		call.registerParameter(3, String.class, ParameterMode.IN).bindValue(workflow);
+		call.registerParameter(4, String.class, ParameterMode.IN).bindValue(prefix);
 		call.getOutputs().getCurrent();
 
 		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery(
 		    "select CONCAT('enc_',alphanum(LOWER(encounter_type.name))) from encounter_type where retired = 0");
 		List<String> encounterTables = sql.list();
 
-		String zipFile = System.getProperty("java.io.tmpdir") + File.separator + "encounters_dump.zip";
+		String zipFile = System.getProperty("java.io.tmpdir") + File.separator + "encountersdump_" + prefix + ".zip";
 		FileOutputStream fos = new FileOutputStream(zipFile);
 		ZipOutputStream zos = new ZipOutputStream(fos);
 		byte[] buffer = new byte[1024];
 
 		for (String encounterTable : encounterTables) {
 
-			sql = sessionFactory.getCurrentSession().createSQLQuery("select * from " + encounterTable);
+			sql = sessionFactory.getCurrentSession().createSQLQuery("select * from " + encounterTable + "_" + prefix);
 			sql.setResultTransformer(AliasToEntityOrderedMapResultTransformer.INSTANCE);
 			List<Map<String, Object>> aliasToValueMapList = sql.list();
 
 			if (!aliasToValueMapList.isEmpty()) {
 
-				String outputFile = System.getProperty("java.io.tmpdir") + File.separator + encounterTable + ".csv";
+				String outputFile = System.getProperty("java.io.tmpdir") + File.separator + encounterTable + "_" + prefix
+				        + ".csv";
 				createCSVFileFromMapList(aliasToValueMapList, outputFile);
 
 				File srcFile = new File(outputFile);
@@ -156,7 +165,13 @@ public class ReportController {
 				// close the InputStream
 				fis.close();
 
+				srcFile.delete();
+
 			}
+			
+			SQLQuery dropSql = sessionFactory.getCurrentSession()
+			        .createSQLQuery("drop table if exists " + encounterTable + "_" + prefix);
+			dropSql.executeUpdate();
 
 		}
 
@@ -166,8 +181,11 @@ public class ReportController {
 
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "encounters_dump.zip");
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "encountersdump_" + prefix + ".zip");
 		header.setContentLength(bytes.length);
+
+		File file = new File(zipFile);
+		file.delete();
 
 		return new HttpEntity<byte[]>(bytes, header);
 
@@ -186,28 +204,37 @@ public class ReportController {
 		String format1 = detectDateFormat(to);
 		Date eDate = fromString(to, format1);
 
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
+		String prefix = Context.getUserContext().getAuthenticatedUser().getUsername().replace(".", "") + "_"
+		        + sdf.format(cal.getTime());
+
 		ProcedureCall call = sessionFactory.getCurrentSession().createStoredProcedureCall("norm_patient");
 
 		call.registerParameter(1, Date.class, ParameterMode.IN).bindValue(sDate);
 		call.registerParameter(2, Date.class, ParameterMode.IN).bindValue(eDate);
 		call.registerParameter(3, String.class, ParameterMode.IN).bindValue(workflow);
+		call.registerParameter(4, String.class, ParameterMode.IN).bindValue(prefix);
 		call.getOutputs().getCurrent();
 
-		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery("select * from norm_patient");
+		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery("select * from normpatient_" + prefix);
 		sql.setResultTransformer(AliasToEntityOrderedMapResultTransformer.INSTANCE);
 		List<Map<String, Object>> aliasToValueMapList = sql.list();
-		String outputFile = System.getProperty("java.io.tmpdir") + File.separator + "patients_dump.csv";
-		if (aliasToValueMapList.isEmpty())
-			new File(outputFile);
-		else
-			createCSVFileFromMapList(aliasToValueMapList, outputFile);
+		String outputFile = System.getProperty("java.io.tmpdir") + File.separator + "patients_dump_" + prefix + ".csv";
+		createCSVFileFromMapList(aliasToValueMapList, outputFile);
 
 		byte[] bytes = Files.readAllBytes(Paths.get(outputFile));
 
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "patients_dump.csv");
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "patients_dump_" + prefix + ".csv");
 		header.setContentLength(bytes.length);
+
+		File file = new File(outputFile);
+		file.delete();
+
+		SQLQuery dropSql = sessionFactory.getCurrentSession().createSQLQuery("drop table if exists normpatient_" + prefix);
+		dropSql.executeUpdate();
 
 		return new HttpEntity<byte[]>(bytes, header);
 
@@ -225,27 +252,36 @@ public class ReportController {
 		String format1 = detectDateFormat(to);
 		Date eDate = fromString(to, format1);
 
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
+		String prefix = Context.getUserContext().getAuthenticatedUser().getUsername().replace(".", "") + "_"
+		        + sdf.format(cal.getTime());
+
 		ProcedureCall call = sessionFactory.getCurrentSession().createStoredProcedureCall("norm_provider");
 
 		call.registerParameter(1, Date.class, ParameterMode.IN).bindValue(sDate);
 		call.registerParameter(2, Date.class, ParameterMode.IN).bindValue(eDate);
+		call.registerParameter(3, String.class, ParameterMode.IN).bindValue(prefix);
 		call.getOutputs().getCurrent();
 
-		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery("select * from norm_provider");
+		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery("select * from normprovider_" + prefix);
 		sql.setResultTransformer(AliasToEntityOrderedMapResultTransformer.INSTANCE);
 		List<Map<String, Object>> aliasToValueMapList = sql.list();
-		String outputFile = System.getProperty("java.io.tmpdir") + File.separator + "providers_dump.csv";
-		if (aliasToValueMapList.isEmpty())
-			new File(outputFile);
-		else
-			createCSVFileFromMapList(aliasToValueMapList, outputFile);
+		String outputFile = System.getProperty("java.io.tmpdir") + File.separator + "providers_dump_" + prefix + ".csv";
+		createCSVFileFromMapList(aliasToValueMapList, outputFile);
 
 		byte[] bytes = Files.readAllBytes(Paths.get(outputFile));
 
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "providers_dump.csv");
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "providers_dump_" + prefix + ".csv");
 		header.setContentLength(bytes.length);
+
+		File file = new File(outputFile);
+		file.delete();
+
+		SQLQuery dropSql = sessionFactory.getCurrentSession().createSQLQuery("drop table if exists normprovider_" + prefix);
+		dropSql.executeUpdate();
 
 		return new HttpEntity<byte[]>(bytes, header);
 
@@ -263,27 +299,36 @@ public class ReportController {
 		String format1 = detectDateFormat(to);
 		Date eDate = fromString(to, format1);
 
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
+		String prefix = Context.getUserContext().getAuthenticatedUser().getUsername().replace(".", "") + "_"
+		        + sdf.format(cal.getTime());
+
 		ProcedureCall call = sessionFactory.getCurrentSession().createStoredProcedureCall("norm_location");
 
 		call.registerParameter(1, Date.class, ParameterMode.IN).bindValue(sDate);
 		call.registerParameter(2, Date.class, ParameterMode.IN).bindValue(eDate);
+		call.registerParameter(3, String.class, ParameterMode.IN).bindValue(prefix);
 		call.getOutputs().getCurrent();
 
-		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery("select * from norm_location");
+		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery("select * from normlocation_" + prefix);
 		sql.setResultTransformer(AliasToEntityOrderedMapResultTransformer.INSTANCE);
 		List<Map<String, Object>> aliasToValueMapList = sql.list();
-		String outputFile = System.getProperty("java.io.tmpdir") + File.separator + "locations_dump.csv";
-		if (aliasToValueMapList.isEmpty())
-			new File(outputFile);
-		else
-			createCSVFileFromMapList(aliasToValueMapList, outputFile);
+		String outputFile = System.getProperty("java.io.tmpdir") + File.separator + "locations_dump_" + prefix + ".csv";
+		createCSVFileFromMapList(aliasToValueMapList, outputFile);
 
 		byte[] bytes = Files.readAllBytes(Paths.get(outputFile));
 
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "locations_dump.csv");
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "locations_dump_" + prefix + ".csv");
 		header.setContentLength(bytes.length);
+
+		File file = new File(outputFile);
+		file.delete();
+
+		SQLQuery dropSql = sessionFactory.getCurrentSession().createSQLQuery("drop table if exists normlocation_" + prefix);
+		dropSql.executeUpdate();
 
 		return new HttpEntity<byte[]>(bytes, header);
 
@@ -298,28 +343,32 @@ public class ReportController {
 
 			CSVWriter writer = new CSVWriter(outputfile);
 
-			// adding header to csv
-			Map<String, Object> extractHeader = aliasToValueMapList.get(0);
-			String[] header = new String[extractHeader.size()];
-			int i = 0;
-			for (Map.Entry<String, Object> entry : extractHeader.entrySet()) {
-				header[i++] = entry.getKey();
-			}
-			writer.writeNext(header);
+			if (!aliasToValueMapList.isEmpty()) {
 
-			// add data to csv
-			for (Map<String, Object> maps : aliasToValueMapList) {
-				Object[] data = new Object[extractHeader.size()];
-				i = 0;
-				for (Map.Entry<String, Object> entry : maps.entrySet()) {
-					data[i++] = entry.getValue();
+				// adding header to csv
+				Map<String, Object> extractHeader = aliasToValueMapList.get(0);
+				String[] header = new String[extractHeader.size()];
+				int i = 0;
+				for (Map.Entry<String, Object> entry : extractHeader.entrySet()) {
+					header[i++] = entry.getKey();
 				}
+				writer.writeNext(header);
 
-				String[] stringArray = new String[data.length];
-				for (int j = 0; j < data.length; j++)
-					stringArray[j] = String.valueOf(data[j]);
+				// add data to csv
+				for (Map<String, Object> maps : aliasToValueMapList) {
+					Object[] data = new Object[extractHeader.size()];
+					i = 0;
+					for (Map.Entry<String, Object> entry : maps.entrySet()) {
+						data[i++] = entry.getValue();
+					}
 
-				writer.writeNext(stringArray);
+					String[] stringArray = new String[data.length];
+					for (int j = 0; j < data.length; j++)
+						stringArray[j] = String.valueOf(data[j]);
+
+					writer.writeNext(stringArray);
+
+				}
 
 			}
 
