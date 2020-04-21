@@ -40,11 +40,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class QXRDataFetchScheduler extends AbstractTask {
-	
+
 	private static final Log log = LogFactory.getLog(QXRDataFetchScheduler.class);
-	
+
 	private HydraService service = Context.getService(HydraService.class);
-	
+
 	@Override
 	public void execute() {
 		if (!isExecuting) {
@@ -66,9 +66,9 @@ public class QXRDataFetchScheduler extends AbstractTask {
 							stmt = conn.createStatement();
 							ResultSet data = stmt.executeQuery(encounterFilterQuery);
 							while (data.next()) {
-								Encounter orderEncounter = Context.getEncounterService().getEncounter(
-								    data.getInt("encounter_id"));
-								
+								Encounter orderEncounter = Context.getEncounterService()
+								        .getEncounter(data.getInt("encounter_id"));
+
 								processDataForPatientID(data.getString("identifier"), orderEncounter,
 								    data.getInt("patient_id"));
 							}
@@ -82,7 +82,7 @@ public class QXRDataFetchScheduler extends AbstractTask {
 						log.error("Error connecting to DB.", e);
 					}
 				}
-				
+
 			}
 			catch (Exception e) {
 				log.error("execution stopped " + e);
@@ -91,66 +91,66 @@ public class QXRDataFetchScheduler extends AbstractTask {
 				stopExecuting();
 			}
 		}
-		
+
 	}
-	
+
 	public void processDataForPatientID(String patientIdentifier, Encounter orderEncounter, Integer patientId) {
-		
+
 		try {
-			
+
 			OkHttpClient client = new OkHttpClient().newBuilder().connectTimeout(60, TimeUnit.SECONDS)
 			        .writeTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS).build();
 			String url = "https://covidapi.qure.ai/v2/cxr/batch_results/" + patientIdentifier + "/";
-			//String url = "https://covidapi.qure.ai/v2/cxr/batch_results/122T3-0/";
+			// String url = "https://covidapi.qure.ai/v2/cxr/batch_results/122T3-0/";
 			Request request = new Request.Builder().url(url).method("GET", null)
 			        .addHeader("Authorization", "Token 04d48517b635caa928da6894133b54b9a96962cc").build();
 			Response response = client.newCall(request).execute();
-			//System.out.println(response.body().string());
+			// System.out.println(response.body().string());
 			int responseCode = response.code();
 			if (responseCode != 200) {
 				log.error("Invalid Response " + responseCode + " " + response.message());
 			} else {
-				
+
 				Scanner sc = new Scanner(response.body().string());
 				String data = "";
-				
+
 				while (sc.hasNext()) {
 					data += sc.nextLine();
 				}
-				
+
 				sc.close();
 				response.close();
-				
+
 				JSONParser jsonParser = new JSONParser();
 				JSONArray jsonArray = (JSONArray) jsonParser.parse(data);
-				
+
 				String covidResult = "";
-				
+
 				for (int i = 0; i < jsonArray.size(); i++) {
-					
+
 					JSONObject element = (JSONObject) jsonArray.get(i);
 					JSONObject metaDataObj = (JSONObject) element.get("metadata");
 					covidResult = (String) metaDataObj.get("covid_score");
-					
+
 				}
 				Encounter resultEncounter = new Encounter();
-				
+
 				EncounterType encounterType = Context.getEncounterService().getEncounterType("Xray Result Form");
 				resultEncounter.setEncounterType(encounterType);
-				
+
 				User user = Context.getUserService().getUserByUsername("QXR-user");
-				
+
 				resultEncounter.setCreator(user);
-				
+
 				Patient patient = Context.getPatientService().getPatient(patientId);
-				
+
 				resultEncounter.setPatient(patient);
-				
+
 				resultEncounter.setEncounterDatetime(new Date());
 				Concept concept = Context.getConceptService().getConceptByName("XRAY COVID RESULT");
-				
+
 				if (concept != null) {
-					
+
 					Obs obs = new Obs();
 					obs.setConcept(concept);
 					concept = Context.getConceptService().getConceptByName(covidResult);
@@ -159,22 +159,22 @@ public class QXRDataFetchScheduler extends AbstractTask {
 					obs.setCreator(user);
 					resultEncounter.addObs(obs);
 				}
-				
+
 				Context.getEncounterService().saveEncounter(resultEncounter);
-				//connection.disconnect();
+
 				HydramoduleEncounterMapper encounterMapper = new HydramoduleEncounterMapper();
-				
+
 				encounterMapper.setOrderEncounterId(orderEncounter);
 				encounterMapper.setResultEncounterId(resultEncounter);
 				encounterMapper.setCreator(user);
 				encounterMapper.setDateCreated(new Date());
-				
+
 				service.saveHydramoduleEncounterMapper(encounterMapper);
-				
+
 				log.info(data);
-				
+
 			}
-			
+
 		}
 		catch (MalformedURLException e) {
 			log.error("Invalid url " + e);
@@ -185,27 +185,27 @@ public class QXRDataFetchScheduler extends AbstractTask {
 		catch (ParseException e) {
 			log.error(e);
 		}
-		
+
 	}
-	
+
 	Connection establishDatabaseConnection() throws SQLException {
-		
+
 		String url = Context.getRuntimeProperties().getProperty("connection.url", null);
-		
+
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		}
 		catch (ClassNotFoundException e) {
 			log.error("Could not find JDBC driver class.", e);
-			
+
 			throw (SQLException) e.fillInStackTrace();
 		}
-		
+
 		String username = Context.getRuntimeProperties().getProperty("connection.username");
 		String password = Context.getRuntimeProperties().getProperty("connection.password");
 		log.debug("connecting to DATABASE: " + OpenmrsConstants.DATABASE_NAME + " USERNAME: " + username + " URL: " + url);
 		return DriverManager.getConnection(url, username, password);
-		
+
 	}
-	
+
 }

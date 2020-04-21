@@ -288,12 +288,12 @@ public interface HydraService extends OpenmrsService {
 	List<HydramoduleUserWorkflow> getAllHydramoduleUserWorkflow() throws APIException;
 
 	HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) throws APIException;
-	
+
 	HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper)
 	        throws APIException;
-	
+
 	HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws APIException;
-	
+
 	List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws APIException;
-	
+
 }

@@ -287,8 +287,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
-	public List<HydramoduleComponentForm> getAllComponentFormsRelations()
-			throws APIException, CloneNotSupportedException {
+	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException, CloneNotSupportedException {
 		List<HydramoduleComponentForm> componentForms = dao.getAllComponentFormRelations();
 
 		SExprHelper exprHelper = SExprHelper.getInstance();
@@ -470,7 +469,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	@Transactional
 	public HydramoduleParticipantSalaryType saveParticipantSalaryType(HydramoduleParticipantSalaryType service)
-			throws APIException {
+	        throws APIException {
 		return dao.saveParticipantSalaryType(service);
 	}
 
@@ -685,7 +684,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	@Transactional
 	public HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow service)
-			throws APIException {
+	        throws APIException {
 		return dao.saveHydramodulePatientWorkflow(service);
 	}
 
@@ -702,7 +701,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	// HydramoduleUserWorkflow
 	@Override
 	public HydramoduleUserWorkflow saveHydramoduleUserWorkflow(HydramoduleUserWorkflow hydramoduleUserWorkflow)
-			throws APIException {
+	        throws APIException {
 		return dao.saveHydramoduleUserWorkflow(hydramoduleUserWorkflow);
 	}
 
@@ -718,8 +717,8 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	// HydramoduleEncounterMapper
 	@Override
-	public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(
-			HydramoduleEncounterMapper hydramoduleEncounterMapper) throws APIException {
+	public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper)
+	        throws APIException {
 		return dao.saveHydramoduleEncounterMapper(hydramoduleEncounterMapper);
 	}
 

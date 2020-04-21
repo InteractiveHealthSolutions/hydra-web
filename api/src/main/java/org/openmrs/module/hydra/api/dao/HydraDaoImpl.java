@@ -1155,26 +1155,27 @@ public class HydraDaoImpl {
 		criteria.addOrder(Order.asc("userWorkflowId"));
 		return criteria.list();
 	}
+
 	// HydramoduleUserWorkflow
-	
-	//HydramoduleEncounterMapper
-		public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper) {
-			getSession().saveOrUpdate(hydramoduleEncounterMapper);
-			getSession().flush();
-			return hydramoduleEncounterMapper;
-		}
-		
-		public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) {
-			DbSession session = sessionFactory.getCurrentSession();
-			Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
-			criteria.add(Restrictions.eq("uuid", uuid));
-			return (HydramoduleEncounterMapper) criteria.uniqueResult();
-		}
-		
-		public List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() {
-			DbSession session = sessionFactory.getCurrentSession();
-			Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
-			criteria.addOrder(Order.asc("encounterMapperId"));
-			return criteria.list();
-		}
+
+	// HydramoduleEncounterMapper
+	public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper) {
+		getSession().saveOrUpdate(hydramoduleEncounterMapper);
+		getSession().flush();
+		return hydramoduleEncounterMapper;
+	}
+
+	public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (HydramoduleEncounterMapper) criteria.uniqueResult();
+	}
+
+	public List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
+		criteria.addOrder(Order.asc("encounterMapperId"));
+		return criteria.list();
+	}
 }

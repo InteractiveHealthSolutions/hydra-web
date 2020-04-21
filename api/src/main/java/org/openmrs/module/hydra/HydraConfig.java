@@ -16,6 +16,6 @@ import org.springframework.stereotype.Component;
  */
 @Component("hydra.HydraConfig")
 public class HydraConfig {
-	
+
 	public final static String MODULE_PRIVILEGE = "Hydra Privilege";
 }
