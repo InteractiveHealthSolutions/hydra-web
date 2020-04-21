@@ -14,8 +14,9 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-+ "/hydra/userworkflow", supportedClass = HydramoduleUserWorkflow.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
-public class UserWorkflowController extends DataDelegatingCrudResource<HydramoduleUserWorkflow>{
+        + "/hydra/userworkflow", supportedClass = HydramoduleUserWorkflow.class, supportedOpenmrsVersions = {
+                "2.0.*,2.1.*,2.2.*" })
+public class UserWorkflowController extends DataDelegatingCrudResource<HydramoduleUserWorkflow> {
 
 	protected final Log log = LogFactory.getLog(getClass());
 
@@ -28,13 +29,13 @@ public class UserWorkflowController extends DataDelegatingCrudResource<Hydramodu
 
 	@Override
 	public HydramoduleUserWorkflow save(HydramoduleUserWorkflow hydramoduleUserWokflow) {
-		
+
 		return service.saveHydramoduleUserWorkflow(hydramoduleUserWokflow);
 	}
 
 	@Override
 	protected void delete(HydramoduleUserWorkflow arg0, String arg1, RequestContext arg2) throws ResponseException {
-		
+
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class UserWorkflowController extends DataDelegatingCrudResource<Hydramodu
 
 	@Override
 	public void purge(HydramoduleUserWorkflow arg0, RequestContext arg1) throws ResponseException {
-		
+
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.model.workflow;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,11 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Field;
 import org.openmrs.BaseOpenmrsObject;
+import org.openmrs.Retireable;
+import org.openmrs.User;
 
 @Entity
 @Table(name = "hydramodule_component_form", catalog = "hydra")
-public class HydramoduleComponentForm extends BaseOpenmrsObject implements Serializable {
+public class HydramoduleComponentForm extends BaseOpenmrsObject implements Retireable, Serializable {
 
 	/**
 	 * 
@@ -51,6 +55,20 @@ public class HydramoduleComponentForm extends BaseOpenmrsObject implements Seria
 	public Integer getId() {
 		return componentFormId;
 	}
+
+	@Column(name = "retired", nullable = false)
+	@Field
+	private Boolean retired = Boolean.FALSE;
+
+	@Column(name = "date_retired")
+	private Date dateRetired;
+
+	@ManyToOne
+	@JoinColumn(name = "retired_by")
+	private User retiredBy;
+
+	@Column(name = "retire_reason", length = 255)
+	private String retireReason;
 
 	@Override
 	public void setId(Integer id) {
@@ -103,6 +121,51 @@ public class HydramoduleComponentForm extends BaseOpenmrsObject implements Seria
 
 	public void setPhase(HydramodulePhase phase) {
 		this.phase = phase;
+	}
+
+	@Override
+	public Boolean isRetired() {
+		return retired;
+	}
+
+	@Override
+	public Boolean getRetired() {
+		return retired;
+	}
+
+	@Override
+	public void setRetired(Boolean retired) {
+		this.retired = retired;
+	}
+
+	@Override
+	public User getRetiredBy() {
+		return retiredBy;
+	}
+
+	@Override
+	public void setRetiredBy(User retiredBy) {
+		this.retiredBy = retiredBy;
+	}
+
+	@Override
+	public Date getDateRetired() {
+		return dateRetired;
+	}
+
+	@Override
+	public void setDateRetired(Date dateRetired) {
+		this.dateRetired = dateRetired;
+	}
+
+	@Override
+	public String getRetireReason() {
+		return retireReason;
+	}
+
+	@Override
+	public void setRetireReason(String retireReason) {
+		this.retireReason = retireReason;
 	}
 
 }

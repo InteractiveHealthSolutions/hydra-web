@@ -401,8 +401,10 @@ public class HydraDaoImpl {
 		sessionFactory.getCurrentSession().delete(phaseComponent);
 	}
 
-	public void deleteComponentForm(HydramoduleComponentForm componentForm) {
-		sessionFactory.getCurrentSession().delete(componentForm);
+	public HydramoduleComponentForm updateComponentForm(HydramoduleComponentForm componentForm) {
+		getSession().update(componentForm);
+		getSession().flush();
+		return componentForm;
 	}
 
 	public void deleteWorkflowPhase(HydramoduleWorkflowPhases workflowphases) {
