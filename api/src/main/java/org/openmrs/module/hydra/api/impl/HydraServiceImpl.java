@@ -29,6 +29,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEncounterMapper;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
@@ -286,7 +287,8 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
-	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException, CloneNotSupportedException {
+	public List<HydramoduleComponentForm> getAllComponentFormsRelations()
+			throws APIException, CloneNotSupportedException {
 		List<HydramoduleComponentForm> componentForms = dao.getAllComponentFormRelations();
 
 		SExprHelper exprHelper = SExprHelper.getInstance();
@@ -468,7 +470,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	@Transactional
 	public HydramoduleParticipantSalaryType saveParticipantSalaryType(HydramoduleParticipantSalaryType service)
-	        throws APIException {
+			throws APIException {
 		return dao.saveParticipantSalaryType(service);
 	}
 
@@ -683,7 +685,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	@Transactional
 	public HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow service)
-	        throws APIException {
+			throws APIException {
 		return dao.saveHydramodulePatientWorkflow(service);
 	}
 
@@ -700,7 +702,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	// HydramoduleUserWorkflow
 	@Override
 	public HydramoduleUserWorkflow saveHydramoduleUserWorkflow(HydramoduleUserWorkflow hydramoduleUserWorkflow)
-	        throws APIException {
+			throws APIException {
 		return dao.saveHydramoduleUserWorkflow(hydramoduleUserWorkflow);
 	}
 
@@ -712,6 +714,23 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) throws APIException {
 		return dao.getHydramoduleUserWorkflow(uuid);
+	}
+
+	// HydramoduleEncounterMapper
+	@Override
+	public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(
+			HydramoduleEncounterMapper hydramoduleEncounterMapper) throws APIException {
+		return dao.saveHydramoduleEncounterMapper(hydramoduleEncounterMapper);
+	}
+
+	@Override
+	public List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws APIException {
+		return dao.getAllHydramoduleEncounterMapper();
+	}
+
+	@Override
+	public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws APIException {
+		return dao.getHydramoduleEncounterMapper(uuid);
 	}
 
 }
