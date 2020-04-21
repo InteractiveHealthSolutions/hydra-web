@@ -274,6 +274,13 @@ public class FormService {
 					}
 						break;
 					case OBS_CODED: {
+						if (dataItem.containsKey("characters")) {
+							String locationStr = (String) dataItem.get("characters");
+							if ("location".equals(locationStr)) {
+								location = findOrCreateLocation(locationStr);
+							}
+						}
+
 						String questionConceptStr = (String) dataItem.get(ParamNames.PARAM_NAME);
 						String valueConceptStr = dataItem.get(ParamNames.VALUE).toString();
 
@@ -530,8 +537,14 @@ public class FormService {
 					}
 
 					if (personAttributes.size() > 0) {
-						// patient.setAttributes(personAttributes);
-						// patientService.savePatient(patient);
+						/*
+						 * patient.setAttributes(personAttributes); patientService.savePatient(patient);
+						 */
+						Person person = patient.getPerson();
+						for (PersonAttribute pa : personAttributes) {
+							person.addAttribute(pa);
+						}
+						// personService.savePerson(person);
 					}
 				} else {
 					System.out.println("Patient is null");
@@ -649,7 +662,7 @@ public class FormService {
 
 		EncounterType encounterType = new EncounterType();
 		encounterType = encounterService.getEncounterType(encounterTypeString);
-		Location location = new Location();
+		Location location = null;
 
 		List<PersonAttribute> personAttributes = new ArrayList<PersonAttribute>();
 
@@ -761,7 +774,9 @@ public class FormService {
 
 		System.out.println(dob);
 		patient.setBirthdate(dob);
-
+		if (location == null) {
+			location = findLocation("8d6c993e-c2cc-11de-8d13-0010c6dffd0f");
+		}
 		// patient.setDateCreated(dateEntered);
 		for (PatientIdentifier patientIdentifieri : patientIdentifiers) {
 			System.out.println("IIIIIIIIIIIIIIIII " + patientIdentifieri.getIdentifier());
@@ -873,6 +888,18 @@ public class FormService {
 		System.out.println("LOCATION UUID: " + location);
 		if (oLocation == null) {
 			return null;
+		}
+		return oLocation;
+	}
+
+	public Location findOrCreateLocation(String locationName) {
+		LocationService locationService = Context.getLocationService();
+		Location oLocation = locationService.getLocation(locationName);
+		if (oLocation == null) {
+			oLocation = new Location();
+			oLocation.setName(locationName);
+			oLocation.setDescription("Created by Hydra");
+			oLocation = locationService.saveLocation(oLocation);
 		}
 		return oLocation;
 	}

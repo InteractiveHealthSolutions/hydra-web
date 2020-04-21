@@ -328,8 +328,11 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Transactional
 	@Override
 	public void deleteComponentForm(HydramoduleComponentForm phaseComponent) throws APIException {
-		dao.deleteComponentForm(phaseComponent);
-
+		phaseComponent.setRetired(true);
+		phaseComponent.setRetiredBy(Context.getAuthenticatedUser());
+		phaseComponent.setDateRetired(new Date());
+		// dao.updateComponent(component);
+		dao.updateComponentForm(phaseComponent);
 	}
 
 	@Transactional
