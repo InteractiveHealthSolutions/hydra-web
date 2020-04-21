@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
-	<!-- See http://wiki.openmrs.org/display/docs/Module+liquibase+File for 
+	See http://wiki.openmrs.org/display/docs/Module+liquibase+File for 
 		documentation on this file. See http://www.liquibase.org/manual/home#available_database_refactorings 
-		for a list of supported elements and attributes -->
+		for a list of supported elements and attributes
 
 	<changeSet author="naveed.iqbal" id="hydra-201905091131">
 		<preConditions onFail="MARK_RAN">
@@ -1432,8 +1432,8 @@
 
 			<column name="action_name" type="varchar(255)" />
 
-			<!-- <column name="form_id" type="int" /> <column name="field_id" type="int" 
-				/> -->
+			<column name="form_id" type="int" /> <column name="field_id" type="int" 
+				/>
 
 			<column name="name" type="varchar(255)">
 				<constraints nullable="false" />
@@ -1807,7 +1807,7 @@
 		</addColumn>
 	</changeSet>
 	
-	<!-- <changeSet id="hydra-202003190151" author="naveed.iqbal">
+	<changeSet id="hydra-202003190151" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="hydramodule_field_type_config_item" />
@@ -1904,7 +1904,7 @@
 		<addForeignKeyConstraint constraintName="hydramodule_form_field_voided_by_fk"
 			baseTableName="hydramodule_form_field" baseColumnNames="retired_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
-	</changeSet> -->
+	</changeSet>
 
 
 
@@ -2604,7 +2604,7 @@
 				INSERT IGNORE INTO hydra.relationship_type (a_is_to_b,b_is_to_a,preferred,weight,description,creator,date_created,retired,retired_by,date_retired,retire_reason,uuid,date_changed,changed_by) VALUES ('Spouse','Spouse',0,0,'Relationship between husband/wife or wife/husband',1,'2020-03-24 23:11:31.0',0,NULL,NULL,NULL,'451ebffd-edfc-d6d4-a8a5-512c67179ef0',NULL,NULL);
 		</sql>    
 	</changeSet>
-	<changeSet author="hareem.ajaz" id="20201504111">
+ -->	<changeSet author="hareem.ajaz" id="20201504111">
 		<preConditions onFail="MARK_RAN">
 			<sqlCheck expectedResult="0">
 				SELECT COUNT(*) FROM scheduler_task_config
