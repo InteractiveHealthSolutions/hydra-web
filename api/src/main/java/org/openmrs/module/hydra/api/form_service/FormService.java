@@ -170,6 +170,10 @@ public class FormService {
 				if (!dataItem.containsKey(ParamNames.PAYLOAD_TYPE))
 					continue;
 
+				if (!dataItem.containsKey(ParamNames.VALUE)) {
+					continue;
+				}
+
 				DATA_TYPE dataType = DATA_TYPE.valueOf(dataItem.get(ParamNames.PAYLOAD_TYPE).toString());
 				System.out.println("\n\n\nDATATYPE: " + dataType.toString() + "\n" + dataItem.toString() + "\n\n\n");
 				switch (dataType) {
@@ -274,18 +278,20 @@ public class FormService {
 					}
 						break;
 					case OBS_CODED: {
-						if (dataItem.containsKey("characters")) {
-							String locationStr = (String) dataItem.get("characters");
-							if ("location".equals(locationStr)) {
-								location = findOrCreateLocation(locationStr);
-							}
-						}
 
 						String questionConceptStr = (String) dataItem.get(ParamNames.PARAM_NAME);
 						String valueConceptStr = dataItem.get(ParamNames.VALUE).toString();
 
 						Concept questionConcept = conceptService.getConceptByUuid(questionConceptStr);
 						Concept valueConcept = conceptService.getConceptByUuid(valueConceptStr);
+
+						// Indus location workaound
+						if (dataItem.containsKey("characters")) {
+							String locationStr = (String) dataItem.get("characters");
+							if ("location".equals(locationStr)) {
+								location = findOrCreateLocation(valueConcept.getDisplayString());
+							}
+						}
 						/*
 						 * if(conceptDateTime == null) { conceptDateTime = createDateConcept(); }
 						 */
