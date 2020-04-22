@@ -104,12 +104,22 @@ public class ReportController {
 	@RequestMapping(value = "/dump/encounters", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getEncounterDumps(HttpServletRequest request,
-	        @RequestParam(value = "workflow", required = true) String workflow,
+	        @RequestParam(value = "workflow", required = false) String workflow,
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
-		Date sDate = fromString(from + " 00:00:00", "yyyy-MM-dd hh:mm:ss");
-		Date eDate = fromString(to + " 23:59:59", "yyyy-MM-dd hh:mm:ss");
+		if (workflow == null)
+			workflow = "";
+
+		String format = detectDateFormat(from);
+		Date sDate = fromString(from, format);
+		String format1 = detectDateFormat(to);
+		Date eDate = fromString(to, format1);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(eDate);
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		eDate = c.getTime();
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
@@ -192,12 +202,22 @@ public class ReportController {
 	@RequestMapping(value = "/dump/patients", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getPatientDumps(HttpServletRequest request,
-	        @RequestParam(value = "workflow", required = true) String workflow,
+	        @RequestParam(value = "workflow", required = false) String workflow,
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
-		Date sDate = fromString(from + " 00:00:00", "yyyy-MM-dd hh:mm:ss");
-		Date eDate = fromString(to + " 23:59:59", "yyyy-MM-dd hh:mm:ss");
+		if (workflow == null)
+			workflow = "";
+
+		String format = detectDateFormat(from);
+		Date sDate = fromString(from, format);
+		String format1 = detectDateFormat(to);
+		Date eDate = fromString(to, format1);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(eDate);
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		eDate = c.getTime();
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
@@ -241,8 +261,15 @@ public class ReportController {
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
-		Date sDate = fromString(from + " 00:00:00", "yyyy-MM-dd hh:mm:ss");
-		Date eDate = fromString(to + " 23:59:59", "yyyy-MM-dd hh:mm:ss");
+		String format = detectDateFormat(from);
+		Date sDate = fromString(from, format);
+		String format1 = detectDateFormat(to);
+		Date eDate = fromString(to, format1);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(eDate);
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		eDate = c.getTime();
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
@@ -285,8 +312,15 @@ public class ReportController {
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
-		Date sDate = fromString(from + " 00:00:00", "yyyy-MM-dd hh:mm:ss");
-		Date eDate = fromString(to + " 23:59:59", "yyyy-MM-dd hh:mm:ss");
+		String format = detectDateFormat(from);
+		Date sDate = fromString(from, format);
+		String format1 = detectDateFormat(to);
+		Date eDate = fromString(to, format1);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(eDate);
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		eDate = c.getTime();
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
