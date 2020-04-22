@@ -90,6 +90,7 @@ public class ReportController {
 		DATE_FORMATS.put("^\\d{2}-[0-1]\\d-[0-3]\\d$", "yy-MM-dd");
 		DATE_FORMATS.put("^\\d{4}-[0-1]\\d-[0-3]\\d$", SQL_DATE);
 		DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{2}$", "dd-MM-yy");
+		DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{2} d{2}:d{2}:d{2}$", "dd-MM-yy hh:mm:ss");
 		DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{4}$", STANDARD_DATE_HYPHENATED);
 		DATE_FORMATS.put("^[0-3]\\d [0-1]\\d \\d{2}$", "dd MM yy");
 		DATE_FORMATS.put("^[0-3]\\d [0-1]\\d \\d{4}$", "dd MM yyyy");
@@ -107,11 +108,8 @@ public class ReportController {
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
-		String format = detectDateFormat(from);
-		Date sDate = fromString(from, format);
-
-		String format1 = detectDateFormat(to);
-		Date eDate = fromString(to, format1);
+		Date sDate = fromString(from + " 00:00:00", "yyyy-MM-dd hh:mm:ss");
+		Date eDate = fromString(to + " 23:59:59", "yyyy-MM-dd hh:mm:ss");
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
@@ -198,11 +196,8 @@ public class ReportController {
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
-		String format = detectDateFormat(from);
-		Date sDate = fromString(from, format);
-
-		String format1 = detectDateFormat(to);
-		Date eDate = fromString(to, format1);
+		Date sDate = fromString(from + " 00:00:00", "yyyy-MM-dd hh:mm:ss");
+		Date eDate = fromString(to + " 23:59:59", "yyyy-MM-dd hh:mm:ss");
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
@@ -246,11 +241,8 @@ public class ReportController {
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
-		String format = detectDateFormat(from);
-		Date sDate = fromString(from, format);
-
-		String format1 = detectDateFormat(to);
-		Date eDate = fromString(to, format1);
+		Date sDate = fromString(from + " 00:00:00", "yyyy-MM-dd hh:mm:ss");
+		Date eDate = fromString(to + " 23:59:59", "yyyy-MM-dd hh:mm:ss");
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
@@ -293,11 +285,8 @@ public class ReportController {
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
-		String format = detectDateFormat(from);
-		Date sDate = fromString(from, format);
-
-		String format1 = detectDateFormat(to);
-		Date eDate = fromString(to, format1);
+		Date sDate = fromString(from + " 00:00:00", "yyyy-MM-dd hh:mm:ss");
+		Date eDate = fromString(to + " 23:59:59", "yyyy-MM-dd hh:mm:ss");
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
