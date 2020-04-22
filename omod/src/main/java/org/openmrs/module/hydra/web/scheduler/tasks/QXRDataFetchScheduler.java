@@ -96,6 +96,7 @@ public class QXRDataFetchScheduler extends AbstractTask {
 
 	public void processDataForPatientID(String patientIdentifier, Encounter orderEncounter, Integer patientId) {
 
+		Response response = null;
 		try {
 
 			OkHttpClient client = new OkHttpClient().newBuilder().connectTimeout(60, TimeUnit.SECONDS)
@@ -104,7 +105,7 @@ public class QXRDataFetchScheduler extends AbstractTask {
 			// String url = "https://covidapi.qure.ai/v2/cxr/batch_results/122T3-0/";
 			Request request = new Request.Builder().url(url).method("GET", null)
 			        .addHeader("Authorization", "Token 04d48517b635caa928da6894133b54b9a96962cc").build();
-			Response response = client.newCall(request).execute();
+			response = client.newCall(request).execute();
 			// System.out.println(response.body().string());
 			int responseCode = response.code();
 			if (responseCode != 200) {
@@ -119,7 +120,7 @@ public class QXRDataFetchScheduler extends AbstractTask {
 				}
 
 				sc.close();
-				response.close();
+				//response.close();
 
 				JSONParser jsonParser = new JSONParser();
 				JSONArray jsonArray = (JSONArray) jsonParser.parse(data);
@@ -184,6 +185,9 @@ public class QXRDataFetchScheduler extends AbstractTask {
 		}
 		catch (ParseException e) {
 			log.error(e);
+		}
+		finally {
+			response.close();
 		}
 
 	}
