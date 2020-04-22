@@ -22,6 +22,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEncounterMapper;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
@@ -287,4 +288,12 @@ public interface HydraService extends OpenmrsService {
 	List<HydramoduleUserWorkflow> getAllHydramoduleUserWorkflow() throws APIException;
 
 	HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) throws APIException;
+
+	HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper)
+	        throws APIException;
+
+	HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws APIException;
+
+	List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws APIException;
+
 }
