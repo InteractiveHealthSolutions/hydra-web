@@ -145,6 +145,7 @@ public class HydraDaoImpl {
 	public List<HydramoduleComponentForm> getAllComponentFormRelations() {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
+		criteria.add(Restrictions.eq("retired", false));
 		criteria.addOrder(Order.asc("displayOrder"));
 		return criteria.list();
 	}
