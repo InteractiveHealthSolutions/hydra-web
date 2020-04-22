@@ -120,7 +120,7 @@ public class QXRDataFetchScheduler extends AbstractTask {
 				}
 
 				sc.close();
-				//response.close();
+				// response.close();
 
 				JSONParser jsonParser = new JSONParser();
 				JSONArray jsonArray = (JSONArray) jsonParser.parse(data);
