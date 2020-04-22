@@ -1805,7 +1805,12 @@
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
 		</addColumn>
+		<addForeignKeyConstraint constraintName="hydramodule_component_form_retired_by_fk"
+			baseTableName="hydramodule_component_form" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
+	
+	
 	
 	<!-- <changeSet id="hydra-202003190151" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
