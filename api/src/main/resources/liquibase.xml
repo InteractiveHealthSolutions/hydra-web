@@ -1698,13 +1698,9 @@
 			</column>
 			<column name="changed_by" type="int" />
 			<column name="date_changed" type="datetime" />
-			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
-				<constraints nullable="false" />
-			</column>
-			<column name="retired_by" type="int" />
-			<column name="date_retired" type="datetime" />
-			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
-			<column name="uuid" type="char(38)">
+		    <column name="voided_by" type="int" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />	<column name="uuid" type="char(38)">
 				<constraints unique="true" />
 			</column>
 		</createTable>
@@ -1722,8 +1718,8 @@
 		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_changed_by_fk"
 			baseTableName="hydramodule_user_workflow" baseColumnNames="changed_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_retired_by_fk"
-			baseTableName="hydramodule_user_workflow" baseColumnNames="retired_by"
+		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_voided_by_fk"
+			baseTableName="hydramodule_user_workflow" baseColumnNames="voided_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 
 	</changeSet>
@@ -2708,12 +2704,12 @@
 			</column>
 			<column name="changed_by" type="int" />
 			<column name="date_changed" type="datetime" />
-			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+			<column name="voided_by" type="int" />
+			<column defaultValueBoolean="false" name="voided" type="boolean">
 				<constraints nullable="false" />
 			</column>
-			<column name="retired_by" type="int" />
-			<column name="date_retired" type="datetime" />
-			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />
 			<column name="uuid" type="char(38)">
 				<constraints unique="true" />
 			</column>
@@ -2732,8 +2728,8 @@
 		<addForeignKeyConstraint constraintName="hydramodule_encounter_mapper_changed_by_fk"
 			baseTableName="hydramodule_encounter_mapper" baseColumnNames="changed_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_encounter_mapper_retired_by_fk"
-		baseTableName="hydramodule_encounter_mapper" baseColumnNames="retired_by"
+		<addForeignKeyConstraint constraintName="hydramodule_encounter_mapper_voided_by_fk"
+		baseTableName="hydramodule_encounter_mapper" baseColumnNames="voided_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 
 	</changeSet>
