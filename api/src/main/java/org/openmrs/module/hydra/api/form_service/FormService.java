@@ -561,12 +561,7 @@ public class FormService {
 						for (PersonAttribute pa : personAttributes) {
 							person.addAttribute(pa);
 						}
-						try {
-							savePersonAttributeViaREST(person.getUuid(), personAttributes, username, decPassword);
-						}
-						catch (IOException e) {
-							e.printStackTrace();
-						}
+						// personService.savePerson(person);
 					}
 				} else {
 					System.out.println("Patient is null");
@@ -952,50 +947,35 @@ public class FormService {
 			jsonReponse.put("result", "failure: Invalid Username or Password");
 		}
 	}
+	
+	private HttpPost buildHttpPostObject(String serverAddress, String json, String username, String password) throws UnsupportedEncodingException {
+        HttpPost httppost = new HttpPost(serverAddress);
+        httppost.setHeader("Accept", "application/json");
+        httppost.setHeader("Content-Type", "application/json");
+        if(json!=null)
+        {
+            StringEntity stringEntity = new StringEntity(json);
+            httppost.setEntity(stringEntity);
+        }
+        String auth = new Base64Encoder().encode((username + ":" + password).getBytes("UTF-8"));
+        httppost.addHeader("Authorization", "Basic " + auth);
+        return httppost;
 
-	private HttpPost buildHttpPostObject(String serverAddress, String json, String username, String password)
-	        throws UnsupportedEncodingException {
-		HttpPost httppost = new HttpPost(serverAddress);
-		httppost.setHeader("Accept", "application/json");
-		httppost.setHeader("Content-Type", "application/json");
-		if (json != null) {
-			StringEntity stringEntity = new StringEntity(json);
-			httppost.setEntity(stringEntity);
-		}
-		String auth = new Base64Encoder().encode((username + ":" + password).getBytes("UTF-8"));
-		httppost.addHeader("Authorization", "Basic " + auth);
-		return httppost;
+        }
 
-	}
-
-	private String savePersonAttributeViaREST(String patientUUID, Set<PersonAttribute> personAttributes, String username,
-	        String password) throws IOException {
-		JSONArray attribueArray = new JSONArray();
-
-		for (PersonAttribute pa : personAttributes) {
-			JSONObject attributeObj = new JSONObject();
-			attributeObj.put("attributeType", pa.getAttributeType().getUuid());
-			attributeObj.put("value", pa.getValue());
-
-			attribueArray.add(attributeObj);
-		}
-
-		JSONObject personObj = new JSONObject();
-		personObj.put("attributes", attribueArray);
-
+	private String savePersonAttributeViaREST(String patientUUID, String username, String password) throws IOException {
 		HttpClient client = new DefaultHttpClient();
-		HttpPost httpPost = buildHttpPostObject("http://localhost:8080" + "/openmrs/ws/rest/v1/person/" + patientUUID + "/",
-		    String.valueOf(personObj), username, password);
-		HttpResponse response = client.execute(httpPost);
-		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-		String line = "";
-		while ((line = rd.readLine()) != null) {
-
-		}
-
-		return line;
+        HttpPost httpPost = buildHttpPostObject("http://localhost:8080" + "/openmrs/ws/rest/v1/patient/",String.valueOf(patientUUID), username, password);
+        HttpResponse response = client.execute(httpPost);
+          BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+          String line ="";
+          while ((line = rd.readLine()) != null) {
+            
+          }
+          
+          return line;
 	}
-
+	
 	public void getPatientData(String username, JSONArray data) {
 		JSONUtils jsonUtils = JSONUtils.getInstance();
 		String dateEntred = jsonUtils.getParamValue(data, "DATE_ENTERED");
