@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Encounter;
 
+@Entity
 @Table(name = "hydramodule_encounter_mapper", catalog = "hydra")
 public class HydramoduleEncounterMapper extends BaseOpenmrsData implements Serializable {
 
