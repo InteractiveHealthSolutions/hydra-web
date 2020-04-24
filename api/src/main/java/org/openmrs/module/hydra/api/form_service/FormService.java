@@ -1,5 +1,9 @@
 package org.openmrs.module.hydra.api.form_service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +18,11 @@ import java.util.TreeSet;
 
 import javax.crypto.SecretKey;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -57,6 +66,8 @@ import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.naming.ObjectNamingStrategy;
+
+import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 public class FormService {
 
@@ -170,6 +181,10 @@ public class FormService {
 				if (!dataItem.containsKey(ParamNames.PAYLOAD_TYPE))
 					continue;
 
+				if (!dataItem.containsKey(ParamNames.VALUE)) {
+					continue;
+				}
+
 				DATA_TYPE dataType = DATA_TYPE.valueOf(dataItem.get(ParamNames.PAYLOAD_TYPE).toString());
 				System.out.println("\n\n\nDATATYPE: " + dataType.toString() + "\n" + dataItem.toString() + "\n\n\n");
 				switch (dataType) {
@@ -274,18 +289,20 @@ public class FormService {
 					}
 						break;
 					case OBS_CODED: {
-						if (dataItem.containsKey("characters")) {
-							String locationStr = (String) dataItem.get("characters");
-							if ("location".equals(locationStr)) {
-								location = findOrCreateLocation(locationStr);
-							}
-						}
 
 						String questionConceptStr = (String) dataItem.get(ParamNames.PARAM_NAME);
 						String valueConceptStr = dataItem.get(ParamNames.VALUE).toString();
 
 						Concept questionConcept = conceptService.getConceptByUuid(questionConceptStr);
 						Concept valueConcept = conceptService.getConceptByUuid(valueConceptStr);
+
+						// Indus location workaound
+						if (dataItem.containsKey("characters")) {
+							String locationStr = (String) dataItem.get("characters");
+							if ("location".equals(locationStr)) {
+								location = findOrCreateLocation(valueConcept.getDisplayString());
+							}
+						}
 						/*
 						 * if(conceptDateTime == null) { conceptDateTime = createDateConcept(); }
 						 */
@@ -544,7 +561,12 @@ public class FormService {
 						for (PersonAttribute pa : personAttributes) {
 							person.addAttribute(pa);
 						}
-						// personService.savePerson(person);
+						try {
+							savePersonAttributeViaREST(person.getUuid(), personAttributes, username, decPassword);
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				} else {
 					System.out.println("Patient is null");
@@ -820,6 +842,7 @@ public class FormService {
 
 		PersonService personService = Context.getPersonService();
 		PersonAttributeType type = new PersonAttributeType();
+		type.setSearchable(true);
 		type.setName(name);
 		type.setDescription(description);
 		type.setFormat("java.lang.String");
@@ -928,6 +951,49 @@ public class FormService {
 		catch (Exception e) {
 			jsonReponse.put("result", "failure: Invalid Username or Password");
 		}
+	}
+
+	private HttpPost buildHttpPostObject(String serverAddress, String json, String username, String password)
+	        throws UnsupportedEncodingException {
+		HttpPost httppost = new HttpPost(serverAddress);
+		httppost.setHeader("Accept", "application/json");
+		httppost.setHeader("Content-Type", "application/json");
+		if (json != null) {
+			StringEntity stringEntity = new StringEntity(json);
+			httppost.setEntity(stringEntity);
+		}
+		String auth = new Base64Encoder().encode((username + ":" + password).getBytes("UTF-8"));
+		httppost.addHeader("Authorization", "Basic " + auth);
+		return httppost;
+
+	}
+
+	private String savePersonAttributeViaREST(String patientUUID, Set<PersonAttribute> personAttributes, String username,
+	        String password) throws IOException {
+		JSONArray attribueArray = new JSONArray();
+
+		for (PersonAttribute pa : personAttributes) {
+			JSONObject attributeObj = new JSONObject();
+			attributeObj.put("attributeType", pa.getAttributeType().getUuid());
+			attributeObj.put("value", pa.getValue());
+
+			attribueArray.add(attributeObj);
+		}
+
+		JSONObject personObj = new JSONObject();
+		personObj.put("attributes", attribueArray);
+
+		HttpClient client = new DefaultHttpClient();
+		HttpPost httpPost = buildHttpPostObject("http://localhost:8080" + "/openmrs/ws/rest/v1/person/" + patientUUID + "/",
+		    String.valueOf(personObj), username, password);
+		HttpResponse response = client.execute(httpPost);
+		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+		String line = "";
+		while ((line = rd.readLine()) != null) {
+
+		}
+
+		return line;
 	}
 
 	public void getPatientData(String username, JSONArray data) {

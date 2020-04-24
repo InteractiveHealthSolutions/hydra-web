@@ -90,6 +90,7 @@ public class ReportController {
 		DATE_FORMATS.put("^\\d{2}-[0-1]\\d-[0-3]\\d$", "yy-MM-dd");
 		DATE_FORMATS.put("^\\d{4}-[0-1]\\d-[0-3]\\d$", SQL_DATE);
 		DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{2}$", "dd-MM-yy");
+		DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{2} d{2}:d{2}:d{2}$", "dd-MM-yy hh:mm:ss");
 		DATE_FORMATS.put("^[0-3]\\d-[0-1]\\d-\\d{4}$", STANDARD_DATE_HYPHENATED);
 		DATE_FORMATS.put("^[0-3]\\d [0-1]\\d \\d{2}$", "dd MM yy");
 		DATE_FORMATS.put("^[0-3]\\d [0-1]\\d \\d{4}$", "dd MM yyyy");
@@ -103,15 +104,22 @@ public class ReportController {
 	@RequestMapping(value = "/dump/encounters", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getEncounterDumps(HttpServletRequest request,
-	        @RequestParam(value = "workflow", required = true) String workflow,
+	        @RequestParam(value = "workflow", required = false) String workflow,
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
+		if (workflow == null)
+			workflow = "";
+
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
-
 		String format1 = detectDateFormat(to);
 		Date eDate = fromString(to, format1);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(eDate);
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		eDate = c.getTime();
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
@@ -194,15 +202,22 @@ public class ReportController {
 	@RequestMapping(value = "/dump/patients", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getPatientDumps(HttpServletRequest request,
-	        @RequestParam(value = "workflow", required = true) String workflow,
+	        @RequestParam(value = "workflow", required = false) String workflow,
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
+		if (workflow == null)
+			workflow = "";
+
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
-
 		String format1 = detectDateFormat(to);
 		Date eDate = fromString(to, format1);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(eDate);
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		eDate = c.getTime();
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
@@ -248,9 +263,13 @@ public class ReportController {
 
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
-
 		String format1 = detectDateFormat(to);
 		Date eDate = fromString(to, format1);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(eDate);
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		eDate = c.getTime();
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
@@ -295,9 +314,13 @@ public class ReportController {
 
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
-
 		String format1 = detectDateFormat(to);
 		Date eDate = fromString(to, format1);
+
+		Calendar c = Calendar.getInstance();
+		c.setTime(eDate);
+		c.add(Calendar.DAY_OF_MONTH, 1);
+		eDate = c.getTime();
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);

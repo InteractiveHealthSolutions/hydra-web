@@ -1805,7 +1805,12 @@
 			<column name="date_retired" type="datetime" />
 			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
 		</addColumn>
+		<addForeignKeyConstraint constraintName="hydramodule_component_form_retired_by_fk"
+			baseTableName="hydramodule_component_form" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
+	
+	
 	
 	<!-- <changeSet id="hydra-202003190151" author="naveed.iqbal">
 		<preConditions onFail="MARK_RAN">
@@ -1952,7 +1957,7 @@
 			DECLARE datatype VARCHAR(20);
 			DECLARE v_numeric double;
 			DECLARE v_coded INT;
-			DECLARE v_text,v_datetime, v_tex, concept_answer TEXT;
+			DECLARE v_text,v_datetime, v_tex, concept_answer, workflow_filter TEXT;
 			
 			/** For every encounter_type **/
 			SELECT COUNT(*) FROM encounter_type where retired = 0 INTO n;
@@ -1973,26 +1978,56 @@
 				EXECUTE stmt;
 				
 				/** For all the encounters of the specific encounter_type **/
-				SELECT count(*) from encounter 
-				left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id
-				left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id
-				left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id
-				left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id
-				where encounter_type = enc_type_id and encounter.voided = 0 
-                and hydramodule_workflow.name = workflow and encounter.encounter_datetime between datefrom and dateto
-				INTO enc_n;
+                if workflow = ''  then
+                
+					SELECT count(*) from encounter 
+					left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id
+					left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id
+					left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id
+					left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id
+					where encounter_type = enc_type_id and encounter.voided = 0 
+					and encounter.encounter_datetime between datefrom and dateto
+					INTO enc_n;
+                
+                else
+                
+					SELECT count(*) from encounter 
+					left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id
+					left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id
+					left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id
+					left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id
+					where encounter_type = enc_type_id and encounter.voided = 0 
+					and hydramodule_workflow.name = workflow and encounter.encounter_datetime between datefrom and dateto
+					INTO enc_n;
+                
+                end if;
 		        
 				SET enc_i=0;
 				WHILE enc_i &lt; enc_n DO 
 				    
-		            SELECT encounter.encounter_id into eid from encounter
-					left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id 
-					left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id 
-					left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id 
-					left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id 
-					where encounter_type = enc_type_id and encounter.voided = 0
-                    and hydramodule_workflow.name =  workflow and encounter.encounter_datetime between datefrom and dateto
-					LIMIT enc_i, 1;
+                    if workflow = ''  then
+                    
+						SELECT encounter.encounter_id into eid from encounter
+						left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id 
+						left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id 
+						left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id 
+						left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id 
+						where encounter_type = enc_type_id and encounter.voided = 0
+						and encounter.encounter_datetime between datefrom and dateto
+						LIMIT enc_i, 1;
+                    
+                    else
+                    
+						SELECT encounter.encounter_id into eid from encounter
+						left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id 
+						left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id 
+						left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id 
+						left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id 
+						where encounter_type = enc_type_id and encounter.voided = 0
+						and hydramodule_workflow.name =  workflow and encounter.encounter_datetime between datefrom and dateto
+						LIMIT enc_i, 1;
+                    
+                    end if;
 		            
 					/** Get encounter metadata info and insert into de-encountrised table **/
 					SET @insert_query:=CONCAT('INSERT INTO ',tab_name,' (patient_id, location_id, encounter_id, encounter_datetime, date_created, creator, provider_id, workflow) ',
@@ -2114,11 +2149,11 @@
 		CREATE PROCEDURE `norm_patient`(IN datefrom datetime, IN dateto datetime, IN workflow varchar(50), IN prefix varchar(50))
 		
 		BEGIN
-		
+		            
 			DECLARE n,i,idn_i,idn_n,attr_i,attr_n INT DEFAULT 0;
 		    DECLARE pid INT;
 		    DECLARE idn_type, idn, loc, colName, loc_colName, attr_type, attr_value, format varchar(50);
-		    DECLARE location_value, concept_value TEXT;
+		    DECLARE location_value, concept_value, workflow_filter TEXT;
             DECLARE tab_name varchar(50);
             
             SET tab_name = CONCAT('normpatient', '_' , prefix);
@@ -2131,6 +2166,12 @@
 		    PREPARE stmt from @create_qurey;
 			EXECUTE stmt;
             
+            if workflow = ''  then
+				SET workflow_filter = ' 1=1 ';
+            else
+				SET workflow_filter =  CONCAT(' hydramodule_workflow.name = ''',workflow,'''');
+			end if;
+            
             SET @insert_qurey:=CONCAT('Insert into ', tab_name ,' (patient_id,workflow,gender,birthdate,given_name,family_name,date_created,creator)
 		    select patient.patient_id, hydramodule_workflow.name, person.gender, person.birthdate, person_name.given_name, person_name.family_name, 
 			patient.date_created, patient.creator from patient
@@ -2138,9 +2179,21 @@
 			left join person on patient.patient_id = person.person_id
 			left join hydramodule_patient_workflow on patient.patient_id = hydramodule_patient_workflow.patient_id
 			left join hydramodule_workflow on hydramodule_patient_workflow.workflow_id = hydramodule_workflow.workflow_id
-			where patient.voided = 0 and hydramodule_workflow.name = ''',workflow,''' and patient.date_created between ''',datefrom,''' and ''',dateto,''';');
+			where patient.voided = 0 and ', workflow_filter ,' and patient.date_created between ''',datefrom,''' and ''',dateto,''';');
             PREPARE stmt from @insert_qurey;
 			EXECUTE stmt;
+            
+            if workflow = ''  then
+            
+            select count(*) from patient
+			left join person_name on patient.patient_id = person_name.person_id
+			left join person on patient.patient_id = person.person_id
+			left join hydramodule_patient_workflow on patient.patient_id = hydramodule_patient_workflow.patient_id
+			left join hydramodule_workflow on hydramodule_patient_workflow.workflow_id = hydramodule_workflow.workflow_id
+			where patient.voided = 0 and patient.date_created between datefrom and dateto
+            into n;
+            
+            else
             
             select count(*) from patient
 			left join person_name on patient.patient_id = person_name.person_id
@@ -2149,6 +2202,8 @@
 			left join hydramodule_workflow on hydramodule_patient_workflow.workflow_id = hydramodule_workflow.workflow_id
 			where patient.voided = 0 and hydramodule_workflow.name = workflow and patient.date_created between datefrom and dateto
             into n;
+            
+            end if;
             
             SET i=0;
 			WHILE i &lt; n DO 
@@ -2252,6 +2307,7 @@
             
             
 		END;
+				
 	    </createProcedure>
 	</changeSet>   
 	
