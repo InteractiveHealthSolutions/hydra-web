@@ -2751,7 +2751,7 @@
 	    </sql>    
 	</changeSet>
 	
-	<changeSet author="rabbia.hassan" id="hydra-dumps-fix">  
+	<changeSet author="rabbia.hassan" id="hydra-deencounterised-fix">  
 		 <comment>Remove procedure</comment>
 	    <sql
 			splitStatements="true"
@@ -2760,9 +2760,9 @@
 	    </sql>    
 	</changeSet>
 	
-	<changeSet author="rabbia.hassan" id="createProcedure-deencounterised-identifier-coloumn-added">
+	<changeSet author="rabbia.hassan" id="deencounterised-identifier-coloumn-added">
 	    <createProcedure>
-		CREATE DEFINER=`root`@`localhost` PROCEDURE `deencountrised`(IN datefrom datetime, IN dateto datetime, IN workflow varchar(50),  IN prefix varchar(50))
+		CREATE PROCEDURE `deencountrised`(IN datefrom datetime, IN dateto datetime, IN workflow varchar(50),  IN prefix varchar(50))
 BEGIN			
 			DECLARE n,i,enc_n,enc_i,obs_n,obs_i INT DEFAULT 0;
 			DECLARE tab_name,concept_name,colName, wf VARCHAR(60);
