@@ -64,6 +64,9 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 	@OneToMany(mappedBy = "field")
 	private Set<HydramoduleFormField> formFields;
 
+	@Column(name = "is_default")
+	private Boolean isDefault = false;
+
 	@Override
 	public Integer getId() {
 		return fieldId;
@@ -152,6 +155,14 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 
 	public void setParsedRule(String parsedRule) {
 		this.parsedRule = parsedRule;
+	}
+
+	public Boolean getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(Boolean isDefault) {
+		this.isDefault = isDefault;
 	}
 
 	@Override

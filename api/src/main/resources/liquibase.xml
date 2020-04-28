@@ -2952,6 +2952,23 @@ BEGIN
 	    
 	    </createProcedure>
 	</changeSet>
+		<changeSet author="hareem.ajaz" id="hydra-202004271343">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="hydramodule_field"
+					columnName="is_default" />
+			</not>
+		</preConditions>
+		<comment>
+			Adding column 'is_default' in hydramodule_field
+			table
+		</comment>
+		<addColumn tableName="hydramodule_field">
+			<column name="is_default" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
 	
 	
 </databaseChangeLog>
