@@ -23,6 +23,7 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.FieldAnswer;
+import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
@@ -1155,6 +1156,20 @@ public class HydraDaoImpl {
 		Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
 		criteria.addOrder(Order.asc("userWorkflowId"));
 		return criteria.list();
+	}
+
+	public HydramoduleUserWorkflow getUserWorkflowByUser(User user) {
+
+		if (user != null) {
+			DbSession session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
+			criteria.add(Restrictions.eq("user", user));
+			List<HydramoduleUserWorkflow> users = criteria.list();
+			return users.get(0);
+
+		}
+		return null;
+
 	}
 
 	// HydramoduleUserWorkflow

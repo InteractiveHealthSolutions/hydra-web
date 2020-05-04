@@ -1698,9 +1698,13 @@
 			</column>
 			<column name="changed_by" type="int" />
 			<column name="date_changed" type="datetime" />
+			<column defaultValueBoolean="false" name="voided" type="boolean">
+				<constraints nullable="false" />
+			</column>
 		    <column name="voided_by" type="int" />
 			<column name="date_voided" type="datetime" />
-			<column name="void_reason" type="varchar(255)" />	<column name="uuid" type="char(38)">
+			<column name="void_reason" type="varchar(255)" />	
+			<column name="uuid" type="char(38)">
 				<constraints unique="true" />
 			</column>
 		</createTable>
@@ -2968,6 +2972,16 @@ BEGIN
 				<constraints nullable="false" />
 			</column>
 		</addColumn>
+	</changeSet>
+	
+	<changeSet author="hareem.ajaz" id="hydra-metadata-202005041036">  
+	    <comment>insert queries for encounter_type</comment>
+	    <sql
+			splitStatements="true"
+			stripComments="true">         
+		   INSERT IGNORE INTO `encounter_type` (name, description, creator, date_created, retired, retired_by, date_retired, retire_reason, uuid, edit_privilege, view_privilege, changed_by, date_changed) VALUES ('Xray Order Form', 'X-ray Order Form', 1, '2020-04-19 12:11:43', 0, NULL,NULL ,NULL , '92639f57-a2a0-49f9-8fd8-5de95013b51e',NULL , NULL,NULL,NULL);
+           INSERT IGNORE INTO `encounter_type` (name, description, creator, date_created, retired, retired_by, date_retired, retire_reason, uuid, edit_privilege, view_privilege, changed_by, date_changed) VALUES ('Xray Result Form', 'X-ray Result Form', 1, '2020-04-19 12:16:52', 0, NULL, NULL, NULL, 'bf22958e-4c9a-43af-8243-d8f83ff449fe', NULL, NULL, NULL,NULL) 
+	    </sql>    
 	</changeSet>
 	
 	
