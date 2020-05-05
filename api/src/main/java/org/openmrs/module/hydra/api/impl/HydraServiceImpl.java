@@ -718,8 +718,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public List<HydramoduleUserWorkflow> getUserWorkflowByUser(String uuid) throws APIException {
 		User user = Context.getUserService().getUserByUuid(uuid);
-		List<HydramoduleUserWorkflow> users = new ArrayList();
-		users.add(dao.getUserWorkflowByUser(user));
+		List<HydramoduleUserWorkflow> users = dao.getUserWorkflowByUser(user);
 		return users;
 	}
 

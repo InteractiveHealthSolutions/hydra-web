@@ -1158,14 +1158,14 @@ public class HydraDaoImpl {
 		return criteria.list();
 	}
 
-	public HydramoduleUserWorkflow getUserWorkflowByUser(User user) {
+	public List<HydramoduleUserWorkflow> getUserWorkflowByUser(User user) {
 
 		if (user != null) {
 			DbSession session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
 			criteria.add(Restrictions.eq("user", user));
 			List<HydramoduleUserWorkflow> users = criteria.list();
-			return users.get(0);
+			return users;
 
 		}
 		return null;
