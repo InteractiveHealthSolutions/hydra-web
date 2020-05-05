@@ -661,10 +661,14 @@ public class FormService {
 
 			// Save relationship
 			RelationshipType relationshipType = personService.getRelationshipTypeByName(relationship);
+			
 			if (relationshipType != null) {
+				System.out.println("RelationshipType "+relationshipType.getName());
 				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(),
 				        relationshipType);
 				personService.saveRelationship(relationshipObj);
+			} else {
+				System.out.println("RelationshipType "+null);
 			}
 		}
 	}
