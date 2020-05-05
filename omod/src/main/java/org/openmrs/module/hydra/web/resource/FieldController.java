@@ -90,6 +90,7 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 		description.addProperty("concept", Representation.REF);
 		description.addProperty("fieldType", Representation.REF);
 		description.addProperty("parsedRule");
+		description.addProperty("isDefault");
 
 		if (representation instanceof DefaultRepresentation) {
 			description.addProperty("display");
@@ -119,7 +120,9 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
+
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
+
 		description.addProperty("uuid");
 		description.addProperty("answers");
 		description.addProperty("selectMultiple");
@@ -131,6 +134,7 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 		description.addProperty("description");
 		description.addProperty("concept");
 		description.addProperty("fieldType");
+		description.addProperty("isDefault");
 
 		return description;
 
