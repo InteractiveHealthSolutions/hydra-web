@@ -739,4 +739,9 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return dao.getHydramoduleEncounterMapper(uuid);
 	}
 
+	@Override
+	public List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String patientIdentifier) throws APIException {
+		return dao.getEncounterMapperByPatient(patientIdentifier);
+	}
+
 }

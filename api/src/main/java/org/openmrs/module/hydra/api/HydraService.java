@@ -298,4 +298,6 @@ public interface HydraService extends OpenmrsService {
 
 	List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws APIException;
 
+	List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String patientIdentifier) throws APIException;
+
 }

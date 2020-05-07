@@ -39,11 +39,10 @@ public class CustomServicesController {
 				return userSystemIds;
 			}
 		}
-		catch(Exception e) {
+		catch (Exception e) {
 			log.error(e);
 		}
 		return null;
 
-		
 	}
 }
