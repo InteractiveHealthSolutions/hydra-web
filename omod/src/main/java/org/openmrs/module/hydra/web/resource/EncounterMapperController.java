@@ -77,7 +77,7 @@ public class EncounterMapperController extends DataDelegatingCrudResource<Hydram
 		description.addProperty("uuid");
 		description.addProperty("encounterMapperId");
 		description.addProperty("orderEncounterId", Representation.REF);
-		description.addProperty("resultEncounterId", Representation.REF);
+		description.addProperty("resultEncounterId", Representation.FULL);
 
 		if (representation instanceof DefaultRepresentation) {
 
