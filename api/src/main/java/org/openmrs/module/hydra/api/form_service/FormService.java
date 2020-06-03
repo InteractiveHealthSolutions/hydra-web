@@ -1,10 +1,15 @@
 package org.openmrs.module.hydra.api.form_service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -14,6 +19,11 @@ import java.util.TreeSet;
 
 import javax.crypto.SecretKey;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -58,8 +68,27 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.naming.ObjectNamingStrategy;
 
+import com.thoughtworks.xstream.core.util.Base64Encoder;
+
 public class FormService {
 
+	private HashMap<String, String> relationships;
+	
+	public FormService() {
+		relationships = new HashMap<String, String>();
+		relationships.put("Doctor", "8d919b58-c2cc-11de-8d13-0010c6dffd0f");
+		relationships.put("Sibling", "8d91a01c-c2cc-11de-8d13-0010c6dffd0f");
+		relationships.put("Parent", "8d91a210-c2cc-11de-8d13-0010c6dffd0f");
+		relationships.put("Aunt/Uncle", "8d91a3dc-c2cc-11de-8d13-0010c6dffd0f");
+		relationships.put("Supervisor", "2a5f4ff4-a179-4b8a-aa4c-40f71956ebbc");
+		relationships.put("Contact", "0fdb0891-bece-4540-93db-937b9d8c4905");
+		relationships.put("Patient", "682dc910-e8fa-4a41-8cce-73cb54ab0850");
+		relationships.put("Patient", "e107edeb-cfde-46dd-855a-c21591677ef0");
+		relationships.put("Child", "701eebed-edfc-d6d4-a8a5-512c67179ef0");
+		relationships.put("Spouse", "451ebffd-edfc-d6d4-a8a5-512c67179ef0");
+		relationships.put("Other Relative", "8133cc4d-8d6d-11ea-a5ab-0242ac120002");
+		relationships.put("Other incl live-in Domestic staff", "d101aebd-8d6d-11ea-a5ab-0242ac120002");
+	}
 	private static FormService instance;
 
 	public static FormService getInstance() {
@@ -170,6 +199,10 @@ public class FormService {
 				if (!dataItem.containsKey(ParamNames.PAYLOAD_TYPE))
 					continue;
 
+				if (!dataItem.containsKey(ParamNames.VALUE)) {
+					continue;
+				}
+
 				DATA_TYPE dataType = DATA_TYPE.valueOf(dataItem.get(ParamNames.PAYLOAD_TYPE).toString());
 				System.out.println("\n\n\nDATATYPE: " + dataType.toString() + "\n" + dataItem.toString() + "\n\n\n");
 				switch (dataType) {
@@ -274,18 +307,20 @@ public class FormService {
 					}
 						break;
 					case OBS_CODED: {
-						if (dataItem.containsKey("characters")) {
-							String locationStr = (String) dataItem.get("characters");
-							if ("location".equals(locationStr)) {
-								location = findOrCreateLocation(locationStr);
-							}
-						}
 
 						String questionConceptStr = (String) dataItem.get(ParamNames.PARAM_NAME);
 						String valueConceptStr = dataItem.get(ParamNames.VALUE).toString();
 
 						Concept questionConcept = conceptService.getConceptByUuid(questionConceptStr);
 						Concept valueConcept = conceptService.getConceptByUuid(valueConceptStr);
+
+						// Indus location workaound
+						if (dataItem.containsKey("characters")) {
+							String locationStr = (String) dataItem.get("characters");
+							if ("location".equals(locationStr)) {
+								location = findOrCreateLocation(valueConcept.getDisplayString());
+							}
+						}
 						/*
 						 * if(conceptDateTime == null) { conceptDateTime = createDateConcept(); }
 						 */
@@ -544,7 +579,12 @@ public class FormService {
 						for (PersonAttribute pa : personAttributes) {
 							person.addAttribute(pa);
 						}
-						// personService.savePerson(person);
+						try {
+							savePersonAttributeViaREST(person.getUuid(), personAttributes, username, decPassword);
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				} else {
 					System.out.println("Patient is null");
@@ -597,6 +637,7 @@ public class FormService {
 		String dob = (String) contactObj.get("age");
 		String birthDate = (String) contactObj.get("dob");
 		String relationship = (String) contactObj.get("relation");
+		
 
 		gender = gender.toLowerCase().startsWith("m") ? "M" : "F";
 
@@ -638,11 +679,15 @@ public class FormService {
 			}
 
 			// Save relationship
-			RelationshipType relationshipType = personService.getRelationshipTypeByName(relationship);
+			RelationshipType relationshipType = personService.getRelationshipTypeByUuid(relationships.get(relationship));
+			
 			if (relationshipType != null) {
+				System.out.println("RelationshipType "+relationshipType.getName());
 				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(),
 				        relationshipType);
 				personService.saveRelationship(relationshipObj);
+			} else {
+				System.out.println("RelationshipType "+null);
 			}
 		}
 	}
@@ -820,6 +865,7 @@ public class FormService {
 
 		PersonService personService = Context.getPersonService();
 		PersonAttributeType type = new PersonAttributeType();
+		type.setSearchable(true);
 		type.setName(name);
 		type.setDescription(description);
 		type.setFormat("java.lang.String");
@@ -928,6 +974,49 @@ public class FormService {
 		catch (Exception e) {
 			jsonReponse.put("result", "failure: Invalid Username or Password");
 		}
+	}
+
+	private HttpPost buildHttpPostObject(String serverAddress, String json, String username, String password)
+	        throws UnsupportedEncodingException {
+		HttpPost httppost = new HttpPost(serverAddress);
+		httppost.setHeader("Accept", "application/json");
+		httppost.setHeader("Content-Type", "application/json");
+		if (json != null) {
+			StringEntity stringEntity = new StringEntity(json);
+			httppost.setEntity(stringEntity);
+		}
+		String auth = new Base64Encoder().encode((username + ":" + password).getBytes("UTF-8"));
+		httppost.addHeader("Authorization", "Basic " + auth);
+		return httppost;
+
+	}
+
+	private String savePersonAttributeViaREST(String patientUUID, Set<PersonAttribute> personAttributes, String username,
+	        String password) throws IOException {
+		JSONArray attribueArray = new JSONArray();
+
+		for (PersonAttribute pa : personAttributes) {
+			JSONObject attributeObj = new JSONObject();
+			attributeObj.put("attributeType", pa.getAttributeType().getUuid());
+			attributeObj.put("value", pa.getValue());
+
+			attribueArray.add(attributeObj);
+		}
+
+		JSONObject personObj = new JSONObject();
+		personObj.put("attributes", attribueArray);
+
+		HttpClient client = new DefaultHttpClient();
+		HttpPost httpPost = buildHttpPostObject("http://localhost:8080" + "/openmrs/ws/rest/v1/person/" + patientUUID + "/",
+		    String.valueOf(personObj), username, password);
+		HttpResponse response = client.execute(httpPost);
+		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+		String line = "";
+		while ((line = rd.readLine()) != null) {
+
+		}
+
+		return line;
 	}
 
 	public void getPatientData(String username, JSONArray data) {

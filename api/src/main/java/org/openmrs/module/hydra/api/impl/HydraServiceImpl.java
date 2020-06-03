@@ -29,6 +29,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
+import org.openmrs.module.hydra.model.workflow.HydramoduleEncounterMapper;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
@@ -327,7 +328,7 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	@Transactional
 	@Override
-	public void deleteComponentForm(HydramoduleComponentForm phaseComponent) throws APIException {
+	public void retireComponentForm(HydramoduleComponentForm phaseComponent) throws APIException {
 		phaseComponent.setRetired(true);
 		phaseComponent.setRetiredBy(Context.getAuthenticatedUser());
 		phaseComponent.setDateRetired(new Date());
@@ -712,6 +713,35 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) throws APIException {
 		return dao.getHydramoduleUserWorkflow(uuid);
+	}
+
+	@Override
+	public List<HydramoduleUserWorkflow> getUserWorkflowByUser(String uuid) throws APIException {
+		User user = Context.getUserService().getUserByUuid(uuid);
+		List<HydramoduleUserWorkflow> users = dao.getUserWorkflowByUser(user);
+		return users;
+	}
+
+	// HydramoduleEncounterMapper
+	@Override
+	public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper)
+	        throws APIException {
+		return dao.saveHydramoduleEncounterMapper(hydramoduleEncounterMapper);
+	}
+
+	@Override
+	public List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws APIException {
+		return dao.getAllHydramoduleEncounterMapper();
+	}
+
+	@Override
+	public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws APIException {
+		return dao.getHydramoduleEncounterMapper(uuid);
+	}
+
+	@Override
+	public List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String patientIdentifier) throws APIException {
+		return dao.getEncounterMapperByPatient(patientIdentifier);
 	}
 
 }

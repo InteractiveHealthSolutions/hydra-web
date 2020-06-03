@@ -52,7 +52,7 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 	@Override
 	protected void delete(HydramoduleComponentForm phaseComponent, String reason, RequestContext context)
 	        throws ResponseException {
-		service.deleteComponentForm(phaseComponent);
+		service.retireComponentForm(phaseComponent);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		HydramoduleComponentForm phaseComponent = getByUniqueId(uuid);
 		if (phaseComponent == null)
 			throw new ObjectNotFoundException();
-		service.deleteComponentForm(phaseComponent);
+		service.retireComponentForm(phaseComponent);
 	}
 
 	@Override
@@ -101,6 +101,7 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		description.addProperty("component");
 		description.addProperty("componentFormId");
 		description.addProperty("form");
+		description.addProperty("retired");
 
 		if (representation instanceof DefaultRepresentation) {
 
@@ -125,6 +126,7 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		description.addProperty("workflow");
 		description.addProperty("componentFormId");
 		description.addProperty("form");
+		description.addProperty("retired");
 
 		return description;
 
