@@ -715,6 +715,13 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return dao.getHydramoduleUserWorkflow(uuid);
 	}
 
+	@Override
+	public List<HydramoduleUserWorkflow> getUserWorkflowByUser(String uuid) throws APIException {
+		User user = Context.getUserService().getUserByUuid(uuid);
+		List<HydramoduleUserWorkflow> users = dao.getUserWorkflowByUser(user);
+		return users;
+	}
+
 	// HydramoduleEncounterMapper
 	@Override
 	public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper)
@@ -730,6 +737,11 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws APIException {
 		return dao.getHydramoduleEncounterMapper(uuid);
+	}
+
+	@Override
+	public List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String patientIdentifier) throws APIException {
+		return dao.getEncounterMapperByPatient(patientIdentifier);
 	}
 
 }
