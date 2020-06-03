@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -71,6 +72,23 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 public class FormService {
 
+	private HashMap<String, String> relationships;
+	
+	public FormService() {
+		relationships = new HashMap<String, String>();
+		relationships.put("Doctor", "8d919b58-c2cc-11de-8d13-0010c6dffd0f");
+		relationships.put("Sibling", "8d91a01c-c2cc-11de-8d13-0010c6dffd0f");
+		relationships.put("Parent", "8d91a210-c2cc-11de-8d13-0010c6dffd0f");
+		relationships.put("Aunt/Uncle", "8d91a3dc-c2cc-11de-8d13-0010c6dffd0f");
+		relationships.put("Supervisor", "2a5f4ff4-a179-4b8a-aa4c-40f71956ebbc");
+		relationships.put("Contact", "0fdb0891-bece-4540-93db-937b9d8c4905");
+		relationships.put("Patient", "682dc910-e8fa-4a41-8cce-73cb54ab0850");
+		relationships.put("Patient", "e107edeb-cfde-46dd-855a-c21591677ef0");
+		relationships.put("Child", "701eebed-edfc-d6d4-a8a5-512c67179ef0");
+		relationships.put("Spouse", "451ebffd-edfc-d6d4-a8a5-512c67179ef0");
+		relationships.put("Other Relative", "8133cc4d-8d6d-11ea-a5ab-0242ac120002");
+		relationships.put("Other incl live-in Domestic staff", "d101aebd-8d6d-11ea-a5ab-0242ac120002");
+	}
 	private static FormService instance;
 
 	public static FormService getInstance() {
@@ -619,6 +637,7 @@ public class FormService {
 		String dob = (String) contactObj.get("age");
 		String birthDate = (String) contactObj.get("dob");
 		String relationship = (String) contactObj.get("relation");
+		
 
 		gender = gender.toLowerCase().startsWith("m") ? "M" : "F";
 
@@ -660,11 +679,15 @@ public class FormService {
 			}
 
 			// Save relationship
-			RelationshipType relationshipType = personService.getRelationshipTypeByName(relationship);
+			RelationshipType relationshipType = personService.getRelationshipTypeByUuid(relationships.get(relationship));
+			
 			if (relationshipType != null) {
+				System.out.println("RelationshipType "+relationshipType.getName());
 				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(),
 				        relationshipType);
 				personService.saveRelationship(relationshipObj);
+			} else {
+				System.out.println("RelationshipType "+null);
 			}
 		}
 	}

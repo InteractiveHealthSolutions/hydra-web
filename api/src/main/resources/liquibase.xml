@@ -1698,12 +1698,12 @@
 			</column>
 			<column name="changed_by" type="int" />
 			<column name="date_changed" type="datetime" />
-			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+			<column defaultValueBoolean="false" name="voided" type="boolean">
 				<constraints nullable="false" />
 			</column>
-			<column name="retired_by" type="int" />
-			<column name="date_retired" type="datetime" />
-			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+		    <column name="voided_by" type="int" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />	
 			<column name="uuid" type="char(38)">
 				<constraints unique="true" />
 			</column>
@@ -1722,8 +1722,8 @@
 		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_changed_by_fk"
 			baseTableName="hydramodule_user_workflow" baseColumnNames="changed_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_retired_by_fk"
-			baseTableName="hydramodule_user_workflow" baseColumnNames="retired_by"
+		<addForeignKeyConstraint constraintName="hydramodule_user_workflow_voided_by_fk"
+			baseTableName="hydramodule_user_workflow" baseColumnNames="voided_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 
 	</changeSet>
@@ -2708,12 +2708,12 @@
 			</column>
 			<column name="changed_by" type="int" />
 			<column name="date_changed" type="datetime" />
-			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+			<column name="voided_by" type="int" />
+			<column defaultValueBoolean="false" name="voided" type="boolean">
 				<constraints nullable="false" />
 			</column>
-			<column name="retired_by" type="int" />
-			<column name="date_retired" type="datetime" />
-			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" />
 			<column name="uuid" type="char(38)">
 				<constraints unique="true" />
 			</column>
@@ -2732,8 +2732,8 @@
 		<addForeignKeyConstraint constraintName="hydramodule_encounter_mapper_changed_by_fk"
 			baseTableName="hydramodule_encounter_mapper" baseColumnNames="changed_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
-		<addForeignKeyConstraint constraintName="hydramodule_encounter_mapper_retired_by_fk"
-		baseTableName="hydramodule_encounter_mapper" baseColumnNames="retired_by"
+		<addForeignKeyConstraint constraintName="hydramodule_encounter_mapper_voided_by_fk"
+		baseTableName="hydramodule_encounter_mapper" baseColumnNames="voided_by"
 			referencedTableName="users" referencedColumnNames="user_id" />
 
 	</changeSet>
@@ -2746,6 +2746,241 @@
 		       INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (168077,'Concept used by hydra for Xray Result Form','en',1,'2020-0-2 08:47:53',NULL,NULL,'42cvd4de-58b6-4979-904b-4b12e99a52dw');
 		       INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168077,'XRAY COVID RESULT','en',1,'2020-04-21 08:47:53',0,NULL,NULL,NULL,'d714898u-e08g-4w1d-8c3A-3b918g182q97','FULLY_SPECIFIED',1,NULL,NULL);
 
+	    </sql>    
+	</changeSet>
+	
+	<changeSet author="rabbia.hassan" id="hydra-deencounterised-fix">  
+		 <comment>Remove procedure</comment>
+	    <sql
+			splitStatements="true"
+			stripComments="true"> 
+			DROP procedure IF EXISTS `deencountrised`;        
+	    </sql>    
+	</changeSet>
+	
+	<changeSet author="rabbia.hassan" id="deencounterised-identifier-coloumn-added">
+	    <createProcedure>
+		CREATE PROCEDURE `deencountrised`(IN datefrom datetime, IN dateto datetime, IN workflow varchar(50),  IN prefix varchar(50))
+BEGIN			
+			DECLARE n,i,enc_n,enc_i,obs_n,obs_i INT DEFAULT 0;
+			DECLARE tab_name,concept_name,colName, wf VARCHAR(60);
+			DECLARE enc_type_id,pid,lid,eid,c,c_id, prov_id INT;
+			DECLARE edt,dc datetime;
+			DECLARE datatype VARCHAR(20);
+			DECLARE v_numeric double;
+			DECLARE v_coded INT;
+			DECLARE v_text,v_datetime, v_tex, concept_answer, workflow_filter TEXT;
+			
+			/** For every encounter_type **/
+			SELECT COUNT(*) FROM encounter_type where retired = 0 INTO n;
+			SET i=0;
+			WHILE i &lt; n DO 
+			
+				/** name for de-encounterised table **/
+				SELECT CONCAT('enc_',alphanum(LOWER(encounter_type.name)),'_',prefix), encounter_type_id  into tab_name,enc_type_id FROM encounter_type where retired = 0 LIMIT i,1; 
+				
+				/** drop de-encountrised table **/
+				SET @drop_table:=CONCAT('DROP TABLE IF EXISTS ', tab_name);
+				PREPARE stmt from @drop_table;
+				EXECUTE stmt;
+				
+				/** create de-encountrised table with metadata from encounter table **/
+				SET @create_table:=CONCAT('CREATE TABLE ',tab_name,' (id INT NOT NULL AUTO_INCREMENT, encounter_id INT NOT NULL, patient_id INT NOT NULL, patient_identifier TEXT NOT NULL, location_id INT NOT NULL, provider_id INT, creator INT NOT NULL, encounter_datetime DATETIME NOT NULL, date_created DATETIME NOT NULL, workflow varchar(50), PRIMARY KEY (id))');
+				PREPARE stmt from @create_table;
+				EXECUTE stmt;
+				
+				/** For all the encounters of the specific encounter_type **/
+                if workflow = ''  then
+                
+					SELECT count(*) from encounter 
+					left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id
+					left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id
+					left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id
+					left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id
+					where encounter_type = enc_type_id and encounter.voided = 0 
+					and encounter.encounter_datetime between datefrom and dateto
+					INTO enc_n;
+                
+                else
+                
+					SELECT count(*) from encounter 
+					left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id
+					left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id
+					left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id
+					left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id
+					where encounter_type = enc_type_id and encounter.voided = 0 
+					and hydramodule_workflow.name = workflow and encounter.encounter_datetime between datefrom and dateto
+					INTO enc_n;
+                
+                end if;
+		        
+				SET enc_i=0;
+				WHILE enc_i &lt; enc_n DO 
+				    
+                    if workflow = ''  then
+                    
+						SELECT encounter.encounter_id into eid from encounter
+						left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id 
+						left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id 
+						left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id 
+						left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id 
+						where encounter_type = enc_type_id and encounter.voided = 0
+						and encounter.encounter_datetime between datefrom and dateto
+						LIMIT enc_i, 1;
+                    
+                    else
+                    
+						SELECT encounter.encounter_id into eid from encounter
+						left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id 
+						left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id 
+						left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id 
+						left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id 
+						where encounter_type = enc_type_id and encounter.voided = 0
+						and hydramodule_workflow.name =  workflow and encounter.encounter_datetime between datefrom and dateto
+						LIMIT enc_i, 1;
+                    
+                    end if;
+		            
+					/** Get encounter metadata info and insert into de-encountrised table **/
+					SET @insert_query:=CONCAT('INSERT INTO ',tab_name,' (patient_id,patient_identifier, location_id, encounter_id, encounter_datetime, date_created, creator, provider_id, workflow) ',
+												'SELECT encounter.patient_id, identifier, encounter.location_id, encounter.encounter_id, encounter.encounter_datetime, encounter.date_created, ',
+												'encounter.creator, encounter_provider.provider_id, hydramodule_workflow.name from encounter ', 
+												'left join encounter_provider on encounter.encounter_id = encounter_provider.encounter_id ',
+												'left join patient_identifier on encounter.patient_id = patient_identifier.patient_id and identifier_type = 3 ',
+                                                'left join hydra.hydramodule_form_encounter on hydramodule_form_encounter.encounter_id = encounter.encounter_id ',
+												'left join hydra.hydramodule_component_form  on hydramodule_component_form.component_form_id = hydramodule_form_encounter.component_form_id ',
+												'left join hydra.hydramodule_workflow on hydramodule_workflow.workflow_id = hydramodule_component_form.workflow_id ',
+												'where encounter.encounter_id = ', eid);
+		            PREPARE stmt from @insert_query;
+					EXECUTE stmt;
+			
+					/** For all the obs of the specific encounter **/
+					SELECT count(*) from obs where encounter_id = eid and voided = 0 into obs_n;
+					SET obs_i=0;
+					
+                    WHILE obs_i &lt; obs_n DO 
+						
+						/** Get concept_id (question) and answers from value columns **/
+						SELECT concept_id, value_numeric, value_coded, value_text, value_datetime into c_id, v_numeric, v_coded, v_text, v_datetime from obs where encounter_id = eid and voided = 0 LIMIT obs_i,1;
+						/** generate column name **/
+						SELECT alphanum(LOWER(name)) FROM concept_name where concept_id = c_id and concept_name_type = 'SHORT' limit 1 into concept_name;
+			
+						/** Check if concept column already exists in the de-encountrised table **/
+						SET colName = NULL;
+						SELECT column_name INTO colName
+						FROM information_schema.columns 
+						WHERE table_schema = 'hydra'
+							AND table_name = tab_name
+						AND column_name = concept_name;
+									
+						/** Get question datatype **/            
+						SELECT concept_datatype.name into datatype from concept 
+						join concept_datatype on concept.datatype_id = concept_datatype.concept_datatype_id
+						where concept_id = c_id;
+															
+						/** alter to add column to de-encounterised table  and insert data according to datatype **/
+						CASE datatype
+							
+							WHEN 'Coded' THEN 
+                            
+                                IF v_coded is not null then
+					
+								IF colName is null THEN 
+									SET @alter_query:=CONCAT('ALTER TABLE ',tab_name,' ADD ', concept_name , ' text');
+									PREPARE stmt from @alter_query;
+									EXECUTE stmt;
+								END IF;
+													
+								/** Get concept name for the coded_value **/
+								SELECT name FROM concept_name where concept_id = v_coded and concept_name_type = 'FULLY_SPECIFIED' limit 1 into concept_answer;
+								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = IF(',concept_name,' is NULL,''', concept_answer, ''', CONCAT(' , concept_name,  ', '', '' ''', concept_answer,''')) WHERE encounter_id = ' , eid);
+                                PREPARE stmt from @insert_value;
+								EXECUTE stmt;
+                                
+                                end if;
+                                
+                            WHEN 'Numeric' THEN
+							
+								IF v_numeric is not null then
+								IF colName is null THEN 
+									SET @alter_query:=CONCAT('ALTER TABLE ',tab_name,' ADD ', concept_name , ' double');
+									PREPARE stmt from @alter_query;
+									EXECUTE stmt;
+								END IF;
+								                                
+								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = ',  v_numeric ,' WHERE encounter_id = ' , eid);
+								PREPARE stmt from @insert_value;
+								EXECUTE stmt; 
+                                end if;
+														
+                            WHEN 'Text' THEN 
+								
+                                IF v_text is not null then
+								IF colName is null THEN 
+									SET @alter_query:=CONCAT('ALTER TABLE ',tab_name,' ADD ', concept_name , ' text');
+									PREPARE stmt from @alter_query;
+									EXECUTE stmt;
+								END IF;
+							
+								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = IF(',concept_name,' is NULL,''', v_text, ''', CONCAT(' , concept_name,  ', '', '' ''', v_text,''')) WHERE encounter_id = ' , eid);
+								PREPARE stmt from @insert_value;
+								EXECUTE stmt;
+								END IF;
+                                
+							WHEN 'Date' || 'Time' || 'Datetime' THEN 
+							
+								IF v_datetime is not null then
+								IF colName is null THEN 
+									SET @alter_query:=CONCAT('ALTER TABLE ',tab_name,' ADD ', concept_name , ' datetime');
+									PREPARE stmt from @alter_query;
+									EXECUTE stmt;
+								END IF;
+							
+								SET @insert_value:=CONCAT('update ',tab_name,' set ', concept_name,' = ''',  v_datetime ,''' WHERE encounter_id = ' , eid);
+								PREPARE stmt from @insert_value;
+								EXECUTE stmt;
+                                end if;
+								
+						END CASE;
+									
+						SET obs_i = obs_i + 1;
+					END WHILE;
+							
+					SET enc_i = enc_i + 1;
+				END WHILE;
+			
+				SET i = i + 1;
+			END WHILE;
+			
+		END;
+	    
+	    </createProcedure>
+	</changeSet>
+		<changeSet author="hareem.ajaz" id="hydra-202004271343">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="hydramodule_field"
+					columnName="is_default" />
+			</not>
+		</preConditions>
+		<comment>
+			Adding column 'is_default' in hydramodule_field
+			table
+		</comment>
+		<addColumn tableName="hydramodule_field">
+			<column name="is_default" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+	
+	<changeSet author="hareem.ajaz" id="hydra-metadata-202005041036">  
+	    <comment>insert queries for encounter_type</comment>
+	    <sql
+			splitStatements="true"
+			stripComments="true">         
+		   INSERT IGNORE INTO `encounter_type` (name, description, creator, date_created, retired, retired_by, date_retired, retire_reason, uuid, edit_privilege, view_privilege, changed_by, date_changed) VALUES ('Xray Order Form', 'X-ray Order Form', 1, '2020-04-19 12:11:43', 0, NULL,NULL ,NULL , '92639f57-a2a0-49f9-8fd8-5de95013b51e',NULL , NULL,NULL,NULL);
+           INSERT IGNORE INTO `encounter_type` (name, description, creator, date_created, retired, retired_by, date_retired, retire_reason, uuid, edit_privilege, view_privilege, changed_by, date_changed) VALUES ('Xray Result Form', 'X-ray Result Form', 1, '2020-04-19 12:16:52', 0, NULL, NULL, NULL, 'bf22958e-4c9a-43af-8243-d8f83ff449fe', NULL, NULL, NULL,NULL) 
 	    </sql>    
 	</changeSet>
 	

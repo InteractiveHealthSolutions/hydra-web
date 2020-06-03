@@ -22,7 +22,10 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
+import org.openmrs.Encounter;
 import org.openmrs.FieldAnswer;
+import org.openmrs.Patient;
+import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
@@ -1157,6 +1160,20 @@ public class HydraDaoImpl {
 		return criteria.list();
 	}
 
+	public List<HydramoduleUserWorkflow> getUserWorkflowByUser(User user) {
+
+		if (user != null) {
+			DbSession session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
+			criteria.add(Restrictions.eq("user", user));
+			List<HydramoduleUserWorkflow> users = criteria.list();
+			return users;
+
+		}
+		return null;
+
+	}
+
 	// HydramoduleUserWorkflow
 
 	// HydramoduleEncounterMapper
@@ -1178,5 +1195,19 @@ public class HydraDaoImpl {
 		Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
 		criteria.addOrder(Order.asc("encounterMapperId"));
 		return criteria.list();
+	}
+
+	public List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String identifier) {
+		DbSession session = sessionFactory.getCurrentSession();
+		List<Patient> patient = Context.getPatientService().getPatients(null, identifier, null, true);
+		if (patient.size() != 0) {
+			List<HydramoduleEncounterMapper> list = (List<HydramoduleEncounterMapper>) session.createQuery(
+			    "from HydramoduleEncounterMapper where orderEncounterId.patient.patientId = " + patient.get(
+			        0).getPatientId() + " and orderEncounterId.encounterId=(select max(orderEncounterId.encounterId) from HydramoduleEncounterMapper)")
+			        .list();
+			return list;
+		}
+		return null;
+
 	}
 }
