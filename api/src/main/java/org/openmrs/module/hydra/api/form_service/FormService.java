@@ -73,7 +73,7 @@ import com.thoughtworks.xstream.core.util.Base64Encoder;
 public class FormService {
 
 	private HashMap<String, String> relationships;
-	
+
 	public FormService() {
 		relationships = new HashMap<String, String>();
 		relationships.put("Doctor", "8d919b58-c2cc-11de-8d13-0010c6dffd0f");
@@ -89,6 +89,7 @@ public class FormService {
 		relationships.put("Other Relative", "8133cc4d-8d6d-11ea-a5ab-0242ac120002");
 		relationships.put("Other incl live-in Domestic staff", "d101aebd-8d6d-11ea-a5ab-0242ac120002");
 	}
+
 	private static FormService instance;
 
 	public static FormService getInstance() {
@@ -637,7 +638,6 @@ public class FormService {
 		String dob = (String) contactObj.get("age");
 		String birthDate = (String) contactObj.get("dob");
 		String relationship = (String) contactObj.get("relation");
-		
 
 		gender = gender.toLowerCase().startsWith("m") ? "M" : "F";
 
@@ -680,14 +680,14 @@ public class FormService {
 
 			// Save relationship
 			RelationshipType relationshipType = personService.getRelationshipTypeByUuid(relationships.get(relationship));
-			
+
 			if (relationshipType != null) {
-				System.out.println("RelationshipType "+relationshipType.getName());
+				System.out.println("RelationshipType " + relationshipType.getName());
 				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(),
 				        relationshipType);
 				personService.saveRelationship(relationshipObj);
 			} else {
-				System.out.println("RelationshipType "+null);
+				System.out.println("RelationshipType " + null);
 			}
 		}
 	}
