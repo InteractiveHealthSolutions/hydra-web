@@ -29,7 +29,7 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEncounterMapper;
+//import org.openmrs.module.hydra.model.workflow.HydramoduleEncounterMapper;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
@@ -722,26 +722,26 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return users;
 	}
 
-	// HydramoduleEncounterMapper
-	@Override
-	public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper)
-	        throws APIException {
-		return dao.saveHydramoduleEncounterMapper(hydramoduleEncounterMapper);
-	}
-
-	@Override
-	public List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws APIException {
-		return dao.getAllHydramoduleEncounterMapper();
-	}
-
-	@Override
-	public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws APIException {
-		return dao.getHydramoduleEncounterMapper(uuid);
-	}
-
-	@Override
-	public List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String patientIdentifier) throws APIException {
-		return dao.getEncounterMapperByPatient(patientIdentifier);
-	}
+//	// HydramoduleEncounterMapper
+//	@Override
+//	public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper)
+//	        throws APIException {
+//		return dao.saveHydramoduleEncounterMapper(hydramoduleEncounterMapper);
+//	}
+//
+//	@Override
+//	public List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws APIException {
+//		return dao.getAllHydramoduleEncounterMapper();
+//	}
+//
+//	@Override
+//	public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws APIException {
+//		return dao.getHydramoduleEncounterMapper(uuid);
+//	}
+//
+//	@Override
+//	public List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String patientIdentifier) throws APIException {
+//		return dao.getEncounterMapperByPatient(patientIdentifier);
+//	}
 
 }
