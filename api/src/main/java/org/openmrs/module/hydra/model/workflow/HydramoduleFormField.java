@@ -101,6 +101,9 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 	// this needs to be done as soon as possible
 	@Column(name = "create_patient")
 	private Boolean createPatient;
+	
+	@Column(name="is_core")
+	private Boolean isCore;
 
 	@ManyToOne
 	@JoinColumn(name = "field_id")
@@ -322,6 +325,14 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	public void setScoreField(Boolean scoreField) {
 		this.scoreField = scoreField;
+	}
+	
+	public Boolean getIsCore() {
+		return isCore;
+	}
+	
+    public void setIsCore(Boolean isCore) {
+		this.isCore = isCore;
 	}
 
 	public HydramoduleFormField getParent() {
