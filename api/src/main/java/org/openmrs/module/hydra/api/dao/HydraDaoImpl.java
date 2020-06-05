@@ -1202,8 +1202,8 @@ public class HydraDaoImpl {
 		List<Patient> patient = Context.getPatientService().getPatients(null, identifier, null, true);
 		if (patient.size() != 0) {
 			List<HydramoduleEncounterMapper> list = (List<HydramoduleEncounterMapper>) session.createQuery(
-			    "from HydramoduleEncounterMapper where orderEncounterId.patient.patientId = " + patient.get(
-			        0).getPatientId() + " and orderEncounterId.encounterId=(select max(orderEncounterId.encounterId) from HydramoduleEncounterMapper)")
+			    "from HydramoduleEncounterMapper where orderEncounterId.patient.patientId = " + patient.get(0).getPatientId()
+			            + " and orderEncounterId.encounterId=(select max(orderEncounterId.encounterId) from HydramoduleEncounterMapper)")
 			        .list();
 			return list;
 		}
