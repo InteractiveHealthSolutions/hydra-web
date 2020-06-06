@@ -85,6 +85,14 @@ public class HydraDaoImpl {
 		return (HydramoduleWorkflow) criteria.uniqueResult();
 	}
 
+	public HydramoduleWorkflow getWorkflowByName(String name) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
+		criteria.add(Restrictions.eq("name", name));
+
+		return (HydramoduleWorkflow) criteria.uniqueResult();
+	}
+
 	public HydramoduleWorkflowPhases getWorkflowPhaseRelation(String uuid) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflowPhases.class);
@@ -390,6 +398,14 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleForm.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return (HydramoduleForm) criteria.uniqueResult();
+	}
+
+	public HydramoduleForm getModuleFormByName(String name) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleForm.class);
+		criteria.add(Restrictions.eq("name", name));
 
 		return (HydramoduleForm) criteria.uniqueResult();
 	}
@@ -1177,37 +1193,45 @@ public class HydraDaoImpl {
 	// HydramoduleUserWorkflow
 
 	// HydramoduleEncounterMapper
-//	public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper) {
-//		getSession().saveOrUpdate(hydramoduleEncounterMapper);
-//		getSession().flush();
-//		return hydramoduleEncounterMapper;
-//	}
-//
-//	public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) {
-//		DbSession session = sessionFactory.getCurrentSession();
-//		Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
-//		criteria.add(Restrictions.eq("uuid", uuid));
-//		return (HydramoduleEncounterMapper) criteria.uniqueResult();
-//	}
-//
-//	public List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() {
-//		DbSession session = sessionFactory.getCurrentSession();
-//		Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
-//		criteria.addOrder(Order.asc("encounterMapperId"));
-//		return criteria.list();
-//	}
-//
-//	public List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String identifier) {
-//		DbSession session = sessionFactory.getCurrentSession();
-//		List<Patient> patient = Context.getPatientService().getPatients(null, identifier, null, true);
-//		if (patient.size() != 0) {
-//			List<HydramoduleEncounterMapper> list = (List<HydramoduleEncounterMapper>) session.createQuery(
-//			    "from HydramoduleEncounterMapper where orderEncounterId.patient.patientId = " + patient.get(0).getPatientId()
-//			            + " and orderEncounterId.encounterId=(select max(orderEncounterId.encounterId) from HydramoduleEncounterMapper)")
-//			        .list();
-//			return list;
-//		}
-//		return null;
-//
-//	}
+	// public HydramoduleEncounterMapper
+	// saveHydramoduleEncounterMapper(HydramoduleEncounterMapper
+	// hydramoduleEncounterMapper) {
+	// getSession().saveOrUpdate(hydramoduleEncounterMapper);
+	// getSession().flush();
+	// return hydramoduleEncounterMapper;
+	// }
+	//
+	// public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid)
+	// {
+	// DbSession session = sessionFactory.getCurrentSession();
+	// Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
+	// criteria.add(Restrictions.eq("uuid", uuid));
+	// return (HydramoduleEncounterMapper) criteria.uniqueResult();
+	// }
+	//
+	// public List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() {
+	// DbSession session = sessionFactory.getCurrentSession();
+	// Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
+	// criteria.addOrder(Order.asc("encounterMapperId"));
+	// return criteria.list();
+	// }
+	//
+	// public List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String
+	// identifier) {
+	// DbSession session = sessionFactory.getCurrentSession();
+	// List<Patient> patient = Context.getPatientService().getPatients(null,
+	// identifier, null, true);
+	// if (patient.size() != 0) {
+	// List<HydramoduleEncounterMapper> list = (List<HydramoduleEncounterMapper>)
+	// session.createQuery(
+	// "from HydramoduleEncounterMapper where orderEncounterId.patient.patientId = "
+	// + patient.get(0).getPatientId()
+	// + " and orderEncounterId.encounterId=(select
+	// max(orderEncounterId.encounterId) from HydramoduleEncounterMapper)")
+	// .list();
+	// return list;
+	// }
+	// return null;
+	//
+	// }
 }
