@@ -216,8 +216,11 @@ public class ReportController {
 
 		for (HydramoduleFormField f : formFields) {
 			HydramoduleField field = f.getField();
-			String obsValue = getObsValue(field.getConcept().getConceptId(), field.getAttributeName(), getAliasFor(f));
-			query += ("," + obsValue);
+			if (field.getConcept() != null) {
+				String obsValue = getObsValue(field.getConcept().getConceptId(), field.getAttributeName(), getAliasFor(f));
+				if (!obsValue.isEmpty())
+					query += ("," + obsValue);
+			}
 		}
 
 		query += " FROM" + " `hydra`.`patient` AS PT"
@@ -239,8 +242,8 @@ public class ReportController {
 	}
 
 	private String getAliasFor(HydramoduleFormField f) {
-		return f.getName().trim().replaceAll("\\?", "").replaceAll("/", "").replaceAll(" ", "_").replaceAll(",", "_")
-		        .replaceAll("-", "_").replaceAll("%", "").toLowerCase();
+
+		return f.getName().replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9]", "").toUpperCase();
 	}
 
 	public String getObsValue(int conceptId, String obsValueType, String alias) {
