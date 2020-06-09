@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+
+<!-- 		<mapping class="org.openmrs.module.hydra.model.event_planner.HydraForm" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.event_planner.HydraFormTag" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.event_planner.HydraFormTagMap" /> -->
+
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleAsset" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleAssetType" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleComponent" />
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleDTOFormSubmissionData" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleEncounterMapper" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleEvent" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleEventEncounter" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleEventService" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleEventSumary" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleEventType" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleField" />
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFieldAnswer" />
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule" />
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFieldTypeConfigItem" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleForm" />
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFormField" />
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFormFieldConfigValue" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFormFieldGroup" />
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFormTag" />
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFormTagMap" />
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleParticipant" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramodulePhase" />
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents" />
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken" />
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleService" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydraModuleServiceCategory" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleServiceType" /> -->
+<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleUserWorkflow" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow" />
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases" />
+		
+	</session-factory>
+</hibernate-configuration>
+
+ 
