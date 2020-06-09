@@ -16,7 +16,7 @@ import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.User;
 
 @Entity
-@Table(name = "hydramodule_user_workflow", catalog = "hydra")
+@Table(name = "hydramodule_user_workflow")
 public class HydramoduleUserWorkflow extends BaseOpenmrsData implements Serializable {
 
 	private static final long serialVersionUID = 8825939626685522359L;

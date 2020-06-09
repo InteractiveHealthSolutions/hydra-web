@@ -20,7 +20,7 @@ import javax.persistence.Transient;
 import org.openmrs.BaseOpenmrsMetadata;
 
 @Entity
-@Table(name = "hydramodule_form_field", catalog = "hydra")
+@Table(name = "hydramodule_form_field")
 public class HydramoduleFormField extends BaseOpenmrsMetadata implements Serializable {
 
 	/**

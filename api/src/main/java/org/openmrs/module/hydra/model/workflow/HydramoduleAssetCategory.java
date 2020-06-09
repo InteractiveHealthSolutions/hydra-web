@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsMetadata;
 
 @Entity
-@Table(name = "hydramodule_asset_category", catalog = "hydra")
+@Table(name = "hydramodule_asset_category")
 public class HydramoduleAssetCategory extends BaseOpenmrsMetadata {
 
 	/**

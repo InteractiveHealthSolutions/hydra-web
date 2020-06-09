@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsObject;
 
 @Entity
-@Table(name = "hydramodule_form_field_group", catalog = "hydra")
+@Table(name = "hydramodule_form_field_group")
 public class HydramoduleFormFieldGroup extends BaseOpenmrsObject implements Serializable {
 
 	private static final long serialVersionUID = 2829659626685522357L;

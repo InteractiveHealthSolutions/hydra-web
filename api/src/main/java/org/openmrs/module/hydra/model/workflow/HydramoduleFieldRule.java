@@ -19,7 +19,7 @@ import javax.persistence.UniqueConstraint;
 import org.openmrs.BaseOpenmrsMetadata;
 
 @Entity
-@Table(name = "hydramodule_field_rule", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
+@Table(name = "hydramodule_field_rule", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
 public class HydramoduleFieldRule extends BaseOpenmrsMetadata implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2668916537478185182L;

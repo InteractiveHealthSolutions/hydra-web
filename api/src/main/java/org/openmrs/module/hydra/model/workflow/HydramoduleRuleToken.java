@@ -16,7 +16,7 @@ import javax.persistence.UniqueConstraint;
 import org.openmrs.BaseOpenmrsObject;
 
 @Entity
-@Table(name = "hydramodule_rule_token", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
+@Table(name = "hydramodule_rule_token", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
 public class HydramoduleRuleToken extends BaseOpenmrsObject implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2668916537478185182L;

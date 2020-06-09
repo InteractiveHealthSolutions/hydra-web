@@ -22,7 +22,7 @@ import org.openmrs.Concept;
 import org.openmrs.FieldType;
 
 @Entity
-@Table(name = "hydramodule_field", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
+@Table(name = "hydramodule_field", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
 public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Serializable, Cloneable {
 
 	private static final long serialVersionUID = -2668916537478185182L;

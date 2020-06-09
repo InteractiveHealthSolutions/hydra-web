@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsMetadata;
 
 @Entity
-@Table(name = "hydramodule_event_type", catalog = "hydra")
+@Table(name = "hydramodule_event_type")
 public class HydramoduleEventType extends BaseOpenmrsMetadata {
 
 	/**

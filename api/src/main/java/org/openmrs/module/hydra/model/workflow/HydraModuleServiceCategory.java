@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsMetadata;
 
 @Entity
-@Table(name = "hydramodule_service_category", catalog = "hydra")
+@Table(name = "hydramodule_service_category")
 public class HydraModuleServiceCategory extends BaseOpenmrsMetadata implements java.io.Serializable {
 
 	/**

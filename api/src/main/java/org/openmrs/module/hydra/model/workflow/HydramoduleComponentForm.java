@@ -19,7 +19,7 @@ import org.openmrs.Retireable;
 import org.openmrs.User;
 
 @Entity
-@Table(name = "hydramodule_component_form", catalog = "hydra")
+@Table(name = "hydramodule_component_form")
 public class HydramoduleComponentForm extends BaseOpenmrsObject implements Retireable, Serializable {
 
 	/**

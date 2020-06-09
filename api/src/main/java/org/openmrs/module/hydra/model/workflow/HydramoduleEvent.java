@@ -19,7 +19,7 @@ import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Location;
 
 @Entity
-@Table(name = "hydramodule_event", catalog = "hydra")
+@Table(name = "hydramodule_event")
 public class HydramoduleEvent extends BaseOpenmrsData {
 
 	/**

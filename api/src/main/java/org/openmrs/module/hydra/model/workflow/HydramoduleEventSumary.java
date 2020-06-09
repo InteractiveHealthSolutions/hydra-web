@@ -16,7 +16,7 @@ import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.BaseOpenmrsObject;
 
 @Entity
-@Table(name = "hydramodule_event_summary", catalog = "hydra")
+@Table(name = "hydramodule_event_summary")
 public class HydramoduleEventSumary extends BaseOpenmrsObject implements Serializable {
 
 	/**
