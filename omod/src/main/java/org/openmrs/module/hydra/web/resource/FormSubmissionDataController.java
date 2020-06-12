@@ -5,6 +5,7 @@ import java.text.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.form_service.FormService;
 import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFormSubmissionData;
@@ -41,15 +42,21 @@ public class FormSubmissionDataController extends DelegatingCrudResource<Hydramo
 	public HydramoduleDTOFormSubmissionData save(HydramoduleDTOFormSubmissionData formSubmissionData) {
 		try {
 			FormService.getInstance().createNewForm(service, formSubmissionData);
-
+		}
+		catch (ContextAuthenticationException e) {
+			e.printStackTrace();
+			String s = null;
+			s.toString();
 		}
 		catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			String s = null;
+			s.toString();
 		}
 		catch (org.json.simple.parser.ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			String s = null;
+			s.toString();
 		}
 		// service.saveField(component);
 		return new HydramoduleDTOFormSubmissionData();
