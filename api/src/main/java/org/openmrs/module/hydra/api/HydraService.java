@@ -16,37 +16,36 @@ import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.HydraConfig;
-import org.openmrs.module.hydra.model.event_planner.HydraForm;
-import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
-import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
-import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
-import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
-import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
-//import org.openmrs.module.hydra.model.workflow.HydramoduleEncounterMapper;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
-import org.openmrs.module.hydra.model.workflow.HydramoduleField;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFieldAnswer;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule;
-import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
-import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
-import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
-import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
-import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
-import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
-import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
-import org.openmrs.module.hydra.model.workflow.HydramoduleService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
-import org.openmrs.module.hydra.model.workflow.HydramoduleUserWorkflow;
-import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
-import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
+import org.openmrs.module.hydra.model.HydraForm;
+import org.openmrs.module.hydra.model.HydramoduleAsset;
+import org.openmrs.module.hydra.model.HydramoduleAssetCategory;
+import org.openmrs.module.hydra.model.HydramoduleAssetType;
+import org.openmrs.module.hydra.model.HydramoduleComponent;
+import org.openmrs.module.hydra.model.HydramoduleComponentForm;
+import org.openmrs.module.hydra.model.HydramoduleEvent;
+import org.openmrs.module.hydra.model.HydramoduleEventAsset;
+import org.openmrs.module.hydra.model.HydramoduleEventParticipants;
+import org.openmrs.module.hydra.model.HydramoduleEventSchedule;
+import org.openmrs.module.hydra.model.HydramoduleEventService;
+import org.openmrs.module.hydra.model.HydramoduleEventType;
+import org.openmrs.module.hydra.model.HydramoduleField;
+import org.openmrs.module.hydra.model.HydramoduleFieldAnswer;
+import org.openmrs.module.hydra.model.HydramoduleFieldDTO;
+import org.openmrs.module.hydra.model.HydramoduleFieldRule;
+import org.openmrs.module.hydra.model.HydramoduleForm;
+import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
+import org.openmrs.module.hydra.model.HydramoduleFormField;
+import org.openmrs.module.hydra.model.HydramoduleParticipant;
+import org.openmrs.module.hydra.model.HydramoduleParticipantSalaryType;
+import org.openmrs.module.hydra.model.HydramodulePatientWorkflow;
+import org.openmrs.module.hydra.model.HydramodulePhase;
+import org.openmrs.module.hydra.model.HydramodulePhaseComponents;
+import org.openmrs.module.hydra.model.HydramoduleRuleToken;
+import org.openmrs.module.hydra.model.HydramoduleService;
+import org.openmrs.module.hydra.model.HydramoduleServiceType;
+import org.openmrs.module.hydra.model.HydramoduleUserWorkflow;
+import org.openmrs.module.hydra.model.HydramoduleWorkflow;
+import org.openmrs.module.hydra.model.HydramoduleWorkflowPhases;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -69,8 +68,8 @@ public interface HydraService extends OpenmrsService {
 	HydraForm getHydraFormByUuid(String uuid) throws APIException;
 
 	/**
-	 * Returns a {@link org.openmrs.module.hydra.model.event_planner.HydraForm} by encounterName. It can
-	 * be called by any authenticated user. It is fetched in read only transaction.
+	 * Returns a {@link org.openmrs.module.hydra.model.HydraForm} by encounterName. It can be called by
+	 * any authenticated user. It is fetched in read only transaction.
 	 * 
 	 * @param uuid
 	 * @return
@@ -100,8 +99,8 @@ public interface HydraService extends OpenmrsService {
 	HydramoduleForm getHydraModuleFormByUuid(String uuid) throws APIException;
 
 	/**
-	 * Returns a set of {@link org.openmrs.module.hydra.model.event_planner.HydraForm} by tag. It can be
-	 * called by any authenticated user. It is fetched in read only transaction.
+	 * Returns a set of {@link org.openmrs.module.hydra.model.HydraForm} by tag. It can be called by any
+	 * authenticated user. It is fetched in read only transaction.
 	 * 
 	 * @param uuid
 	 * @return

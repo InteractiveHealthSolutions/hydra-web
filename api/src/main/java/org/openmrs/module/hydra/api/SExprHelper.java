@@ -8,10 +8,10 @@ import org.json.simple.JSONObject;
 import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
-import org.openmrs.module.hydra.model.workflow.HydramoduleField;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
-import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
+import org.openmrs.module.hydra.model.HydramoduleField;
+import org.openmrs.module.hydra.model.HydramoduleFieldRule;
+import org.openmrs.module.hydra.model.HydramoduleFormField;
+import org.openmrs.module.hydra.model.HydramoduleRuleToken;
 
 public class SExprHelper {
 
