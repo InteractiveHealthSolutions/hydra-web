@@ -1,5 +1,8 @@
 package org.openmrs.module.hydra.api;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.openmrs.Provider;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -16,10 +19,12 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 
 	protected static final String DATA_XML = "HydraService-initialData.xml";
 
+	protected static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
 	protected Provider rowling;
 
 	protected HydramoduleComponent preAdmission, admission, orientation;
-
+	
 	/**
 	 * Initialize all data objects before each test
 	 * 
@@ -29,28 +34,31 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 		initializeInMemoryDatabase();
 		executeDataSet(DATA_XML);
 		
-		
+		initComponents();		
+	}
+
+	private void initComponents() throws ParseException {
 		preAdmission = new HydramoduleComponent();
 		preAdmission.setComponentId(1);
 		preAdmission.setName("Pre-Admission");
 		preAdmission.setDescription("Pre-Admission component");
 		preAdmission.setRetired(Boolean.FALSE);
-		preAdmission.setUuid("aaaaaaaa-bbbb-cccc-dddd-abcdef100008");
+		preAdmission.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006050008");
 
 		admission = new HydramoduleComponent();
-		preAdmission.setComponentId(2);
-		preAdmission.setName("Admission");
-		preAdmission.setDescription("Admission component");
-		preAdmission.setRetired(Boolean.FALSE);
-		preAdmission.setUuid("aaaaaaaa-bbbb-cccc-dddd-abcdef100009");
+		admission.setComponentId(2);
+		admission.setName("Admission");
+		admission.setDescription("Admission component");
+		admission.setRetired(Boolean.FALSE);
+		admission.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006050009");
 		
 		orientation = new HydramoduleComponent();
-		admission = new HydramoduleComponent();
-		preAdmission.setComponentId(3);
-		preAdmission.setName("Orientation");
-		preAdmission.setDescription("Orientation component");
-		preAdmission.setRetired(Boolean.TRUE);
-		preAdmission.setUuid("aaaaaaaa-bbbb-cccc-dddd-abcdef100010");
-
+		orientation.setComponentId(3);
+		orientation.setName("Orientation");
+		orientation.setDescription("Orientation component");
+		orientation.setRetired(Boolean.TRUE);
+		orientation.setDateRetired(dateFormatter.parse("2020-06-04 00:00:00"));
+		orientation.setRetireReason("Due to increasing cases of rigging");
+		orientation.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006050010");
 	}
 }

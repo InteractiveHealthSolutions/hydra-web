@@ -10,9 +10,9 @@
 <!-- 		<mapping class="org.openmrs.module.hydra.model.event_planner.HydraFormTag" /> -->
 <!-- 		<mapping class="org.openmrs.module.hydra.model.event_planner.HydraFormTagMap" /> -->
 
-<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleAsset" /> -->
-<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory" /> -->
-<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleAssetType" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleAsset" />
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory" />
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleAssetType" />
 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleComponent" />
 <!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm" /> -->
 <!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleDTOFieldAnswer" /> -->
