@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsMetadata;
 
 @Entity
-@Table(name = "hydramodule_participant_salary_type", catalog = "hydra")
+@Table(name = "hydramodule_participant_salary_type")
 public class HydramoduleParticipantSalaryType extends BaseOpenmrsMetadata {
 
 	/**

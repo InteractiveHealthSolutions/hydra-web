@@ -16,7 +16,7 @@ import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Encounter;
 
 @Entity
-@Table(name = "hydramodule_form_encounter", catalog = "hydra")
+@Table(name = "hydramodule_form_encounter")
 public class HydramoduleFormEncounter extends BaseOpenmrsObject implements Serializable {
 
 	/**

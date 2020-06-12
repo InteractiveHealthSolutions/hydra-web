@@ -23,7 +23,7 @@ import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.EncounterType;
 
 @Entity
-@Table(name = "hydramodule_form", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
+@Table(name = "hydramodule_form", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
 public class HydramoduleForm extends BaseOpenmrsMetadata implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2668916537478185182L;

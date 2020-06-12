@@ -16,7 +16,7 @@ import org.openmrs.BaseOpenmrsMetadata;
 
 @Deprecated
 // @Entity
-@Table(name = "hydramodule_form_field_config_value", catalog = "hydra")
+@Table(name = "hydramodule_form_field_config_value")
 public class HydramoduleFormFieldConfigValue extends BaseOpenmrsMetadata implements Serializable {
 
 	private static final long serialVersionUID = 2825439626685522357L;

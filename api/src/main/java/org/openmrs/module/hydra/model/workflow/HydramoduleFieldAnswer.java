@@ -19,7 +19,7 @@ import org.openmrs.Field;
 import org.openmrs.FieldAnswer;
 
 @Entity
-@Table(name = "hydramodule_field_answer", catalog = "hydra", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
+@Table(name = "hydramodule_field_answer", uniqueConstraints = @UniqueConstraint(columnNames = "uuid"))
 public class HydramoduleFieldAnswer extends BaseOpenmrsObject implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2668916537478185182L;

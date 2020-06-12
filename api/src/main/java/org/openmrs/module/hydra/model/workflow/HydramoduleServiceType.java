@@ -15,7 +15,7 @@ import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 
 @Entity
-@Table(name = "hydramodule_service_type", catalog = "hydra")
+@Table(name = "hydramodule_service_type")
 public class HydramoduleServiceType extends BaseOpenmrsMetadata implements java.io.Serializable {
 
 	/**

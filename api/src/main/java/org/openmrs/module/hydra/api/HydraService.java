@@ -291,13 +291,22 @@ public interface HydraService extends OpenmrsService {
 
 	HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) throws APIException;
 
-//	HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper)
-//	        throws APIException;
-//
-//	HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws APIException;
-//
-//	List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws APIException;
-//
-//	List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String patientIdentifier) throws APIException;
+	HydramoduleWorkflow getWorkflowByName(String name) throws APIException;
+
+	HydramoduleForm getHydraModuleFormByName(String name) throws APIException;
+
+	// HydramoduleEncounterMapper
+	// saveHydramoduleEncounterMapper(HydramoduleEncounterMapper
+	// hydramoduleEncounterMapper)
+	// throws APIException;
+	//
+	// HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws
+	// APIException;
+	//
+	// List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws
+	// APIException;
+	//
+	// List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String
+	// patientIdentifier) throws APIException;
 
 }

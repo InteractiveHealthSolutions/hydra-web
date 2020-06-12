@@ -20,7 +20,7 @@ import javax.persistence.Transient;
 import org.openmrs.BaseOpenmrsMetadata;
 
 @Entity
-@Table(name = "hydramodule_form_field", catalog = "hydra")
+@Table(name = "hydramodule_form_field")
 public class HydramoduleFormField extends BaseOpenmrsMetadata implements Serializable {
 
 	/**
@@ -101,8 +101,8 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 	// this needs to be done as soon as possible
 	@Column(name = "create_patient")
 	private Boolean createPatient;
-	
-	@Column(name="is_core")
+
+	@Column(name = "is_core")
 	private Boolean isCore;
 
 	@ManyToOne
@@ -326,12 +326,12 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 	public void setScoreField(Boolean scoreField) {
 		this.scoreField = scoreField;
 	}
-	
+
 	public Boolean getIsCore() {
 		return isCore;
 	}
-	
-    public void setIsCore(Boolean isCore) {
+
+	public void setIsCore(Boolean isCore) {
 		this.isCore = isCore;
 	}
 

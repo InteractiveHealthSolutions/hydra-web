@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsMetadata;
 
 @Entity
-@Table(name = "hydramodule_asset", catalog = "hydra")
+@Table(name = "hydramodule_asset")
 public class HydramoduleAsset extends BaseOpenmrsMetadata implements Serializable {
 
 	/**

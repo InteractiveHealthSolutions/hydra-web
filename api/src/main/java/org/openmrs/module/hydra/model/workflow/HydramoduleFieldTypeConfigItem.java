@@ -17,7 +17,7 @@ import org.openmrs.FieldType;
 
 @Deprecated
 // @Entity
-@Table(name = "hydramodule_field_type_config_item", catalog = "hydra")
+@Table(name = "hydramodule_field_type_config_item")
 public class HydramoduleFieldTypeConfigItem extends BaseOpenmrsObject implements Serializable {
 
 	private static final long serialVersionUID = 2829659626685522357L;

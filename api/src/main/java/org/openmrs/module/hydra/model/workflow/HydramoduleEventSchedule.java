@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import org.openmrs.BaseOpenmrsData;
 
 @Entity
-@Table(name = "hydramodule_event_schedule", catalog = "hydra")
+@Table(name = "hydramodule_event_schedule")
 public class HydramoduleEventSchedule extends BaseOpenmrsData {
 
 	/**

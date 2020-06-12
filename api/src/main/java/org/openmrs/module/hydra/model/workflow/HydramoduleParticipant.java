@@ -15,7 +15,7 @@ import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.User;
 
 @Entity
-@Table(name = "hydramodule_participant", catalog = "hydra")
+@Table(name = "hydramodule_participant")
 public class HydramoduleParticipant extends BaseOpenmrsMetadata {
 
 	/**

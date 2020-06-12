@@ -16,7 +16,7 @@ import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Patient;
 
 @Entity
-@Table(name = "hydramodule_patient_workflow", catalog = "hydra")
+@Table(name = "hydramodule_patient_workflow")
 public class HydramodulePatientWorkflow extends BaseOpenmrsData implements Serializable {
 
 	/**
