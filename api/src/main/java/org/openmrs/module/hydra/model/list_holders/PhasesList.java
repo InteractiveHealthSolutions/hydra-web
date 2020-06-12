@@ -3,7 +3,7 @@ package org.openmrs.module.hydra.model.list_holders;
 import java.util.List;
 
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
+import org.openmrs.module.hydra.model.HydramodulePhase;
 
 public class PhasesList extends BaseOpenmrsData {
 

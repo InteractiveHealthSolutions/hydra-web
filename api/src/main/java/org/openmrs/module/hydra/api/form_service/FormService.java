@@ -60,11 +60,11 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
-import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
-import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFormSubmissionData;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
-import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
-import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
+import org.openmrs.module.hydra.model.HydramoduleComponentForm;
+import org.openmrs.module.hydra.model.HydramoduleDTOFormSubmissionData;
+import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
+import org.openmrs.module.hydra.model.HydramodulePatientWorkflow;
+import org.openmrs.module.hydra.model.HydramoduleWorkflow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jmx.export.naming.ObjectNamingStrategy;
 
