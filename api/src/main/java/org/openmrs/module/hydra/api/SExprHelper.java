@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
+import org.openmrs.module.hydra.api.dao.IHydramoduleFieldDao;
 import org.openmrs.module.hydra.model.HydramoduleField;
 import org.openmrs.module.hydra.model.HydramoduleFieldRule;
 import org.openmrs.module.hydra.model.HydramoduleFormField;
@@ -23,7 +24,7 @@ public class SExprHelper {
 
 	private static SExprHelper instance;
 
-	private HydraDaoImpl dao;
+	private IHydramoduleFieldDao fieldDao;
 
 	public static synchronized SExprHelper getInstance() {
 		if (instance == null)
@@ -56,7 +57,7 @@ public class SExprHelper {
 
 		// Question part of the expression
 		String questionString = questionToken.getValue();
-		HydramoduleField responseField = dao.getHydramoduleField(questionString);
+		HydramoduleField responseField = fieldDao.getHydramoduleField(questionString);
 		conditionObject.put("id", responseField.getFieldId());
 		conditionObject.put("questionId", responseField.getFieldId());
 
@@ -79,10 +80,10 @@ public class SExprHelper {
 		return conditionObject;
 	}
 
-	public String compileComplex(HydraDaoImpl dao, HydramoduleFormField ff) {
+	public String compileComplex(IHydramoduleFieldDao dao, HydramoduleFormField ff) {
 		// "parsedRule":
 		// "{\"hiddenWhen\":[{\"questionId\":10,\"notEquals\":[{\"uuid\":\"OTHER\"}],\"id\":10},\"OR\"]}"
-		this.dao = dao;
+		this.fieldDao = dao;
 		HydramoduleField field = ff.getField();
 		JSONObject ruleObj = new JSONObject();
 
