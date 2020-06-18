@@ -8,7 +8,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.form_service.FormService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFormSubmissionData;
+import org.openmrs.module.hydra.model.HydramoduleDTOFormSubmissionData;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;

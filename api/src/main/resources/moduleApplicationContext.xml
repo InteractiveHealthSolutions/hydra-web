@@ -27,6 +27,7 @@
 
     <!-- Wraps HydraService methods in DB transactions and OpenMRS interceptors,
     which set audit info like dateCreated, changedBy, etc.-->
+       
     <bean id="hydra.HydraService"
             class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager">
@@ -34,7 +35,15 @@
         </property>
         <property name="target">
             <bean class="org.openmrs.module.hydra.api.impl.HydraServiceImpl">
-                <property name="dao" ref="hydra.HydraDao" />
+           <!--      <property name="assetDao" ref="hydra.HydraAssetDao" />
+                <property name="componentDao" ref="hydra.HydraComponentDao" />
+                <property name="eventDao" ref="hydra.HydraEventDao" />
+                <property name="fieldDao" ref="hydra.HydraFieldDao" />
+                <property name="formDao" ref="hydra.HydraFormDao" />
+                <property name="participantDao" ref="hydra.HydraParticipantDao" />
+                <property name="phaseDao" ref="hydra.HydraPhaseDao" />
+                <property name="serviceDao" ref="hydra.HydraServiceDao" />
+                <property name="workflowDao" ref="hydra.HydraWorkflowDao" /> -->
             </bean>
         </property>
         <property name="preInterceptors">

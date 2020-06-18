@@ -18,7 +18,7 @@ import org.openmrs.User;
 import org.openmrs.api.UserService;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.api.impl.HydraServiceImpl;
-import org.openmrs.module.hydra.model.event_planner.HydraForm;
+import org.openmrs.module.hydra.model.HydraForm;
 
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;

@@ -31,38 +31,37 @@ import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
-import org.openmrs.module.hydra.model.event_planner.HydraForm;
-import org.openmrs.module.hydra.model.workflow.HydramoduleAsset;
-import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
-import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
-import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
-import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
-//import org.openmrs.module.hydra.model.workflow.HydramoduleEncounterMapper;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventType;
-import org.openmrs.module.hydra.model.workflow.HydramoduleField;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFieldAnswer;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFieldDTO;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule;
-import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFormFieldGroup;
-import org.openmrs.module.hydra.model.workflow.HydramoduleParticipant;
-import org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType;
-import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
-import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
-import org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents;
-import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
-import org.openmrs.module.hydra.model.workflow.HydramoduleService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
-import org.openmrs.module.hydra.model.workflow.HydramoduleUserWorkflow;
-import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
-import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
+import org.openmrs.module.hydra.model.HydraForm;
+import org.openmrs.module.hydra.model.HydramoduleAsset;
+import org.openmrs.module.hydra.model.HydramoduleAssetCategory;
+import org.openmrs.module.hydra.model.HydramoduleAssetType;
+import org.openmrs.module.hydra.model.HydramoduleComponent;
+import org.openmrs.module.hydra.model.HydramoduleComponentForm;
+import org.openmrs.module.hydra.model.HydramoduleEvent;
+import org.openmrs.module.hydra.model.HydramoduleEventAsset;
+import org.openmrs.module.hydra.model.HydramoduleEventParticipants;
+import org.openmrs.module.hydra.model.HydramoduleEventSchedule;
+import org.openmrs.module.hydra.model.HydramoduleEventService;
+import org.openmrs.module.hydra.model.HydramoduleEventType;
+import org.openmrs.module.hydra.model.HydramoduleField;
+import org.openmrs.module.hydra.model.HydramoduleFieldAnswer;
+import org.openmrs.module.hydra.model.HydramoduleFieldDTO;
+import org.openmrs.module.hydra.model.HydramoduleFieldRule;
+import org.openmrs.module.hydra.model.HydramoduleForm;
+import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
+import org.openmrs.module.hydra.model.HydramoduleFormField;
+import org.openmrs.module.hydra.model.HydramoduleFormFieldGroup;
+import org.openmrs.module.hydra.model.HydramoduleParticipant;
+import org.openmrs.module.hydra.model.HydramoduleParticipantSalaryType;
+import org.openmrs.module.hydra.model.HydramodulePatientWorkflow;
+import org.openmrs.module.hydra.model.HydramodulePhase;
+import org.openmrs.module.hydra.model.HydramodulePhaseComponents;
+import org.openmrs.module.hydra.model.HydramoduleRuleToken;
+import org.openmrs.module.hydra.model.HydramoduleService;
+import org.openmrs.module.hydra.model.HydramoduleServiceType;
+import org.openmrs.module.hydra.model.HydramoduleUserWorkflow;
+import org.openmrs.module.hydra.model.HydramoduleWorkflow;
+import org.openmrs.module.hydra.model.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -81,6 +80,14 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return (HydramoduleWorkflow) criteria.uniqueResult();
+	}
+
+	public HydramoduleWorkflow getWorkflowByName(String name) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
+		criteria.add(Restrictions.eq("name", name));
 
 		return (HydramoduleWorkflow) criteria.uniqueResult();
 	}
@@ -390,6 +397,14 @@ public class HydraDaoImpl {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleForm.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return (HydramoduleForm) criteria.uniqueResult();
+	}
+
+	public HydramoduleForm getModuleFormByName(String name) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleForm.class);
+		criteria.add(Restrictions.eq("name", name));
 
 		return (HydramoduleForm) criteria.uniqueResult();
 	}
@@ -1177,37 +1192,45 @@ public class HydraDaoImpl {
 	// HydramoduleUserWorkflow
 
 	// HydramoduleEncounterMapper
-//	public HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper) {
-//		getSession().saveOrUpdate(hydramoduleEncounterMapper);
-//		getSession().flush();
-//		return hydramoduleEncounterMapper;
-//	}
-//
-//	public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) {
-//		DbSession session = sessionFactory.getCurrentSession();
-//		Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
-//		criteria.add(Restrictions.eq("uuid", uuid));
-//		return (HydramoduleEncounterMapper) criteria.uniqueResult();
-//	}
-//
-//	public List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() {
-//		DbSession session = sessionFactory.getCurrentSession();
-//		Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
-//		criteria.addOrder(Order.asc("encounterMapperId"));
-//		return criteria.list();
-//	}
-//
-//	public List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String identifier) {
-//		DbSession session = sessionFactory.getCurrentSession();
-//		List<Patient> patient = Context.getPatientService().getPatients(null, identifier, null, true);
-//		if (patient.size() != 0) {
-//			List<HydramoduleEncounterMapper> list = (List<HydramoduleEncounterMapper>) session.createQuery(
-//			    "from HydramoduleEncounterMapper where orderEncounterId.patient.patientId = " + patient.get(0).getPatientId()
-//			            + " and orderEncounterId.encounterId=(select max(orderEncounterId.encounterId) from HydramoduleEncounterMapper)")
-//			        .list();
-//			return list;
-//		}
-//		return null;
-//
-//	}
+	// public HydramoduleEncounterMapper
+	// saveHydramoduleEncounterMapper(HydramoduleEncounterMapper
+	// hydramoduleEncounterMapper) {
+	// getSession().saveOrUpdate(hydramoduleEncounterMapper);
+	// getSession().flush();
+	// return hydramoduleEncounterMapper;
+	// }
+	//
+	// public HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid)
+	// {
+	// DbSession session = sessionFactory.getCurrentSession();
+	// Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
+	// criteria.add(Restrictions.eq("uuid", uuid));
+	// return (HydramoduleEncounterMapper) criteria.uniqueResult();
+	// }
+	//
+	// public List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() {
+	// DbSession session = sessionFactory.getCurrentSession();
+	// Criteria criteria = session.createCriteria(HydramoduleEncounterMapper.class);
+	// criteria.addOrder(Order.asc("encounterMapperId"));
+	// return criteria.list();
+	// }
+	//
+	// public List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String
+	// identifier) {
+	// DbSession session = sessionFactory.getCurrentSession();
+	// List<Patient> patient = Context.getPatientService().getPatients(null,
+	// identifier, null, true);
+	// if (patient.size() != 0) {
+	// List<HydramoduleEncounterMapper> list = (List<HydramoduleEncounterMapper>)
+	// session.createQuery(
+	// "from HydramoduleEncounterMapper where orderEncounterId.patient.patientId = "
+	// + patient.get(0).getPatientId()
+	// + " and orderEncounterId.encounterId=(select
+	// max(orderEncounterId.encounterId) from HydramoduleEncounterMapper)")
+	// .list();
+	// return list;
+	// }
+	// return null;
+	//
+	// }
 }

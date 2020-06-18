@@ -2,6 +2,10 @@ package org.openmrs.module.hydra.web.controller;
 
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
+import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.model.HydramoduleField;
+import org.openmrs.module.hydra.model.HydramoduleForm;
+import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.util.OpenmrsConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -81,6 +87,9 @@ public class ReportController {
 	@Autowired
 	private DbSessionFactory sessionFactory;
 
+	@Autowired
+	private HydraService service;// = Context.getService(HydraService.class);
+
 	static {
 		DATE_FORMATS = new HashMap();
 
@@ -105,6 +114,7 @@ public class ReportController {
 	@ResponseBody
 	public HttpEntity<byte[]> getEncounterDumps(HttpServletRequest request,
 	        @RequestParam(value = "workflow", required = false) String workflow,
+	        @RequestParam(value = "form", required = false) String form,
 	        @RequestParam(value = "from", required = true) String from,
 	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
@@ -125,61 +135,45 @@ public class ReportController {
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
 		String prefix = sdf.format(cal.getTime());
 
-		ProcedureCall call = sessionFactory.getCurrentSession().createStoredProcedureCall("deencountrised");
+		int workflowId = service.getWorkflowByName(workflow).getId();
+		int encounterId = service.getHydraModuleFormByName(form).getEncounterType().getId();
 
-		call.registerParameter(1, Date.class, ParameterMode.IN).bindValue(sDate);
-		call.registerParameter(2, Date.class, ParameterMode.IN).bindValue(eDate);
-		call.registerParameter(3, String.class, ParameterMode.IN).bindValue(workflow);
-		call.registerParameter(4, String.class, ParameterMode.IN).bindValue(prefix);
-		call.getOutputs().getCurrent();
+		String query = generateQuery(encounterId, workflowId, form, from, to);
 
-		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery(
-		    "select CONCAT('enc_',alphanum(LOWER(encounter_type.name))) from encounter_type where retired = 0");
-		List<String> encounterTables = sql.list();
+		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery(query);
+		sql.setResultTransformer(AliasToEntityOrderedMapResultTransformer.INSTANCE);
+		List<Map<String, Object>> aliasToValueMapList = sql.list();
 
-		String zipFile = System.getProperty("java.io.tmpdir") + File.separator + "encountersdump_" + prefix + ".zip";
+		String zipFile = System.getProperty("java.io.tmpdir") + File.separator + form + "_forms_" + prefix + ".zip";
 		FileOutputStream fos = new FileOutputStream(zipFile);
 		ZipOutputStream zos = new ZipOutputStream(fos);
 		byte[] buffer = new byte[1024];
 
-		for (String encounterTable : encounterTables) {
+		if (!aliasToValueMapList.isEmpty()) {
 
-			sql = sessionFactory.getCurrentSession().createSQLQuery("select * from " + encounterTable + "_" + prefix);
-			sql.setResultTransformer(AliasToEntityOrderedMapResultTransformer.INSTANCE);
-			List<Map<String, Object>> aliasToValueMapList = sql.list();
+			String outputFile = System.getProperty("java.io.tmpdir") + File.separator + form + "_" + prefix + ".csv";
+			createCSVFileFromMapList(aliasToValueMapList, outputFile);
 
-			if (!aliasToValueMapList.isEmpty()) {
+			File srcFile = new File(outputFile);
 
-				String outputFile = System.getProperty("java.io.tmpdir") + File.separator + encounterTable + "_" + prefix
-				        + ".csv";
-				createCSVFileFromMapList(aliasToValueMapList, outputFile);
+			FileInputStream fis = new FileInputStream(srcFile);
 
-				File srcFile = new File(outputFile);
+			// begin writing a new ZIP entry, positions the stream to the start of the entry
+			// data
+			zos.putNextEntry(new ZipEntry(srcFile.getName()));
 
-				FileInputStream fis = new FileInputStream(srcFile);
+			int length;
 
-				// begin writing a new ZIP entry, positions the stream to the start of the entry
-				// data
-				zos.putNextEntry(new ZipEntry(srcFile.getName()));
-
-				int length;
-
-				while ((length = fis.read(buffer)) > 0) {
-					zos.write(buffer, 0, length);
-				}
-
-				zos.closeEntry();
-
-				// close the InputStream
-				fis.close();
-
-				srcFile.delete();
-
+			while ((length = fis.read(buffer)) > 0) {
+				zos.write(buffer, 0, length);
 			}
 
-			SQLQuery dropSql = sessionFactory.getCurrentSession()
-			        .createSQLQuery("drop table if exists " + encounterTable + "_" + prefix);
-			dropSql.executeUpdate();
+			zos.closeEntry();
+
+			// close the InputStream
+			fis.close();
+
+			srcFile.delete();
 
 		}
 
@@ -189,7 +183,7 @@ public class ReportController {
 
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "encountersdump_" + prefix + ".zip");
+		header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + form + "_" + prefix + ".zip");
 		header.setContentLength(bytes.length);
 
 		File file = new File(zipFile);
@@ -197,6 +191,83 @@ public class ReportController {
 
 		return new HttpEntity<byte[]>(bytes, header);
 
+	}
+
+	private String generateQuery(int encounterId, int workflowId, String form, String from, String to) {
+		String query = "SELECT EN.encounter_id as ENCOUNTER_ID, " + "ID.IDENTIFIER AS PATIENT_ID, "
+		        + "UPPER(CONCAT(NM.GIVEN_NAME, ' ', NM.FAMILY_NAME)) AS PATIENT_NAME,PR.GENDER, "
+		        + "YEAR(PR.date_created) - YEAR(PR.BIRTHDATE) AS AGE,PA.address2 AS ADDRESS,PA.state_province AS PROVINCE,PA.city_village AS CITY,PA.address3 As LAND_MARK "
+		        + ",DATE(EN.encounter_datetime) as ENCOUNTER_DATE, " + "US.USERNAME as USERNAME, LO.NAME as LOCATION";
+
+		HydramoduleForm hydraForm = service.getHydraModuleFormByName(form);
+		List<HydramoduleFormField> formFields = hydraForm.getFormFields();
+		Collections.sort(formFields, new Comparator<HydramoduleFormField>() {
+
+			@Override
+			public int compare(HydramoduleFormField o1, HydramoduleFormField o2) {
+				if (o1.getDisplayOrder() == null || o1.getDisplayOrder() == null) {
+					return 0;
+				}
+
+				return o1.getDisplayOrder() - o2.getDisplayOrder();
+			}
+
+		});
+
+		for (HydramoduleFormField f : formFields) {
+			HydramoduleField field = f.getField();
+			if (field.getConcept() != null) {
+				String obsValue = getObsValue(field.getConcept().getConceptId(), field.getAttributeName(), getAliasFor(f));
+				if (!obsValue.isEmpty())
+					query += ("," + obsValue);
+			}
+		}
+
+		query += " FROM" + " `hydra`.`patient` AS PT"
+		        + " LEFT JOIN `hydra`.`patient_identifier` AS ID ON ID.PATIENT_ID = PT.PATIENT_ID AND ID.IDENTIFIER_TYPE = 3 and ID.voided=0"
+		        + " LEFT JOIN `hydra`.`person_name` AS NM ON NM.PERSON_ID = PT.PATIENT_ID and NM.voided=0"
+		        + " LEFT JOIN `hydra`.`person` AS PR ON PR.PERSON_ID = PT.PATIENT_ID and PR.voided=0"
+		        + " LEFT JOIN `hydra`.`person_address` AS PA ON PA.PERSON_ID = PT.PATIENT_ID and PA.voided=0 and PA.person_address_id=(select max(person_address_id) from person_address where person_id=PT.patient_id)"
+		        + " LEFT JOIN `hydra`.`encounter` AS EN ON EN.PATIENT_ID = PT.PATIENT_ID LEFT JOIN `hydra`.`users` AS US ON US.USER_ID = EN.CREATOR "
+		        + " LEFT JOIN `hydra`.`location` AS LO ON LO.LOCATION_ID = EN.LOCATION_ID"
+		        + " LEFT JOIN `hydra`.`hydramodule_form_encounter` AS FE ON FE.encounter_id = EN.encounter_id"
+		        + " LEFT JOIN `hydra`.`hydramodule_component_form` AS CF ON CF.component_form_id = FE.component_form_id"
+		        + " LEFT JOIN `hydra`.`hydramodule_workflow` AS WF ON WF.workflow_id = CF.workflow_id"
+		        + " LEFT OUTER JOIN `hydra`.obs as o_sc on o_sc.encounter_id = EN.encounter_id and o_sc.voided=0";
+
+		query += " where" + " EN.encounter_datetime between '" + from + "' and '" + to + "' and" + " EN.encounter_type = "
+		        + encounterId + "  and PT.voided=0 and WF.workflow_id=" + workflowId + " group by EN.encounter_id;";
+
+		return query;
+	}
+
+	private String getAliasFor(HydramoduleFormField f) {
+
+		return f.getName().replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9]", "").toUpperCase();
+	}
+
+	public String getObsValue(int conceptId, String obsValueType, String alias) {
+		String toReturn = "";
+		String obsCoded = " group_concat(if(o_sc.concept_id = " + conceptId
+		        + ", (Select name from `hydra`.`concept_name` where concept_id=(concat(o_sc.value_coded))and LOCALE_PREFERRED = 1 and voided=0 and locale='en'), NULL)) AS "
+		        + alias;
+		String obsText = " group_concat(if(o_sc.concept_id = " + conceptId + ", concat(o_sc.value_text), NULL)) AS " + alias;
+		String obsDateTime = " group_concat(if(o_sc.concept_id = " + conceptId + ", concat(o_sc.value_datetime), NULL)) AS "
+		        + alias;
+		String obsNumeric = " group_concat(if(o_sc.concept_id = " + conceptId + ", concat(o_sc.value_numeric), NULL)) AS "
+		        + alias;
+
+		if ("Coded".equals(obsValueType)) {
+			toReturn = obsCoded;
+		} else if ("Text".equals(obsValueType)) {
+			toReturn = obsText;
+		} else if ("Datetime".equals(obsValueType)) {
+			toReturn = obsDateTime;
+		} else if ("Numeric".equals(obsValueType)) {
+			toReturn = obsNumeric;
+		}
+
+		return toReturn;
 	}
 
 	@RequestMapping(value = "/dump/patients", method = RequestMethod.GET)
