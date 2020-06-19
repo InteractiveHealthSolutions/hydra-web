@@ -37,14 +37,14 @@
 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleFormTagMap" />
 <!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleParticipant" /> -->
 <!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleParticipantSalaryType" /> -->
-<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow" />
 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramodulePhase" />
 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramodulePhaseComponents" />
 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken" />
 <!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleService" /> -->
 <!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydraModuleServiceCategory" /> -->
 <!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleServiceType" /> -->
-<!-- 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleUserWorkflow" /> -->
+		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleUserWorkflow" />
 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow" />
 		<mapping class="org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases" />
 		

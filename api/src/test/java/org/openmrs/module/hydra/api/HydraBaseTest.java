@@ -4,9 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.openmrs.Provider;
+import org.openmrs.User;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * It is an integration test (extends BaseModuleContextSensitiveTest), which verifies DAO methods
@@ -20,13 +23,18 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 
 	protected static final String DATA_XML = "HydraService-initialData.xml";
 
+	@Autowired
+	protected DbSessionFactory sessionFactory;	
+
 	protected static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-	protected Provider rowling;
+	protected User rowling;
+	
+	protected Provider rowlingProvider;
 
 	protected HydramoduleComponent preAdmission, admission, orientation;
-	
-	protected HydramodulePhase search, graduation, wizardy;
+
+	protected HydramodulePhase search, treat, prevent;
 
 	/**
 	 * Initialize all data objects before each test
@@ -36,9 +44,15 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 	public void initTestData() throws Exception {
 		initializeInMemoryDatabase();
 		executeDataSet(DATA_XML);
-		
+
+		initUser();
 		initComponents();
 		initPhases();
+	}
+	
+	private void initUser() {
+		rowling = (User) sessionFactory.getCurrentSession().get(User.class, 1000);
+		rowlingProvider = (Provider) sessionFactory.getCurrentSession().get(Provider.class, 1000);
 	}
 
 	private void initComponents() throws ParseException {
@@ -55,7 +69,7 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 		admission.setDescription("Admission component");
 		admission.setRetired(Boolean.FALSE);
 		admission.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006050009");
-		
+
 		orientation = new HydramoduleComponent();
 		orientation.setComponentId(3);
 		orientation.setName("Orientation");
@@ -73,19 +87,19 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 		search.setDescription("Wizard hunting for admissions");
 		search.setRetired(Boolean.FALSE);
 		search.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006120014");
-		
-		graduation = new HydramodulePhase();
-		graduation.setPhaseId(2);
-		graduation.setName("Graduation");
-		graduation.setDescription("Learn some magic");
-		graduation.setRetired(Boolean.FALSE);
-		graduation.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006120015");
-		
-		wizardy = new HydramodulePhase();
-		wizardy.setPhaseId(3);
-		wizardy.setName("Wizardy");
-		wizardy.setDescription("Life of a wizard");
-		wizardy.setRetired(Boolean.FALSE);
-		wizardy.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006120016");
+
+		treat = new HydramodulePhase();
+		treat.setPhaseId(2);
+		treat.setName("Treat");
+		treat.setDescription("Learn some magic");
+		treat.setRetired(Boolean.FALSE);
+		treat.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006120015");
+
+		prevent = new HydramodulePhase();
+		prevent.setPhaseId(3);
+		prevent.setName("Prevent");
+		prevent.setDescription("Do not become evil");
+		prevent.setRetired(Boolean.FALSE);
+		prevent.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006120016");
 	}
 }

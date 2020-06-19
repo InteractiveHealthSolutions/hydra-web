@@ -37,6 +37,25 @@
 		voided="false" date_created="2020-02-14 00:00:00.0" concept_name_type="FULLY_SPECIFIED" 
 		uuid="aaaaaaaa-bbbb-cccc-dddd-202006050007" />
 
+	<!-- Patient-Persons -->
+	<person person_id="1001" gender="M" birthdate="1980-07-31" birthdate_estimated="0" dead="0" creator="1"
+		date_created="2020-06-19 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190001" deathdate_estimated="0" />
+
+	<person person_id="1002" gender="M" birthdate="1926-12-31" birthdate_estimated="0" dead="1" creator="1" death_date="1998-05-02 00:00:00" 
+		deathdate_estimated="0" date_created="2020-06-19 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190002" />
+
+	<!-- Patient-Person Names -->
+	<person_name person_name_id="1001" preferred="1" person_id="1001" given_name="Harry" middle_name="James"
+		family_name="Potter" creator="1" date_created="2020-06-19 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190003" />
+		
+	<person_name person_name_id="1002" preferred="1" person_id="1002" given_name="Tom" middle_name="Marvolo"
+		family_name="Riddle" creator="1" date_created="2020-06-19 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190004" />
+
+	<!-- Patients -->
+	<patient patient_id="1001" creator="1" date_created="2020-06-19 00:00:00" voided="false" allergy_status="Unknown" />
+	
+	<patient patient_id="1002" creator="1" date_created="2020-06-19 00:00:00" voided="false" allergy_status="Unknown" />
+
 	<!-- Hydramodule-Asset Category -->
 	<hydramodule_asset_category asset_category_id="1" name="Apparel" description="All wearables" creator="1000" 
 		date_created="2020-06-01 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120001" />
@@ -101,15 +120,33 @@
 	<hydramodule_phase phase_id="1" name="Search" description="Wizard hunting for admissions" creator="1000" 
 		date_created="2020-06-04 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120014" />
 
-	<hydramodule_phase phase_id="2" name="Graduation" description="Learn some magic" creator="1000" 
+	<hydramodule_phase phase_id="2" name="Treat" description="Learn some magic" creator="1000" 
 		date_created="2020-06-05 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120015" />
 
-	<hydramodule_phase phase_id="3" name="Wizardy" description="Life of a wizard" creator="1000" 
+	<hydramodule_phase phase_id="3" name="Prevent" description="Do not become evil" creator="1000" 
 		date_created="2020-06-05 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120016" />
 	
 	<!-- Hydramodule-Phase Component -->
+
 	<!-- Hydramodule-Workflow -->
+	<hydramodule_workflow workflow_id="1" name="Hogwartz Workflow" description="Workflow for Hogwartz school" creator="1" 
+		concept_id="1000" date_created="2020-06-10 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190005" />
+
 	<!-- Hydramodule-Workflow Phase -->
+	<hydramodule_workflow_phases id="1" workflow_id="1" phase_id="1" display_order="1" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190006" />
+	
+	<hydramodule_workflow_phases id="2" workflow_id="1" phase_id="2" display_order="2" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190007" />
+
+	<!-- Hydramodule-Patient Workflow -->
+	<hydramodule_patient_workflow patient_workflow_id="1" workflow_id="1" patient_id="1001" creator="1" 
+		date_created="2020-06-15 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190008" />
+
+	<hydramodule_patient_workflow patient_workflow_id="2" workflow_id="1" patient_id="1002" creator="1" 
+		date_created="2020-06-15 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190009" />
+	
+	<!-- Hydramodule-User Workflow -->
+	<hydramodule_user_workflow user_workflow_id="1" workflow_id="1" user_id="1000" creator="1"
+		date_created="2020-06-15 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190010" />
 
 	<!-- Hydramodule-Form -->
 	<!-- Hydramodule-Form Tag -->
