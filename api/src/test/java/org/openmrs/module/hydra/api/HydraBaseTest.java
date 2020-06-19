@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 
 import org.openmrs.Provider;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 /**
@@ -25,6 +26,8 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 
 	protected HydramoduleComponent preAdmission, admission, orientation;
 	
+	protected HydramodulePhase search, graduation, wizardy;
+
 	/**
 	 * Initialize all data objects before each test
 	 * 
@@ -34,7 +37,8 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 		initializeInMemoryDatabase();
 		executeDataSet(DATA_XML);
 		
-		initComponents();		
+		initComponents();
+		initPhases();
 	}
 
 	private void initComponents() throws ParseException {
@@ -60,5 +64,28 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 		orientation.setDateRetired(dateFormatter.parse("2020-06-04 00:00:00"));
 		orientation.setRetireReason("Due to increasing cases of rigging");
 		orientation.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006050010");
+	}
+
+	private void initPhases() throws ParseException {
+		search = new HydramodulePhase();
+		search.setPhaseId(1);
+		search.setName("Search");
+		search.setDescription("Wizard hunting for admissions");
+		search.setRetired(Boolean.FALSE);
+		search.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006120014");
+		
+		graduation = new HydramodulePhase();
+		graduation.setPhaseId(2);
+		graduation.setName("Graduation");
+		graduation.setDescription("Learn some magic");
+		graduation.setRetired(Boolean.FALSE);
+		graduation.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006120015");
+		
+		wizardy = new HydramodulePhase();
+		wizardy.setPhaseId(3);
+		wizardy.setName("Wizardy");
+		wizardy.setDescription("Life of a wizard");
+		wizardy.setRetired(Boolean.FALSE);
+		wizardy.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006120016");
 	}
 }

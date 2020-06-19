@@ -189,6 +189,11 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 	}
 
 	@Test
+	public void shouldGetAssetCategoryByName() {
+		fail("Not yet implemented");
+	}
+
+	@Test
 	public void shouldGetAssetCategoryByUuid() {
 		Context.clearSession();
 		assertEquals(apparel, dao.getAssetCategory("aaaaaaaa-bbbb-cccc-dddd-202006120001"));
@@ -247,6 +252,11 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 
 	@Test
 	public void shouldGetAssetTypeById() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void shouldGetAssetTypeByName() {
 		fail("Not yet implemented");
 	}
 
