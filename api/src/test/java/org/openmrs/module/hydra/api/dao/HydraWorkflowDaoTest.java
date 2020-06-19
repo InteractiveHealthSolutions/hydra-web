@@ -96,7 +96,7 @@ public class HydraWorkflowDaoTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldPurgeHydramoduleWorkflowCompletely() {
+	public void shouldPurgeHydramoduleHydramoduleWorkflowCompletely() {
 		Context.clearSession();
 		dao.deleteWorkflow(hogwartzWorkflow);
 		HydramodulePatientWorkflow shouldNotExist = (HydramodulePatientWorkflow) sessionFactory.getCurrentSession()
@@ -105,46 +105,46 @@ public class HydraWorkflowDaoTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldPurgeWorkflowSafely() {
+	public void shouldPurgeHydramoduleWorkflowSafely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldRetireWorkflow() {
+	public void shouldRetireHydramoduleWorkflow() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldUnretireWorkflow() {
+	public void shouldUnretireHydramoduleWorkflow() {
 		fail("Not yet implemented");
 	}
 
 	/* Workflow Phases */
 	@Test
-	public void shouldGetAllWorkflowPhases() {
+	public void shouldGetAllHydramoduleWorkflowPhases() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetWorkflowPhaseById() {
+	public void shouldGetHydramoduleWorkflowPhaseById() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetWorkflowsPhasesByWorkflow() {
+	public void shouldGetHydramoduleWorkflowsPhasesByWorkflow() {
 		Context.clearSession();
 		List<HydramoduleWorkflowPhases> list = dao.getWorkflowPhase(hogwartzWorkflow);
 		assertThat(list, hasItems(searchPhase, treatPhase));
 	}
 
 	@Test
-	public void shouldGetWorkflowPhaseByUuid() {
+	public void shouldGetHydramoduleWorkflowPhaseByUuid() {
 		Context.clearSession();
 		assertEquals(hogwartzWorkflow, dao.getWorkflow("aaaaaaaa-bbbb-cccc-dddd-202006190005"));
 	}
 
 	@Test
-	public void shouldSaveWorkflowPhase() {
+	public void shouldSaveHydramoduleWorkflowPhase() {
 		Context.clearSession();
 		HydramoduleWorkflowPhases preventPhase = new HydramoduleWorkflowPhases();
 		preventPhase.setId(100);
@@ -157,7 +157,7 @@ public class HydraWorkflowDaoTest extends HydraBaseTest {
 	}
 	
 	@Test
-	public void shouldPurgeWorkflowPhaseCompletely() {
+	public void shouldPurgeHydramoduleWorkflowPhaseCompletely() {
 		Context.clearSession();
 		dao.deleteWorkflow(hogwartzWorkflow);
 		HydramodulePatientWorkflow shouldNotExist = (HydramodulePatientWorkflow) sessionFactory.getCurrentSession()
@@ -166,63 +166,63 @@ public class HydraWorkflowDaoTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldPurgeWorkflowPhaseSafely() {
+	public void shouldPurgeHydramoduleWorkflowPhaseSafely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldRetireWorkflowPhase() {
+	public void shouldRetireHydramoduleWorkflowPhase() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldUnretireWorkflowPhase() {
+	public void shouldUnretireHydramoduleWorkflowPhase() {
 		fail("Not yet implemented");
 	}
 	
 	/* Patient Workflow Phases */
 	@Test
-	public void shouldGetPatientWorkflow() {
+	public void shouldGetHydramodulePatientWorkflow() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetPatientWorkflowById() {
+	public void shouldGetHydramodulePatientWorkflowById() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetPatientWorkflowsByWorkflow() {
+	public void shouldGetHydramodulePatientWorkflowsByWorkflow() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetPatientWorkflowByUuid() {
+	public void shouldGetHydramodulePatientWorkflowByUuid() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldSavePatientWorkflow() {
+	public void shouldSaveHydramodulePatientWorkflow() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldPurgePatientWorkflowCompletely() {
+	public void shouldPurgeHydramodulePatientWorkflowCompletely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldPurgePatientWorkflowSafely() {
+	public void shouldPurgeHydramodulePatientWorkflowSafely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldVoidPatientWorkflow() {
+	public void shouldVoidHydramodulePatientWorkflow() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldUnvoidPatientWorkflow() {
+	public void shouldUnvoidHydramodulePatientWorkflow() {
 		fail("Not yet implemented");
 	}
 }

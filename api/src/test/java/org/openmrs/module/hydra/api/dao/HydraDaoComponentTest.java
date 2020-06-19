@@ -31,7 +31,7 @@ public class HydraDaoComponentTest extends HydraBaseTest {
 	}
 
 	@Test
-	public final void shouldGetActiveComponents() {
+	public final void shouldGetActiveHydramoduleComponents() {
 		Context.clearSession();
 		List<HydramoduleComponent> active = Arrays.asList(preAdmission, admission);
 		List<HydramoduleComponent> list = dao.getAllComponents();
@@ -40,23 +40,23 @@ public class HydraDaoComponentTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldGetAllComponents() {
-		fail("Not yet implemented");
-	}
-	
-	@Test
-	public void shouldGetComponentById() {
+	public void shouldGetAllHydramoduleComponents() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetComponentByUuid() {
+	public void shouldGetHydramoduleComponentById() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void shouldGetHydramoduleComponentByUuid() {
 		Context.clearSession();
 		assertEquals(admission, dao.getAssetCategory("aaaaaaaa-bbbb-cccc-dddd-202006050009"));
 	}
 
 	@Test
-	public void shouldSaveComponent() {
+	public void shouldSaveHydramoduleComponent() {
 		HydramoduleComponent component = new HydramoduleComponent();
 		component.setName("Test Component");
 		component.setDescription(component.getName());
@@ -67,22 +67,22 @@ public class HydraDaoComponentTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldPurgeComponentCompletely() {
+	public void shouldPurgeHydramoduleComponentCompletely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldPurgeComponentSafely() {
+	public void shouldPurgeHydramoduleComponentSafely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldRetireComponent() {
+	public void shouldRetireHydramoduleComponent() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldUnretireComponent() {
+	public void shouldUnretireHydramoduleComponent() {
 		fail("Not yet implemented");
 	}
 }

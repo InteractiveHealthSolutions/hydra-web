@@ -32,11 +32,11 @@ public class HydraDaoPhaseTest extends HydraBaseTest {
 	@Test
 	public void shouldGetAllPhases() {
 		Context.clearSession();
-		List<HydramodulePhase> active = Arrays.asList(search, graduation, wizardy);
+		List<HydramodulePhase> active = Arrays.asList(search, treat, prevent);
 		List<HydramodulePhase> list = dao.getAllPhases();
 		assertTrue(list.size() == active.size());
 	}
-	
+
 	@Test
 	public void shouldGetPhaseById() {
 		fail("Not yet implemented");
@@ -70,7 +70,7 @@ public class HydraDaoPhaseTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldNOTRetireComponent() {
+	public void shouldRetireComponent() {
 		fail("Not yet implemented");
 	}
 }

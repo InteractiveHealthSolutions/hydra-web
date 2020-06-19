@@ -167,7 +167,7 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 
 	/* Asset Categories */
 	@Test
-	public void shouldGetActiveAssetCategories() {
+	public void shouldGetHydramoduleActiveAssetCategories() {
 		Context.clearSession();
 		List<HydramoduleAssetCategory> active = Arrays.asList(apparel, magicGear);
 		List<HydramoduleAssetCategory> list = dao.getAllAssetCategories(false);
@@ -176,7 +176,7 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldGetAssetCategories() {
+	public void shouldGetHydramoduleAssetCategories() {
 		Context.clearSession();
 		List<HydramoduleAssetCategory> active = Arrays.asList(apparel, magicGear, woodcraft);
 		List<HydramoduleAssetCategory> list = dao.getAllAssetCategories(true);
@@ -184,23 +184,23 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldGetAssetCategoryById() {
+	public void shouldGetHydramoduleAssetCategoryById() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetAssetCategoryByName() {
+	public void shouldGetHydramoduleAssetCategoryByName() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetAssetCategoryByUuid() {
+	public void shouldGetHydramoduleAssetCategoryByUuid() {
 		Context.clearSession();
 		assertEquals(apparel, dao.getAssetCategory("aaaaaaaa-bbbb-cccc-dddd-202006120001"));
 	}
 
 	@Test
-	public void shouldSaveAssetCategory() {
+	public void shouldSaveHydramoduleAssetCategory() {
 		HydramoduleAssetCategory assetCategory = new HydramoduleAssetCategory();
 		assetCategory.setName("Test Asset Category");
 		assetCategory.setDescription(assetCategory.getName());
@@ -213,32 +213,31 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 	 * Should delete the object along with all dependent objects
 	 */
 	@Test
-	public void shouldPurgeAssetCategoryCompletely() {
+	public void shouldPurgeHydramoduleAssetCategoryCompletely() {
 		fail("Not yet implemented");
 	}
 
 	/**
-	 * Should first set the value of dependent objects to UNKNOWN Category and then
-	 * delete
+	 * Should first set the value of dependent objects to UNKNOWN Category and then delete
 	 */
 	@Test
-	public void shouldPurgeAssetCategorySafely() {
+	public void shouldPurgeHydramoduleAssetCategorySafely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldRetireAssetCategory() {
+	public void shouldRetireHydramoduleAssetCategory() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldUnretireAssetCategory() {
+	public void shouldUnretireHydramoduleAssetCategory() {
 		fail("Not yet implemented");
 	}
 
 	/* Asset Types */
 	@Test
-	public void shouldGetActiveAssetTypes() {
+	public void shouldGetHydramoduleActiveAssetTypes() {
 		Context.clearSession();
 		List<HydramoduleAssetType> active = Arrays.asList(cloak, winterWear, emblem, broomStick, wand);
 		List<HydramoduleAssetType> list = dao.getAllAssetTypes(false);
@@ -246,33 +245,33 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldGetAssetTypes() {
+	public void shouldGetHydramoduleAssetTypes() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetAssetTypeById() {
+	public void shouldGetHydramoduleAssetTypeById() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetAssetTypeByName() {
+	public void shouldGetHydramoduleAssetTypeByName() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetAssetTypeByUuid() {
+	public void shouldGetHydramoduleAssetTypeByUuid() {
 		Context.clearSession();
 		assertEquals(broomStick, dao.getAssetCategory("aaaaaaaa-bbbb-cccc-dddd-202006120007"));
 	}
 
 	@Test
-	public void shouldGetAssetTypesByCategory() {
+	public void shouldGetHydramoduleAssetTypesByCategory() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldSaveAssetType() {
+	public void shouldSaveHydramoduleAssetType() {
 		HydramoduleAssetType assetType = new HydramoduleAssetType();
 		assetType.setName("Test Asset Type");
 		assetType.setDescription(assetType.getName());
@@ -282,28 +281,28 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldPurgeAssetTypeCompletely() {
+	public void shouldPurgeHydramoduleAssetTypeCompletely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldPurgeAssetTypeSafely() {
+	public void shouldPurgeHydramoduleAssetTypeSafely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldRetireAssetType() {
+	public void shouldRetireHydramoduleAssetType() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldUnretireAssetType() {
+	public void shouldUnretireHydramoduleAssetType() {
 		fail("Not yet implemented");
 	}
 
 	/* Assets */
 	@Test
-	public void shouldNOTGetAllAssets() {
+	public void shouldNOTGetAllHydramoduleAssets() {
 		Context.clearSession();
 		List<HydramoduleAssetType> active = Arrays.asList(cloak, winterWear, emblem, broomStick, wand);
 		List<HydramoduleAssetType> list = dao.getAllAssetTypes(false);
@@ -311,28 +310,33 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldGetAssetById() {
+	public void shouldGetHydramoduleAssetById() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetAssetByUuid() {
+	public void shouldGetHydramoduleAssetsByName() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	public void shouldGetHydramoduleAssetByUuid() {
 		Context.clearSession();
 		assertEquals(nimbus2000, dao.getAssetCategory("aaaaaaaa-bbbb-cccc-dddd-202006120009"));
 	}
 
 	@Test
-	public void shouldGetAssetsByReferenceId() {
+	public void shouldGetHydramoduleAssetsByReferenceId() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldGetAssetsByType() {
+	public void shouldGetHydramoduleAssetsByType() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldSaveAsset() {
+	public void shouldSaveHydramoduleAsset() {
 		HydramoduleAsset asset = new HydramoduleAsset();
 		asset.setAssetType(wand);
 		asset.setName("Test Asset Type");
@@ -348,7 +352,7 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 	}
 
 	@Test(expected = DuplicateIdentifierException.class)
-	public void shouldNOTSaveAssetWithDuplicateReferenceIdForSameAssetType() {
+	public void shouldNOTSaveHydramoduleAssetWithDuplicateReferenceIdForSameAssetType() {
 		HydramoduleAsset asset = new HydramoduleAsset();
 		asset.setAssetType(wand);
 		asset.setName("Test Asset Type");
@@ -360,7 +364,7 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 		asset.setRetired(Boolean.FALSE);
 		asset.setUuid(UUID.randomUUID().toString());
 		dao.saveAsset(asset);
-		
+
 		HydramoduleAsset asset2 = new HydramoduleAsset();
 		asset2.setAssetType(wand);
 		asset2.setName("Test Asset Type 2");
@@ -375,7 +379,7 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 	}
 
 	@Test(expected = DAOException.class)
-	public void shouldNOTSaveAssetForRetiredAssetType() {
+	public void shouldNOTSaveHydramoduleAssetForRetiredAssetType() {
 		HydramoduleAsset asset = new HydramoduleAsset();
 		asset.setAssetType(wand);
 		asset.setName("Test Asset Type");
@@ -390,22 +394,22 @@ public class HydraAssetDaoTest extends HydraBaseTest {
 	}
 
 	@Test
-	public void shouldPurgeAssetCompletely() {
+	public void shouldPurgeHydramoduleAssetCompletely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldPurgeAssetSafely() {
+	public void shouldPurgeHydramoduleAssetSafely() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldRetireAsset() {
+	public void shouldRetireHydramoduleAsset() {
 		fail("Not yet implemented");
 	}
 
 	@Test
-	public void shouldUnretireAsset() {
+	public void shouldUnretireHydramoduleAsset() {
 		fail("Not yet implemented");
 	}
 }
