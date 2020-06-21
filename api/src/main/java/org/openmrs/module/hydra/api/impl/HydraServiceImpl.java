@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.openmrs.EncounterType;
+import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
@@ -796,9 +797,16 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
-	public HydramoduleComponentForm getComponentFormByForm(HydramoduleForm hydramoduleForm) throws APIException {
-		HydramoduleComponentForm componentForm = componentDao.getComponentFormByForm(hydramoduleForm);
+	public HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,HydramoduleWorkflow hydramoduleWorkflow) throws APIException {
+		HydramoduleComponentForm componentForm = componentDao.getComponentFormByFormAndWorkflow(hydramoduleForm, hydramoduleWorkflow);
 		return componentForm;
+	}
+
+	@Override
+	public HydramodulePatientWorkflow getHydramodulePatientWorkflowByPatient(Integer patientId) throws APIException {
+	    Patient patient = Context.getPatientService().getPatient(patientId);
+	    HydramodulePatientWorkflow hydramodulePatientWorkflow = workflowDao.getPatientWorkflowByPatient(patient);
+	    return hydramodulePatientWorkflow;
 	}
 
 	// // HydramoduleEncounterMapper
