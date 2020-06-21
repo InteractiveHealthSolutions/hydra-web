@@ -92,7 +92,8 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 	}
 
 	@Override
-	public HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm, HydramoduleWorkflow hydramoduleWorkflow) {
+	public HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
+	        HydramoduleWorkflow hydramoduleWorkflow) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
 		criteria.add(Restrictions.eq("form", hydramoduleForm));

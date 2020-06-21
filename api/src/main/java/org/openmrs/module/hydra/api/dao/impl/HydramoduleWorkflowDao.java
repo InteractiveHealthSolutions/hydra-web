@@ -178,7 +178,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 	public HydramodulePatientWorkflow getPatientWorkflowByPatient(Patient patient) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePatientWorkflow.class);
-		criteria.add(Restrictions.eq("patient",patient));
+		criteria.add(Restrictions.eq("patient", patient));
 		return (HydramodulePatientWorkflow) criteria.uniqueResult();
 	}
 
