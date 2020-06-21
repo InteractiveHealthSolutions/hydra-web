@@ -238,7 +238,7 @@ public interface HydraService extends OpenmrsService {
 
 	HydramoduleComponentForm saveComponentFormRelation(HydramoduleComponentForm item) throws APIException;
 
-	HydramoduleComponentForm getComponentFormByForm(HydramoduleForm hydramoduleForm) throws APIException;
+	HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,HydramoduleWorkflow hydramoduleWorkflow) throws APIException;
 
 	HydramoduleComponentForm getComponentFormByUUID(String uuid) throws APIException;
 
@@ -277,6 +277,8 @@ public interface HydraService extends OpenmrsService {
 	List<HydramoduleParticipant> getParticipantByUserUUID(String userUUID) throws APIException;
 
 	HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow service) throws APIException;
+	
+	HydramodulePatientWorkflow getHydramodulePatientWorkflowByPatient(Integer patientId) throws APIException;
 
 	List<HydramodulePatientWorkflow> getAllHydramodulePatientWorkflows() throws APIException;
 

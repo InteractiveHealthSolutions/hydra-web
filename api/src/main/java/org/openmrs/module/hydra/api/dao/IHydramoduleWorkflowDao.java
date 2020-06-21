@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.module.hydra.model.HydramodulePatientWorkflow;
@@ -41,6 +42,8 @@ public interface IHydramoduleWorkflowDao {
 	HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow patientWorkflow);
 
 	HydramodulePatientWorkflow getHydramodulePatientWorkflow(String uuid);
+	
+	HydramodulePatientWorkflow getPatientWorkflowByPatient(Patient patient);
 
 	List<HydramodulePatientWorkflow> getAllHydramodulePatientWorkflows();
 
