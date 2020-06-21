@@ -797,16 +797,18 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	}
 
 	@Override
-	public HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,HydramoduleWorkflow hydramoduleWorkflow) throws APIException {
-		HydramoduleComponentForm componentForm = componentDao.getComponentFormByFormAndWorkflow(hydramoduleForm, hydramoduleWorkflow);
+	public HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
+	        HydramoduleWorkflow hydramoduleWorkflow) throws APIException {
+		HydramoduleComponentForm componentForm = componentDao.getComponentFormByFormAndWorkflow(hydramoduleForm,
+		    hydramoduleWorkflow);
 		return componentForm;
 	}
 
 	@Override
 	public HydramodulePatientWorkflow getHydramodulePatientWorkflowByPatient(Integer patientId) throws APIException {
-	    Patient patient = Context.getPatientService().getPatient(patientId);
-	    HydramodulePatientWorkflow hydramodulePatientWorkflow = workflowDao.getPatientWorkflowByPatient(patient);
-	    return hydramodulePatientWorkflow;
+		Patient patient = Context.getPatientService().getPatient(patientId);
+		HydramodulePatientWorkflow hydramodulePatientWorkflow = workflowDao.getPatientWorkflowByPatient(patient);
+		return hydramodulePatientWorkflow;
 	}
 
 	// // HydramoduleEncounterMapper
