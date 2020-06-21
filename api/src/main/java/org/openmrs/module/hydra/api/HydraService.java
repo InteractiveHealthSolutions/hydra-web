@@ -238,6 +238,8 @@ public interface HydraService extends OpenmrsService {
 
 	HydramoduleComponentForm saveComponentFormRelation(HydramoduleComponentForm item) throws APIException;
 
+	HydramoduleComponentForm getComponentFormByForm(HydramoduleForm hydramoduleForm) throws APIException;
+
 	HydramoduleComponentForm getComponentFormByUUID(String uuid) throws APIException;
 
 	List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException, CloneNotSupportedException;
