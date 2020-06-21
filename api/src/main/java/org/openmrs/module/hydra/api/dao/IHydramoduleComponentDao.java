@@ -29,4 +29,6 @@ public interface IHydramoduleComponentDao {
 
 	HydramoduleComponentForm updateComponentForm(HydramoduleComponentForm componentForm);
 
+	HydramoduleComponentForm getComponentFormByForm(HydramoduleForm hydramoduleForm);
+
 }
