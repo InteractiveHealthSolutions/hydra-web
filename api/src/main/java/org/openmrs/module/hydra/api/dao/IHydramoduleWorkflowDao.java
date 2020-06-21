@@ -42,7 +42,7 @@ public interface IHydramoduleWorkflowDao {
 	HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow patientWorkflow);
 
 	HydramodulePatientWorkflow getHydramodulePatientWorkflow(String uuid);
-	
+
 	HydramodulePatientWorkflow getPatientWorkflowByPatient(Patient patient);
 
 	List<HydramodulePatientWorkflow> getAllHydramodulePatientWorkflows();
