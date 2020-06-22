@@ -238,8 +238,9 @@ public interface HydraService extends OpenmrsService {
 
 	HydramoduleComponentForm saveComponentFormRelation(HydramoduleComponentForm item) throws APIException;
 
-	HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
-	        HydramoduleWorkflow hydramoduleWorkflow) throws APIException;
+	// HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm
+	// hydramoduleForm,
+	// HydramoduleWorkflow hydramoduleWorkflow) throws APIException;
 
 	HydramoduleComponentForm getComponentFormByUUID(String uuid) throws APIException;
 

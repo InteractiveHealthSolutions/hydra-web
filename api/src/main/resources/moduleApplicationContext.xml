@@ -34,8 +34,8 @@
             <ref bean="transactionManager" />
         </property>
         <property name="target">
-            <bean class="org.openmrs.module.hydra.api.impl.HydraServiceImpl">
-           <!--      <property name="assetDao" ref="hydra.HydraAssetDao" />
+           <bean class="org.openmrs.module.hydra.api.impl.HydraServiceImpl">
+                <!-- <property name="assetDao" ref="hydra.HydraAssetDao" />
                 <property name="componentDao" ref="hydra.HydraComponentDao" />
                 <property name="eventDao" ref="hydra.HydraEventDao" />
                 <property name="fieldDao" ref="hydra.HydraFieldDao" />

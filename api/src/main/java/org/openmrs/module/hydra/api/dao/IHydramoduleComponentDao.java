@@ -30,7 +30,8 @@ public interface IHydramoduleComponentDao {
 
 	HydramoduleComponentForm updateComponentForm(HydramoduleComponentForm componentForm);
 
-	HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
-	        HydramoduleWorkflow hydramoduleWorkflow);
+	// HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm
+	// hydramoduleForm,
+	// HydramoduleWorkflow hydramoduleWorkflow);
 
 }

@@ -29,9 +29,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class CustomServicesController {
 
 	private static Log log = LogFactory.getLog(CustomServicesController.class);
-	
-	private HydraService hydraService = Context.getService(HydraService.class);
 
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@RequestMapping(value = "/getUserByRole", method = RequestMethod.GET)
 	@ResponseBody
@@ -54,32 +53,39 @@ public class CustomServicesController {
 		return null;
 
 	}
-	 
-	@RequestMapping(value = "/saveformencounterqxr", method = RequestMethod.GET)
-	@ResponseBody
-	public String saveFormEncounterForQXR(HttpServletRequest request, @RequestParam(value="patientId", required=true) Integer patientId,@RequestParam(value="resultencounterId", required=true) Integer resultEncounterId ) {
-		try {
-			HydramoduleForm form = hydraService.getHydraModuleFormByName("Xray Result Form");
-			
-			HydramodulePatientWorkflow hydramodulePatientWorkflow = hydraService
-			        .getHydramodulePatientWorkflowByPatient(patientId);
-			
-			HydramoduleComponentForm componentForm = hydraService.getComponentFormByFormAndWorkflow(form,hydramodulePatientWorkflow.getWorkflow());
-			
-			HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
-			
-			Encounter resultEncounter = Context.getEncounterService().getEncounter(resultEncounterId);
-			
-			formEncounter.setComponentForm(componentForm);
-			formEncounter.setEncounter(resultEncounter);
-			
-			hydraService.saveFormEncounter(formEncounter);
-			
-			return "sucessfully saved";
-		}
-		catch (Exception e) {
-			log.error(e);
-		}
-			return null;
-	}
+
+	// @RequestMapping(value = "/saveformencounterqxr", method = RequestMethod.GET)
+	// @ResponseBody
+	// public String saveFormEncounterForQXR(HttpServletRequest request,
+	// @RequestParam(value = "patientId", required = true) Integer patientId,
+	// @RequestParam(value = "resultencounterId", required = true) Integer
+	// resultEncounterId) {
+	// try {
+	// HydramoduleForm form = hydraService.getHydraModuleFormByName("Xray Result
+	// Form");
+	//
+	// HydramodulePatientWorkflow hydramodulePatientWorkflow = hydraService
+	// .getHydramodulePatientWorkflowByPatient(patientId);
+	//
+	// HydramoduleComponentForm componentForm =
+	// hydraService.getComponentFormByFormAndWorkflow(form,
+	// hydramodulePatientWorkflow.getWorkflow());
+	//
+	// HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
+	//
+	// Encounter resultEncounter =
+	// Context.getEncounterService().getEncounter(resultEncounterId);
+	//
+	// formEncounter.setComponentForm(componentForm);
+	// formEncounter.setEncounter(resultEncounter);
+	//
+	// hydraService.saveFormEncounter(formEncounter);
+	//
+	// return "sucessfully saved";
+	// }
+	// catch (Exception e) {
+	// log.error(e);
+	// }
+	// return null;
+	// }
 }
