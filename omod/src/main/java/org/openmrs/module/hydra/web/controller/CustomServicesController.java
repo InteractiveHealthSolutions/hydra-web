@@ -32,7 +32,6 @@ public class CustomServicesController {
 
 	private static Log log = LogFactory.getLog(CustomServicesController.class);
 	
-	private HydraService hydraService = Context.getService(HydraService.class);
 
 
 	@RequestMapping(value = "/getUserByRole", method = RequestMethod.GET)
@@ -63,12 +62,12 @@ public class CustomServicesController {
 	@ResponseBody
 	public String saveFormEncounterForQXR(HttpServletRequest request, @RequestParam(value="patientId", required=true) Integer patientId,@RequestParam(value="resultencounterId", required=true) Integer resultEncounterId ) {
 		try {
-			HydramoduleForm form = hydraService.getHydraModuleFormByName("Xray Result Form");
+			HydramoduleForm form = service.getHydraModuleFormByName("Xray Result Form");
 			
-			HydramodulePatientWorkflow hydramodulePatientWorkflow = hydraService
+			HydramodulePatientWorkflow hydramodulePatientWorkflow = service
 			        .getHydramodulePatientWorkflowByPatient(patientId);
 			
-			HydramoduleComponentForm componentForm = hydraService.getComponentFormByFormAndWorkflow(form,hydramodulePatientWorkflow.getWorkflow());
+			HydramoduleComponentForm componentForm = service.getComponentFormByFormAndWorkflow(form,hydramodulePatientWorkflow.getWorkflow());
 			
 			HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
 			
@@ -77,7 +76,7 @@ public class CustomServicesController {
 			formEncounter.setComponentForm(componentForm);
 			formEncounter.setEncounter(resultEncounter);
 			
-			hydraService.saveFormEncounter(formEncounter);
+			service.saveFormEncounter(formEncounter);
 			
 			return "sucessfully saved";
 		}
