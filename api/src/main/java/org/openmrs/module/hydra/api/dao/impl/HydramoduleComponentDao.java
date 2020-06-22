@@ -13,6 +13,7 @@ import org.openmrs.module.hydra.api.dao.IHydramoduleComponentDao;
 import org.openmrs.module.hydra.model.HydramoduleComponent;
 import org.openmrs.module.hydra.model.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.HydramoduleForm;
+import org.openmrs.module.hydra.model.HydramoduleWorkflow;
 import org.springframework.stereotype.Component;
 
 @Component("componentDao")
@@ -88,6 +89,16 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 		getSession().update(componentForm);
 		getSession().flush();
 		return componentForm;
+	}
+
+	@Override
+	public HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
+	        HydramoduleWorkflow hydramoduleWorkflow) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
+		criteria.add(Restrictions.eq("form", hydramoduleForm));
+		criteria.add(Restrictions.eq("workflow", hydramoduleWorkflow));
+		return (HydramoduleComponentForm) criteria.uniqueResult();
 	}
 
 }

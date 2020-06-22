@@ -7,7 +7,7 @@ import javax.transaction.Transactional;
 import org.openmrs.module.hydra.model.HydramoduleComponent;
 import org.openmrs.module.hydra.model.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.HydramoduleForm;
-import org.springframework.stereotype.Repository;
+import org.openmrs.module.hydra.model.HydramoduleWorkflow;
 
 public interface IHydramoduleComponentDao {
 
@@ -28,5 +28,8 @@ public interface IHydramoduleComponentDao {
 	HydramoduleComponent updateComponent(HydramoduleComponent component);
 
 	HydramoduleComponentForm updateComponentForm(HydramoduleComponentForm componentForm);
+
+	HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
+	        HydramoduleWorkflow hydramoduleWorkflow);
 
 }

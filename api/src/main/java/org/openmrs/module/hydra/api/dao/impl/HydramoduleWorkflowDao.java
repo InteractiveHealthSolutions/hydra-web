@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.db.hibernate.DbSession;
@@ -171,6 +172,14 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 		}
 		return null;
 
+	}
+
+	@Override
+	public HydramodulePatientWorkflow getPatientWorkflowByPatient(Patient patient) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramodulePatientWorkflow.class);
+		criteria.add(Restrictions.eq("patient", patient));
+		return (HydramodulePatientWorkflow) criteria.uniqueResult();
 	}
 
 }
