@@ -299,6 +299,11 @@ public interface HydraService extends OpenmrsService {
 
 	HydramoduleForm getHydraModuleFormByName(String name) throws APIException;
 
+	HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
+	        HydramoduleWorkflow hydramoduleWorkflow) throws APIException;
+
+	HydramodulePatientWorkflow getHydramodulePatientWorkflowByPatient(Integer patientId) throws APIException;
+
 	// HydramoduleEncounterMapper
 	// saveHydramoduleEncounterMapper(HydramoduleEncounterMapper
 	// hydramoduleEncounterMapper)

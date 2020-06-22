@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.AbstractDocument.Content;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
@@ -18,6 +16,7 @@ import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.HydramodulePatientWorkflow;
 import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/hydra/customservices")
 public class CustomServicesController {
+
+	@Autowired
+	private HydraService service;
 
 	private static Log log = LogFactory.getLog(CustomServicesController.class);
 	
@@ -54,6 +56,8 @@ public class CustomServicesController {
 		return null;
 
 	}
+
+	
 	 
 	@RequestMapping(value = "/saveformencounterqxr", method = RequestMethod.GET)
 	@ResponseBody
@@ -80,6 +84,6 @@ public class CustomServicesController {
 		catch (Exception e) {
 			log.error(e);
 		}
-			return null;
+		return null;
 	}
 }

@@ -55,4 +55,6 @@ public interface IHydramoduleWorkflowDao {
 
 	List<HydramoduleUserWorkflow> getUserWorkflowByUser(User user);
 
+	HydramodulePatientWorkflow getPatientWorkflowByPatient(Patient patient);
+
 }
