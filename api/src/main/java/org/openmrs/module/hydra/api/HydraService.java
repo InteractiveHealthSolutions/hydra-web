@@ -238,7 +238,6 @@ public interface HydraService extends OpenmrsService {
 
 	HydramoduleComponentForm saveComponentFormRelation(HydramoduleComponentForm item) throws APIException;
 
-	
 	HydramoduleComponentForm getComponentFormByUUID(String uuid) throws APIException;
 
 	List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException, CloneNotSupportedException;
@@ -276,7 +275,6 @@ public interface HydraService extends OpenmrsService {
 	List<HydramoduleParticipant> getParticipantByUserUUID(String userUUID) throws APIException;
 
 	HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow service) throws APIException;
-
 
 	List<HydramodulePatientWorkflow> getAllHydramodulePatientWorkflows() throws APIException;
 

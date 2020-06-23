@@ -31,8 +31,6 @@ public class CustomServicesController {
 	private HydraService service;
 
 	private static Log log = LogFactory.getLog(CustomServicesController.class);
-	
-
 
 	@RequestMapping(value = "/getUserByRole", method = RequestMethod.GET)
 	@ResponseBody
@@ -56,28 +54,29 @@ public class CustomServicesController {
 
 	}
 
-	
-	 
 	@RequestMapping(value = "/saveformencounterqxr", method = RequestMethod.GET)
 	@ResponseBody
-	public String saveFormEncounterForQXR(HttpServletRequest request, @RequestParam(value="patientId", required=true) Integer patientId,@RequestParam(value="resultencounterId", required=true) Integer resultEncounterId ) {
+	public String saveFormEncounterForQXR(HttpServletRequest request,
+	        @RequestParam(value = "patientId", required = true) Integer patientId,
+	        @RequestParam(value = "resultencounterId", required = true) Integer resultEncounterId) {
 		try {
 			HydramoduleForm form = service.getHydraModuleFormByName("Xray Result Form");
-			
+
 			HydramodulePatientWorkflow hydramodulePatientWorkflow = service
 			        .getHydramodulePatientWorkflowByPatient(patientId);
-			
-			HydramoduleComponentForm componentForm = service.getComponentFormByFormAndWorkflow(form,hydramodulePatientWorkflow.getWorkflow());
-			
+
+			HydramoduleComponentForm componentForm = service.getComponentFormByFormAndWorkflow(form,
+			    hydramodulePatientWorkflow.getWorkflow());
+
 			HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
-			
+
 			Encounter resultEncounter = Context.getEncounterService().getEncounter(resultEncounterId);
-			
+
 			formEncounter.setComponentForm(componentForm);
 			formEncounter.setEncounter(resultEncounter);
-			
+
 			service.saveFormEncounter(formEncounter);
-			
+
 			return "sucessfully saved";
 		}
 		catch (Exception e) {
