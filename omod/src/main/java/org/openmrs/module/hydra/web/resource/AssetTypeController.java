@@ -20,7 +20,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingC
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/assetType", supportedClass = HydramoduleAssetType.class, supportedOpenmrsVersions = {
+        + "/hydra/asset-type", supportedClass = HydramoduleAssetType.class, supportedOpenmrsVersions = {
                 "2.0.*,2.1.*,2.2.*" })
 public class AssetTypeController extends MetadataDelegatingCrudResource<HydramoduleAssetType> {
 

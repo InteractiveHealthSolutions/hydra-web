@@ -31,7 +31,7 @@ public class CustomServicesController {
 	private HydraService service;
 
 	private static Log log = LogFactory.getLog(CustomServicesController.class);
-
+	
 	@RequestMapping(value = "/getUserByRole", method = RequestMethod.GET)
 	@ResponseBody
 	List<String> getUsersByRole(HttpServletRequest request, @RequestParam(value = "role", required = true) String roleUuid) {
@@ -64,17 +64,15 @@ public class CustomServicesController {
 
 			HydramodulePatientWorkflow hydramodulePatientWorkflow = service
 			        .getHydramodulePatientWorkflowByPatient(patientId);
-
-			HydramoduleComponentForm componentForm = service.getComponentFormByFormAndWorkflow(form,
-			    hydramodulePatientWorkflow.getWorkflow());
-
+			
+			HydramoduleComponentForm componentForm = service.getComponentFormByFormAndWorkflow(form,hydramodulePatientWorkflow.getWorkflow());
+			
 			HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
 
 			Encounter resultEncounter = Context.getEncounterService().getEncounter(resultEncounterId);
 
 			formEncounter.setComponentForm(componentForm);
 			formEncounter.setEncounter(resultEncounter);
-
 			service.saveFormEncounter(formEncounter);
 
 			return "sucessfully saved";
