@@ -2655,7 +2655,7 @@
 			splitStatements="true"
 			stripComments="true">         
 		       	INSERT IGNORE INTO hydra.`field_type` (`field_type_id`,`name`,`description`,`is_set`,`creator`,`date_created`,`uuid`) VALUES (14,'Barcode Reader',NULL,0,1,'2005-02-22 00:00:00','675eafd0-c2cc-11de-0d13-0010c6dffd0f');
-				INSERT IGNORE INTO hydra.`field_type` (`field_type_id`,`name`,`description`,`is_set`,`creator`,`date_created`,`uuid`) VALUES (15,'Phone Numbere',NULL,0,1,'2005-02-22 00:00:00','356eafd0-c2cc-11de-0d13-0010c6df0dff');
+				INSERT IGNORE INTO hydra.`field_type` (`field_type_id`,`name`,`description`,`is_set`,`creator`,`date_created`,`uuid`) VALUES (15,'Phone Number',NULL,0,1,'2005-02-22 00:00:00','356eafd0-c2cc-11de-0d13-0010c6df0dff');
 	    </sql>    
 	</changeSet>
 	
@@ -2934,8 +2934,20 @@ BEGIN
 			stripComments="true">   
 			INSERT IGNORE INTO 
 			`hydra`.`hydramodule_field` (`field_id`,`field_type_id`,`concept_id`,`select_multiple`,`table_name`,`attribute_name`,`default_value`,`name`,`description`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`uuid`,`is_default`) 
-			VALUES(1,15,168076,NULL,"Attribute","Text",NULL,"Phone Number","Default field required by Hydra",1,"2020-06-29 11:07:33",NULL,NULL,0,NULL,NULL,NULL,"f68972ca-b9ce-11ea-b3de-0242ac130004", 0);
+			VALUES(1,15,168076,NULL,"Attribute","Text",NULL,"Phone Number","Default field required by Hydra",1,"2020-06-29 11:07:33",NULL,NULL,0,NULL,NULL,NULL,"f68972ca-b9ce-11ea-b3de-0242ac130004", 1);
 
 		</sql>    
 	</changeSet>
+	
+	<changeSet author="naveed.iqbal" id="hydra-metadata-202006290151">  
+	    <comment>insert query for hydra contact number person attribute type</comment>
+	    <sql
+			splitStatements="true"
+			stripComments="true">   
+			INSERT IGNORE INTO 
+			`hydra`.`person_attribute_type` (`name`,`description`,`format`,`foreign_key`,`searchable`,`creator`,`date_created`,`changed_by`,`date_changed`,`retired`,`retired_by`,`date_retired`,`retire_reason`,`edit_privilege`,`sort_weight`,`uuid`)
+			VALUES ("Hydra - Contact Number","Attribute type Hydra - Contact Number created by Hydra","java.lang.String",NULL,1,1,"2020-06-29 08:49:02",NULL,NULL,0,NULL,NULL,NULL,NULL,0,"280a7e3c-8f92-425a-b779-58be7b359b21");
+		</sql>    
+	</changeSet>
+
 </databaseChangeLog>
