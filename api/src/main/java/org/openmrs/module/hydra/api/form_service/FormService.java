@@ -147,7 +147,6 @@ public class FormService {
 		username = (String) authentication.get("USERNAME");
 		password = (String) authentication.get("PASSWORD");
 		SecretKey sec;
-		String decPassword = null;
 
 		providerUUID = (String) authentication.get("provider");
 		Context.authenticate(username, password);
@@ -581,8 +580,8 @@ public class FormService {
 							person.addAttribute(pa);
 						}
 						try {
-							String attribSaveResponse = savePersonAttributeViaREST(person.getUuid(), personAttributes, username, decPassword);
-							System.out.println("PERSON ATTRIBUTE RESPONSE "+ username+", "+decPassword+", "+attribSaveResponse);
+							String attribSaveResponse = savePersonAttributeViaREST(person.getUuid(), personAttributes, username, password);
+							System.out.println("PERSON ATTRIBUTE RESPONSE "+ username+", "+password+", "+attribSaveResponse);
 						}
 						catch (IOException e) {
 							e.printStackTrace();
