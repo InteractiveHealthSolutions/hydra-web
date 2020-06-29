@@ -582,7 +582,7 @@ public class FormService {
 						}
 						try {
 							String attribSaveResponse = savePersonAttributeViaREST(person.getUuid(), personAttributes, username, decPassword);
-							System.out.println("PERSON ATTRIBUTE RESPONSE "+ attribSaveResponse);
+							System.out.println("PERSON ATTRIBUTE RESPONSE "+ username+", "+decPassword+", "+attribSaveResponse);
 						}
 						catch (IOException e) {
 							e.printStackTrace();
