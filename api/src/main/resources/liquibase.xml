@@ -2620,7 +2620,7 @@
 			stripComments="true">         
 		       	INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (168076,0,NULL,NULL,NULL,8,7,0,1,'2020-03-20 08:47:53',NULL,1,'2020-03-20 08:47:53',NULL,NULL,NULL,'a7a9e56d-cb7c-43al-7549-ccb0e4a9a9c1');
 				
-				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (168076,'Concept used by Hydra Phone Number question,'en',1,'2020-03-20 08:47:53',NULL,NULL,'badd8bf0-b9cc-11ea-b3de-0242ac130004');
+				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (168076,'Concept used by Hydra Phone Number question','en',1,'2020-03-20 08:47:53',NULL,NULL,'badd8bf0-b9cc-11ea-b3de-0242ac130004');
 				
 				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168076,'Hydra - Contact Number','en',1,'2020-03-20 08:47:53',0,NULL,NULL,NULL,'badd8ea2-b9cc-11ea-b3de-0242ac130004','FULLY_SPECIFIED',1,NULL,NULL);
 				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168076,'hydra_contact_number','en',1,'2020-03-20 08:47:53',0,NULL,NULL,NULL,'badd9154-b9cc-11ea-b3de-0242ac130004','SHORT',0,NULL,NULL);
