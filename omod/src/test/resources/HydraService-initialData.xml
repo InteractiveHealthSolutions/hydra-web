@@ -1,0 +1,177 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<dataset>
+
+	<!-- DEAR ENGINEER, I BEG YOU TO READ THIS AND FOLLOW STRICTLY. THIS IS FOR YOUR OWN SAKE -->
+	<!--
+		1. When creating a new object, the UUID must be like aaaaaaaa-bbbb-cccc-dddd-<yyyyMMdd>####. Always ensure that you only change the
+			last part and start with the date you are working on and then use last 4 digits as serial in increasing order.
+		2. If for any reason you're making a change to previous entries, check HydraBaseTest class twice and confirm that your change doesn't break the tests
+	 -->
+
+
+	<!-- User-Persons -->
+	<person person_id="1000" gender="M" birthdate="1984-05-26" birthdate_estimated="0" dead="0" creator="1"
+		date_created="2019-08-22 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050001" deathdate_estimated="0" />
+
+	<person person_id="1001" gender="M" birthdate="1984-01-01" birthdate_estimated="0" dead="0" creator="1"
+		date_created="2020-05-26 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006260001" deathdate_estimated="0" />
+
+	<!-- User-Person Names -->
+	<person_name person_name_id="1000" preferred="1" person_id="1000" given_name="Joanne K." family_name="Rowling"
+		creator="1" date_created="2019-08-22 13:56:44" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050002" />
+
+	<person_name person_name_id="1001" preferred="1" person_id="1001" given_name="Doby" family_name="House Elf"
+		creator="1" date_created="2020-05-26 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006260002" />
+
+	<!-- Users -->
+	<users user_id="1000" system_id="1000-3" username="jk.rowling" password="" salt=""
+		secret_question="" creator="1" date_created="2019-08-22 00:00:00" changed_by="1" date_changed="2020-02-02 00:00:00"
+		person_id="1000" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050003" />
+
+	<users user_id="1001" system_id="1001-4" username="doby" password="" salt=""
+		secret_question="" creator="1" date_created="2020-05-26 00:00:00" changed_by="1" date_changed="2020-06-02 00:00:00"
+		person_id="1001" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006260003" />
+
+	<!-- Providers -->
+	<provider provider_id="1000" person_id="1000" identifier="JK.ROWLING" creator="1" date_created="2019-08-24 00:00:00"
+		changed_by="1" date_changed="2020-02-07 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050004" />
+
+	<!-- Concepts -->
+	<concept concept_id="1000" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1"
+		date_created="2020-02-14 00:00:00.0" version="" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050005" />
+
+	<concept_description concept_description_id="1000" concept_id="1000" description="" locale="en_GB" creator="1" 
+		date_created="2020-02-14 00:00:00.0" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050006" />
+
+	<concept concept_id="1000" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1"
+		date_created="2020-02-14 00:00:00.0" version="" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050005" />
+
+	<concept_description concept_description_id="1000" concept_id="1000" description="" locale="en_GB" creator="1" 
+		date_created="2020-02-14 00:00:00.0" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050006" />
+
+	<concept_name concept_name_id="1000" concept_id="1000" name="TB_CONTACT_TRACING_WORKFLOW" locale="en_GB" creator="1" locale_preferred="1" 
+		voided="false" date_created="2020-02-14 00:00:00.0" concept_name_type="FULLY_SPECIFIED" 
+		uuid="aaaaaaaa-bbbb-cccc-dddd-202006050007" />
+
+	<!-- Patient-Persons -->
+	<person person_id="1001" gender="M" birthdate="1980-07-31" birthdate_estimated="0" dead="0" creator="1"
+		date_created="2020-06-19 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190001" deathdate_estimated="0" />
+
+	<person person_id="1002" gender="M" birthdate="1926-12-31" birthdate_estimated="0" dead="1" creator="1" death_date="1998-05-02 00:00:00" 
+		deathdate_estimated="0" date_created="2020-06-19 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190002" />
+
+	<!-- Patient-Person Names -->
+	<person_name person_name_id="1001" preferred="1" person_id="1001" given_name="Harry" middle_name="James"
+		family_name="Potter" creator="1" date_created="2020-06-19 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190003" />
+		
+	<person_name person_name_id="1002" preferred="1" person_id="1002" given_name="Tom" middle_name="Marvolo"
+		family_name="Riddle" creator="1" date_created="2020-06-19 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190004" />
+
+	<!-- Patients -->
+	<patient patient_id="1001" creator="1" date_created="2020-06-19 00:00:00" voided="false" allergy_status="Unknown" />
+	
+	<patient patient_id="1002" creator="1" date_created="2020-06-19 00:00:00" voided="false" allergy_status="Unknown" />
+
+	<!-- Hydramodule-Asset Category -->
+	<hydramodule_asset_category asset_category_id="1" name="Apparel" description="All wearables" creator="1000" 
+		date_created="2020-06-01 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120001" />
+
+	<hydramodule_asset_category asset_category_id="2" name="Woodcraft" description="Wood items like wand and broom stick"
+		date_created="2020-06-02 00:00:00" retired="true" date_retired="2020-06-03 00:00:00" creator="1000" 
+		retire_reason="Created a more general category instead" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120002" />
+
+	<hydramodule_asset_category asset_category_id="3" name="Magic Gear" description="All magic tools and apparatus" 
+		creator="1000" date_created="2020-06-03 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120003" />
+
+	<!-- Hydramodule-Asset Type -->
+	<hydramodule_asset_type asset_type_id="1" name="Cloak" asset_category_id="1" description="Coats, overcoats, ..." 
+		creator="1000" date_created="2020-06-04 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120004"/>	
+
+	<hydramodule_asset_type asset_type_id="2" name="Winter wear" asset_category_id="1" description="Winter season stuff" 
+		creator="1000" date_created="2020-06-04 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120005"/>	
+	
+	<hydramodule_asset_type asset_type_id="3" name="Emblem" asset_category_id="1" description="Symbolic. Rings, Pendants, etc." 
+		creator="1000" date_created="2020-06-05 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120006"/>	
+
+	<hydramodule_asset_type asset_type_id="4" name="Broom Stick" asset_category_id="2" description="Strictly for broom sticks" 
+		creator="1000" date_created="2020-06-05 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120007"/>	
+
+	<hydramodule_asset_type asset_type_id="5" name="Wand" asset_category_id="2" description="Magic wands" 
+		creator="1000" date_created="2020-06-06 00:00:00" retired="true" date_retired="2020-06-06 00:00:00" 
+		retire_reason="Disabled due to overuse" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120008"/>	
+	
+	<!-- Hydramodule-Asset -->
+	<hydramodule_asset asset_id="1" asset_type_id="4" name="Nimbus 2000" description="Harry's old broom stick" 
+		reference_id="NIMBUS2000" capital_value="900" fixed_asset="true" creator="1000" 
+		date_created="2020-06-05 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120009" />
+
+	<hydramodule_asset asset_id="2" asset_type_id="4" name="Fire bolt" description="Harry's goto broom stick" 
+		reference_id="FIREBOLT" capital_value="1300" fixed_asset="true" creator="1000" 
+		date_created="2020-06-05 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120010" />
+
+	<hydramodule_asset asset_id="3" asset_type_id="1" name="Peverell Cloak" description="The cloak given to Ignotus Peverell by death" 
+		reference_id="PEVERELLCLOAK" capital_value="800000" fixed_asset="true" creator="1000" 
+		date_created="2020-06-06 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120011" />
+
+	<hydramodule_asset asset_id="4" asset_type_id="3" name="Ravenclaw Ring" description="Silver ring of house Ravenclaw of Hogwatz school" 
+		reference_id="RAVENRING" capital_value="15" fixed_asset="true" creator="1000" 
+		date_created="2020-06-08 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120012" />
+
+	<hydramodule_asset asset_id="5" asset_type_id="3" name="Hogwarts Pendant" description="Hogwatz school crest pendant" 
+		reference_id="HOGWARTZPENDANT" capital_value="25" fixed_asset="true" creator="1000" 
+		date_created="2020-06-08 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120013" />
+
+	<!-- Hydramodule-Component -->
+	<hydramodule_component component_id="1" name="Pre-Admission" description="Pre-Admission component" creator="1000"
+		date_created="2020-06-01 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050008" />
+
+	<hydramodule_component component_id="2" name="Admission" description="Admission component" creator="1000"
+		date_created="2020-06-02 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050009" />
+
+	<hydramodule_component component_id="3" name="Orientation" description="Orientation component" creator="1000"
+		date_created="2020-06-04 00:00:00" retired="true" date_retired="2020-06-05 00:00:00" 
+		retire_reason="Due to increasing cases of rigging" uuid="aaaaaaaa-bbbb-cccc-dddd-202006050010" />
+
+	<!-- Hydramodule-Phase -->
+	<hydramodule_phase phase_id="1" name="Search" description="Wizard hunting for admissions" creator="1000" 
+		date_created="2020-06-04 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120014" />
+
+	<hydramodule_phase phase_id="2" name="Treat" description="Learn some magic" creator="1000" 
+		date_created="2020-06-05 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120015" />
+
+	<hydramodule_phase phase_id="3" name="Prevent" description="Do not become evil" creator="1000" 
+		date_created="2020-06-05 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006120016" />
+	
+	<!-- Hydramodule-Phase Component -->
+
+	<!-- Hydramodule-Workflow -->
+	<hydramodule_workflow workflow_id="1" name="Hogwartz Workflow" description="Workflow for Hogwartz school" creator="1" 
+		concept_id="1000" date_created="2020-06-10 00:00:00" retired="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190005" />
+
+	<!-- Hydramodule-Workflow Phase -->
+	<hydramodule_workflow_phases id="1" workflow_id="1" phase_id="1" display_order="1" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190006" />
+	
+	<hydramodule_workflow_phases id="2" workflow_id="1" phase_id="2" display_order="2" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190007" />
+
+	<!-- Hydramodule-Patient Workflow -->
+	<hydramodule_patient_workflow patient_workflow_id="1" workflow_id="1" patient_id="1001" creator="1" 
+		date_created="2020-06-15 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190008" />
+
+	<hydramodule_patient_workflow patient_workflow_id="2" workflow_id="1" patient_id="1002" creator="1" 
+		date_created="2020-06-15 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190009" />
+	
+	<!-- Hydramodule-User Workflow -->
+	<hydramodule_user_workflow user_workflow_id="1" workflow_id="1" user_id="1000" creator="1"
+		date_created="2020-06-15 00:00:00" voided="false" uuid="aaaaaaaa-bbbb-cccc-dddd-202006190010" />
+
+	<!-- Hydramodule-Form -->
+	<!-- Hydramodule-Form Tag -->
+	<!-- Hydramodule-Form Tag Map -->
+	<!-- Hydramodule-Component Form -->
+
+	<!-- Hydramodule-Field -->
+	<!-- Hydramodule-Field Rule -->
+	<!-- Hydramodule-Field Answer -->
+	<!-- Hydramodule-Form Field -->
+
+</dataset>

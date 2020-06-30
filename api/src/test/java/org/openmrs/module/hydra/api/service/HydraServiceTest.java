@@ -38,6 +38,7 @@ import org.openmrs.api.APIAuthenticationException;
 import org.openmrs.api.ValidationException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraBaseTest;
+import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.api.dao.HydraWorkflowDaoTest;
 import org.openmrs.module.hydra.api.impl.HydraServiceImpl;
@@ -70,8 +71,7 @@ public class HydraServiceTest extends HydraBaseTest {
 
 	@Test
 	public void setupService() {
-		assertNotNull(Context.getService(HydraServiceImpl.class));
-		// Note: Could be because the service is extending BaseOpenmrsService instead of OpenmrsService
+		assertNotNull(Context.getService(HydraService.class));
 	}
 
 	/* Test Privileges */
