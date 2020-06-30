@@ -26,12 +26,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.Concept;
+import org.openmrs.User;
 import org.openmrs.api.APIAuthenticationException;
 import org.openmrs.api.ValidationException;
 import org.openmrs.api.context.Context;
@@ -59,45 +61,59 @@ public class HydraServiceTest extends HydraBaseTest {
 		super.initTestData();
 		MockitoAnnotations.initMocks(this);
 	}
+	
+	@After
+	public void resetUser() throws Exception {
+		User admin = (User) sessionFactory.getCurrentSession().get(User.class, 1);
+		Context.becomeUser(admin.getSystemId());
+	}
 
 	@Test
 	public void setupService() {
 		assertNotNull(Context.getService(HydraServiceImpl.class));
+		// Note: Could be because the service is extending BaseOpenmrsService instead of OpenmrsService
 	}
 
 	/* Test Privileges */
 	public void shouldGetWithPrivilege() {
 		Context.becomeUser(doby.getSystemId());
 		service.getAllPhases();
-		Context.becomeUser("1-9");
 	}
 
 	@Test(expected = APIAuthenticationException.class)
 	public void shouldNOTGetWithoutPrivilege() {
+		Context.becomeUser(doby.getSystemId());
+		service.getAllWorkflows();
 	}
 
 	@Test
 	public void shouldCreateWithPrivilege() {
+		fail("Not yet implemented");
 	}
 
 	@Test
 	public void shouldNOTCreateWithoutPrivilege() {
+		fail("Not yet implemented");
 	}
 
 	@Test
 	public void shouldUpdateWithPrivilege() {
+		fail("Not yet implemented");
 	}
 
 	@Test
 	public void shouldNOTUpdateWithoutPrivilege() {
+		fail("Not yet implemented");
 	}
 
 	@Test
 	public void shouldDeleteWithPrivilege() {
+		fail("Not yet implemented");
 	}
 
 	@Test
 	public void shouldNOTDeleteWithoutPrivilege() {
+		fail("Not yet implemented");
 	}
 
 	/* Workflow */
@@ -122,6 +138,7 @@ public class HydraServiceTest extends HydraBaseTest {
 	 */
 	@Test
 	public void shouldGetHydramoduleWorkflowById() {
+		fail("Not yet implemented");
 	}
 
 	/**
@@ -129,6 +146,7 @@ public class HydraServiceTest extends HydraBaseTest {
 	 */
 	@Test
 	public void shouldGetHydramoduleWorkflowByName() {
+		fail("Not yet implemented");
 	}
 
 	/**
@@ -136,6 +154,7 @@ public class HydraServiceTest extends HydraBaseTest {
 	 */
 	@Test
 	public void shouldGetHydramoduleWorkflowByUuid() {
+		fail("Not yet implemented");
 	}
 
 	@Test
