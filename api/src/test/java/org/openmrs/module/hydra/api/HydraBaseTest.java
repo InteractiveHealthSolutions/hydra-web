@@ -3,11 +3,17 @@ package org.openmrs.module.hydra.api;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.openmrs.Privilege;
 import org.openmrs.Provider;
+import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
+import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramodulePhase;
+import org.openmrs.module.hydra.model.workflow.HydramoduleUserWorkflow;
+import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
+import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,20 +27,34 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 
-	protected static final String DATA_XML = "HydraService-initialData.xml";
-
 	@Autowired
-	protected DbSessionFactory sessionFactory;	
+	protected DbSessionFactory sessionFactory;
+
+	protected static final String DATA_XML = "HydraService-initialData.xml";
 
 	protected static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-	protected User rowling;
-	
+	protected User rowling, doby;
+
+	protected Role emptyRole, hydraRole;
+
 	protected Provider rowlingProvider;
 
 	protected HydramoduleComponent preAdmission, admission, orientation;
 
 	protected HydramodulePhase search, treat, prevent;
+
+	protected HydramoduleWorkflow hogwartzWorkflow;
+
+	protected HydramoduleWorkflowPhases searchPhase;
+
+	protected HydramoduleWorkflowPhases treatPhase;
+
+	protected HydramodulePatientWorkflow harryWorkflow;
+
+	protected HydramodulePatientWorkflow tomWorkflow;
+
+	protected HydramoduleUserWorkflow dumbledoreWorkflow;
 
 	/**
 	 * Initialize all data objects before each test
@@ -45,14 +65,35 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 		initializeInMemoryDatabase();
 		executeDataSet(DATA_XML);
 
-		initUser();
+		initRoles();
+		initUsers();
 		initComponents();
 		initPhases();
+		initWorkflows();
 	}
-	
-	private void initUser() {
+
+	private void initRoles() {
+		Privilege addPhasePrivilege = new Privilege("Add Phase", "Add new Phase");
+		Privilege viewPhasePrivilege = new Privilege("View Phase", "View existing Phase");
+		Privilege editPhasePrivilege = new Privilege("Edit Phase", "Edit existing Phase");
+		Privilege deletePhasePrivilege = new Privilege("Delete Phase", "Delete/Retire/Unretire existing Phase");
+		addPhasePrivilege.setName(addPhasePrivilege.getPrivilege());
+		viewPhasePrivilege.setName(viewPhasePrivilege.getPrivilege());
+		editPhasePrivilege.setName(editPhasePrivilege.getPrivilege());
+		deletePhasePrivilege.setName(deletePhasePrivilege.getPrivilege());
+		sessionFactory.getCurrentSession().save(addPhasePrivilege);
+		sessionFactory.getCurrentSession().save(viewPhasePrivilege);
+		sessionFactory.getCurrentSession().save(editPhasePrivilege);
+		sessionFactory.getCurrentSession().save(deletePhasePrivilege);
+	}
+
+	private void initUsers() {
 		rowling = (User) sessionFactory.getCurrentSession().get(User.class, 1000);
 		rowlingProvider = (Provider) sessionFactory.getCurrentSession().get(Provider.class, 1000);
+
+		doby = (User) sessionFactory.getCurrentSession().get(User.class, 1001);
+		doby.addRole(hydraRole);
+		sessionFactory.getCurrentSession().saveOrUpdate(doby);
 	}
 
 	private void initComponents() throws ParseException {
@@ -101,5 +142,17 @@ public class HydraBaseTest extends BaseModuleContextSensitiveTest {
 		prevent.setDescription("Do not become evil");
 		prevent.setRetired(Boolean.FALSE);
 		prevent.setUuid("aaaaaaaa-bbbb-cccc-dddd-202006120016");
+	}
+
+	private void initWorkflows() throws ParseException {
+		hogwartzWorkflow = (HydramoduleWorkflow) sessionFactory.getCurrentSession().get(HydramoduleWorkflow.class, 1);
+		searchPhase = (HydramoduleWorkflowPhases) sessionFactory.getCurrentSession().get(HydramoduleWorkflowPhases.class, 1);
+		treatPhase = (HydramoduleWorkflowPhases) sessionFactory.getCurrentSession().get(HydramoduleWorkflowPhases.class, 2);
+		harryWorkflow = (HydramodulePatientWorkflow) sessionFactory.getCurrentSession().get(HydramodulePatientWorkflow.class,
+		    1);
+		tomWorkflow = (HydramodulePatientWorkflow) sessionFactory.getCurrentSession().get(HydramodulePatientWorkflow.class,
+		    2);
+		dumbledoreWorkflow = (HydramoduleUserWorkflow) sessionFactory.getCurrentSession().get(HydramoduleUserWorkflow.class,
+		    1);
 	}
 }

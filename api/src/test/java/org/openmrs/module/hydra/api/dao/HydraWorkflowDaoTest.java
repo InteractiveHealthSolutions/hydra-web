@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +18,6 @@ import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraBaseTest;
 import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
-import org.openmrs.module.hydra.model.workflow.HydramoduleUserWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
 import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,32 +29,9 @@ public class HydraWorkflowDaoTest extends HydraBaseTest {
 	@Autowired
 	HydraDaoImpl dao;
 
-	HydramoduleWorkflow hogwartzWorkflow;
-
-	HydramoduleWorkflowPhases searchPhase, treatPhase;
-
-	HydramodulePatientWorkflow harryWorkflow, tomWorkflow;
-
-	HydramoduleUserWorkflow dumbledoreWorkflow;
-
 	@Before
 	public void runBeforeEachTest() throws Exception {
 		super.initTestData();
-		initWorkflows();
-	}
-
-	private void initWorkflows() throws ParseException {
-		hogwartzWorkflow = (HydramoduleWorkflow) sessionFactory.getCurrentSession().get(HydramoduleWorkflow.class, 1);
-		searchPhase = (HydramoduleWorkflowPhases) sessionFactory.getCurrentSession()
-				.get(HydramoduleWorkflowPhases.class, 1);
-		treatPhase = (HydramoduleWorkflowPhases) sessionFactory.getCurrentSession().get(HydramoduleWorkflowPhases.class,
-				2);
-		harryWorkflow = (HydramodulePatientWorkflow) sessionFactory.getCurrentSession()
-				.get(HydramodulePatientWorkflow.class, 1);
-		tomWorkflow = (HydramodulePatientWorkflow) sessionFactory.getCurrentSession()
-				.get(HydramodulePatientWorkflow.class, 2);
-		dumbledoreWorkflow = (HydramoduleUserWorkflow) sessionFactory.getCurrentSession()
-				.get(HydramoduleUserWorkflow.class, 1);
 	}
 
 	/* Workflows */
@@ -100,7 +75,7 @@ public class HydraWorkflowDaoTest extends HydraBaseTest {
 		Context.clearSession();
 		dao.deleteWorkflow(hogwartzWorkflow);
 		HydramodulePatientWorkflow shouldNotExist = (HydramodulePatientWorkflow) sessionFactory.getCurrentSession()
-				.get(HydramodulePatientWorkflow.class, 1);
+		        .get(HydramodulePatientWorkflow.class, 1);
 		assertNull(shouldNotExist);
 	}
 
@@ -155,13 +130,13 @@ public class HydraWorkflowDaoTest extends HydraBaseTest {
 		preventPhase = dao.saveWorkflowPhase(preventPhase);
 		assertThat(preventPhase, Matchers.hasProperty("dateCreated", Matchers.notNullValue()));
 	}
-	
+
 	@Test
 	public void shouldPurgeHydramoduleWorkflowPhaseCompletely() {
 		Context.clearSession();
 		dao.deleteWorkflow(hogwartzWorkflow);
 		HydramodulePatientWorkflow shouldNotExist = (HydramodulePatientWorkflow) sessionFactory.getCurrentSession()
-				.get(HydramodulePatientWorkflow.class, 1);
+		        .get(HydramodulePatientWorkflow.class, 1);
 		assertNull(shouldNotExist);
 	}
 
@@ -179,7 +154,7 @@ public class HydraWorkflowDaoTest extends HydraBaseTest {
 	public void shouldUnretireHydramoduleWorkflowPhase() {
 		fail("Not yet implemented");
 	}
-	
+
 	/* Patient Workflow Phases */
 	@Test
 	public void shouldGetHydramodulePatientWorkflow() {
