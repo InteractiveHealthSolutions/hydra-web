@@ -72,10 +72,10 @@ public class HydramodulePhaseDao extends HydraDao implements IHydramodulePhaseDa
 	}
 
 	@Override
-	public List<HydramodulePhaseComponents> getPhaseComponent(HydramoduleWorkflow workflow) {
+	public List<HydramodulePhaseComponents> getPhaseComponentByWorkflow(HydramoduleWorkflow workflow) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePhaseComponents.class);
-		criteria.add(Restrictions.eq("hydramoduleWorkflow", workflow.getWorkflowId()));
+		criteria.add(Restrictions.eq("hydramoduleWorkflow", workflow));
 
 		return criteria.list();
 	}

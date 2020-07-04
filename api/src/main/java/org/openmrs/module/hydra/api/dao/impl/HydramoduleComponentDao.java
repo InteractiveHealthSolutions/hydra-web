@@ -101,4 +101,13 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 		return (HydramoduleComponentForm) criteria.uniqueResult();
 	}
 
+	@Override
+	public List<HydramoduleComponentForm> getComponentFormByWorkflow(HydramoduleWorkflow hydramoduleWorkflow) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
+
+		criteria.add(Restrictions.eq("workflow", hydramoduleWorkflow));
+		return criteria.list();
+	}
+
 }

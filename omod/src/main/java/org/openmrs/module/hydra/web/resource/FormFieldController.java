@@ -107,6 +107,8 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 
 		description.addProperty("group", Representation.REF);
 		description.addProperty("children", Representation.REF);
+		description.addProperty("autoCompleteFromFormField", Representation.REF);
+		description.addProperty("autoCompleteFromComponentForm", Representation.REF);
 
 		// description.addProperty("form", Representation.REF);
 
@@ -159,6 +161,8 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("group");
 		description.addProperty("createPatient");
 		description.addProperty("isCore");
+		description.addProperty("autoCompleteFromFormField", Representation.REF);
+		description.addProperty("autoCompleteFromComponentForm", Representation.REF);
 
 		return description;
 
