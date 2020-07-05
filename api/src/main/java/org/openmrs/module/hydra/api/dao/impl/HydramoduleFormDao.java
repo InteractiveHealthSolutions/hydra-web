@@ -21,15 +21,26 @@ import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.openmrs.module.hydra.model.HydramoduleFormFieldGroup;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("formDao")
 @Transactional
 public class HydramoduleFormDao extends HydraDao implements IHydramoduleFormDao {
 
+	@Autowired
 	private IHydramoduleFieldDao fieldDao;
 
+	@Autowired
 	private IHydramoduleComponentDao componentDao;
+
+	public void setComponentDao(IHydramoduleComponentDao componentDao) {
+		this.componentDao = componentDao;
+	}
+
+	public void setFieldDao(IHydramoduleFieldDao fieldDao) {
+		this.fieldDao = fieldDao;
+	}
 
 	@Override
 	public HydramoduleForm getModuleFormByName(String name) {

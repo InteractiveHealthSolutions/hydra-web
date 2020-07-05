@@ -2927,6 +2927,44 @@ BEGIN
 			</column>
 		</addColumn>
 	</changeSet>
+	<changeSet author="hareem.ajaz" id="hydra-202006291343">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="hydramodule_form_field"
+					columnName="auto_complete_from_form_field" />
+			</not>
+		</preConditions>
+		<comment>
+			Adding column 'auto_complete_from_form_field' in hydramodule_form_field
+			table
+		</comment>
+		<addColumn tableName="hydramodule_form_field">
+			<column name="auto_complete_from_form_field" type="int">
+			</column>
+		</addColumn>
+		<addForeignKeyConstraint constraintName="hydramodule_component_form_autocomplete_from_fk"
+			baseTableName="hydramodule_form_field" baseColumnNames="auto_complete_from_form_field"
+			referencedTableName="hydramodule_form_field" referencedColumnNames="form_field_id" />
+	</changeSet>
+	<changeSet author="hareem.ajaz" id="hydra-202006291344">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="hydramodule_form_field"
+					columnName="auto_complete_from_component_form_id" />
+			</not>
+		</preConditions>
+		<comment>
+			Adding column 'auto_complete_from_component_form_id' in hydramodule_form_field
+			table
+		</comment>
+		<addColumn tableName="hydramodule_form_field">
+			<column name="auto_complete_from_component_form_id" type="int">
+			</column>
+		</addColumn>	
+		<addForeignKeyConstraint constraintName="hydramodule_component_form_component_form_id"
+			baseTableName="hydramodule_form_field" baseColumnNames="auto_complete_from_form_field"
+			referencedTableName="hydramodule_component_form" referencedColumnNames="component_form_id" />
+
 	<changeSet author="naveed.iqbal" id="hydra-metadata-202006291110">  
 	    <comment>insert query for contact number default field</comment>
 	    <sql

@@ -25,6 +25,6 @@ public interface IHydramodulePhaseDao {
 
 	void deletePhaseComponent(HydramodulePhaseComponents phaseComponent);
 
-	List<HydramodulePhaseComponents> getPhaseComponent(HydramoduleWorkflow workflow);
+	List<HydramodulePhaseComponents> getPhaseComponentByWorkflow(HydramoduleWorkflow workflow);
 
 }

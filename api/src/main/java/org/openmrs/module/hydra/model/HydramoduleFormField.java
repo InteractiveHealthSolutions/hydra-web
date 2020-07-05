@@ -133,6 +133,14 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 	@Transient
 	private List<HydramoduleFieldDTO> fieldData;
 
+	@ManyToOne
+	@JoinColumn(name = "auto_complete_from_form_field")
+	private HydramoduleFormField autoCompleteFromFormField;
+
+	@ManyToOne
+	@JoinColumn(name = "auto_complete_from_component_form_id")
+	private HydramoduleComponentForm autoCompleteFromComponentForm;
+
 	@Override
 	public Integer getId() {
 		return formFieldId;
@@ -365,6 +373,22 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 
 	public void setCreatePatient(Boolean createPatient) {
 		this.createPatient = createPatient;
+	}
+
+	public HydramoduleFormField getAutoCompleteFromFormField() {
+		return autoCompleteFromFormField;
+	}
+
+	public void setAutoCompleteFromFormField(HydramoduleFormField autoCompleteFromFormField) {
+		this.autoCompleteFromFormField = autoCompleteFromFormField;
+	}
+
+	public void setAutoCompleteFromComponentForm(HydramoduleComponentForm autoCompleteFromComponentForm) {
+		this.autoCompleteFromComponentForm = autoCompleteFromComponentForm;
+	}
+
+	public HydramoduleComponentForm getAutoCompleteFromComponentForm() {
+		return autoCompleteFromComponentForm;
 	}
 
 	public Boolean getDisabled() {
