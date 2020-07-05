@@ -2964,7 +2964,7 @@ BEGIN
 		<addForeignKeyConstraint constraintName="hydramodule_component_form_component_form_id"
 			baseTableName="hydramodule_form_field" baseColumnNames="auto_complete_from_form_field"
 			referencedTableName="hydramodule_component_form" referencedColumnNames="component_form_id" />
-
+    </changeSet>
 	<changeSet author="naveed.iqbal" id="hydra-metadata-202006291110">  
 	    <comment>insert query for contact number default field</comment>
 	    <sql
