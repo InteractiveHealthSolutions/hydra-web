@@ -13,6 +13,7 @@ import org.openmrs.module.hydra.api.dao.IHydramoduleComponentDao;
 import org.openmrs.module.hydra.model.HydramoduleComponent;
 import org.openmrs.module.hydra.model.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.HydramoduleForm;
+import org.openmrs.module.hydra.model.HydramodulePhase;
 import org.openmrs.module.hydra.model.HydramoduleWorkflow;
 import org.springframework.stereotype.Component;
 
@@ -111,10 +112,10 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 	}
 
 	@Override
-	public List<HydramoduleComponentForm> getComponentFormByComponent(HydramoduleComponent component) {
+	public List<HydramoduleComponentForm> getComponentFormByPhase(HydramodulePhase phase) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
-		criteria.add(Restrictions.eq("component", component));
+		criteria.add(Restrictions.eq("phase", phase));
 		return criteria.list();
 	}
 

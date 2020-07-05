@@ -303,7 +303,6 @@ public interface HydraService extends OpenmrsService {
 
 	List<HydramoduleWorkflowPhases> getWorkflowPhaseByWorkflow(String workflowUUID) throws APIException;
 
-	List<HydramoduleComponentForm> getComponentFormsByComponent(String componentUUID) throws APIException;
 	// HydramoduleEncounterMapper
 	// saveHydramoduleEncounterMapper(HydramoduleEncounterMapper
 	// hydramoduleEncounterMapper)
@@ -317,5 +316,7 @@ public interface HydraService extends OpenmrsService {
 	//
 	// List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String
 	// patientIdentifier) throws APIException;
+
+	List<HydramoduleComponentForm> getComponentFormsByPhase(String phaseUUID) throws APIException;
 
 }
