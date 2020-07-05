@@ -108,7 +108,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 	public List<HydramoduleWorkflowPhases> getWorkflowPhase(HydramoduleWorkflow workflow) {
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflowPhases.class);
-		criteria.add(Restrictions.eq("workflowId", workflow.getWorkflowId()));
+		criteria.add(Restrictions.eq("hydramoduleWorkflow", workflow));
 
 		return criteria.list();
 	}
