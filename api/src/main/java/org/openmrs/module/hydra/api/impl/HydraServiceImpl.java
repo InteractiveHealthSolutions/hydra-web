@@ -824,8 +824,12 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public List<HydramoduleWorkflowPhases> getWorkflowPhaseByWorkflow(String workflowUUID) throws APIException {
 		HydramoduleWorkflow hydramoduleWorkflow = workflowDao.getWorkflow(workflowUUID);
-		List<HydramoduleWorkflowPhases> hydramoduleWorkflowPhases = workflowDao.getWorkflowPhase(hydramoduleWorkflow);
-		return hydramoduleWorkflowPhases;
+		if (hydramoduleWorkflow != null) {
+			List<HydramoduleWorkflowPhases> hydramoduleWorkflowPhases = workflowDao.getWorkflowPhase(hydramoduleWorkflow);
+			return hydramoduleWorkflowPhases;
+
+		}
+		return null;
 	}
 
 	// // HydramoduleEncounterMapper
