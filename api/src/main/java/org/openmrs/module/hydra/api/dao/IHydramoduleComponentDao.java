@@ -35,4 +35,6 @@ public interface IHydramoduleComponentDao {
 
 	List<HydramoduleComponentForm> getComponentFormByWorkflow(HydramoduleWorkflow hydramoduleWorkflow);
 
+	List<HydramoduleComponentForm> getComponentFormByComponent(HydramoduleComponent component);
+
 }

@@ -8,6 +8,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.model.HydramoduleComponentForm;
+import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -16,8 +17,10 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ObjectNotFoundException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
@@ -83,6 +86,14 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		if (phaseComponent == null)
 			throw new ObjectNotFoundException();
 		service.retireComponentForm(phaseComponent);
+	}
+
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String queryParam = context.getParameter("q");
+		List<HydramoduleComponentForm> componentForms = service.getComponentFormsByComponent(queryParam);
+
+		return new NeedsPaging<HydramoduleComponentForm>(componentForms, context);
 	}
 
 	@Override

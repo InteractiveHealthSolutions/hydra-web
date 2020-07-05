@@ -832,6 +832,13 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return null;
 	}
 
+	@Override
+	public List<HydramoduleComponentForm> getComponentFormsByComponent(String componentUUID) throws APIException {
+		HydramoduleComponent component = componentDao.getComponent(componentUUID);
+		List<HydramoduleComponentForm> hydramoduleComponents = componentDao.getComponentFormByComponent(component);
+		return hydramoduleComponents;
+	}
+
 	// // HydramoduleEncounterMapper
 	// @Override
 	// public HydramoduleEncounterMapper

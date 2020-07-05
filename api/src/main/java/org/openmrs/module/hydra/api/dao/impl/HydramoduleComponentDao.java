@@ -110,4 +110,12 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 		return criteria.list();
 	}
 
+	@Override
+	public List<HydramoduleComponentForm> getComponentFormByComponent(HydramoduleComponent component) {
+		DbSession session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
+		criteria.add(Restrictions.eq("component", component));
+		return criteria.list();
+	}
+
 }
