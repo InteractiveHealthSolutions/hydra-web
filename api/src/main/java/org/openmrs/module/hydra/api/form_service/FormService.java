@@ -581,7 +581,7 @@ public class FormService {
 							person.addAttribute(pa);
 						}
 						try {
-							savePersonAttributeViaREST(person.getUuid(), personAttributes, username, decPassword);
+							savePersonAttributeViaREST(person.getUuid(), personAttributes, username, password);
 						}
 						catch (IOException e) {
 							e.printStackTrace();
