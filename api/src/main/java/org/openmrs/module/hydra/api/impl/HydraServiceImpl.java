@@ -839,6 +839,13 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 		return hydramoduleComponents;
 	}
 
+	@Override
+	public List<HydramoduleFormField> getFormFieldsByForm(String uuid) throws APIException {
+		HydramoduleForm form = formDao.getModuleForm(uuid);
+		List<HydramoduleFormField> fields = formDao.getFormFields(form);
+		return fields;
+	}
+
 	// // HydramoduleEncounterMapper
 	// @Override
 	// public HydramoduleEncounterMapper
