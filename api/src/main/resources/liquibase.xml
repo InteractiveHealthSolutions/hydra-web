@@ -2961,8 +2961,8 @@ BEGIN
 			<column name="auto_complete_from_component_form_id" type="int">
 			</column>
 		</addColumn>	
-		<addForeignKeyConstraint constraintName="hydramodule_component_form_component_form_id"
-			baseTableName="hydramodule_form_field" baseColumnNames="auto_complete_from_form_field"
+		<addForeignKeyConstraint constraintName="hydramodule_form_field_component_form_fk"
+			baseTableName="hydramodule_form_field" baseColumnNames="auto_complete_from_component_form_id"
 			referencedTableName="hydramodule_component_form" referencedColumnNames="component_form_id" />
     </changeSet>
 	<changeSet author="naveed.iqbal" id="hydra-metadata-202006291110">  
@@ -3003,8 +3003,5 @@ BEGIN
 				<constraints nullable="false" />
 			</column>
 		</addColumn>	
-		<addForeignKeyConstraint constraintName="hydramodule_component_form_component_form_id"
-			baseTableName="hydramodule_form_field" baseColumnNames="auto_complete_from_form_field"
-			referencedTableName="hydramodule_component_form" referencedColumnNames="component_form_id" />
-    </changeSet>
+	</changeSet>
 </databaseChangeLog>

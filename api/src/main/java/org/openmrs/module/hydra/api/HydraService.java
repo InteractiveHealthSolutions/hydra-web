@@ -52,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
  * The main service of this module, which is exposed for other modules. See
  * moduleApplicationContext.xml on how it is wired up.
  */
+
 @Transactional
 public interface HydraService extends OpenmrsService {
 
