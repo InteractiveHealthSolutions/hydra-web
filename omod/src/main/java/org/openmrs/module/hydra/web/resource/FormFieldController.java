@@ -115,6 +115,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("uuid");
 		description.addProperty("createPatient");
 		description.addProperty("isCore");
+		description.addProperty("autoCompleteFromEarliest");
 		description.addProperty("field", Representation.FULL);
 		description.addProperty("fieldData", Representation.FULL);
 
@@ -173,6 +174,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("children");
 		description.addProperty("group");
 		description.addProperty("createPatient");
+		description.addProperty("autoCompleteFromEarliest");
 		description.addProperty("isCore");
 		description.addProperty("autoCompleteFromFormField");
 		description.addProperty("autoCompleteFromComponentForm");
