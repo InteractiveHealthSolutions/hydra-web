@@ -38,7 +38,7 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 	@JoinColumn(name = "field_type_id")
 	private FieldType fieldType;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "concept_id")
 	private Concept concept;
 
