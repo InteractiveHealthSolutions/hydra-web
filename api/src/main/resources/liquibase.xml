@@ -3004,7 +3004,7 @@ BEGIN
 			</column>
 		</addColumn>	
 		<addForeignKeyConstraint constraintName="hydramodule_component_form_component_form_id"
-			baseTableName="hydramodule_form_field" baseColumnNames="auto_complete_from_form_field"
+			baseTableName="hydramodule_form_field" baseColumnNames="auto_complete_from_component_form_id"
 			referencedTableName="hydramodule_component_form" referencedColumnNames="component_form_id" />
     </changeSet>
 </databaseChangeLog>
