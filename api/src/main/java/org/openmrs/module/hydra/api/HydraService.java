@@ -22,7 +22,6 @@ import org.openmrs.module.hydra.model.workflow.HydramoduleAssetCategory;
 import org.openmrs.module.hydra.model.workflow.HydramoduleAssetType;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
-//import org.openmrs.module.hydra.model.workflow.HydramoduleEncounterMapper;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEvent;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventAsset;
 import org.openmrs.module.hydra.model.workflow.HydramoduleEventParticipants;
@@ -53,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
  * The main service of this module, which is exposed for other modules. See
  * moduleApplicationContext.xml on how it is wired up.
  */
+
 @Transactional
 public interface HydraService extends OpenmrsService {
 
@@ -69,8 +69,8 @@ public interface HydraService extends OpenmrsService {
 	HydraForm getHydraFormByUuid(String uuid) throws APIException;
 
 	/**
-	 * Returns a {@link org.openmrs.module.hydra.model.event_planner.HydraForm} by encounterName. It can
-	 * be called by any authenticated user. It is fetched in read only transaction.
+	 * Returns a {@link org.openmrs.module.hydra.model.HydraForm} by encounterName. It can be called by
+	 * any authenticated user. It is fetched in read only transaction.
 	 * 
 	 * @param uuid
 	 * @return
@@ -100,8 +100,8 @@ public interface HydraService extends OpenmrsService {
 	HydramoduleForm getHydraModuleFormByUuid(String uuid) throws APIException;
 
 	/**
-	 * Returns a set of {@link org.openmrs.module.hydra.model.event_planner.HydraForm} by tag. It can be
-	 * called by any authenticated user. It is fetched in read only transaction.
+	 * Returns a set of {@link org.openmrs.module.hydra.model.HydraForm} by tag. It can be called by any
+	 * authenticated user. It is fetched in read only transaction.
 	 * 
 	 * @param uuid
 	 * @return
@@ -291,13 +291,34 @@ public interface HydraService extends OpenmrsService {
 
 	HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) throws APIException;
 
-//	HydramoduleEncounterMapper saveHydramoduleEncounterMapper(HydramoduleEncounterMapper hydramoduleEncounterMapper)
-//	        throws APIException;
-//
-//	HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws APIException;
-//
-//	List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws APIException;
-//
-//	List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String patientIdentifier) throws APIException;
+	HydramoduleWorkflow getWorkflowByName(String name) throws APIException;
+
+	HydramoduleForm getHydraModuleFormByName(String name) throws APIException;
+
+	HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
+	        HydramoduleWorkflow hydramoduleWorkflow) throws APIException;
+
+	HydramodulePatientWorkflow getHydramodulePatientWorkflowByPatient(Integer patientId) throws APIException;
+
+	List<HydramodulePhaseComponents> getHydramodulePhaseComponentsByWorkflow(String uuid) throws APIException;
+
+	List<HydramoduleWorkflowPhases> getWorkflowPhaseByWorkflow(String workflowUUID) throws APIException;
+
+	List<HydramoduleComponentForm> getComponentFormsByComponent(String componentUUID) throws APIException;
+
+	List<HydramoduleFormField> getFormFieldsByForm(String uuid) throws APIException;
+	// HydramoduleEncounterMapper
+	// saveHydramoduleEncounterMapper(HydramoduleEncounterMapper
+	// hydramoduleEncounterMapper)
+	// throws APIException;
+	//
+	// HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws
+	// APIException;
+	//
+	// List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws
+	// APIException;
+	//
+	// List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String
+	// patientIdentifier) throws APIException;
 
 }
