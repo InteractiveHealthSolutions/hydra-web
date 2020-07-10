@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFormDao;
 import org.openmrs.module.hydra.model.HydraForm;
 import org.openmrs.module.hydra.model.HydramoduleForm;
@@ -11,7 +12,7 @@ import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface IHydraFormService {
+public interface IHydraFormService extends OpenmrsService {
 
 	void setFormDao(IHydramoduleFormDao formDao);
 

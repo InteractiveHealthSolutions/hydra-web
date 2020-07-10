@@ -21,9 +21,15 @@ import org.openmrs.module.hydra.model.HydramoduleFieldAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("eventDao")
 @Transactional
-public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDao {
+public class HydramoduleEventDao implements IHydramoduleEventDao {
+
+	@Autowired
+	protected DbSessionFactory sessionFactory;
+
+	protected DbSession getSession() {
+		return sessionFactory.getCurrentSession();
+	}
 
 	@Override
 	public HydramoduleEvent saveHydramoduleEvent(HydramoduleEvent event) {

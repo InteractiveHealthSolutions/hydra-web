@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.api;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleWorkflowDao;
 import org.openmrs.module.hydra.model.HydramodulePatientWorkflow;
 import org.openmrs.module.hydra.model.HydramoduleUserWorkflow;
@@ -10,7 +11,7 @@ import org.openmrs.module.hydra.model.HydramoduleWorkflow;
 import org.openmrs.module.hydra.model.HydramoduleWorkflowPhases;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface IHydraWorkflowService {
+public interface IHydraWorkflowService extends OpenmrsService {
 
 	void setWorkflowDao(IHydramoduleWorkflowDao workflowDao);
 
@@ -40,8 +41,7 @@ public interface IHydraWorkflowService {
 
 	HydramodulePatientWorkflow getHydramodulePatientWorkflow(String uuid) throws APIException;
 
-	HydramoduleUserWorkflow saveHydramoduleUserWorkflow(HydramoduleUserWorkflow hydramoduleUserWorkflow)
-			throws APIException;
+	HydramoduleUserWorkflow saveHydramoduleUserWorkflow(HydramoduleUserWorkflow hydramoduleUserWorkflow) throws APIException;
 
 	List<HydramoduleUserWorkflow> getAllHydramoduleUserWorkflow() throws APIException;
 

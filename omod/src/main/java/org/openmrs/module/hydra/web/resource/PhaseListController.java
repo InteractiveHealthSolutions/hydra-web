@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramodulePhase;
 import org.openmrs.module.hydra.model.list_holders.PhasesList;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -25,8 +26,6 @@ public class PhaseListController extends DataDelegatingCrudResource<PhasesList> 
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	private HydraService service = Context.getService(HydraService.class);
-
 	@Override
 	public PhasesList newDelegate() {
 		return new PhasesList();
@@ -45,7 +44,7 @@ public class PhaseListController extends DataDelegatingCrudResource<PhasesList> 
 
 	@Override
 	public PhasesList getByUniqueId(String uniqueId) {
-		List<HydramodulePhase> phases = service.getAllPhases();
+		List<HydramodulePhase> phases = HydraContext.getHydraPhaseService().getAllPhases();
 		return PhasesList.createFromPhases(phases);
 	}
 

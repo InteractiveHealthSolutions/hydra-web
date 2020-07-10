@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.api.impl;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.IHydraPhaseService;
 import org.openmrs.module.hydra.api.dao.IHydramodulePhaseDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleWorkflowDao;
@@ -12,14 +13,11 @@ import org.openmrs.module.hydra.model.HydramoduleWorkflow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class HydraPhaseService implements IHydraPhaseService {
-	
-	@Autowired
-	private IHydramodulePhaseDao phaseDao;
-	
-	@Autowired
-	private IHydramoduleWorkflowDao workflowDao;
+public class HydraPhaseService extends BaseOpenmrsService implements IHydraPhaseService {
 
+	private IHydramodulePhaseDao phaseDao;
+
+	private IHydramoduleWorkflowDao workflowDao;
 
 	@Override
 	public void setPhaseDao(IHydramodulePhaseDao phaseDao) {
@@ -58,7 +56,7 @@ public class HydraPhaseService implements IHydraPhaseService {
 
 		return phase;
 	}
-	
+
 	@Override
 	public HydramodulePhase getPhaseByUUID(String uuid) throws APIException {
 
@@ -70,12 +68,12 @@ public class HydraPhaseService implements IHydraPhaseService {
 
 		return phaseDao.getAllPhases();
 	}
-	
+
 	@Override
 	public HydramodulePhaseComponents savePhaseComponentRelation(HydramodulePhaseComponents item) throws APIException {
 		return phaseDao.savePhaseComponentsRelation(item);
 	}
-	
+
 	@Override
 	public HydramodulePhaseComponents getPhasesComponentRelationByUUID(String uuid) throws APIException {
 		return phaseDao.getPhaseComponentRelation(uuid);
@@ -85,14 +83,14 @@ public class HydraPhaseService implements IHydraPhaseService {
 	public List<HydramodulePhaseComponents> getAllPhaseComponentsRelations() throws APIException {
 		return phaseDao.getAllPhaseComponentRelations();
 	}
-	
+
 	@Override
 	@Transactional
 	public void deletePhaseComponent(HydramodulePhaseComponents phaseComponent) throws APIException {
 		phaseDao.deletePhaseComponent(phaseComponent);
 
 	}
-	
+
 	@Override
 	public List<HydramodulePhaseComponents> getHydramodulePhaseComponentsByWorkflow(String uuid) throws APIException {
 
@@ -102,6 +100,5 @@ public class HydraPhaseService implements IHydraPhaseService {
 
 		return hydramodulePhaseComponents;
 	}
-
 
 }

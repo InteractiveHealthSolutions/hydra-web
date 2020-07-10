@@ -11,6 +11,7 @@ import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
@@ -26,9 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/hydra/customservices")
 public class CustomServicesController {
-
-	@Autowired
-	private HydraService service;
 
 	private static Log log = LogFactory.getLog(CustomServicesController.class);
 
@@ -60,13 +58,13 @@ public class CustomServicesController {
 	        @RequestParam(value = "patientId", required = true) Integer patientId,
 	        @RequestParam(value = "resultencounterId", required = true) Integer resultEncounterId) {
 		try {
-			HydramoduleForm form = service.getHydraModuleFormByName("Xray Result Form");
+			HydramoduleForm form = HydraContext.getHydraFormService().getHydraModuleFormByName("Xray Result Form");
 
-			HydramodulePatientWorkflow hydramodulePatientWorkflow = service
+			HydramodulePatientWorkflow hydramodulePatientWorkflow = HydraContext.getHydraWorkflowService()
 			        .getHydramodulePatientWorkflowByPatient(patientId);
 
-			HydramoduleComponentForm componentForm = service.getComponentFormByFormAndWorkflow(form,
-			    hydramodulePatientWorkflow.getWorkflow());
+			HydramoduleComponentForm componentForm = HydraContext.getHydraComponentService()
+			        .getComponentFormByFormAndWorkflow(form, hydramodulePatientWorkflow.getWorkflow());
 
 			HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
 
@@ -74,7 +72,7 @@ public class CustomServicesController {
 
 			formEncounter.setComponentForm(componentForm);
 			formEncounter.setEncounter(resultEncounter);
-			service.saveFormEncounter(formEncounter);
+			HydraContext.getHydraFormService().saveFormEncounter(formEncounter);
 
 			return "sucessfully saved";
 		}

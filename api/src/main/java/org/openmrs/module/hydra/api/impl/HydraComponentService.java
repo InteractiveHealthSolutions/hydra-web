@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.IHydraComponentService;
 import org.openmrs.module.hydra.api.SExprHelper;
 import org.openmrs.module.hydra.api.dao.IHydramoduleComponentDao;
@@ -17,12 +18,10 @@ import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.openmrs.module.hydra.model.HydramoduleWorkflow;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class HydraComponentService implements IHydraComponentService {
-	
-	@Autowired
+public class HydraComponentService extends BaseOpenmrsService implements IHydraComponentService {
+
 	private IHydramoduleComponentDao componentDao;
-	
-	@Autowired
+
 	private IHydramoduleFieldDao fieldDao;
 
 	@Override
@@ -39,7 +38,7 @@ public class HydraComponentService implements IHydraComponentService {
 	public HydramoduleComponent saveComponent(HydramoduleComponent component) throws APIException {
 		return componentDao.saveComponent(component);
 	}
-	
+
 	@Override
 	public HydramoduleComponent getComponentByUUID(String uuid) throws APIException {
 
@@ -51,7 +50,7 @@ public class HydraComponentService implements IHydraComponentService {
 
 		return componentDao.getAllComponents();
 	}
-	
+
 	@Override
 	public void purgeComponent(HydramoduleComponent component) throws APIException {
 		component.setRetired(true);
@@ -65,12 +64,10 @@ public class HydraComponentService implements IHydraComponentService {
 		return componentDao.saveComponentFormRelation(item);
 	}
 
-
 	@Override
 	public HydramoduleComponentForm getComponentFormByUUID(String uuid) throws APIException {
 		return componentDao.getComponentFormRelation(uuid);
 	}
-
 
 	@Override
 	public List<HydramoduleComponentForm> getAllComponentFormsRelations() throws APIException, CloneNotSupportedException {
@@ -118,6 +115,5 @@ public class HydraComponentService implements IHydraComponentService {
 		List<HydramoduleComponentForm> hydramoduleComponents = componentDao.getComponentFormByComponent(component);
 		return hydramoduleComponents;
 	}
-
 
 }

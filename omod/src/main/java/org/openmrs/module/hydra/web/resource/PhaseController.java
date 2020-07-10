@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramodulePhase;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -28,9 +29,6 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
-
 	@Override
 	public HydramodulePhase newDelegate() {
 		return new HydramodulePhase();
@@ -38,18 +36,18 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 
 	@Override
 	public HydramodulePhase save(HydramodulePhase delegate) {
-		return service.savePhase(delegate);
+		return HydraContext.getHydraPhaseService().savePhase(delegate);
 	}
 
 	@Override
 	public HydramodulePhase getByUniqueId(String uuid) {
-		return service.getPhaseByUUID(uuid);
+		return HydraContext.getHydraPhaseService().getPhaseByUUID(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramodulePhase> phase = service.getAllPhases();
+		List<HydramodulePhase> phase = HydraContext.getHydraPhaseService().getAllPhases();
 		simpleObject.put("phases", ConversionUtil.convertToRepresentation(phase, context.getRepresentation()));
 		return simpleObject;
 	}

@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleWorkflow;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -28,9 +29,6 @@ public class WorkflowController extends MetadataDelegatingCrudResource<Hydramodu
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	HydraService service = Context.getService(HydraService.class);
-
 	@Override
 	public HydramoduleWorkflow newDelegate() {
 		return new HydramoduleWorkflow();
@@ -38,18 +36,18 @@ public class WorkflowController extends MetadataDelegatingCrudResource<Hydramodu
 
 	@Override
 	public HydramoduleWorkflow save(HydramoduleWorkflow delegate) {
-		return service.saveWorkflow(delegate);
+		return HydraContext.getHydraWorkflowService().saveWorkflow(delegate);
 	}
 
 	@Override
 	public HydramoduleWorkflow getByUniqueId(String uuid) {
-		return service.getWorkflowByUUID(uuid);
+		return HydraContext.getHydraWorkflowService().getWorkflowByUUID(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleWorkflow> p = service.getAllWorkflows();
+		List<HydramoduleWorkflow> p = HydraContext.getHydraWorkflowService().getAllWorkflows();
 		simpleObject.put("workflows", ConversionUtil.convertToRepresentation(p, context.getRepresentation()));
 		return simpleObject;
 	}

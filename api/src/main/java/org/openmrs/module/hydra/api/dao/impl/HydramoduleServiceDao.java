@@ -8,15 +8,23 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.hibernate.DbSession;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleServiceDao;
 import org.openmrs.module.hydra.model.HydramoduleService;
 import org.openmrs.module.hydra.model.HydramoduleServiceType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("serviceDao")
 @Transactional
-public class HydramoduleServiceDao extends HydraDao implements IHydramoduleServiceDao {
+public class HydramoduleServiceDao implements IHydramoduleServiceDao {
+
+	@Autowired
+	protected DbSessionFactory sessionFactory;
+
+	protected DbSession getSession() {
+		return sessionFactory.getCurrentSession();
+	}
 
 	@Override
 	public HydramoduleServiceType saveServiceType(HydramoduleServiceType serviceType) {

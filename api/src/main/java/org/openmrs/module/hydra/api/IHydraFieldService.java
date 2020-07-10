@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.api;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFieldDao;
 import org.openmrs.module.hydra.model.HydramoduleField;
 import org.openmrs.module.hydra.model.HydramoduleFieldAnswer;
@@ -11,7 +12,7 @@ import org.openmrs.module.hydra.model.HydramoduleFieldRule;
 import org.openmrs.module.hydra.model.HydramoduleRuleToken;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface IHydraFieldService {
+public interface IHydraFieldService extends OpenmrsService {
 
 	void setFieldDao(IHydramoduleFieldDao fieldDao);
 

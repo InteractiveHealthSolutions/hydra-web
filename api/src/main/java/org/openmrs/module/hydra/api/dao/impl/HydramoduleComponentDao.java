@@ -8,17 +8,25 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.hibernate.DbSession;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleComponentDao;
 import org.openmrs.module.hydra.model.HydramoduleComponent;
 import org.openmrs.module.hydra.model.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleWorkflow;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("componentDao")
 @Transactional
-public class HydramoduleComponentDao extends HydraDao implements IHydramoduleComponentDao {
+public class HydramoduleComponentDao implements IHydramoduleComponentDao {
+
+	@Autowired
+	protected DbSessionFactory sessionFactory;
+
+	protected DbSession getSession() {
+		return sessionFactory.getCurrentSession();
+	}
 
 	@Override
 	public HydramoduleComponentForm getComponentFormRelation(String uuid) {

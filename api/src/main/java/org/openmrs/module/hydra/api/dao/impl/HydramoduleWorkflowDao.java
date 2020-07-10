@@ -21,9 +21,15 @@ import org.openmrs.module.hydra.model.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("workflowDao")
 @Transactional
-public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWorkflowDao {
+public class HydramoduleWorkflowDao implements IHydramoduleWorkflowDao {
+
+	@Autowired
+	protected DbSessionFactory sessionFactory;
+
+	protected DbSession getSession() {
+		return sessionFactory.getCurrentSession();
+	}
 
 	@Override
 	public HydramoduleWorkflow getWorkflow(String uuid) {

@@ -6,6 +6,7 @@ import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.IHydraWorkflowService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleWorkflowDao;
 import org.openmrs.module.hydra.model.HydramodulePatientWorkflow;
@@ -15,9 +16,8 @@ import org.openmrs.module.hydra.model.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class HydraWorkflowService implements IHydraWorkflowService {
+public class HydraWorkflowService extends BaseOpenmrsService implements IHydraWorkflowService {
 
-	@Autowired
 	private IHydramoduleWorkflowDao workflowDao;
 
 	@Override
@@ -25,7 +25,6 @@ public class HydraWorkflowService implements IHydraWorkflowService {
 		this.workflowDao = workflowDao;
 	}
 
-	
 	@Override
 	@Transactional
 	public HydramoduleWorkflow saveWorkflow(HydramoduleWorkflow item) throws APIException {
@@ -60,12 +59,13 @@ public class HydraWorkflowService implements IHydraWorkflowService {
 
 		return workflowDao.saveWorkflow(item);
 	}
-	
+
 	@Override
 	@Transactional
 	public HydramoduleWorkflowPhases saveWorkflowPhaseRelation(HydramoduleWorkflowPhases item) throws APIException {
 		return workflowDao.saveWorkflowPhaseRelation(item);
 	}
+
 	@Override
 	public HydramoduleWorkflow getWorkflowByUUID(String uuid) throws APIException {
 
@@ -83,7 +83,7 @@ public class HydraWorkflowService implements IHydraWorkflowService {
 
 		return workflowDao.getAllWorkflows();
 	}
-	
+
 	@Override
 	public HydramoduleWorkflowPhases getWorkflowPhasesRelationByUUID(String uuid) throws APIException {
 		return workflowDao.getWorkflowPhaseRelation(uuid);
@@ -111,6 +111,7 @@ public class HydraWorkflowService implements IHydraWorkflowService {
 		// TODO Auto-generated method stub
 
 	}
+
 	@Override
 	@Transactional
 	public HydramodulePatientWorkflow saveHydramodulePatientWorkflow(HydramodulePatientWorkflow service)
@@ -168,7 +169,5 @@ public class HydraWorkflowService implements IHydraWorkflowService {
 		}
 		return null;
 	}
-
-
 
 }

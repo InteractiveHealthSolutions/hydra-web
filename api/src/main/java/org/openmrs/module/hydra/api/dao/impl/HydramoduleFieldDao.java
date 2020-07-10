@@ -16,6 +16,7 @@ import org.openmrs.FieldAnswer;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSession;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFieldDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFormDao;
@@ -26,13 +27,20 @@ import org.openmrs.module.hydra.model.HydramoduleFieldRule;
 import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.openmrs.module.hydra.model.HydramoduleRuleToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("fieldDao")
 @Transactional
-public class HydramoduleFieldDao extends HydraDao implements IHydramoduleFieldDao {
+public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
-	private IHydramoduleFormDao formDao;
+	private IHydramoduleFormDao hydraFormDao;
+
+	@Autowired
+	protected DbSessionFactory sessionFactory;
+
+	protected DbSession getSession() {
+		return sessionFactory.getCurrentSession();
+	}
 
 	// Fields
 	@Override
@@ -40,6 +48,7 @@ public class HydramoduleFieldDao extends HydraDao implements IHydramoduleFieldDa
 		// System.out.println(serviceType.getUuid());
 		// Field fieldReceived =
 		// Context.getFormService().saveField(serviceType.getField());
+
 		HydramoduleField fieldReceived = fieldDTO.getField();
 		System.out.println("Saving field ");
 		getSession().saveOrUpdate(fieldReceived);
@@ -155,7 +164,7 @@ public class HydramoduleFieldDao extends HydraDao implements IHydramoduleFieldDa
 
 	@Override
 	public HydramoduleFormField getHydramoduleFormField(String formUUID, String fieldUUID) {
-		HydramoduleForm form = formDao.getModuleForm(formUUID);
+		HydramoduleForm form = hydraFormDao.getModuleForm(formUUID);
 		HydramoduleField field = getHydramoduleField(fieldUUID);
 		DbSession session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFormField.class);

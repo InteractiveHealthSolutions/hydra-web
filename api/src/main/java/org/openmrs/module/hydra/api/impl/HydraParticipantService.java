@@ -6,6 +6,7 @@ import java.util.List;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.IHydraParticipantService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleParticipantDao;
 import org.openmrs.module.hydra.model.HydramoduleParticipant;
@@ -13,16 +14,14 @@ import org.openmrs.module.hydra.model.HydramoduleParticipantSalaryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class HydraParticipantService implements IHydraParticipantService {
-	
-	@Autowired
+public class HydraParticipantService extends BaseOpenmrsService implements IHydraParticipantService {
+
 	private IHydramoduleParticipantDao participantDao;
-	
+
 	@Override
 	public void setParticipantDao(IHydramoduleParticipantDao participantDao) {
 		this.participantDao = participantDao;
 	}
-
 
 	@Override
 	@Transactional

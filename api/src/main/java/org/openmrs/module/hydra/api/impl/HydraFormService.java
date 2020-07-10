@@ -6,6 +6,7 @@ import java.util.Set;
 import org.openmrs.EncounterType;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.IHydraFormService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFormDao;
 import org.openmrs.module.hydra.model.HydraForm;
@@ -15,9 +16,8 @@ import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class HydraFormService implements IHydraFormService {
-	
-	@Autowired
+public class HydraFormService extends BaseOpenmrsService implements IHydraFormService {
+
 	private IHydramoduleFormDao formDao;
 
 	@Override
@@ -35,7 +35,7 @@ public class HydraFormService implements IHydraFormService {
 	public HydraForm saveForm(HydraForm item) throws APIException {
 		return formDao.saveForm(item);
 	}
-	
+
 	@Override
 	public Set<HydraForm> getHydraFormsByTag(String tag) throws APIException {
 		return formDao.getHydraFormsByTag(tag);
@@ -46,7 +46,7 @@ public class HydraFormService implements IHydraFormService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public HydramoduleForm saveHydramoduleForm(HydramoduleForm form) throws APIException {
 		if (form.getHydramoduleFormId() == null) {

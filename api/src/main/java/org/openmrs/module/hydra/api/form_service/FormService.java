@@ -60,6 +60,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
+import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.HydramoduleDTOFormSubmissionData;
 import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
@@ -120,13 +121,12 @@ public class FormService {
 		CONTACT_TRACING
 	}
 
-	private HydraService service;
+	// private HydraService service;
 
 	JSONParser parser;
 
 	public synchronized void createNewForm(HydraService service, HydramoduleDTOFormSubmissionData formSubmissionData)
 	        throws ContextAuthenticationException, ParseException, org.json.simple.parser.ParseException {
-		this.service = service;
 		parser = new JSONParser();
 
 		JSONArray data = (JSONArray) parser.parse(formSubmissionData.getData());
@@ -564,11 +564,12 @@ public class FormService {
 					                                                             // of
 					                                                             // componentForm
 					System.out.println("FormDetailsUUID: " + formDetailsUUID);
-					HydramoduleComponentForm componentForm = service.getComponentFormByUUID(formDetailsUUID);
+					HydramoduleComponentForm componentForm = HydraContext.getHydraComponentService()
+					        .getComponentFormByUUID(formDetailsUUID);
 					if (componentForm != null) {
 						formEncounter.setComponentForm(componentForm);
 						formEncounter.setEncounter(savedEncoounter);
-						service.saveFormEncounter(formEncounter);
+						HydraContext.getHydraFormService().saveFormEncounter(formEncounter);
 					}
 
 					if (personAttributes.size() > 0) {
@@ -672,12 +673,12 @@ public class FormService {
 		System.out.println(patient.getPerson().getGivenName());
 		patient = patientService.savePatient(patient);
 		if (patient != null) {
-			HydramoduleWorkflow workflow = service.getWorkflowByUUID(workflowUUID);
+			HydramoduleWorkflow workflow = HydraContext.getHydraWorkflowService().getWorkflowByUUID(workflowUUID);
 			if (workflow != null) {
 				HydramodulePatientWorkflow patientWorkflow = new HydramodulePatientWorkflow();
 				patientWorkflow.setWorkflow(workflow);
 				patientWorkflow.setPatient(patient);
-				service.saveHydramodulePatientWorkflow(patientWorkflow);
+				HydraContext.getHydraWorkflowService().saveHydramodulePatientWorkflow(patientWorkflow);
 			}
 
 			// Save relationship
@@ -840,12 +841,12 @@ public class FormService {
 		System.out.println(patient.getPerson().getGivenName());
 		patient = patientService.savePatient(patient);
 		if (patient != null) {
-			HydramoduleWorkflow workflow = service.getWorkflowByUUID(workflowUUID);
+			HydramoduleWorkflow workflow = HydraContext.getHydraWorkflowService().getWorkflowByUUID(workflowUUID);
 			if (workflow != null) {
 				HydramodulePatientWorkflow patientWorkflow = new HydramodulePatientWorkflow();
 				patientWorkflow.setWorkflow(workflow);
 				patientWorkflow.setPatient(patient);
-				service.saveHydramodulePatientWorkflow(patientWorkflow);
+				HydraContext.getHydraWorkflowService().saveHydramodulePatientWorkflow(patientWorkflow);
 			}
 		}
 		/*

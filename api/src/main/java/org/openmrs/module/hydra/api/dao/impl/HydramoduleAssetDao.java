@@ -18,9 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Component("assetDao")
 @Transactional
-public class HydramoduleAssetDao extends HydraDao implements IHydramoduleAssetDao {
+public class HydramoduleAssetDao implements IHydramoduleAssetDao {
+
+	@Autowired
+	protected DbSessionFactory sessionFactory;
+
+	protected DbSession getSession() {
+		return sessionFactory.getCurrentSession();
+	}
 
 	@Override
 	public HydramoduleAssetType saveAssetType(HydramoduleAssetType serviceType) {

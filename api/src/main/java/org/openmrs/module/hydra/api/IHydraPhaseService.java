@@ -3,13 +3,14 @@ package org.openmrs.module.hydra.api;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.api.dao.IHydramodulePhaseDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleWorkflowDao;
 import org.openmrs.module.hydra.model.HydramodulePhase;
 import org.openmrs.module.hydra.model.HydramodulePhaseComponents;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface IHydraPhaseService {
+public interface IHydraPhaseService extends OpenmrsService {
 
 	void setPhaseDao(IHydramodulePhaseDao phaseDao);
 

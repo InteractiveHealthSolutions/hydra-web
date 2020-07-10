@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.IHydraFieldService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFieldDao;
 import org.openmrs.module.hydra.model.HydramoduleField;
@@ -14,10 +15,8 @@ import org.openmrs.module.hydra.model.HydramoduleRuleToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class HydraFieldService implements IHydraFieldService {
-	
-	
-	@Autowired
+public class HydraFieldService extends BaseOpenmrsService implements IHydraFieldService {
+
 	private IHydramoduleFieldDao fieldDao;
 
 	@Override
@@ -71,7 +70,7 @@ public class HydraFieldService implements IHydraFieldService {
 	}
 
 	// HydramoduleFieldAnswer
-    @Override
+	@Override
 	@Transactional
 	public HydramoduleFieldAnswer saveHydramoduleFieldAnswer(HydramoduleFieldAnswer service) throws APIException {
 		return fieldDao.saveHydramoduleFieldAnswer(service);
@@ -118,6 +117,5 @@ public class HydraFieldService implements IHydraFieldService {
 	public HydramoduleRuleToken getHydramoduleRuleToken(String uuid) throws APIException {
 		return fieldDao.getHydramoduleRuleToken(uuid);
 	}
-
 
 }

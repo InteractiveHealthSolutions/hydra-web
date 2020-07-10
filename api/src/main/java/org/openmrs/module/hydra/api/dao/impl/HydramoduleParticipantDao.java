@@ -8,15 +8,23 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.hibernate.DbSession;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleParticipantDao;
 import org.openmrs.module.hydra.model.HydramoduleParticipant;
 import org.openmrs.module.hydra.model.HydramoduleParticipantSalaryType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("participantDao")
 @Transactional
-public class HydramoduleParticipantDao extends HydraDao implements IHydramoduleParticipantDao {
+public class HydramoduleParticipantDao implements IHydramoduleParticipantDao {
+
+	@Autowired
+	protected DbSessionFactory sessionFactory;
+
+	protected DbSession getSession() {
+		return sessionFactory.getCurrentSession();
+	}
 
 	@Override
 	public HydramoduleParticipant getParticipantByUser(org.openmrs.User user) {

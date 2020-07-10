@@ -10,6 +10,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.APIException;
 import org.openmrs.api.db.hibernate.DbSession;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleComponentDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFieldDao;
@@ -24,15 +25,21 @@ import org.openmrs.module.hydra.model.HydramoduleFormFieldGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("formDao")
 @Transactional
-public class HydramoduleFormDao extends HydraDao implements IHydramoduleFormDao {
+public class HydramoduleFormDao implements IHydramoduleFormDao {
 
 	@Autowired
 	private IHydramoduleFieldDao fieldDao;
 
 	@Autowired
 	private IHydramoduleComponentDao componentDao;
+
+	@Autowired
+	protected DbSessionFactory sessionFactory;
+
+	protected DbSession getSession() {
+		return sessionFactory.getCurrentSession();
+	}
 
 	public void setComponentDao(IHydramoduleComponentDao componentDao) {
 		this.componentDao = componentDao;

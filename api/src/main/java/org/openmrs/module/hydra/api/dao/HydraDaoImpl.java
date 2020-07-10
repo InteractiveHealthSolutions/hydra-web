@@ -65,7 +65,8 @@ import org.openmrs.module.hydra.model.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-@Repository("hydra.HydraDao")
+@Deprecated
+// @Repository("hydra.HydraDao")
 @Transactional
 public class HydraDaoImpl {
 

@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleParticipantSalaryType;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -29,9 +30,6 @@ public class ParticipantSalaryTypeController extends MetadataDelegatingCrudResou
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
-
 	@Override
 	public HydramoduleParticipantSalaryType newDelegate() {
 		return new HydramoduleParticipantSalaryType();
@@ -40,19 +38,20 @@ public class ParticipantSalaryTypeController extends MetadataDelegatingCrudResou
 	@Override
 	public HydramoduleParticipantSalaryType save(HydramoduleParticipantSalaryType component) {
 		System.out.println(component.getName());
-		return service.saveParticipantSalaryType(component);
+		return HydraContext.getHydraParticipantService().saveParticipantSalaryType(component);
 	}
 
 	@Override
 	public HydramoduleParticipantSalaryType getByUniqueId(String uuid) {
-		return service.getParticipantSalaryType(uuid);
+		return HydraContext.getHydraParticipantService().getParticipantSalaryType(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleParticipantSalaryType> services = service.getAllParticipantSalaryTypes(true);
-		services.addAll(service.getAllParticipantSalaryTypes(false));
+		List<HydramoduleParticipantSalaryType> services = HydraContext.getHydraParticipantService()
+		        .getAllParticipantSalaryTypes(true);
+		services.addAll(HydraContext.getHydraParticipantService().getAllParticipantSalaryTypes(false));
 		simpleObject.put("salaryTypes", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

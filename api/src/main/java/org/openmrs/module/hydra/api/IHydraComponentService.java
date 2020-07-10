@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.api;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleComponentDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFieldDao;
 import org.openmrs.module.hydra.model.HydramoduleComponent;
@@ -10,7 +11,7 @@ import org.openmrs.module.hydra.model.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleWorkflow;
 
-public interface IHydraComponentService {
+public interface IHydraComponentService extends OpenmrsService {
 
 	void setFieldDao(IHydramoduleFieldDao fieldDao);
 
@@ -33,7 +34,7 @@ public interface IHydraComponentService {
 	void retireComponentForm(HydramoduleComponentForm phaseComponent) throws APIException;
 
 	HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
-			HydramoduleWorkflow hydramoduleWorkflow) throws APIException;
+	        HydramoduleWorkflow hydramoduleWorkflow) throws APIException;
 
 	List<HydramoduleComponentForm> getComponentFormsByComponent(String componentUUID) throws APIException;
 

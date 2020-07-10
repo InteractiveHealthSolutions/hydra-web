@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.api.impl;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.IHydraEventService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleEventDao;
 import org.openmrs.module.hydra.model.HydramoduleEvent;
@@ -14,11 +15,10 @@ import org.openmrs.module.hydra.model.HydramoduleEventType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class HydraEventService implements IHydraEventService {
-	
-	@Autowired
+public class HydraEventService extends BaseOpenmrsService implements IHydraEventService {
+
 	private IHydramoduleEventDao eventDao;
-	
+
 	@Override
 	public void setEventDao(IHydramoduleEventDao eventDao) {
 		this.eventDao = eventDao;
@@ -59,7 +59,7 @@ public class HydraEventService implements IHydraEventService {
 
 	// EventType
 
-    @Override
+	@Override
 	@Transactional
 	public HydramoduleEventType saveEventType(HydramoduleEventType service) throws APIException {
 		return eventDao.saveHydramoduleEventType(service);
@@ -87,7 +87,6 @@ public class HydraEventService implements IHydraEventService {
 		return eventDao.getAllHydramoduleEventServices(voided);
 	}
 
-	
 	@Override
 	public HydramoduleEventService getEventService(String uuid) throws APIException {
 		return eventDao.getHydramoduleEventService(uuid);

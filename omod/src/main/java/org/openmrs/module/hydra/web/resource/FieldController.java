@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleField;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -30,9 +31,6 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
-
 	@Override
 	public HydramoduleField newDelegate() {
 		return new HydramoduleField();
@@ -40,18 +38,18 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 
 	@Override
 	public HydramoduleField save(HydramoduleField delegate) {
-		return service.saveHydramoduleField(delegate);
+		return HydraContext.getHydraFieldService().saveHydramoduleField(delegate);
 	}
 
 	@Override
 	public HydramoduleField getByUniqueId(String uuid) {
-		return service.getHydramoduleField(uuid);
+		return HydraContext.getHydraFieldService().getHydramoduleField(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleField> moduleForm = service.getAllHydramoduleFields();
+		List<HydramoduleField> moduleForm = HydraContext.getHydraFieldService().getAllHydramoduleFields();
 		simpleObject.put("fields", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}
@@ -64,7 +62,7 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
 		System.out.println(queryParam);
-		List<HydramoduleField> forms = service.getHydramoduleFieldsByName(queryParam);
+		List<HydramoduleField> forms = HydraContext.getHydraFieldService().getHydramoduleFieldsByName(queryParam);
 
 		return new NeedsPaging<HydramoduleField>(forms, context);
 	}

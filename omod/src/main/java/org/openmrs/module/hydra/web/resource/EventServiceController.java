@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleEventService;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -29,9 +30,6 @@ public class EventServiceController extends DataDelegatingCrudResource<Hydramodu
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
-
 	@Override
 	public HydramoduleEventService newDelegate() {
 		return new HydramoduleEventService();
@@ -39,19 +37,19 @@ public class EventServiceController extends DataDelegatingCrudResource<Hydramodu
 
 	@Override
 	public HydramoduleEventService save(HydramoduleEventService component) {
-		return service.saveEventService(component);
+		return HydraContext.getHydraEventService().saveEventService(component);
 	}
 
 	@Override
 	public HydramoduleEventService getByUniqueId(String uuid) {
-		return service.getEventService(uuid);
+		return HydraContext.getHydraEventService().getEventService(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleEventService> services = service.getAllEventServices(true);
-		services.addAll(service.getAllEventServices(false));
+		List<HydramoduleEventService> services = HydraContext.getHydraEventService().getAllEventServices(true);
+		services.addAll(HydraContext.getHydraEventService().getAllEventServices(false));
 		simpleObject.put("eventServices", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

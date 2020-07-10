@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleField;
 import org.openmrs.module.hydra.model.HydramoduleParticipant;
 import org.openmrs.module.webservices.rest.SimpleObject;
@@ -32,9 +33,6 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
-
 	@Override
 	public HydramoduleParticipant newDelegate() {
 		return new HydramoduleParticipant();
@@ -43,18 +41,18 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 	@Override
 	public HydramoduleParticipant save(HydramoduleParticipant component) {
 		System.out.println(component.getName());
-		return service.saveParticipant(component);
+		return HydraContext.getHydraParticipantService().saveParticipant(component);
 	}
 
 	@Override
 	public HydramoduleParticipant getByUniqueId(String uuid) {
-		return service.getParticipant(uuid);
+		return HydraContext.getHydraParticipantService().getParticipant(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleParticipant> services = service.getAllParticipants(false);
+		List<HydramoduleParticipant> services = HydraContext.getHydraParticipantService().getAllParticipants(false);
 		simpleObject.put("participants", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}
@@ -69,7 +67,8 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
 		System.out.println(queryParam);
-		List<HydramoduleParticipant> participants = service.getParticipantByUserUUID(queryParam);
+		List<HydramoduleParticipant> participants = HydraContext.getHydraParticipantService()
+		        .getParticipantByUserUUID(queryParam);
 
 		return new NeedsPaging<HydramoduleParticipant>(participants, context);
 	}

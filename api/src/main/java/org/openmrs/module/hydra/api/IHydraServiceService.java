@@ -3,12 +3,13 @@ package org.openmrs.module.hydra.api;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleServiceDao;
 import org.openmrs.module.hydra.model.HydramoduleService;
 import org.openmrs.module.hydra.model.HydramoduleServiceType;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface IHydraServiceService {
+public interface IHydraServiceService extends OpenmrsService {
 
 	void setServiceDao(IHydramoduleServiceDao serviceDao);
 

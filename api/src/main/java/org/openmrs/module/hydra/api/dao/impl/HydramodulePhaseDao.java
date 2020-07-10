@@ -8,16 +8,24 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.hibernate.DbSession;
+import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramodulePhaseDao;
 import org.openmrs.module.hydra.model.HydramodulePhase;
 import org.openmrs.module.hydra.model.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.HydramoduleWorkflow;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("phaseDao")
 @Transactional
-public class HydramodulePhaseDao extends HydraDao implements IHydramodulePhaseDao {
+public class HydramodulePhaseDao implements IHydramodulePhaseDao {
+
+	@Autowired
+	protected DbSessionFactory sessionFactory;
+
+	protected DbSession getSession() {
+		return sessionFactory.getCurrentSession();
+	}
 
 	@Override
 	public HydramodulePhaseComponents getPhaseComponentRelation(String uuid) {

@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.api.impl;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.IHydraAssetService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleAssetDao;
 import org.openmrs.module.hydra.model.HydramoduleAsset;
@@ -11,9 +12,9 @@ import org.openmrs.module.hydra.model.HydramoduleAssetType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class HydraAssetService implements IHydraAssetService {
-	
-	@Autowired
+@Transactional
+public class HydraAssetService extends BaseOpenmrsService implements IHydraAssetService {
+
 	private IHydramoduleAssetDao assetDao;
 
 	@Override

@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.api;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleEventDao;
 import org.openmrs.module.hydra.model.HydramoduleEvent;
 import org.openmrs.module.hydra.model.HydramoduleEventAsset;
@@ -12,7 +13,7 @@ import org.openmrs.module.hydra.model.HydramoduleEventService;
 import org.openmrs.module.hydra.model.HydramoduleEventType;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface IHydraEventService {
+public interface IHydraEventService extends OpenmrsService {
 
 	void setEventDao(IHydramoduleEventDao eventDao);
 

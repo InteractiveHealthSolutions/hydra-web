@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.api.impl;
 import java.util.List;
 
 import org.openmrs.api.APIException;
+import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.IHydraServiceService;
 import org.openmrs.module.hydra.api.dao.IHydramoduleServiceDao;
 import org.openmrs.module.hydra.model.HydramoduleService;
@@ -10,9 +11,8 @@ import org.openmrs.module.hydra.model.HydramoduleServiceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-public class HydraServiceService implements IHydraServiceService {
-	
-	@Autowired
+public class HydraServiceService extends BaseOpenmrsService implements IHydraServiceService {
+
 	private IHydramoduleServiceDao serviceDao;
 
 	@Override
