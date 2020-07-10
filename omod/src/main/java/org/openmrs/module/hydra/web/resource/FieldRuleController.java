@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleField;
 import org.openmrs.module.hydra.model.HydramoduleFieldRule;
 import org.openmrs.module.webservices.rest.SimpleObject;
@@ -33,6 +32,8 @@ public class FieldRuleController extends MetadataDelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleFieldRule newDelegate() {
 		return new HydramoduleFieldRule();
@@ -40,18 +41,18 @@ public class FieldRuleController extends MetadataDelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleFieldRule save(HydramoduleFieldRule delegate) {
-		return HydraContext.getHydraFieldService().saveHydramoduleFieldRule(delegate);
+		return hydraService.getHydraFieldService().saveHydramoduleFieldRule(delegate);
 	}
 
 	@Override
 	public HydramoduleFieldRule getByUniqueId(String uuid) {
-		return HydraContext.getHydraFieldService().getHydramoduleFieldRule(uuid);
+		return hydraService.getHydraFieldService().getHydramoduleFieldRule(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleFieldRule> moduleForm = HydraContext.getHydraFieldService().getAllHydramoduleFieldRules(false);
+		List<HydramoduleFieldRule> moduleForm = hydraService.getHydraFieldService().getAllHydramoduleFieldRules(false);
 		simpleObject.put("fields", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}

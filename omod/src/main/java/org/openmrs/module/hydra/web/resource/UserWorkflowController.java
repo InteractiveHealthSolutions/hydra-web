@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleFieldAnswer;
 import org.openmrs.module.hydra.model.HydramoduleUserWorkflow;
 import org.openmrs.module.webservices.rest.SimpleObject;
@@ -31,6 +30,8 @@ public class UserWorkflowController extends DelegatingCrudResource<HydramoduleUs
 
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleUserWorkflow newDelegate() {
 		return new HydramoduleUserWorkflow();
@@ -39,7 +40,7 @@ public class UserWorkflowController extends DelegatingCrudResource<HydramoduleUs
 	@Override
 	public HydramoduleUserWorkflow save(HydramoduleUserWorkflow hydramoduleUserWokflow) {
 
-		return HydraContext.getHydraWorkflowService().saveHydramoduleUserWorkflow(hydramoduleUserWokflow);
+		return hydraService.getHydraWorkflowService().saveHydramoduleUserWorkflow(hydramoduleUserWokflow);
 	}
 
 	@Override
@@ -49,13 +50,13 @@ public class UserWorkflowController extends DelegatingCrudResource<HydramoduleUs
 
 	@Override
 	public HydramoduleUserWorkflow getByUniqueId(String uuid) {
-		return HydraContext.getHydraWorkflowService().getHydramoduleUserWorkflow(uuid);
+		return hydraService.getHydraWorkflowService().getHydramoduleUserWorkflow(uuid);
 	}
 
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
-		List<HydramoduleUserWorkflow> users = HydraContext.getHydraWorkflowService().getUserWorkflowByUser(queryParam);
+		List<HydramoduleUserWorkflow> users = hydraService.getHydraWorkflowService().getUserWorkflowByUser(queryParam);
 		return new NeedsPaging<HydramoduleUserWorkflow>(users, context);
 	}
 

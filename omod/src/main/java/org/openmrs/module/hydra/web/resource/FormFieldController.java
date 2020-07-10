@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.openmrs.module.webservices.rest.SimpleObject;
@@ -32,6 +31,8 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleFormField newDelegate() {
 		return new HydramoduleFormField();
@@ -46,7 +47,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleFormField getByUniqueId(String uuid) {
-		return HydraContext.getHydraFormService().getFormFieldByUUID(uuid);
+		return hydraService.getHydraFormService().getFormFieldByUUID(uuid);
 	}
 
 	/*
@@ -73,7 +74,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
-		List<HydramoduleFormField> forms = HydraContext.getHydraFormService().getFormFieldsByForm(queryParam);
+		List<HydramoduleFormField> forms = hydraService.getHydraFormService().getFormFieldsByForm(queryParam);
 
 		return new NeedsPaging<HydramoduleFormField>(forms, context);
 	}

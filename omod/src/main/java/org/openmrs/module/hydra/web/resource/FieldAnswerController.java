@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleFieldAnswer;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -30,6 +29,8 @@ public class FieldAnswerController extends DelegatingCrudResource<HydramoduleFie
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleFieldAnswer newDelegate() {
 		return new HydramoduleFieldAnswer();
@@ -37,18 +38,18 @@ public class FieldAnswerController extends DelegatingCrudResource<HydramoduleFie
 
 	@Override
 	public HydramoduleFieldAnswer save(HydramoduleFieldAnswer delegate) {
-		return HydraContext.getHydraFieldService().saveHydramoduleFieldAnswer(delegate);
+		return hydraService.getHydraFieldService().saveHydramoduleFieldAnswer(delegate);
 	}
 
 	@Override
 	public HydramoduleFieldAnswer getByUniqueId(String uuid) {
-		return HydraContext.getHydraFieldService().getHydramoduleFieldAnswer(uuid);
+		return hydraService.getHydraFieldService().getHydramoduleFieldAnswer(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleFieldAnswer> moduleForm = HydraContext.getHydraFieldService().getAllHydramoduleFieldAnswers(false);
+		List<HydramoduleFieldAnswer> moduleForm = hydraService.getHydraFieldService().getAllHydramoduleFieldAnswers(false);
 		simpleObject.put("fieldAnswers", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}

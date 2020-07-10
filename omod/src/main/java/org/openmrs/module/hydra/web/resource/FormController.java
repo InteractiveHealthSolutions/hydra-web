@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -31,6 +30,8 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleForm newDelegate() {
 		return new HydramoduleForm();
@@ -38,18 +39,18 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 
 	@Override
 	public HydramoduleForm save(HydramoduleForm delegate) {
-		return HydraContext.getHydraFormService().saveHydramoduleForm(delegate);
+		return hydraService.getHydraFormService().saveHydramoduleForm(delegate);
 	}
 
 	@Override
 	public HydramoduleForm getByUniqueId(String uuid) {
-		return HydraContext.getHydraFormService().getHydraModuleFormByUuid(uuid);
+		return hydraService.getHydraFormService().getHydraModuleFormByUuid(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleForm> moduleForm = HydraContext.getHydraFormService().getAllModuleForm();
+		List<HydramoduleForm> moduleForm = hydraService.getHydraFormService().getAllModuleForm();
 		simpleObject.put("forms", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}
@@ -61,7 +62,7 @@ public class FormController extends MetadataDelegatingCrudResource<HydramoduleFo
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
-		List<HydramoduleForm> forms = HydraContext.getHydraFormService().getAllModuleFormsByComponent(queryParam);
+		List<HydramoduleForm> forms = hydraService.getHydraFormService().getAllModuleFormsByComponent(queryParam);
 
 		return new NeedsPaging<HydramoduleForm>(forms, context);
 	}

@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleAssetCategory;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -30,6 +29,8 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleAssetCategory newDelegate() {
 		return new HydramoduleAssetCategory();
@@ -37,19 +38,19 @@ public class AssetCategoryController extends MetadataDelegatingCrudResource<Hydr
 
 	@Override
 	public HydramoduleAssetCategory save(HydramoduleAssetCategory component) {
-		return HydraContext.getHydraAssetService().saveAssetCategory(component);
+		return hydraService.getHydraAssetService().saveAssetCategory(component);
 	}
 
 	@Override
 	public HydramoduleAssetCategory getByUniqueId(String uuid) {
-		return HydraContext.getHydraAssetService().getAssetCategory(uuid);
+		return hydraService.getHydraAssetService().getAssetCategory(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleAssetCategory> services = HydraContext.getHydraAssetService().getAllAssetCategories(true);
-		services.addAll(HydraContext.getHydraAssetService().getAllAssetCategories(false));
+		List<HydramoduleAssetCategory> services = hydraService.getHydraAssetService().getAllAssetCategories(true);
+		services.addAll(hydraService.getHydraAssetService().getAllAssetCategories(false));
 		simpleObject.put("services", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

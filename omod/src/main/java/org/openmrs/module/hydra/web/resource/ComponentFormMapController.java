@@ -7,7 +7,6 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.webservices.rest.SimpleObject;
@@ -35,6 +34,8 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleComponentForm newDelegate() {
 		return new HydramoduleComponentForm();
@@ -42,18 +43,18 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 
 	@Override
 	public HydramoduleComponentForm save(HydramoduleComponentForm phaseComponent) {
-		return HydraContext.getHydraComponentService().saveComponentFormRelation(phaseComponent);
+		return hydraService.getHydraComponentService().saveComponentFormRelation(phaseComponent);
 	}
 
 	@Override
 	public HydramoduleComponentForm getByUniqueId(String uuid) {
-		return HydraContext.getHydraComponentService().getComponentFormByUUID(uuid);
+		return hydraService.getHydraComponentService().getComponentFormByUUID(uuid);
 	}
 
 	@Override
 	protected void delete(HydramoduleComponentForm phaseComponent, String reason, RequestContext context)
 	        throws ResponseException {
-		HydraContext.getHydraComponentService().retireComponentForm(phaseComponent);
+		hydraService.getHydraComponentService().retireComponentForm(phaseComponent);
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		SimpleObject simpleObject = new SimpleObject();
 		List<HydramoduleComponentForm> componentForms;
 		try {
-			componentForms = HydraContext.getHydraComponentService().getAllComponentFormsRelations();
+			componentForms = hydraService.getHydraComponentService().getAllComponentFormsRelations();
 			simpleObject.put("ComponentsFormsMap",
 			    ConversionUtil.convertToRepresentation(componentForms, context.getRepresentation()));
 		}
@@ -83,13 +84,13 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		HydramoduleComponentForm phaseComponent = getByUniqueId(uuid);
 		if (phaseComponent == null)
 			throw new ObjectNotFoundException();
-		HydraContext.getHydraComponentService().retireComponentForm(phaseComponent);
+		hydraService.getHydraComponentService().retireComponentForm(phaseComponent);
 	}
 
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
-		List<HydramoduleComponentForm> componentForms = HydraContext.getHydraComponentService()
+		List<HydramoduleComponentForm> componentForms = hydraService.getHydraComponentService()
 		        .getComponentFormsByComponent(queryParam);
 
 		return new NeedsPaging<HydramoduleComponentForm>(componentForms, context);

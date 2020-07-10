@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramodulePhaseComponents;
 import org.openmrs.module.hydra.model.HydramoduleUserWorkflow;
 import org.openmrs.module.webservices.rest.SimpleObject;
@@ -34,6 +33,8 @@ public class PhaseComponentsMapController extends DelegatingCrudResource<Hydramo
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramodulePhaseComponents newDelegate() {
 		return new HydramodulePhaseComponents();
@@ -41,24 +42,24 @@ public class PhaseComponentsMapController extends DelegatingCrudResource<Hydramo
 
 	@Override
 	public HydramodulePhaseComponents save(HydramodulePhaseComponents phaseComponent) {
-		return HydraContext.getHydraPhaseService().savePhaseComponentRelation(phaseComponent);
+		return hydraService.getHydraPhaseService().savePhaseComponentRelation(phaseComponent);
 	}
 
 	@Override
 	public HydramodulePhaseComponents getByUniqueId(String uuid) {
-		return HydraContext.getHydraPhaseService().getPhasesComponentRelationByUUID(uuid);
+		return hydraService.getHydraPhaseService().getPhasesComponentRelationByUUID(uuid);
 	}
 
 	@Override
 	protected void delete(HydramodulePhaseComponents phaseComponent, String reason, RequestContext context)
 	        throws ResponseException {
-		HydraContext.getHydraPhaseService().deletePhaseComponent(phaseComponent);
+		hydraService.getHydraPhaseService().deletePhaseComponent(phaseComponent);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramodulePhaseComponents> pahseComponent = HydraContext.getHydraPhaseService()
+		List<HydramodulePhaseComponents> pahseComponent = hydraService.getHydraPhaseService()
 		        .getAllPhaseComponentsRelations();
 		simpleObject.put("PhaseComponentsMap",
 		    ConversionUtil.convertToRepresentation(pahseComponent, context.getRepresentation()));
@@ -76,13 +77,13 @@ public class PhaseComponentsMapController extends DelegatingCrudResource<Hydramo
 		HydramodulePhaseComponents phaseComponent = getByUniqueId(uuid);
 		if (phaseComponent == null)
 			throw new ObjectNotFoundException();
-		HydraContext.getHydraPhaseService().deletePhaseComponent(phaseComponent);
+		hydraService.getHydraPhaseService().deletePhaseComponent(phaseComponent);
 	}
 
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
-		List<HydramodulePhaseComponents> hydramodulePhaseComponents = HydraContext.getHydraPhaseService()
+		List<HydramodulePhaseComponents> hydramodulePhaseComponents = hydraService.getHydraPhaseService()
 		        .getHydramodulePhaseComponentsByWorkflow(queryParam);
 		return new NeedsPaging<HydramodulePhaseComponents>(hydramodulePhaseComponents, context);
 	}

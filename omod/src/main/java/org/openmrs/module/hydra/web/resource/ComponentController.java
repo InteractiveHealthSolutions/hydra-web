@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleComponent;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -30,6 +29,8 @@ public class ComponentController extends MetadataDelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleComponent newDelegate() {
 		return new HydramoduleComponent();
@@ -37,25 +38,25 @@ public class ComponentController extends MetadataDelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleComponent save(HydramoduleComponent component) {
-		return HydraContext.getHydraComponentService().saveComponent(component);
+		return hydraService.getHydraComponentService().saveComponent(component);
 	}
 
 	@Override
 	public HydramoduleComponent getByUniqueId(String uuid) {
-		return HydraContext.getHydraComponentService().getComponentByUUID(uuid);
+		return hydraService.getHydraComponentService().getComponentByUUID(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleComponent> component = HydraContext.getHydraComponentService().getAllComponents();
+		List<HydramoduleComponent> component = hydraService.getHydraComponentService().getAllComponents();
 		simpleObject.put("components", ConversionUtil.convertToRepresentation(component, context.getRepresentation()));
 		return simpleObject;
 	}
 
 	@Override
 	public void purge(HydramoduleComponent component, RequestContext context) throws ResponseException {
-		HydraContext.getHydraComponentService().purgeComponent(component);
+		hydraService.getHydraComponentService().purgeComponent(component);
 	}
 
 	@Override

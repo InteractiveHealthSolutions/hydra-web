@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleField;
 import org.openmrs.module.hydra.model.HydramoduleFieldRule;
 import org.openmrs.module.hydra.model.HydramoduleRuleToken;
@@ -35,6 +34,8 @@ public class RuleTokenController extends DelegatingCrudResource<HydramoduleRuleT
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleRuleToken newDelegate() {
 		return new HydramoduleRuleToken();
@@ -42,18 +43,18 @@ public class RuleTokenController extends DelegatingCrudResource<HydramoduleRuleT
 
 	@Override
 	public HydramoduleRuleToken save(HydramoduleRuleToken delegate) {
-		return HydraContext.getHydraFieldService().saveHydramoduleRuleToken(delegate);
+		return hydraService.getHydraFieldService().saveHydramoduleRuleToken(delegate);
 	}
 
 	@Override
 	public HydramoduleRuleToken getByUniqueId(String uuid) {
-		return HydraContext.getHydraFieldService().getHydramoduleRuleToken(uuid);
+		return hydraService.getHydraFieldService().getHydramoduleRuleToken(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleRuleToken> moduleForm = HydraContext.getHydraFieldService().getAllHydramoduleRuleTokens();
+		List<HydramoduleRuleToken> moduleForm = hydraService.getHydraFieldService().getAllHydramoduleRuleTokens();
 		simpleObject.put("rules", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}

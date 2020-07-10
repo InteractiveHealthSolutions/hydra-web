@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleEventParticipants;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -30,6 +29,8 @@ public class EventParticipantController extends DataDelegatingCrudResource<Hydra
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleEventParticipants newDelegate() {
 		return new HydramoduleEventParticipants();
@@ -37,19 +38,19 @@ public class EventParticipantController extends DataDelegatingCrudResource<Hydra
 
 	@Override
 	public HydramoduleEventParticipants save(HydramoduleEventParticipants component) {
-		return HydraContext.getHydraEventService().saveEventParticipant(component);
+		return hydraService.getHydraEventService().saveEventParticipant(component);
 	}
 
 	@Override
 	public HydramoduleEventParticipants getByUniqueId(String uuid) {
-		return HydraContext.getHydraEventService().getEventParticipant(uuid);
+		return hydraService.getHydraEventService().getEventParticipant(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleEventParticipants> services = HydraContext.getHydraEventService().getAllEventParticipants(true);
-		services.addAll(HydraContext.getHydraEventService().getAllEventParticipants(false));
+		List<HydramoduleEventParticipants> services = hydraService.getHydraEventService().getAllEventParticipants(true);
+		services.addAll(hydraService.getHydraEventService().getAllEventParticipants(false));
 		simpleObject.put("eventServices", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

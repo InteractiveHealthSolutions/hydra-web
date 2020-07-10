@@ -6,7 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.impl.HydraContext;
 import org.openmrs.module.hydra.model.HydramoduleFieldDTO;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -32,6 +31,8 @@ public class FieldDTOController extends DelegatingCrudResource<HydramoduleFieldD
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	@Override
 	public HydramoduleFieldDTO newDelegate() {
 		return new HydramoduleFieldDTO();
@@ -40,7 +41,7 @@ public class FieldDTOController extends DelegatingCrudResource<HydramoduleFieldD
 	@Override
 	public HydramoduleFieldDTO save(HydramoduleFieldDTO component) {
 
-		HydraContext.getHydraFieldService().saveField(component);
+		hydraService.getHydraFieldService().saveField(component);
 		return new HydramoduleFieldDTO();
 	}
 
@@ -52,7 +53,7 @@ public class FieldDTOController extends DelegatingCrudResource<HydramoduleFieldD
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
-		List<HydramoduleFieldDTO> forms = HydraContext.getHydraFieldService().getFieldsByName(queryParam);
+		List<HydramoduleFieldDTO> forms = hydraService.getHydraFieldService().getFieldsByName(queryParam);
 
 		return new NeedsPaging<HydramoduleFieldDTO>(forms, context);
 	}
