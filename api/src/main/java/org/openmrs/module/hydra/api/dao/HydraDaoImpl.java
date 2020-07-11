@@ -66,7 +66,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Deprecated
-// @Repository("hydra.HydraDao")
 @Transactional
 public class HydraDaoImpl {
 

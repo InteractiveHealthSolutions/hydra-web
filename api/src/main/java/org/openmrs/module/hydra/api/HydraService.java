@@ -1,10 +1,20 @@
 package org.openmrs.module.hydra.api;
 
-public interface HydraService {
+import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.hydra.api.HydraService;
+import org.openmrs.module.hydra.api.IHydraAssetService;
+import org.openmrs.module.hydra.api.IHydraComponentService;
+import org.openmrs.module.hydra.api.IHydraEventService;
+import org.openmrs.module.hydra.api.IHydraFieldService;
+import org.openmrs.module.hydra.api.IHydraFormService;
+import org.openmrs.module.hydra.api.IHydraParticipantService;
+import org.openmrs.module.hydra.api.IHydraPhaseService;
+import org.openmrs.module.hydra.api.IHydraServiceService;
+import org.openmrs.module.hydra.api.IHydraWorkflowService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-	void setHydraAssetService(IHydraAssetService hydraAssetService);
-
-	void setHydraComponentService(IHydraComponentService hydraComponentService);
+@Transactional
+public interface HydraService extends OpenmrsService {
 
 	void setHydraEventService(IHydraEventService hydraEventService);
 
