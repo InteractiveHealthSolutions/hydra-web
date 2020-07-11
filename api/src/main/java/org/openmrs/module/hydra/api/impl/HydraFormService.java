@@ -18,27 +18,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class HydraFormService extends BaseOpenmrsService implements IHydraFormService {
 
-	private IHydramoduleFormDao formDao;
+	@Autowired
+	private IHydramoduleFormDao hydraFormDao;
 
 	@Override
-	public void setFormDao(IHydramoduleFormDao formDao) {
-		this.formDao = formDao;
+	public void setHydraFormDao(IHydramoduleFormDao formDao) {
+		this.hydraFormDao = formDao;
 	}
 
 	@Override
 	public HydraForm getHydraFormByUuid(String uuid) throws APIException {
-		return formDao.getHydraFormByUuid(uuid);
+		return hydraFormDao.getHydraFormByUuid(uuid);
 	}
 
 	@Override
 	@Transactional
 	public HydraForm saveForm(HydraForm item) throws APIException {
-		return formDao.saveForm(item);
+		return hydraFormDao.saveForm(item);
 	}
 
 	@Override
 	public Set<HydraForm> getHydraFormsByTag(String tag) throws APIException {
-		return formDao.getHydraFormsByTag(tag);
+		return hydraFormDao.getHydraFormsByTag(tag);
 	}
 
 	@Override
@@ -60,43 +61,43 @@ public class HydraFormService extends BaseOpenmrsService implements IHydraFormSe
 			form.setEncounterType(encounterType);
 		}
 
-		return formDao.saveModuleForm(form);
+		return hydraFormDao.saveModuleForm(form);
 	}
 
 	@Override
 	public List<HydramoduleForm> getAllModuleForm() throws APIException {
-		return formDao.getAllModuleForm();
+		return hydraFormDao.getAllModuleForm();
 	}
 
 	@Override
 	public List<HydramoduleForm> getAllModuleFormsByComponent(String componentUUID) throws APIException {
-		return formDao.getAllModuleFormByComponentUUID(componentUUID);
+		return hydraFormDao.getAllModuleFormByComponentUUID(componentUUID);
 	}
 
 	@Override
 	public HydramoduleForm getHydraModuleFormByUuid(String uuid) throws APIException {
-		return formDao.getModuleForm(uuid);
+		return hydraFormDao.getModuleForm(uuid);
 	}
 
 	@Override
 	public HydramoduleForm getHydraModuleFormByName(String name) throws APIException {
-		return formDao.getModuleFormByName(name);
+		return hydraFormDao.getModuleFormByName(name);
 	}
 
 	@Override
 	public HydramoduleFormField getFormFieldByUUID(String uuid) throws APIException {
-		return formDao.getFormField(uuid);
+		return hydraFormDao.getFormField(uuid);
 	}
 
 	@Override
 	public void saveFormEncounter(HydramoduleFormEncounter formEncounter) {
-		formDao.saveFormEncounter(formEncounter);
+		hydraFormDao.saveFormEncounter(formEncounter);
 	}
 
 	@Override
 	public List<HydramoduleFormField> getFormFieldsByForm(String uuid) throws APIException {
-		HydramoduleForm form = formDao.getModuleForm(uuid);
-		List<HydramoduleFormField> fields = formDao.getFormFields(form);
+		HydramoduleForm form = hydraFormDao.getModuleForm(uuid);
+		List<HydramoduleFormField> fields = hydraFormDao.getFormFields(form);
 		return fields;
 	}
 

@@ -73,7 +73,7 @@ public class ReportController {
 
 	private static Log log = LogFactory.getLog(ReportController.class);
 
-	private HydraService hydraService = Context.getService(HydraService.class);
+	private HydraService hydraService;
 
 	public static final String STANDARD_DATE = "dd/MM/yyyy";
 
@@ -120,6 +120,8 @@ public class ReportController {
 
 		if (workflow == null)
 			workflow = "";
+
+		hydraService = Context.getService(HydraService.class);
 
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
@@ -198,6 +200,8 @@ public class ReportController {
 		        + "UPPER(CONCAT(NM.GIVEN_NAME, ' ', NM.FAMILY_NAME)) AS PATIENT_NAME,PR.GENDER, "
 		        + "YEAR(PR.date_created) - YEAR(PR.BIRTHDATE) AS AGE,PA.address2 AS ADDRESS,PA.state_province AS PROVINCE,PA.city_village AS CITY,PA.address3 As LAND_MARK "
 		        + ",DATE(EN.encounter_datetime) as ENCOUNTER_DATE, " + "US.USERNAME as USERNAME, LO.NAME as LOCATION";
+
+		hydraService = Context.getService(HydraService.class);
 
 		HydramoduleForm hydraForm = hydraService.getHydraFormService().getHydraModuleFormByName(form);
 		List<HydramoduleFormField> formFields = hydraForm.getFormFields();

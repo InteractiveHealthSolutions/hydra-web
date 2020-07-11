@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class HydraEventService extends BaseOpenmrsService implements IHydraEventService {
 
+	@Autowired
 	private IHydramoduleEventDao eventDao;
 
 	@Override

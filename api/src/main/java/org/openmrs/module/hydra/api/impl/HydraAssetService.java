@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class HydraAssetService extends BaseOpenmrsService implements IHydraAssetService {
 
+	@Autowired
 	private IHydramoduleAssetDao assetDao;
 
 	@Override

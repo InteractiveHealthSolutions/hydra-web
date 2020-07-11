@@ -20,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class HydraComponentService extends BaseOpenmrsService implements IHydraComponentService {
 
+	@Autowired
 	private IHydramoduleComponentDao componentDao;
 
+	@Autowired
 	private IHydramoduleFieldDao fieldDao;
 
 	@Override

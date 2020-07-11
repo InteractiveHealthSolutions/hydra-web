@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
@@ -15,9 +17,6 @@ import org.openmrs.ConceptAnswer;
 import org.openmrs.FieldAnswer;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.db.hibernate.DbSession;
-import org.openmrs.api.db.hibernate.DbSessionFactory;
-import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFieldDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFormDao;
 import org.openmrs.module.hydra.model.HydramoduleField;
@@ -28,7 +27,6 @@ import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.openmrs.module.hydra.model.HydramoduleRuleToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Transactional
 public class HydramoduleFieldDao implements IHydramoduleFieldDao {
@@ -36,10 +34,22 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 	private IHydramoduleFormDao hydraFormDao;
 
 	@Autowired
-	protected DbSessionFactory sessionFactory;
+	public SessionFactory sessionFactory;
 
-	protected DbSession getSession() {
+	public Session getSession() {
 		return sessionFactory.getCurrentSession();
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	public void setHydraFormDao(IHydramoduleFormDao hydraFormDao) {
+		this.hydraFormDao = hydraFormDao;
+	}
+
+	public IHydramoduleFormDao getHydraFormDao() {
+		return hydraFormDao;
 	}
 
 	// Fields
@@ -65,7 +75,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 	public List<HydramoduleFieldAnswer> getAllFieldAnswersByID(HydramoduleField fieldId) {
 		// HydramoduleComponent component = getComponent(componentUUID);
 		if (fieldId != null) {
-			DbSession session = sessionFactory.getCurrentSession();
+			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(FieldAnswer.class);
 			criteria.add(Restrictions.eq("field", fieldId)).setMaxResults(25);
 			// criteria.
@@ -84,7 +94,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 	public List<HydramoduleField> getAllFieldsByName(String name) {
 		// HydramoduleComponent component = getComponent(componentUUID);
 		if (name != null) {
-			DbSession session = sessionFactory.getCurrentSession();
+			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(HydramoduleField.class);
 			criteria.add(Restrictions.like("name", "%" + name + "%")).setMaxResults(25);
 			// criteria.
@@ -156,7 +166,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public HydramoduleField getHydramoduleField(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleField.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramoduleField) criteria.uniqueResult();
@@ -166,7 +176,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 	public HydramoduleFormField getHydramoduleFormField(String formUUID, String fieldUUID) {
 		HydramoduleForm form = hydraFormDao.getModuleForm(formUUID);
 		HydramoduleField field = getHydramoduleField(fieldUUID);
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFormField.class);
 		criteria.add(Restrictions.eq("form", form));
 		criteria.add(Restrictions.eq("field", field));
@@ -177,7 +187,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public List<HydramoduleField> getAllHydramoduleFields() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleField.class);
 		criteria.addOrder(Order.asc("fieldId"));
 		return criteria.list();
@@ -185,7 +195,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	/*
 	 * public List<HydramoduleField> getHydramoduleFieldsByName(String name) { if
-	 * (name != null) { DbSession session = sessionFactory.getCurrentSession();
+	 * (name != null) { Session session = sessionFactory.getCurrentSession();
 	 * Criteria criteria = session.createCriteria(HydramoduleField.class);
 	 * criteria.add(Restrictions.like("name", "%" + name + "%")); return
 	 * criteria.list(); } else { return new ArrayList<HydramoduleField>(); } }
@@ -202,7 +212,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public HydramoduleFieldAnswer getHydramoduleFieldAnswer(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldAnswer.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramoduleFieldAnswer) criteria.uniqueResult();
@@ -210,7 +220,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public List<HydramoduleFieldAnswer> getAllHydramoduleFieldAnswers(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldAnswer.class);
 		criteria.addOrder(Order.asc("fieldAnswerId"));
 		return criteria.list();
@@ -220,7 +230,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public void deleteFieldRules(List<HydramoduleFieldRule> rules) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		for (HydramoduleFieldRule ff : rules) {
 			deleteRuleTokensByFieldRuleId(ff.getRuleId());
 			session.delete(ff);
@@ -245,7 +255,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public HydramoduleFieldRule getHydramoduleFieldRule(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramoduleFieldRule) criteria.uniqueResult();
@@ -259,7 +269,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 	@Override
 	@Deprecated
 	public List<HydramoduleFieldRule> getHydramoduleFieldRuleByTargetField(HydramoduleField field) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
 		criteria.add(Restrictions.eq("targetQuestion", field));
 		return (List<HydramoduleFieldRule>) criteria.list();
@@ -267,7 +277,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public List<HydramoduleFieldRule> getHydramoduleFieldRuleByTargetFormField(HydramoduleFormField field) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
 		criteria.add(Restrictions.eq("targetFormField", field));
 		return (List<HydramoduleFieldRule>) criteria.list();
@@ -275,7 +285,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public List<HydramoduleFieldRule> getAllHydramoduleFieldRules(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFieldRule.class);
 		criteria.add(Restrictions.eq("retired", retired));
 
@@ -284,7 +294,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public void deleteRuleTokensByFieldRuleId(Integer fieldRuleId) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		session.createQuery("delete from HydramoduleRuleToken f where f.rule.ruleId =" + fieldRuleId).executeUpdate();
 	}
 
@@ -298,14 +308,14 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public HydramoduleRuleToken getHydramoduleRuleToken(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleRuleToken.class);
 		return (HydramoduleRuleToken) criteria.uniqueResult();
 	}
 
 	@Override
 	public List<HydramoduleRuleToken> getAllHydramoduleRuleTokens() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleRuleToken.class);
 		criteria.addOrder(Order.asc("tokenId"));
 		return criteria.list();
@@ -320,7 +330,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 
 	@Override
 	public void deleteFieldAnswers(int fieldId) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		session.createQuery("delete from HydramoduleFieldAnswer f where f.field.fieldId=" + fieldId).executeUpdate();
 	}
 

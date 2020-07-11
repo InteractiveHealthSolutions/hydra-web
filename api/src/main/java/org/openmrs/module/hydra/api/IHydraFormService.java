@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface IHydraFormService extends OpenmrsService {
 
-	void setFormDao(IHydramoduleFormDao formDao);
+	void setHydraFormDao(IHydramoduleFormDao formDao);
 
 	HydraForm getHydraFormByUuid(String uuid) throws APIException;
 

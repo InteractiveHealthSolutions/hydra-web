@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class HydraServiceService extends BaseOpenmrsService implements IHydraServiceService {
 
+	@Autowired
 	private IHydramoduleServiceDao serviceDao;
 
 	@Override

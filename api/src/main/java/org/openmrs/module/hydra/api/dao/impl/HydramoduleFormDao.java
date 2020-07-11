@@ -6,11 +6,11 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.APIException;
-import org.openmrs.api.db.hibernate.DbSession;
-import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleComponentDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFieldDao;
@@ -35,10 +35,14 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 	private IHydramoduleComponentDao componentDao;
 
 	@Autowired
-	protected DbSessionFactory sessionFactory;
+	public SessionFactory sessionFactory;
 
-	protected DbSession getSession() {
+	public Session getSession() {
 		return sessionFactory.getCurrentSession();
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
 	public void setComponentDao(IHydramoduleComponentDao componentDao) {
@@ -51,7 +55,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 
 	@Override
 	public HydramoduleForm getModuleFormByName(String name) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleForm.class);
 		criteria.add(Restrictions.eq("name", name));
 
@@ -65,7 +69,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 
 	@Override
 	public HydraForm getHydraModuleFormByTag(String tag) {
-		DbSession session = getSession();
+		Session session = getSession();
 		HydraForm form = (HydraForm) session.createCriteria(HydraForm.class).add(Restrictions.eq("uuid", tag))
 		        .uniqueResult();
 		return form;
@@ -147,7 +151,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 
 	@Override
 	public List<HydramoduleFormField> getFormFields(HydramoduleForm form) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFormField.class);
 		criteria.add(Restrictions.eq("form", form));
 
@@ -156,13 +160,13 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 
 	@Override
 	public List<HydramoduleFormField> getFormFields(Integer formId) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		return session.createQuery("from HydramoduleFormField f where f.form.hydramoduleFormId=" + formId).list();
 	}
 
 	@Override
 	public HydramoduleFormField getFormField(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFormField.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 
@@ -171,7 +175,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 
 	@Override
 	public void deleteFormFields(HydramoduleForm form) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		List<HydramoduleFormField> formFields = getFormFields(form);
 		deleteFormFields(formFields);
 		session.flush();
@@ -180,7 +184,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 	// TODO use criteria
 	@Override
 	public void deleteFormFields(List<HydramoduleFormField> formFields) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		for (HydramoduleFormField ff : formFields) {
 			System.out.println("Deleted!!!");
 			fieldDao.deleteFieldRules(ff.getRules());
@@ -191,7 +195,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 
 	@Override
 	public List<HydramoduleForm> getAllModuleForm() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleForm.class);
 		criteria.addOrder(Order.asc("hydramoduleFormId"));
 		return criteria.list();
@@ -201,7 +205,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 	public List<HydramoduleForm> getAllModuleFormByComponentUUID(String componentUUID) {
 		HydramoduleComponent component = componentDao.getComponent(componentUUID);
 		if (component != null) {
-			DbSession session = sessionFactory.getCurrentSession();
+			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(HydramoduleForm.class);
 			criteria.add(Restrictions.eq("component", component));
 			criteria.addOrder(Order.asc("hydramoduleFormId"));
@@ -213,7 +217,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 
 	@Override
 	public HydramoduleForm getModuleForm(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleForm.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 
@@ -232,7 +236,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 	public HydramoduleFormField getHydramoduleFormField(String formUUID, String fieldUUID) {
 		HydramoduleForm form = getModuleForm(formUUID);
 		HydramoduleField field = fieldDao.getHydramoduleField(fieldUUID);
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFormField.class);
 		criteria.add(Restrictions.eq("form", form));
 		criteria.add(Restrictions.eq("field", field));
@@ -250,7 +254,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 
 	@Override
 	public HydramoduleFormFieldGroup getHydramoduleFormFieldGroup(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFormFieldGroup.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramoduleFormFieldGroup) criteria.uniqueResult();
@@ -258,7 +262,7 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 
 	@Override
 	public List<HydramoduleFormFieldGroup> getAllHydramoduleFormFieldGroups() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFormFieldGroup.class);
 		criteria.addOrder(Order.asc("groupId"));
 		return criteria.list();

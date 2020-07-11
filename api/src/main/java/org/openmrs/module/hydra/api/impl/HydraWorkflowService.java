@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class HydraWorkflowService extends BaseOpenmrsService implements IHydraWorkflowService {
 
+	@Autowired
 	private IHydramoduleWorkflowDao workflowDao;
 
 	@Override

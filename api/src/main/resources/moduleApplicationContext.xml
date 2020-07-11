@@ -85,44 +85,35 @@
 
 	<bean id="assetDao"
 		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleAssetDao">
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="componentDao"
 		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleComponentDao">
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="eventDao"
 		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleEventDao">
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="fieldDao"
 		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleFieldDao">
-		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="hydraFormDao" ref="hydraFormDao" />
 
 	</bean>
 	<bean id="hydraFormDao"
 		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleFormDao">
-		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="fieldDao" ref="fieldDao" />
 		<property name="componentDao" ref="componentDao" />
 	</bean>
 	<bean id="participantDao"
 		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleParticipantDao">
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="phaseDao"
 		class="org.openmrs.module.hydra.api.dao.impl.HydramodulePhaseDao">
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="serviceDao"
 		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleServiceDao">
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="workflowDao"
 		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleWorkflowDao">
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean parent="serviceContext">
 		<property name="moduleService">

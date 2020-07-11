@@ -15,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class HydraPhaseService extends BaseOpenmrsService implements IHydraPhaseService {
 
+	@Autowired
 	private IHydramodulePhaseDao phaseDao;
 
+	@Autowired
 	private IHydramoduleWorkflowDao workflowDao;
 
 	@Override

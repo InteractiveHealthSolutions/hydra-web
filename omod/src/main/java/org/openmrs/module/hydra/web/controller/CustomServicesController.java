@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/hydra/customservices")
 public class CustomServicesController {
 
-	private HydraService hydraService = Context.getService(HydraService.class);
+	private HydraService hydraService;
 
 	private static Log log = LogFactory.getLog(CustomServicesController.class);
 
@@ -35,6 +35,7 @@ public class CustomServicesController {
 	@ResponseBody
 	List<String> getUsersByRole(HttpServletRequest request, @RequestParam(value = "role", required = true) String roleUuid) {
 
+		hydraService = Context.getService(HydraService.class);
 		Role role = Context.getUserService().getRoleByUuid(roleUuid);
 		try {
 			if (role != null) {
@@ -59,6 +60,8 @@ public class CustomServicesController {
 	        @RequestParam(value = "patientId", required = true) Integer patientId,
 	        @RequestParam(value = "resultencounterId", required = true) Integer resultEncounterId) {
 		try {
+			hydraService = Context.getService(HydraService.class);
+
 			HydramoduleForm form = hydraService.getHydraFormService().getHydraModuleFormByName("Xray Result Form");
 
 			HydramodulePatientWorkflow hydramodulePatientWorkflow = hydraService.getHydraWorkflowService()

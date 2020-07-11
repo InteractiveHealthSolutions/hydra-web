@@ -5,10 +5,10 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.api.db.hibernate.DbSession;
-import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramodulePhaseDao;
 import org.openmrs.module.hydra.model.HydramodulePhase;
@@ -21,15 +21,19 @@ import org.springframework.stereotype.Component;
 public class HydramodulePhaseDao implements IHydramodulePhaseDao {
 
 	@Autowired
-	protected DbSessionFactory sessionFactory;
+	public SessionFactory sessionFactory;
 
-	protected DbSession getSession() {
+	public Session getSession() {
 		return sessionFactory.getCurrentSession();
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
 	@Override
 	public HydramodulePhaseComponents getPhaseComponentRelation(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePhaseComponents.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramodulePhaseComponents) criteria.uniqueResult();
@@ -37,7 +41,7 @@ public class HydramodulePhaseDao implements IHydramodulePhaseDao {
 
 	@Override
 	public HydramodulePhase getPhase(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePhase.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("retired", false));
@@ -46,7 +50,7 @@ public class HydramodulePhaseDao implements IHydramodulePhaseDao {
 
 	@Override
 	public List<HydramodulePhase> getAllPhases() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePhase.class);
 		criteria.addOrder(Order.asc("phaseId"));
 		criteria.add(Restrictions.eq("retired", false));
@@ -55,7 +59,7 @@ public class HydramodulePhaseDao implements IHydramodulePhaseDao {
 
 	@Override
 	public List<HydramodulePhaseComponents> getAllPhaseComponentRelations() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePhaseComponents.class);
 		criteria.addOrder(Order.asc("displayOrder"));
 		return criteria.list();
@@ -81,7 +85,7 @@ public class HydramodulePhaseDao implements IHydramodulePhaseDao {
 
 	@Override
 	public List<HydramodulePhaseComponents> getPhaseComponentByWorkflow(HydramoduleWorkflow workflow) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePhaseComponents.class);
 		criteria.add(Restrictions.eq("hydramoduleWorkflow", workflow));
 

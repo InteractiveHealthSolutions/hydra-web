@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class HydraFieldService extends BaseOpenmrsService implements IHydraFieldService {
 
+	@Autowired
 	private IHydramoduleFieldDao fieldDao;
 
 	@Override
