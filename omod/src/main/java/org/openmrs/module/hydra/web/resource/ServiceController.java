@@ -28,8 +28,7 @@ public class ServiceController extends MetadataDelegatingCrudResource<Hydramodul
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleService newDelegate() {
@@ -38,18 +37,18 @@ public class ServiceController extends MetadataDelegatingCrudResource<Hydramodul
 
 	@Override
 	public HydramoduleService save(HydramoduleService component) {
-		return service.saveService(component);
+		return hydraService.getHydraServiceService().saveService(component);
 	}
 
 	@Override
 	public HydramoduleService getByUniqueId(String uuid) {
-		return service.getService(uuid);
+		return hydraService.getHydraServiceService().getService(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleService> services = service.getAllServices(false);
+		List<HydramoduleService> services = hydraService.getHydraServiceService().getAllServices(false);
 		// services.addAll(service.getAllServices(false));
 		simpleObject.put("services", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;

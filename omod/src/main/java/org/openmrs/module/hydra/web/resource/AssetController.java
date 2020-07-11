@@ -28,8 +28,7 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleAsset newDelegate() {
@@ -39,18 +38,18 @@ public class AssetController extends MetadataDelegatingCrudResource<HydramoduleA
 	@Override
 	public HydramoduleAsset save(HydramoduleAsset component) {
 		System.out.println(component.getName());
-		return service.saveAsset(component);
+		return hydraService.getHydraAssetService().saveAsset(component);
 	}
 
 	@Override
 	public HydramoduleAsset getByUniqueId(String uuid) {
-		return service.getAsset(uuid);
+		return hydraService.getHydraAssetService().getAsset(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleAsset> services = service.getAllAssets(false);
+		List<HydramoduleAsset> services = hydraService.getHydraAssetService().getAllAssets(false);
 		simpleObject.put("assets", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

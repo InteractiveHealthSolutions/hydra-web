@@ -55,24 +55,22 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
-import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
 import org.openmrs.module.hydra.model.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.HydramoduleDTOFormSubmissionData;
 import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.HydramodulePatientWorkflow;
 import org.openmrs.module.hydra.model.HydramoduleWorkflow;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jmx.export.naming.ObjectNamingStrategy;
 
 import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 public class FormService {
 
 	private HashMap<String, String> relationships;
+
+	HydraService hydraService = Context.getService(HydraService.class);
 
 	public FormService() {
 		relationships = new HashMap<String, String>();
@@ -120,13 +118,12 @@ public class FormService {
 		CONTACT_TRACING
 	}
 
-	private HydraService service;
+	// private HydraService service;
 
 	JSONParser parser;
 
-	public synchronized void createNewForm(HydraService service, HydramoduleDTOFormSubmissionData formSubmissionData)
+	public synchronized void createNewForm(HydramoduleDTOFormSubmissionData formSubmissionData)
 	        throws ContextAuthenticationException, ParseException, org.json.simple.parser.ParseException {
-		this.service = service;
 		parser = new JSONParser();
 
 		JSONArray data = (JSONArray) parser.parse(formSubmissionData.getData());
@@ -564,11 +561,12 @@ public class FormService {
 					                                                             // of
 					                                                             // componentForm
 					System.out.println("FormDetailsUUID: " + formDetailsUUID);
-					HydramoduleComponentForm componentForm = service.getComponentFormByUUID(formDetailsUUID);
+					HydramoduleComponentForm componentForm = hydraService.getHydraComponentService()
+					        .getComponentFormByUUID(formDetailsUUID);
 					if (componentForm != null) {
 						formEncounter.setComponentForm(componentForm);
 						formEncounter.setEncounter(savedEncoounter);
-						service.saveFormEncounter(formEncounter);
+						hydraService.getHydraFormService().saveFormEncounter(formEncounter);
 					}
 
 					if (personAttributes.size() > 0) {
@@ -672,12 +670,12 @@ public class FormService {
 		System.out.println(patient.getPerson().getGivenName());
 		patient = patientService.savePatient(patient);
 		if (patient != null) {
-			HydramoduleWorkflow workflow = service.getWorkflowByUUID(workflowUUID);
+			HydramoduleWorkflow workflow = hydraService.getHydraWorkflowService().getWorkflowByUUID(workflowUUID);
 			if (workflow != null) {
 				HydramodulePatientWorkflow patientWorkflow = new HydramodulePatientWorkflow();
 				patientWorkflow.setWorkflow(workflow);
 				patientWorkflow.setPatient(patient);
-				service.saveHydramodulePatientWorkflow(patientWorkflow);
+				hydraService.getHydraWorkflowService().saveHydramodulePatientWorkflow(patientWorkflow);
 			}
 
 			// Save relationship
@@ -840,12 +838,12 @@ public class FormService {
 		System.out.println(patient.getPerson().getGivenName());
 		patient = patientService.savePatient(patient);
 		if (patient != null) {
-			HydramoduleWorkflow workflow = service.getWorkflowByUUID(workflowUUID);
+			HydramoduleWorkflow workflow = hydraService.getHydraWorkflowService().getWorkflowByUUID(workflowUUID);
 			if (workflow != null) {
 				HydramodulePatientWorkflow patientWorkflow = new HydramodulePatientWorkflow();
 				patientWorkflow.setWorkflow(workflow);
 				patientWorkflow.setPatient(patient);
-				service.saveHydramodulePatientWorkflow(patientWorkflow);
+				hydraService.getHydraWorkflowService().saveHydramodulePatientWorkflow(patientWorkflow);
 			}
 		}
 		/*

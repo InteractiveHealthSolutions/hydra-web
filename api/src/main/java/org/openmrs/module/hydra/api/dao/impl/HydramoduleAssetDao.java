@@ -5,10 +5,10 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.api.db.hibernate.DbSession;
-import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleAssetDao;
 import org.openmrs.module.hydra.model.HydramoduleAsset;
@@ -18,9 +18,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Component("assetDao")
 @Transactional
-public class HydramoduleAssetDao extends HydraDao implements IHydramoduleAssetDao {
+public class HydramoduleAssetDao implements IHydramoduleAssetDao {
+
+	@Autowired
+	public SessionFactory sessionFactory;
+
+	public Session getSession() {
+		return sessionFactory.getCurrentSession();
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public HydramoduleAssetType saveAssetType(HydramoduleAssetType serviceType) {
@@ -36,7 +46,7 @@ public class HydramoduleAssetDao extends HydraDao implements IHydramoduleAssetDa
 
 	@Override
 	public HydramoduleAssetType getAssetType(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleAssetType.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("retired", false));
@@ -45,7 +55,7 @@ public class HydramoduleAssetDao extends HydraDao implements IHydramoduleAssetDa
 
 	@Override
 	public List<HydramoduleAssetType> getAllAssetTypes(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleAssetType.class);
 		criteria.addOrder(Order.asc("assetTypeId"));
 		criteria.add(Restrictions.eq("retired", retired));
@@ -62,7 +72,7 @@ public class HydramoduleAssetDao extends HydraDao implements IHydramoduleAssetDa
 
 	@Override
 	public HydramoduleAssetCategory getAssetCategory(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleAssetCategory.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("retired", false));
@@ -71,7 +81,7 @@ public class HydramoduleAssetDao extends HydraDao implements IHydramoduleAssetDa
 
 	@Override
 	public List<HydramoduleAssetCategory> getAllAssetCategories(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleAssetCategory.class);
 		criteria.addOrder(Order.asc("assetCategoryId"));
 		criteria.add(Restrictions.eq("retired", retired));
@@ -95,7 +105,7 @@ public class HydramoduleAssetDao extends HydraDao implements IHydramoduleAssetDa
 
 	@Override
 	public HydramoduleAsset getAsset(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleAsset.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("retired", false));
@@ -104,7 +114,7 @@ public class HydramoduleAssetDao extends HydraDao implements IHydramoduleAssetDa
 
 	@Override
 	public List<HydramoduleAsset> getAllAssets(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleAsset.class);
 		criteria.addOrder(Order.asc("assetId"));
 		criteria.add(Restrictions.eq("retired", retired));

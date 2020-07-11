@@ -5,18 +5,30 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleServiceDao;
 import org.openmrs.module.hydra.model.HydramoduleService;
 import org.openmrs.module.hydra.model.HydramoduleServiceType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("serviceDao")
 @Transactional
-public class HydramoduleServiceDao extends HydraDao implements IHydramoduleServiceDao {
+public class HydramoduleServiceDao implements IHydramoduleServiceDao {
+
+	@Autowired
+	public SessionFactory sessionFactory;
+
+	public Session getSession() {
+		return sessionFactory.getCurrentSession();
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public HydramoduleServiceType saveServiceType(HydramoduleServiceType serviceType) {
@@ -27,7 +39,7 @@ public class HydramoduleServiceDao extends HydraDao implements IHydramoduleServi
 
 	@Override
 	public HydramoduleServiceType getServiceType(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleServiceType.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("retired", false));
@@ -36,7 +48,7 @@ public class HydramoduleServiceDao extends HydraDao implements IHydramoduleServi
 
 	@Override
 	public List<HydramoduleServiceType> getAllServiceTypes(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleServiceType.class);
 		criteria.addOrder(Order.asc("serviceTypeId"));
 		criteria.add(Restrictions.eq("retired", retired));
@@ -60,7 +72,7 @@ public class HydramoduleServiceDao extends HydraDao implements IHydramoduleServi
 
 	@Override
 	public HydramoduleService getService(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleService.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("retired", false));
@@ -69,7 +81,7 @@ public class HydramoduleServiceDao extends HydraDao implements IHydramoduleServi
 
 	@Override
 	public List<HydramoduleService> getAllServices(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleService.class);
 		criteria.addOrder(Order.asc("serviceId"));
 		criteria.add(Restrictions.eq("retired", retired));

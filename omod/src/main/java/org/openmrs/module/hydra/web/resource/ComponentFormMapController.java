@@ -34,8 +34,7 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleComponentForm newDelegate() {
@@ -44,18 +43,18 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 
 	@Override
 	public HydramoduleComponentForm save(HydramoduleComponentForm phaseComponent) {
-		return service.saveComponentFormRelation(phaseComponent);
+		return hydraService.getHydraComponentService().saveComponentFormRelation(phaseComponent);
 	}
 
 	@Override
 	public HydramoduleComponentForm getByUniqueId(String uuid) {
-		return service.getComponentFormByUUID(uuid);
+		return hydraService.getHydraComponentService().getComponentFormByUUID(uuid);
 	}
 
 	@Override
 	protected void delete(HydramoduleComponentForm phaseComponent, String reason, RequestContext context)
 	        throws ResponseException {
-		service.retireComponentForm(phaseComponent);
+		hydraService.getHydraComponentService().retireComponentForm(phaseComponent);
 	}
 
 	@Override
@@ -63,7 +62,7 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		SimpleObject simpleObject = new SimpleObject();
 		List<HydramoduleComponentForm> componentForms;
 		try {
-			componentForms = service.getAllComponentFormsRelations();
+			componentForms = hydraService.getHydraComponentService().getAllComponentFormsRelations();
 			simpleObject.put("ComponentsFormsMap",
 			    ConversionUtil.convertToRepresentation(componentForms, context.getRepresentation()));
 		}
@@ -85,14 +84,15 @@ public class ComponentFormMapController extends DelegatingCrudResource<Hydramodu
 		HydramoduleComponentForm phaseComponent = getByUniqueId(uuid);
 		if (phaseComponent == null)
 			throw new ObjectNotFoundException();
-		service.retireComponentForm(phaseComponent);
+		hydraService.getHydraComponentService().retireComponentForm(phaseComponent);
 	}
 
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
-		List<HydramoduleComponentForm> componentForms = service.getComponentFormsByComponent(queryParam);
-        
+		List<HydramoduleComponentForm> componentForms = hydraService.getHydraComponentService()
+		        .getComponentFormsByComponent(queryParam);
+
 		return new NeedsPaging<HydramoduleComponentForm>(componentForms, context);
 	}
 

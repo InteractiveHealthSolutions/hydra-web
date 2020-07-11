@@ -31,6 +31,8 @@ public class FormSubmissionDataControllerOld extends DelegatingCrudResource<Hydr
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	// @Autowired
 	private HydraService service = Context.getService(HydraService.class);
 
@@ -42,7 +44,7 @@ public class FormSubmissionDataControllerOld extends DelegatingCrudResource<Hydr
 	@Override
 	public HydramoduleDTOFormSubmissionData save(HydramoduleDTOFormSubmissionData formSubmissionData) {
 		try {
-			FormService.getInstance().createNewForm(service, formSubmissionData);
+			FormService.getInstance().createNewForm(formSubmissionData);
 		}
 		catch (ContextAuthenticationException e) {
 			e.printStackTrace();

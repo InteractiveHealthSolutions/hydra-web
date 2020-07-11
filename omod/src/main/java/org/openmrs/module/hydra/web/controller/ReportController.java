@@ -3,6 +3,7 @@ package org.openmrs.module.hydra.web.controller;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.HydraService;
+
 import org.openmrs.module.hydra.model.HydramoduleField;
 import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleFormField;
@@ -72,6 +73,8 @@ public class ReportController {
 
 	private static Log log = LogFactory.getLog(ReportController.class);
 
+	private HydraService hydraService;
+
 	public static final String STANDARD_DATE = "dd/MM/yyyy";
 
 	public static final String STANDARD_DATE_HYPHENATED = "dd-MM-yyyy";
@@ -86,9 +89,6 @@ public class ReportController {
 
 	@Autowired
 	private DbSessionFactory sessionFactory;
-
-	@Autowired
-	private HydraService service;// = Context.getService(HydraService.class);
 
 	static {
 		DATE_FORMATS = new HashMap();
@@ -121,6 +121,8 @@ public class ReportController {
 		if (workflow == null)
 			workflow = "";
 
+		hydraService = Context.getService(HydraService.class);
+
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
 		String format1 = detectDateFormat(to);
@@ -135,8 +137,8 @@ public class ReportController {
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
 		String prefix = sdf.format(cal.getTime());
 
-		int workflowId = service.getWorkflowByName(workflow).getId();
-		int encounterId = service.getHydraModuleFormByName(form).getEncounterType().getId();
+		int workflowId = hydraService.getHydraWorkflowService().getWorkflowByName(workflow).getId();
+		int encounterId = hydraService.getHydraFormService().getHydraModuleFormByName(form).getEncounterType().getId();
 
 		String query = generateQuery(encounterId, workflowId, form, from, to);
 
@@ -199,7 +201,9 @@ public class ReportController {
 		        + "YEAR(PR.date_created) - YEAR(PR.BIRTHDATE) AS AGE,PA.address2 AS ADDRESS,PA.state_province AS PROVINCE,PA.city_village AS CITY,PA.address3 As LAND_MARK "
 		        + ",DATE(EN.encounter_datetime) as ENCOUNTER_DATE, " + "US.USERNAME as USERNAME, LO.NAME as LOCATION";
 
-		HydramoduleForm hydraForm = service.getHydraModuleFormByName(form);
+		hydraService = Context.getService(HydraService.class);
+
+		HydramoduleForm hydraForm = hydraService.getHydraFormService().getHydraModuleFormByName(form);
 		List<HydramoduleFormField> formFields = hydraForm.getFormFields();
 		Collections.sort(formFields, new Comparator<HydramoduleFormField>() {
 

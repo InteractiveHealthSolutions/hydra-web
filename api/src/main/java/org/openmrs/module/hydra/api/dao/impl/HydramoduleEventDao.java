@@ -5,10 +5,10 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.api.db.hibernate.DbSession;
-import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleEventDao;
 import org.openmrs.module.hydra.model.HydramoduleEvent;
@@ -21,9 +21,19 @@ import org.openmrs.module.hydra.model.HydramoduleFieldAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("eventDao")
 @Transactional
-public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDao {
+public class HydramoduleEventDao implements IHydramoduleEventDao {
+
+	@Autowired
+	public SessionFactory sessionFactory;
+
+	public Session getSession() {
+		return sessionFactory.getCurrentSession();
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public HydramoduleEvent saveHydramoduleEvent(HydramoduleEvent event) {
@@ -78,7 +88,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public HydramoduleEvent getHydramoduleEvent(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEvent.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("voided", false));
@@ -87,7 +97,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public HydramoduleEvent getHydramoduleEvent(Integer id) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEvent.class);
 		criteria.add(Restrictions.eq("eventId", id));
 		criteria.add(Restrictions.eq("voided", false));
@@ -96,7 +106,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public List<HydramoduleEvent> getAllHydramoduleEvents(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEvent.class);
 		criteria.addOrder(Order.asc("eventId"));
 		criteria.add(Restrictions.eq("voided", retired));
@@ -113,7 +123,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public HydramoduleEventSchedule getHydramoduleEventScedule(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEventSchedule.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("voided", false));
@@ -122,7 +132,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public List<HydramoduleEventSchedule> getAllHydramoduleEventScedules(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEventSchedule.class);
 		criteria.addOrder(Order.asc("scheduleId"));
 		criteria.add(Restrictions.eq("voided", retired));
@@ -140,7 +150,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public HydramoduleEventType getHydramoduleEventType(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEventType.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("retired", false));
@@ -149,7 +159,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public List<HydramoduleEventType> getAllHydramoduleEventTypes(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEventType.class);
 		criteria.addOrder(Order.asc("eventTypeId"));
 		criteria.add(Restrictions.eq("retired", retired));
@@ -174,7 +184,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public HydramoduleEventAsset getHydramoduleEventAsset(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEventAsset.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("voided", false));
@@ -183,7 +193,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public List<HydramoduleEventAsset> getAllHydramoduleEventAssets(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEventAsset.class);
 		criteria.addOrder(Order.asc("eventAssetId"));
 		criteria.add(Restrictions.eq("voided", retired));
@@ -201,7 +211,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public HydramoduleEventService getHydramoduleEventService(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEventService.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("voided", false));
@@ -210,7 +220,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public List<HydramoduleEventService> getAllHydramoduleEventServices(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEventService.class);
 		criteria.addOrder(Order.asc("eventServiceId"));
 		criteria.add(Restrictions.eq("voided", retired));
@@ -231,7 +241,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public HydramoduleEventParticipants getHydramoduleEventParticipant(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEventParticipants.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("voided", false));
@@ -240,7 +250,7 @@ public class HydramoduleEventDao extends HydraDao implements IHydramoduleEventDa
 
 	@Override
 	public List<HydramoduleEventParticipants> getAllHydramoduleEventParticipants(boolean retired) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleEventParticipants.class);
 		criteria.addOrder(Order.asc("eventParticipantId"));
 		criteria.add(Restrictions.eq("voided", retired));

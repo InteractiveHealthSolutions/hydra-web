@@ -33,8 +33,7 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleWorkflowPhases newDelegate() {
@@ -43,18 +42,18 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleWorkflowPhases save(HydramoduleWorkflowPhases delegate) {
-		return service.saveWorkflowPhaseRelation(delegate);
+		return hydraService.getHydraWorkflowService().saveWorkflowPhaseRelation(delegate);
 	}
 
 	@Override
 	public HydramoduleWorkflowPhases getByUniqueId(String uuid) {
-		return service.getWorkflowPhasesRelationByUUID(uuid);
+		return hydraService.getHydraWorkflowService().getWorkflowPhasesRelationByUUID(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleWorkflowPhases> p = service.getAllWorkflowPhaseRelations();
+		List<HydramoduleWorkflowPhases> p = hydraService.getHydraWorkflowService().getAllWorkflowPhaseRelations();
 		simpleObject.put("workflowPhasesMap", ConversionUtil.convertToRepresentation(p, context.getRepresentation()));
 		return simpleObject;
 	}
@@ -67,7 +66,8 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
-		List<HydramoduleWorkflowPhases> hydramoduleWorkflowPhases = service.getWorkflowPhaseByWorkflow(queryParam);
+		List<HydramoduleWorkflowPhases> hydramoduleWorkflowPhases = hydraService.getHydraWorkflowService()
+		        .getWorkflowPhaseByWorkflow(queryParam);
 		return new NeedsPaging<HydramoduleWorkflowPhases>(hydramoduleWorkflowPhases, context);
 	}
 
@@ -115,7 +115,7 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 	@Override
 	protected void delete(HydramoduleWorkflowPhases workflowphases, String reason, RequestContext context)
 	        throws ResponseException {
-		service.deleteWorkflowPhase(workflowphases);
+		hydraService.getHydraWorkflowService().deleteWorkflowPhase(workflowphases);
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 		HydramoduleWorkflowPhases workflowPhases = getByUniqueId(uuid);
 		if (workflowPhases == null)
 			throw new ObjectNotFoundException();
-		service.deleteWorkflowPhase(workflowPhases);
+		hydraService.getHydraWorkflowService().deleteWorkflowPhase(workflowPhases);
 	}
 
 }

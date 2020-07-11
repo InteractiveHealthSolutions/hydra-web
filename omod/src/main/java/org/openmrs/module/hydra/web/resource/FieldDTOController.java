@@ -31,8 +31,7 @@ public class FieldDTOController extends DelegatingCrudResource<HydramoduleFieldD
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleFieldDTO newDelegate() {
@@ -42,7 +41,7 @@ public class FieldDTOController extends DelegatingCrudResource<HydramoduleFieldD
 	@Override
 	public HydramoduleFieldDTO save(HydramoduleFieldDTO component) {
 
-		service.saveField(component);
+		hydraService.getHydraFieldService().saveField(component);
 		return new HydramoduleFieldDTO();
 	}
 
@@ -54,7 +53,7 @@ public class FieldDTOController extends DelegatingCrudResource<HydramoduleFieldD
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
-		List<HydramoduleFieldDTO> forms = service.getFieldsByName(queryParam);
+		List<HydramoduleFieldDTO> forms = hydraService.getHydraFieldService().getFieldsByName(queryParam);
 
 		return new NeedsPaging<HydramoduleFieldDTO>(forms, context);
 	}

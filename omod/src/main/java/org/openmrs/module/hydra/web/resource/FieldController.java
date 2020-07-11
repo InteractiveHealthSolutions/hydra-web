@@ -30,8 +30,7 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleField newDelegate() {
@@ -40,18 +39,18 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 
 	@Override
 	public HydramoduleField save(HydramoduleField delegate) {
-		return service.saveHydramoduleField(delegate);
+		return hydraService.getHydraFieldService().saveHydramoduleField(delegate);
 	}
 
 	@Override
 	public HydramoduleField getByUniqueId(String uuid) {
-		return service.getHydramoduleField(uuid);
+		return hydraService.getHydraFieldService().getHydramoduleField(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleField> moduleForm = service.getAllHydramoduleFields();
+		List<HydramoduleField> moduleForm = hydraService.getHydraFieldService().getAllHydramoduleFields();
 		simpleObject.put("fields", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}
@@ -64,7 +63,7 @@ public class FieldController extends MetadataDelegatingCrudResource<HydramoduleF
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
 		System.out.println(queryParam);
-		List<HydramoduleField> forms = service.getHydramoduleFieldsByName(queryParam);
+		List<HydramoduleField> forms = hydraService.getHydraFieldService().getHydramoduleFieldsByName(queryParam);
 
 		return new NeedsPaging<HydramoduleField>(forms, context);
 	}

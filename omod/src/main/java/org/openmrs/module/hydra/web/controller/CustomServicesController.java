@@ -27,8 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/hydra/customservices")
 public class CustomServicesController {
 
-	@Autowired
-	private HydraService service;
+	private HydraService hydraService;
 
 	private static Log log = LogFactory.getLog(CustomServicesController.class);
 
@@ -36,6 +35,7 @@ public class CustomServicesController {
 	@ResponseBody
 	List<String> getUsersByRole(HttpServletRequest request, @RequestParam(value = "role", required = true) String roleUuid) {
 
+		hydraService = Context.getService(HydraService.class);
 		Role role = Context.getUserService().getRoleByUuid(roleUuid);
 		try {
 			if (role != null) {
@@ -60,13 +60,15 @@ public class CustomServicesController {
 	        @RequestParam(value = "patientId", required = true) Integer patientId,
 	        @RequestParam(value = "resultencounterId", required = true) Integer resultEncounterId) {
 		try {
-			HydramoduleForm form = service.getHydraModuleFormByName("Xray Result Form");
+			hydraService = Context.getService(HydraService.class);
 
-			HydramodulePatientWorkflow hydramodulePatientWorkflow = service
+			HydramoduleForm form = hydraService.getHydraFormService().getHydraModuleFormByName("Xray Result Form");
+
+			HydramodulePatientWorkflow hydramodulePatientWorkflow = hydraService.getHydraWorkflowService()
 			        .getHydramodulePatientWorkflowByPatient(patientId);
 
-			HydramoduleComponentForm componentForm = service.getComponentFormByFormAndWorkflow(form,
-			    hydramodulePatientWorkflow.getWorkflow());
+			HydramoduleComponentForm componentForm = hydraService.getHydraComponentService()
+			        .getComponentFormByFormAndWorkflow(form, hydramodulePatientWorkflow.getWorkflow());
 
 			HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
 
@@ -74,7 +76,7 @@ public class CustomServicesController {
 
 			formEncounter.setComponentForm(componentForm);
 			formEncounter.setEncounter(resultEncounter);
-			service.saveFormEncounter(formEncounter);
+			hydraService.getHydraFormService().saveFormEncounter(formEncounter);
 
 			return "sucessfully saved";
 		}

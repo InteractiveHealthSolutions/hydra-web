@@ -29,8 +29,7 @@ public class ParticipantSalaryTypeController extends MetadataDelegatingCrudResou
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleParticipantSalaryType newDelegate() {
@@ -40,19 +39,20 @@ public class ParticipantSalaryTypeController extends MetadataDelegatingCrudResou
 	@Override
 	public HydramoduleParticipantSalaryType save(HydramoduleParticipantSalaryType component) {
 		System.out.println(component.getName());
-		return service.saveParticipantSalaryType(component);
+		return hydraService.getHydraParticipantService().saveParticipantSalaryType(component);
 	}
 
 	@Override
 	public HydramoduleParticipantSalaryType getByUniqueId(String uuid) {
-		return service.getParticipantSalaryType(uuid);
+		return hydraService.getHydraParticipantService().getParticipantSalaryType(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleParticipantSalaryType> services = service.getAllParticipantSalaryTypes(true);
-		services.addAll(service.getAllParticipantSalaryTypes(false));
+		List<HydramoduleParticipantSalaryType> services = hydraService.getHydraParticipantService()
+		        .getAllParticipantSalaryTypes(true);
+		services.addAll(hydraService.getHydraParticipantService().getAllParticipantSalaryTypes(false));
 		simpleObject.put("salaryTypes", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

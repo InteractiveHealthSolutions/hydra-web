@@ -5,24 +5,34 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.api.db.hibernate.DbSession;
-import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleComponentDao;
 import org.openmrs.module.hydra.model.HydramoduleComponent;
 import org.openmrs.module.hydra.model.HydramoduleComponentForm;
 import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleWorkflow;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Component("componentDao")
 @Transactional
-public class HydramoduleComponentDao extends HydraDao implements IHydramoduleComponentDao {
+public class HydramoduleComponentDao implements IHydramoduleComponentDao {
+
+	@Autowired
+	public SessionFactory sessionFactory;
+
+	public Session getSession() {
+		return sessionFactory.getCurrentSession();
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public HydramoduleComponentForm getComponentFormRelation(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramoduleComponentForm) criteria.uniqueResult();
@@ -30,7 +40,7 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 
 	@Override
 	public List<HydramoduleComponentForm> getAllComponentFormRelations() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
 		criteria.add(Restrictions.eq("retired", false));
 		criteria.addOrder(Order.asc("displayOrder"));
@@ -39,7 +49,7 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 
 	@Override
 	public List<HydramoduleComponentForm> getAllComponentFormRelations(HydramoduleForm form) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
 		criteria.addOrder(Order.asc("displayOrder"));
 		criteria.add(Restrictions.eq("form", form));
@@ -48,7 +58,7 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 
 	@Override
 	public HydramoduleComponent getComponent(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponent.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		criteria.add(Restrictions.eq("retired", false));
@@ -57,7 +67,7 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 
 	@Override
 	public List<HydramoduleComponent> getAllComponents() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponent.class);
 		criteria.addOrder(Order.asc("componentId"));
 		criteria.add(Restrictions.eq("retired", false));
@@ -94,7 +104,7 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 	@Override
 	public HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
 	        HydramoduleWorkflow hydramoduleWorkflow) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
 		criteria.add(Restrictions.eq("form", hydramoduleForm));
 		criteria.add(Restrictions.eq("workflow", hydramoduleWorkflow));
@@ -103,7 +113,7 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 
 	@Override
 	public List<HydramoduleComponentForm> getComponentFormByWorkflow(HydramoduleWorkflow hydramoduleWorkflow) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
 
 		criteria.add(Restrictions.eq("workflow", hydramoduleWorkflow));
@@ -112,7 +122,7 @@ public class HydramoduleComponentDao extends HydraDao implements IHydramoduleCom
 
 	@Override
 	public List<HydramoduleComponentForm> getComponentFormByComponent(HydramoduleComponent component) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleComponentForm.class);
 		criteria.add(Restrictions.eq("component", component));
 		return criteria.list();

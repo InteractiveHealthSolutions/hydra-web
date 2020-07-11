@@ -29,8 +29,7 @@ public class AssetTypeController extends MetadataDelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleAssetType newDelegate() {
@@ -39,19 +38,19 @@ public class AssetTypeController extends MetadataDelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleAssetType save(HydramoduleAssetType component) {
-		return service.saveAssetType(component);
+		return hydraService.getHydraAssetService().saveAssetType(component);
 	}
 
 	@Override
 	public HydramoduleAssetType getByUniqueId(String uuid) {
-		return service.getAssetType(uuid);
+		return hydraService.getHydraAssetService().getAssetType(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleAssetType> services = service.getAllAssetTypes(true);
-		services.addAll(service.getAllAssetTypes(false));
+		List<HydramoduleAssetType> services = hydraService.getHydraAssetService().getAllAssetTypes(true);
+		services.addAll(hydraService.getHydraAssetService().getAllAssetTypes(false));
 		simpleObject.put("assetTypes", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

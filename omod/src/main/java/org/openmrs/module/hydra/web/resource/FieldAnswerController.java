@@ -29,8 +29,7 @@ public class FieldAnswerController extends DelegatingCrudResource<HydramoduleFie
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleFieldAnswer newDelegate() {
@@ -39,18 +38,18 @@ public class FieldAnswerController extends DelegatingCrudResource<HydramoduleFie
 
 	@Override
 	public HydramoduleFieldAnswer save(HydramoduleFieldAnswer delegate) {
-		return service.saveHydramoduleFieldAnswer(delegate);
+		return hydraService.getHydraFieldService().saveHydramoduleFieldAnswer(delegate);
 	}
 
 	@Override
 	public HydramoduleFieldAnswer getByUniqueId(String uuid) {
-		return service.getHydramoduleFieldAnswer(uuid);
+		return hydraService.getHydraFieldService().getHydramoduleFieldAnswer(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleFieldAnswer> moduleForm = service.getAllHydramoduleFieldAnswers(false);
+		List<HydramoduleFieldAnswer> moduleForm = hydraService.getHydraFieldService().getAllHydramoduleFieldAnswers(false);
 		simpleObject.put("fieldAnswers", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}

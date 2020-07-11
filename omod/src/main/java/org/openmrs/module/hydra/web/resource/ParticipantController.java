@@ -32,8 +32,7 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleParticipant newDelegate() {
@@ -43,18 +42,18 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 	@Override
 	public HydramoduleParticipant save(HydramoduleParticipant component) {
 		System.out.println(component.getName());
-		return service.saveParticipant(component);
+		return hydraService.getHydraParticipantService().saveParticipant(component);
 	}
 
 	@Override
 	public HydramoduleParticipant getByUniqueId(String uuid) {
-		return service.getParticipant(uuid);
+		return hydraService.getHydraParticipantService().getParticipant(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleParticipant> services = service.getAllParticipants(false);
+		List<HydramoduleParticipant> services = hydraService.getHydraParticipantService().getAllParticipants(false);
 		simpleObject.put("participants", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}
@@ -69,7 +68,8 @@ public class ParticipantController extends MetadataDelegatingCrudResource<Hydram
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
 		System.out.println(queryParam);
-		List<HydramoduleParticipant> participants = service.getParticipantByUserUUID(queryParam);
+		List<HydramoduleParticipant> participants = hydraService.getHydraParticipantService()
+		        .getParticipantByUserUUID(queryParam);
 
 		return new NeedsPaging<HydramoduleParticipant>(participants, context);
 	}

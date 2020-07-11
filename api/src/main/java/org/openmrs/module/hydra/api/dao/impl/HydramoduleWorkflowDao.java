@@ -5,13 +5,13 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
-import org.openmrs.api.db.hibernate.DbSession;
-import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleWorkflowDao;
 import org.openmrs.module.hydra.model.HydramodulePatientWorkflow;
@@ -21,13 +21,23 @@ import org.openmrs.module.hydra.model.HydramoduleWorkflowPhases;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("workflowDao")
 @Transactional
-public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWorkflowDao {
+public class HydramoduleWorkflowDao implements IHydramoduleWorkflowDao {
+
+	@Autowired
+	public SessionFactory sessionFactory;
+
+	public Session getSession() {
+		return sessionFactory.getCurrentSession();
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	@Override
 	public HydramoduleWorkflow getWorkflow(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 
@@ -36,7 +46,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 
 	@Override
 	public HydramoduleWorkflow getWorkflowByName(String name) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
 		criteria.add(Restrictions.eq("name", name));
 
@@ -45,7 +55,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 
 	@Override
 	public List<HydramoduleWorkflow> getAllWorkflows() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflow.class);
 		criteria.addOrder(Order.asc("workflowId"));
 		criteria.add(Restrictions.eq("retired", false));
@@ -72,7 +82,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 
 	@Override
 	public HydramoduleWorkflowPhases getWorkflowPhaseRelation(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflowPhases.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 
@@ -81,7 +91,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 
 	@Override
 	public List<HydramoduleWorkflowPhases> getAllPhasesWorkFlowPhaseRelations() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflowPhases.class);
 		criteria.addOrder(Order.asc("displayOrder"));
 		return criteria.list();
@@ -106,7 +116,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 
 	@Override
 	public List<HydramoduleWorkflowPhases> getWorkflowPhase(HydramoduleWorkflow workflow) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleWorkflowPhases.class);
 		criteria.add(Restrictions.eq("hydramoduleWorkflow", workflow));
 
@@ -122,7 +132,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 
 	@Override
 	public HydramodulePatientWorkflow getHydramodulePatientWorkflow(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePatientWorkflow.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramodulePatientWorkflow) criteria.uniqueResult();
@@ -130,7 +140,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 
 	@Override
 	public List<HydramodulePatientWorkflow> getAllHydramodulePatientWorkflows() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePatientWorkflow.class);
 		criteria.addOrder(Order.asc("patientWorkflowId"));
 		return criteria.list();
@@ -145,7 +155,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 
 	@Override
 	public HydramoduleUserWorkflow getHydramoduleUserWorkflow(String uuid) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
 		return (HydramoduleUserWorkflow) criteria.uniqueResult();
@@ -153,7 +163,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 
 	@Override
 	public List<HydramoduleUserWorkflow> getAllHydramoduleUserWorkflow() {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
 		criteria.addOrder(Order.asc("userWorkflowId"));
 		return criteria.list();
@@ -163,7 +173,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 	public List<HydramoduleUserWorkflow> getUserWorkflowByUser(User user) {
 
 		if (user != null) {
-			DbSession session = sessionFactory.getCurrentSession();
+			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(HydramoduleUserWorkflow.class);
 			criteria.add(Restrictions.eq("user", user));
 			List<HydramoduleUserWorkflow> users = criteria.list();
@@ -176,7 +186,7 @@ public class HydramoduleWorkflowDao extends HydraDao implements IHydramoduleWork
 
 	@Override
 	public HydramodulePatientWorkflow getPatientWorkflowByPatient(Patient patient) {
-		DbSession session = sessionFactory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramodulePatientWorkflow.class);
 		criteria.add(Restrictions.eq("patient", patient));
 		return (HydramodulePatientWorkflow) criteria.uniqueResult();

@@ -29,8 +29,7 @@ public class EventParticipantController extends DataDelegatingCrudResource<Hydra
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleEventParticipants newDelegate() {
@@ -39,19 +38,19 @@ public class EventParticipantController extends DataDelegatingCrudResource<Hydra
 
 	@Override
 	public HydramoduleEventParticipants save(HydramoduleEventParticipants component) {
-		return service.saveEventParticipant(component);
+		return hydraService.getHydraEventService().saveEventParticipant(component);
 	}
 
 	@Override
 	public HydramoduleEventParticipants getByUniqueId(String uuid) {
-		return service.getEventParticipant(uuid);
+		return hydraService.getHydraEventService().getEventParticipant(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleEventParticipants> services = service.getAllEventParticipants(true);
-		services.addAll(service.getAllEventParticipants(false));
+		List<HydramoduleEventParticipants> services = hydraService.getHydraEventService().getAllEventParticipants(true);
+		services.addAll(hydraService.getHydraEventService().getAllEventParticipants(false));
 		simpleObject.put("eventServices", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

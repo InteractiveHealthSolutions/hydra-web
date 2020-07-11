@@ -29,8 +29,7 @@ public class EventTypeController extends MetadataDelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleEventType newDelegate() {
@@ -39,19 +38,19 @@ public class EventTypeController extends MetadataDelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleEventType save(HydramoduleEventType component) {
-		return service.saveEventType(component);
+		return hydraService.getHydraEventService().saveEventType(component);
 	}
 
 	@Override
 	public HydramoduleEventType getByUniqueId(String uuid) {
-		return service.getEventType(uuid);
+		return hydraService.getHydraEventService().getEventType(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleEventType> services = service.getAllEventTypes(true);
-		services.addAll(service.getAllEventTypes(false));
+		List<HydramoduleEventType> services = hydraService.getHydraEventService().getAllEventTypes(true);
+		services.addAll(hydraService.getHydraEventService().getAllEventTypes(false));
 		simpleObject.put("eventTypes", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

@@ -25,7 +25,7 @@ public class PhaseListController extends DataDelegatingCrudResource<PhasesList> 
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public PhasesList newDelegate() {
@@ -45,7 +45,7 @@ public class PhaseListController extends DataDelegatingCrudResource<PhasesList> 
 
 	@Override
 	public PhasesList getByUniqueId(String uniqueId) {
-		List<HydramodulePhase> phases = service.getAllPhases();
+		List<HydramodulePhase> phases = hydraService.getHydraPhaseService().getAllPhases();
 		return PhasesList.createFromPhases(phases);
 	}
 

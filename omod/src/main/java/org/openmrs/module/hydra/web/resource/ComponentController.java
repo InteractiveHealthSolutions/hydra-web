@@ -29,8 +29,7 @@ public class ComponentController extends MetadataDelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleComponent newDelegate() {
@@ -39,25 +38,25 @@ public class ComponentController extends MetadataDelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleComponent save(HydramoduleComponent component) {
-		return service.saveComponent(component);
+		return hydraService.getHydraComponentService().saveComponent(component);
 	}
 
 	@Override
 	public HydramoduleComponent getByUniqueId(String uuid) {
-		return service.getComponentByUUID(uuid);
+		return hydraService.getHydraComponentService().getComponentByUUID(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleComponent> component = service.getAllComponents();
+		List<HydramoduleComponent> component = hydraService.getHydraComponentService().getAllComponents();
 		simpleObject.put("components", ConversionUtil.convertToRepresentation(component, context.getRepresentation()));
 		return simpleObject;
 	}
 
 	@Override
 	public void purge(HydramoduleComponent component, RequestContext context) throws ResponseException {
-		service.purgeComponent(component);
+		hydraService.getHydraComponentService().purgeComponent(component);
 	}
 
 	@Override

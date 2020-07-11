@@ -28,8 +28,7 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramodulePhase newDelegate() {
@@ -38,18 +37,18 @@ public class PhaseController extends MetadataDelegatingCrudResource<HydramoduleP
 
 	@Override
 	public HydramodulePhase save(HydramodulePhase delegate) {
-		return service.savePhase(delegate);
+		return hydraService.getHydraPhaseService().savePhase(delegate);
 	}
 
 	@Override
 	public HydramodulePhase getByUniqueId(String uuid) {
-		return service.getPhaseByUUID(uuid);
+		return hydraService.getHydraPhaseService().getPhaseByUUID(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramodulePhase> phase = service.getAllPhases();
+		List<HydramodulePhase> phase = hydraService.getHydraPhaseService().getAllPhases();
 		simpleObject.put("phases", ConversionUtil.convertToRepresentation(phase, context.getRepresentation()));
 		return simpleObject;
 	}

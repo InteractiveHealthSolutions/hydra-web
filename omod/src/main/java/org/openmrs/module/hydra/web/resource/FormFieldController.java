@@ -31,8 +31,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleFormField newDelegate() {
@@ -48,7 +47,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleFormField getByUniqueId(String uuid) {
-		return service.getFormFieldByUUID(uuid);
+		return hydraService.getHydraFormService().getFormFieldByUUID(uuid);
 	}
 
 	/*
@@ -75,7 +74,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		String queryParam = context.getParameter("q");
-		List<HydramoduleFormField> forms = service.getFormFieldsByForm(queryParam);
+		List<HydramoduleFormField> forms = hydraService.getHydraFormService().getFormFieldsByForm(queryParam);
 
 		return new NeedsPaging<HydramoduleFormField>(forms, context);
 	}
