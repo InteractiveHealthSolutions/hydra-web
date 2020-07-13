@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -37,7 +38,7 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 	@JoinColumn(name = "field_type_id")
 	private FieldType fieldType;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "concept_id")
 	private Concept concept;
 
@@ -58,7 +59,7 @@ public class HydramoduleField extends BaseOpenmrsMetadata implements java.io.Ser
 	@Column(name = "select_multiple")
 	private Boolean selectMultiple = false;
 
-	@OneToMany(mappedBy = "field")
+	@OneToMany(mappedBy = "field",fetch = FetchType.EAGER)
 	private Set<HydramoduleFieldAnswer> answers;
 
 	@OneToMany(mappedBy = "field")

@@ -2987,5 +2987,21 @@ BEGIN
 			VALUES ("Hydra - Contact Number","Attribute type Hydra - Contact Number created by Hydra","java.lang.String",NULL,1,1,"2020-06-29 08:49:02",NULL,NULL,0,NULL,NULL,NULL,NULL,0,"280a7e3c-8f92-425a-b779-58be7b359b21");
 		</sql>    
 	</changeSet>
-
+<changeSet author="hareem.ajaz" id="hydra-202007081344">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="hydramodule_form_field"
+					columnName="auto_complete_from_earliest" />
+			</not>
+		</preConditions>
+		<comment>
+			Adding column 'auto_complete_from_earliest' in hydramodule_form_field
+			table
+		</comment>
+		<addColumn tableName="hydramodule_form_field">
+			<column name="auto_complete_from_earliest" type="BOOLEAN" defaultValueBoolean="true">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>	
+	</changeSet>
 </databaseChangeLog>
