@@ -1,5 +1,6 @@
 package org.openmrs.module.hydra.api;
 
+import org.openmrs.api.OpenmrsService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.IHydraAssetService;
@@ -12,6 +13,7 @@ import org.openmrs.module.hydra.api.IHydraPhaseService;
 import org.openmrs.module.hydra.api.IHydraServiceService;
 import org.openmrs.module.hydra.api.IHydraWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface HydraService extends OpenmrsService {
@@ -47,5 +49,9 @@ public interface HydraService extends OpenmrsService {
 	IHydraServiceService getHydraServiceService();
 
 	IHydraWorkflowService getHydraWorkflowService();
+
+	void setHydraAssetService(IHydraAssetService hydraAssetService);
+
+	void setHydraComponentService(IHydraComponentService hydraComponentService);
 
 }
