@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.APIException;
@@ -225,12 +226,6 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 	}
 
 	// componentForm
-	@Override
-	public HydramoduleFormEncounter saveFormEncounter(HydramoduleFormEncounter formEncounter) {
-		getSession().saveOrUpdate(formEncounter);
-		getSession().flush();
-		return formEncounter;
-	}
 
 	@Override
 	public HydramoduleFormField getHydramoduleFormField(String formUUID, String fieldUUID) {
@@ -265,6 +260,46 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(HydramoduleFormFieldGroup.class);
 		criteria.addOrder(Order.asc("groupId"));
+		return criteria.list();
+	}
+
+	// formEncounter
+	
+	@Override
+	public HydramoduleFormEncounter saveFormEncounter(HydramoduleFormEncounter formEncounter) {
+		getSession().saveOrUpdate(formEncounter);
+		getSession().flush();
+		return formEncounter;
+	}
+	
+	@Override
+	public HydramoduleFormEncounter getFormEncounter(String uuid) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFormEncounter.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (HydramoduleFormEncounter) criteria.uniqueResult();
+	}
+
+	@Override
+	public List<HydramoduleFormEncounter> getAllFormEncounters() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFormEncounter.class);
+		criteria.addOrder(Order.asc("formEncounterId"));
+		return criteria.list();
+	}
+
+	@Override
+	public List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, Integer patientId) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFormEncounter.class);
+		
+		if(componentFormId!=null)
+			criteria.add(Restrictions.eq("componentForm.componentFormId", componentFormId));
+		
+		if(patientId!=null)
+			criteria.add(Restrictions.eq("encounter.encounterId", patientId));
+		
+		criteria.addOrder(Order.asc("formEncounterId"));
 		return criteria.list();
 	}
 

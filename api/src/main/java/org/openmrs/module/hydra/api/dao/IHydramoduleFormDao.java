@@ -2,15 +2,12 @@ package org.openmrs.module.hydra.api.dao;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.openmrs.api.APIException;
 import org.openmrs.module.hydra.model.HydraForm;
 import org.openmrs.module.hydra.model.HydramoduleForm;
 import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.openmrs.module.hydra.model.HydramoduleFormFieldGroup;
-import org.springframework.stereotype.Repository;
 
 public interface IHydramoduleFormDao {
 
@@ -57,5 +54,11 @@ public interface IHydramoduleFormDao {
 	HydramoduleFormFieldGroup getHydramoduleFormFieldGroup(String uuid);
 
 	List<HydramoduleFormFieldGroup> getAllHydramoduleFormFieldGroups();
+
+	HydramoduleFormEncounter getFormEncounter(String uuid);
+
+	List<HydramoduleFormEncounter> getAllFormEncounters();
+
+	List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, Integer patientId);
 
 }
