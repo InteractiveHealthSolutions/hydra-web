@@ -17,6 +17,7 @@ import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentat
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.Listable;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource;
@@ -27,8 +28,9 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
-        + "/hydra/encounter-form", supportedClass = HydramoduleFormEncounter.class, supportedOpenmrsVersions = { "2.0.*,2.1.*,2.2.*" })
-public class FormEncounterController extends DelegatingCrudResource<HydramoduleFormEncounter> {
+        + "/hydra/form-encounter", supportedClass = HydramoduleFormEncounter.class, supportedOpenmrsVersions = {
+                "2.0.*,2.1.*,2.2.*" })
+public class FormEncounterController extends DelegatingCrudResource<HydramoduleFormEncounter> implements Listable {
 
 	/**
 	 * Logger for this class
@@ -56,34 +58,36 @@ public class FormEncounterController extends DelegatingCrudResource<HydramoduleF
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
 		List<HydramoduleFormEncounter> moduleForm;
-		String componentParam = context.getParameter("componentFormId");
-		String patientParam = context.getParameter("patientId");
-		if(componentParam!=null || patientParam!=null) {
-			
-			Integer componentFormId = componentParam==null?null:Integer.parseInt(componentParam);
-			Integer patientId = patientParam==null?null:Integer.parseInt(patientParam);
-			
-			moduleForm = hydraService.getHydraFormService().getAllFormEncounters(componentFormId, patientId);
-		} else {	
-			moduleForm = hydraService.getHydraFormService().getAllFormEncounters();
-		}
-		
+
+		moduleForm = hydraService.getHydraFormService().getAllFormEncounters();
+
 		simpleObject.put("formsEncounters", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
-		
+
 		return simpleObject;
 	}
 
 	@Override
-	protected void delete(HydramoduleFormEncounter delegate, String reason, RequestContext context) throws ResponseException {
+	protected void delete(HydramoduleFormEncounter delegate, String reason, RequestContext context)
+	        throws ResponseException {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
-		String queryParam = context.getParameter("q");
-		List<HydramoduleFormEncounter> forms = hydraService.getHydraFormService().searchFormEncounters(queryParam);
+		List<HydramoduleFormEncounter> moduleForm;
+		String componentParam = context.getParameter("componentFormId");
+		String patientParam = context.getParameter("patientId");
+		if (componentParam != null || patientParam != null) {
 
-		return new NeedsPaging<HydramoduleFormEncounter>(forms, context);
+			Integer componentFormId = componentParam == null ? null : Integer.parseInt(componentParam);
+			Integer patientId = patientParam == null ? null : Integer.parseInt(patientParam);
+
+			moduleForm = hydraService.getHydraFormService().getAllFormEncounters(componentFormId, patientId);
+		} else {
+			moduleForm = hydraService.getHydraFormService().getAllFormEncounters();
+		}
+
+		return new NeedsPaging<HydramoduleFormEncounter>(moduleForm, context);
 	}
 
 	@Override
@@ -96,6 +100,7 @@ public class FormEncounterController extends DelegatingCrudResource<HydramoduleF
 		description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
 		description.addProperty("formEncounterId");
 		description.addProperty("uuid");
+		description.addProperty("componentForm", Representation.REF);
 
 		if (representation instanceof RefRepresentation) {
 			description.addProperty("encounter", Representation.REF);
@@ -106,21 +111,21 @@ public class FormEncounterController extends DelegatingCrudResource<HydramoduleF
 		} else {
 			description.addProperty("encounter", Representation.DEFAULT);
 		}
-		
+
 		return description;
 	}
 
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		
+
 		description.addProperty("encounter");
 		description.addProperty("componentForm");
 
 		return description;
 
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getUpdatableProperties() throws ResourceDoesNotSupportOperationException {
 		// TODO Auto-generated method stub
@@ -130,6 +135,6 @@ public class FormEncounterController extends DelegatingCrudResource<HydramoduleF
 	@Override
 	public void purge(HydramoduleFormEncounter delegate, RequestContext context) throws ResponseException {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

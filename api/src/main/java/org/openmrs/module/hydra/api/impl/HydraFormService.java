@@ -89,24 +89,24 @@ public class HydraFormService extends BaseOpenmrsService implements IHydraFormSe
 	public HydramoduleFormField getFormFieldByUUID(String uuid) throws APIException {
 		return hydraFormDao.getFormField(uuid);
 	}
-	
+
 	@Override
 	public List<HydramoduleFormField> getFormFieldsByForm(String uuid) throws APIException {
 		HydramoduleForm form = hydraFormDao.getModuleForm(uuid);
 		List<HydramoduleFormField> fields = hydraFormDao.getFormFields(form);
 		return fields;
 	}
-	
+
 	@Override
 	public HydramoduleFormEncounter getFormEncounterByUUID(String uuid) throws APIException {
 		return hydraFormDao.getFormEncounter(uuid);
 	}
-	
+
 	@Override
 	public List<HydramoduleFormEncounter> getAllFormEncounters() throws APIException {
 		return hydraFormDao.getAllFormEncounters();
 	}
-	
+
 	@Override
 	public List<HydramoduleFormEncounter> searchFormEncounters(String searchString) throws APIException {
 		return new ArrayList<HydramoduleFormEncounter>();
@@ -119,10 +119,8 @@ public class HydraFormService extends BaseOpenmrsService implements IHydraFormSe
 
 	@Override
 	public List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, Integer patientId) {
-		
+
 		return hydraFormDao.getAllFormEncounters(componentFormId, patientId);
 	}
-
-	
 
 }

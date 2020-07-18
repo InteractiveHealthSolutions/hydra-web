@@ -264,14 +264,14 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 	}
 
 	// formEncounter
-	
+
 	@Override
 	public HydramoduleFormEncounter saveFormEncounter(HydramoduleFormEncounter formEncounter) {
 		getSession().saveOrUpdate(formEncounter);
 		getSession().flush();
 		return formEncounter;
 	}
-	
+
 	@Override
 	public HydramoduleFormEncounter getFormEncounter(String uuid) {
 		Session session = sessionFactory.getCurrentSession();
@@ -291,16 +291,15 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 	@Override
 	public List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, Integer patientId) {
 		Session session = sessionFactory.getCurrentSession();
-		Criteria criteria = session.createCriteria(HydramoduleFormEncounter.class);
-		
-		if(componentFormId!=null)
-			criteria.add(Restrictions.eq("componentForm.componentFormId", componentFormId));
-		
-		if(patientId!=null)
-			criteria.add(Restrictions.eq("encounter.encounterId", patientId));
-		
-		criteria.addOrder(Order.asc("formEncounterId"));
-		return criteria.list();
+		String query;
+
+		if (componentFormId == null)
+			query = "from HydramoduleFormEncounter f where f.encounter.patient.patientId=" + patientId;
+		else
+			query = "from HydramoduleFormEncounter f " + "where f.componentForm.componentFormId=" + componentFormId
+			        + " and f.encounter.patient.patientId=" + patientId;
+
+		return session.createQuery(query).list();
 	}
 
 }
