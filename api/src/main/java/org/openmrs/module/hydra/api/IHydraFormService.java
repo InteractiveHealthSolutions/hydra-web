@@ -46,6 +46,8 @@ public interface IHydraFormService extends OpenmrsService {
 
 	List<HydramoduleFormEncounter> searchFormEncounters(String searchString) throws APIException;
 
+	List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, String patientId);
+
 	List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, Integer patientId);
 
 }

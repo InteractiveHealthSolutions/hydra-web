@@ -76,13 +76,17 @@ public class FormEncounterController extends DelegatingCrudResource<HydramoduleF
 	protected PageableResult doSearch(RequestContext context) {
 		List<HydramoduleFormEncounter> moduleForm;
 		String componentParam = context.getParameter("componentFormId");
-		String patientParam = context.getParameter("patientId");
-		if (componentParam != null || patientParam != null) {
+		String patientParam = context.getParameter("patientIdentifier");
+		String patientIdParam = context.getParameter("patientId");
+		if (componentParam != null || patientParam != null || patientIdParam != null) {
 
 			Integer componentFormId = componentParam == null ? null : Integer.parseInt(componentParam);
-			Integer patientId = patientParam == null ? null : Integer.parseInt(patientParam);
-
-			moduleForm = hydraService.getHydraFormService().getAllFormEncounters(componentFormId, patientId);
+			Integer patientId = patientIdParam == null ? null : Integer.parseInt(patientIdParam);
+			String patientIdentifier = patientParam;
+			if (patientId != null)
+				moduleForm = hydraService.getHydraFormService().getAllFormEncounters(componentFormId, patientId);
+			else
+				moduleForm = hydraService.getHydraFormService().getAllFormEncounters(componentFormId, patientIdentifier);
 		} else {
 			moduleForm = hydraService.getHydraFormService().getAllFormEncounters();
 		}

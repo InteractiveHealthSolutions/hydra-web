@@ -118,6 +118,12 @@ public class HydraFormService extends BaseOpenmrsService implements IHydraFormSe
 	}
 
 	@Override
+	public List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, String patientId) {
+
+		return hydraFormDao.getAllFormEncounters(componentFormId, patientId);
+	}
+
+	@Override
 	public List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, Integer patientId) {
 
 		return hydraFormDao.getAllFormEncounters(componentFormId, patientId);

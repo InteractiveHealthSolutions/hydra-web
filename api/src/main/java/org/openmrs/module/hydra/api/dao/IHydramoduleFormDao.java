@@ -59,6 +59,8 @@ public interface IHydramoduleFormDao {
 
 	List<HydramoduleFormEncounter> getAllFormEncounters();
 
+	List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, String patientId);
+
 	List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, Integer patientId);
 
 }

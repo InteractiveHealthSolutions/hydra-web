@@ -187,7 +187,6 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 	public void deleteFormFields(List<HydramoduleFormField> formFields) {
 		Session session = sessionFactory.getCurrentSession();
 		for (HydramoduleFormField ff : formFields) {
-			System.out.println("Deleted!!!");
 			fieldDao.deleteFieldRules(ff.getRules());
 			session.delete(ff);
 		}
@@ -236,7 +235,6 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 		criteria.add(Restrictions.eq("form", form));
 		criteria.add(Restrictions.eq("field", field));
 
-		System.out.println("Dataatatatatatatatatatat " + formUUID + " " + fieldUUID);
 		return (HydramoduleFormField) criteria.uniqueResult();
 	}
 
@@ -298,6 +296,21 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 		else
 			query = "from HydramoduleFormEncounter f " + "where f.componentForm.componentFormId=" + componentFormId
 			        + " and f.encounter.patient.patientId=" + patientId;
+
+		return session.createQuery(query).list();
+	}
+
+	@Override
+	public List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, String patientId) {
+		Session session = sessionFactory.getCurrentSession();
+		String query;
+
+		if (componentFormId == null)
+			query = "select f from HydramoduleFormEncounter f " + "inner join f.encounter.patient.identifiers i "
+			        + "where i.identifier='" + patientId + "'";
+		else
+			query = "select f from HydramoduleFormEncounter f " + "inner join f.encounter.patient.identifiers i "
+			        + "where f.componentForm.componentFormId=" + componentFormId + " and i.identifier='" + patientId + "'";
 
 		return session.createQuery(query).list();
 	}
