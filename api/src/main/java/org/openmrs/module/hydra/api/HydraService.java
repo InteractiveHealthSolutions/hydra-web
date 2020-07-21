@@ -54,4 +54,8 @@ public interface HydraService extends OpenmrsService {
 
 	void setHydraComponentService(IHydraComponentService hydraComponentService);
 
+	void setHydraLocationTypeService(IHydraLocationTypeService hydraLocationTypeService);
+
+	IHydraLocationTypeService getHydraLocationTypeService();
+
 }
