@@ -36,8 +36,18 @@ public interface IHydraFormService extends OpenmrsService {
 
 	HydramoduleFormField getFormFieldByUUID(String uuid) throws APIException;
 
-	void saveFormEncounter(HydramoduleFormEncounter formEncounter);
+	HydramoduleFormEncounter saveFormEncounter(HydramoduleFormEncounter formEncounter);
 
 	List<HydramoduleFormField> getFormFieldsByForm(String uuid) throws APIException;
+
+	HydramoduleFormEncounter getFormEncounterByUUID(String uuid) throws APIException;
+
+	List<HydramoduleFormEncounter> getAllFormEncounters() throws APIException;
+
+	List<HydramoduleFormEncounter> searchFormEncounters(String searchString) throws APIException;
+
+	List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, String patientId);
+
+	List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, Integer patientId);
 
 }

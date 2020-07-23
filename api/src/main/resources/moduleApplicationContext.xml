@@ -74,6 +74,12 @@
 		<property name="workflowDao" ref="workflowDao" />
 
 	</bean>
+		<bean id="hydraLocationTypeService"
+		class="org.openmrs.module.hydra.api.impl.HydraLocationTypeService">
+		<property name="locationTypeDao" ref="locationTypeDao" />
+
+	</bean>
+	
 	<!-- <bean id="hydraServiceImpl" class="org.openmrs.module.hydra.api.impl.HydraServiceImpl"> 
 		<property name="hydraAssetService" ref="hydraAssetService" /> <property name="hydraComponentService" 
 		ref="hydraComponentService" /> <property name="hydraEventService" ref="hydraEventService" 
@@ -115,6 +121,10 @@
 	<bean id="workflowDao"
 		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleWorkflowDao">
 	</bean>
+	<bean id="locationTypeDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleLocationTypeDao">
+	</bean>
+	
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
@@ -144,6 +154,8 @@
 								ref="hydraPhaseService" />
 							<property name="hydraWorkflowService"
 								ref="hydraWorkflowService" />
+							<property name="hydraLocationTypeService" 
+							    ref="hydraLocationTypeService"/>
 						</bean>
 					</property>
 					<property name="preInterceptors">

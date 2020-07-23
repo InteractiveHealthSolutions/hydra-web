@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.APIException;
@@ -186,7 +187,6 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 	public void deleteFormFields(List<HydramoduleFormField> formFields) {
 		Session session = sessionFactory.getCurrentSession();
 		for (HydramoduleFormField ff : formFields) {
-			System.out.println("Deleted!!!");
 			fieldDao.deleteFieldRules(ff.getRules());
 			session.delete(ff);
 		}
@@ -225,12 +225,6 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 	}
 
 	// componentForm
-	@Override
-	public HydramoduleFormEncounter saveFormEncounter(HydramoduleFormEncounter formEncounter) {
-		getSession().saveOrUpdate(formEncounter);
-		getSession().flush();
-		return formEncounter;
-	}
 
 	@Override
 	public HydramoduleFormField getHydramoduleFormField(String formUUID, String fieldUUID) {
@@ -241,7 +235,6 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 		criteria.add(Restrictions.eq("form", form));
 		criteria.add(Restrictions.eq("field", field));
 
-		System.out.println("Dataatatatatatatatatatat " + formUUID + " " + fieldUUID);
 		return (HydramoduleFormField) criteria.uniqueResult();
 	}
 
@@ -266,6 +259,60 @@ public class HydramoduleFormDao implements IHydramoduleFormDao {
 		Criteria criteria = session.createCriteria(HydramoduleFormFieldGroup.class);
 		criteria.addOrder(Order.asc("groupId"));
 		return criteria.list();
+	}
+
+	// formEncounter
+
+	@Override
+	public HydramoduleFormEncounter saveFormEncounter(HydramoduleFormEncounter formEncounter) {
+		getSession().saveOrUpdate(formEncounter);
+		getSession().flush();
+		return formEncounter;
+	}
+
+	@Override
+	public HydramoduleFormEncounter getFormEncounter(String uuid) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFormEncounter.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (HydramoduleFormEncounter) criteria.uniqueResult();
+	}
+
+	@Override
+	public List<HydramoduleFormEncounter> getAllFormEncounters() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HydramoduleFormEncounter.class);
+		criteria.addOrder(Order.asc("formEncounterId"));
+		return criteria.list();
+	}
+
+	@Override
+	public List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, Integer patientId) {
+		Session session = sessionFactory.getCurrentSession();
+		String query;
+
+		if (componentFormId == null)
+			query = "from HydramoduleFormEncounter f where f.encounter.patient.patientId=" + patientId;
+		else
+			query = "from HydramoduleFormEncounter f " + "where f.componentForm.componentFormId=" + componentFormId
+			        + " and f.encounter.patient.patientId=" + patientId;
+
+		return session.createQuery(query).list();
+	}
+
+	@Override
+	public List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, String patientId) {
+		Session session = sessionFactory.getCurrentSession();
+		String query;
+
+		if (componentFormId == null)
+			query = "select f from HydramoduleFormEncounter f " + "inner join f.encounter.patient.identifiers i "
+			        + "where i.identifier='" + patientId + "'";
+		else
+			query = "select f from HydramoduleFormEncounter f " + "inner join f.encounter.patient.identifiers i "
+			        + "where f.componentForm.componentFormId=" + componentFormId + " and i.identifier='" + patientId + "'";
+
+		return session.createQuery(query).list();
 	}
 
 }

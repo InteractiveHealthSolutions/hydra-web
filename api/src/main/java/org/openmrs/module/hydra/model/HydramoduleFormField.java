@@ -140,7 +140,7 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 	@ManyToOne
 	@JoinColumn(name = "auto_complete_from_component_form_id")
 	private HydramoduleComponentForm autoCompleteFromComponentForm;
-	
+
 	@Column(name = "auto_complete_from_earliest")
 	private Boolean autoCompleteFromEarliest;
 
@@ -413,11 +413,11 @@ public class HydramoduleFormField extends BaseOpenmrsMetadata implements Seriali
 	public void setAutoCompleteFromEarliest(Boolean autoCompleteFromEarliest) {
 		this.autoCompleteFromEarliest = autoCompleteFromEarliest;
 	}
-	
+
 	public Boolean getAutoCompleteFromEarliest() {
 		return autoCompleteFromEarliest;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "HydramoduleFormField [formFieldId=" + formFieldId + ", displayOrder=" + displayOrder + ", field=" + field

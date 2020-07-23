@@ -1,5 +1,6 @@
 package org.openmrs.module.hydra.api.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -90,15 +91,42 @@ public class HydraFormService extends BaseOpenmrsService implements IHydraFormSe
 	}
 
 	@Override
-	public void saveFormEncounter(HydramoduleFormEncounter formEncounter) {
-		hydraFormDao.saveFormEncounter(formEncounter);
-	}
-
-	@Override
 	public List<HydramoduleFormField> getFormFieldsByForm(String uuid) throws APIException {
 		HydramoduleForm form = hydraFormDao.getModuleForm(uuid);
 		List<HydramoduleFormField> fields = hydraFormDao.getFormFields(form);
 		return fields;
+	}
+
+	@Override
+	public HydramoduleFormEncounter getFormEncounterByUUID(String uuid) throws APIException {
+		return hydraFormDao.getFormEncounter(uuid);
+	}
+
+	@Override
+	public List<HydramoduleFormEncounter> getAllFormEncounters() throws APIException {
+		return hydraFormDao.getAllFormEncounters();
+	}
+
+	@Override
+	public List<HydramoduleFormEncounter> searchFormEncounters(String searchString) throws APIException {
+		return new ArrayList<HydramoduleFormEncounter>();
+	}
+
+	@Override
+	public HydramoduleFormEncounter saveFormEncounter(HydramoduleFormEncounter formEncounter) {
+		return hydraFormDao.saveFormEncounter(formEncounter);
+	}
+
+	@Override
+	public List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, String patientId) {
+
+		return hydraFormDao.getAllFormEncounters(componentFormId, patientId);
+	}
+
+	@Override
+	public List<HydramoduleFormEncounter> getAllFormEncounters(Integer componentFormId, Integer patientId) {
+
+		return hydraFormDao.getAllFormEncounters(componentFormId, patientId);
 	}
 
 }
