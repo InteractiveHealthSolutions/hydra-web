@@ -105,6 +105,7 @@ public class LocationTypeController extends MetadataDelegatingCrudResource<Hydra
 		description.addProperty("uuid");
 		description.addProperty("name");
 		description.addProperty("retired");
+		description.addProperty("locationTypeId");
 
 		description.addProperty("locationTypeLevel");
 
