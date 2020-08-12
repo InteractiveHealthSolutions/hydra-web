@@ -16,6 +16,7 @@ import org.openmrs.module.hydra.api.IHydraComponentService;
 import org.openmrs.module.hydra.api.IHydraEventService;
 import org.openmrs.module.hydra.api.IHydraFieldService;
 import org.openmrs.module.hydra.api.IHydraFormService;
+import org.openmrs.module.hydra.api.IHydraLocationTypeService;
 import org.openmrs.module.hydra.api.IHydraParticipantService;
 import org.openmrs.module.hydra.api.IHydraPhaseService;
 import org.openmrs.module.hydra.api.IHydraServiceService;
@@ -50,6 +51,9 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 
 	@Autowired
 	private IHydraServiceService hydraServiceService;
+
+	@Autowired
+	private IHydraLocationTypeService locationTypeService;
 
 	@Override
 	public void setHydraAssetService(IHydraAssetService hydraAssetService) {
@@ -139,6 +143,16 @@ public class HydraServiceImpl extends BaseOpenmrsService implements HydraService
 	@Override
 	public IHydraWorkflowService getHydraWorkflowService() {
 		return hydraWorkflowService;
+	}
+
+	@Override
+	public void setHydraLocationTypeService(IHydraLocationTypeService hydraLocationTypeService) {
+		this.locationTypeService = hydraLocationTypeService;
+	}
+
+	@Override
+	public IHydraLocationTypeService getHydraLocationTypeService() {
+		return locationTypeService;
 	}
 
 }

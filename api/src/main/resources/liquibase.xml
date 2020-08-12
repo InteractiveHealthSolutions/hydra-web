@@ -3004,4 +3004,54 @@ BEGIN
 			</column>
 		</addColumn>	
 	</changeSet>
+	<changeSet author="hareem.ajaz" id="hydra-202007201131">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="hydramodule_location_type" />
+			</not>
+		</preConditions>
+		<comment>
+			Creating the hydramodule_location_type table
+		</comment>
+		<createTable tableName="hydramodule_location_type">
+			<column name="location_type_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="location_type_level" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="name" type="varchar(50)">
+				<constraints nullable="false" />
+			</column>
+		
+			<column name="description" type="varchar(255)" defaultValue="null" />
+			<column name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)">
+				<constraints unique="true" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="hydramodule_location_type_creator_fk"
+			baseTableName="hydramodule_location_type" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_location_type_changed_by_fk"
+			baseTableName="hydramodule_location_type" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+		<addForeignKeyConstraint constraintName="hydramodule_location_type_voided_by_fk"
+			baseTableName="hydramodule_location_type" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	
 </databaseChangeLog>
