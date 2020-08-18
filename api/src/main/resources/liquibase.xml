@@ -2320,9 +2320,9 @@
 		
 			DECLARE n,i,attr_i,attr_n INT DEFAULT 0;
 		    DECLARE pid INT;
-			DECLARE attr_type, attr_value, format, colName varchar(50);
+			DECLARE attr_type, attr_value, format, colName varchar(255);
 		    DECLARE location_value, concept_value TEXT;
-            DECLARE tab_name, roles varchar(50);
+            DECLARE tab_name, roles varchar(255);
 		
 			SET tab_name = CONCAT('normprovider', '_' , prefix);
              

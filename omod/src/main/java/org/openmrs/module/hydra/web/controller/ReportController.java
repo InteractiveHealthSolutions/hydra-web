@@ -35,6 +35,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -121,6 +122,8 @@ public class ReportController {
 		if (workflow == null)
 			workflow = "";
 
+		aliasList = new ArrayList<String>();
+		duplicateAliasCount = 0;
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
 		String format1 = detectDateFormat(to);
@@ -141,19 +144,27 @@ public class ReportController {
 		String query = generateQuery(encounterId, workflowId, form, from, to);
 
 		SQLQuery sql = sessionFactory.getCurrentSession().createSQLQuery(query);
+		System.out.println("QUERY2: " + query);
 		sql.setResultTransformer(AliasToEntityOrderedMapResultTransformer.INSTANCE);
-		List<Map<String, Object>> aliasToValueMapList = sql.list();
+		List<Map<String, Object>> aliasToValueMapList = new ArrayList<Map<String, Object>>();
+		try {
+			aliasToValueMapList = sql.list();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("CSV rows size: " + aliasToValueMapList.size());
 
 		String zipFile = System.getProperty("java.io.tmpdir") + File.separator + form + "_forms_" + prefix + ".zip";
 		FileOutputStream fos = new FileOutputStream(zipFile);
 		ZipOutputStream zos = new ZipOutputStream(fos);
 		byte[] buffer = new byte[1024];
-
 		if (!aliasToValueMapList.isEmpty()) {
 
 			String outputFile = System.getProperty("java.io.tmpdir") + File.separator + form + "_" + prefix + ".csv";
 			createCSVFileFromMapList(aliasToValueMapList, outputFile);
-
+			System.out.println("CSV: " + outputFile);
 			File srcFile = new File(outputFile);
 
 			FileInputStream fis = new FileInputStream(srcFile);
@@ -178,7 +189,6 @@ public class ReportController {
 		}
 
 		zos.close();
-
 		byte[] bytes = Files.readAllBytes(Paths.get(zipFile));
 
 		HttpHeaders header = new HttpHeaders();
@@ -197,7 +207,7 @@ public class ReportController {
 		String query = "SELECT EN.encounter_id as ENCOUNTER_ID, " + "ID.IDENTIFIER AS PATIENT_ID, "
 		        + "UPPER(CONCAT(NM.GIVEN_NAME, ' ', NM.FAMILY_NAME)) AS PATIENT_NAME,PR.GENDER, "
 		        + "YEAR(PR.date_created) - YEAR(PR.BIRTHDATE) AS AGE,PA.address2 AS ADDRESS,PA.state_province AS PROVINCE,PA.city_village AS CITY,PA.address3 As LAND_MARK "
-		        + ",DATE(EN.encounter_datetime) as ENCOUNTER_DATE, " + "US.USERNAME as USERNAME, LO.NAME as LOCATION";
+		        + ",EN.encounter_datetime as ENCOUNTER_DATE, " + "US.USERNAME as USERNAME, LO.NAME as LOCATION";
 
 		HydramoduleForm hydraForm = service.getHydraModuleFormByName(form);
 		List<HydramoduleFormField> formFields = hydraForm.getFormFields();
@@ -241,9 +251,25 @@ public class ReportController {
 		return query;
 	}
 
-	private String getAliasFor(HydramoduleFormField f) {
+	private List<String> aliasList;
 
-		return f.getName().replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9]", "").toUpperCase();
+	private int duplicateAliasCount = 0;
+
+	private String getAliasFor(HydramoduleFormField f) {
+		String alias = f.getName().replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9]", "").toUpperCase();
+		alias = processAlias(alias);
+		return alias;
+	}
+
+	private String processAlias(String alias) {
+		if (!aliasList.contains(alias)) {
+			aliasList.add(alias);
+		} else {
+			alias = alias + "_" + (duplicateAliasCount + 1);
+			processAlias(alias);
+		}
+
+		return alias;
 	}
 
 	public String getObsValue(int conceptId, String obsValueType, String alias) {
