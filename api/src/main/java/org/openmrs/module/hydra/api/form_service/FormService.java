@@ -346,26 +346,29 @@ public class FormService {
 						String valueStr = dataItem.get(ParamNames.VALUE).toString();
 
 						Concept questionConcept = conceptService.getConceptByUuid(questionConceptStr);
+						Concept parentValueConcept = conceptService.getConceptByUuid("51afc3ac-e7a1-11ea-adc1-0242ac120002");
+
 						JSONArray valuesArray = (JSONArray) parser.parse(valueStr);
+						if (valuesArray.size() > 0) {
+							// setting member obs
+							Set<Obs> members = new HashSet<Obs>();
+							for (int k = 0; k < valuesArray.size(); k++) {
+								String value = (String) valuesArray.get(k);
+								Concept valueConcept = conceptService.getConceptByUuid(value);
 
-						// setting member obs
-						Set<Obs> members = new HashSet<Obs>();
-						for (int k = 0; k < valuesArray.size(); k++) {
-							String value = (String) valuesArray.get(k);
-							Concept valueConcept = conceptService.getConceptByUuid(value);
+								Obs obs = new Obs();
+								obs.setConcept(questionConcept);
+								obs.setValueCoded(valueConcept);
+								members.add(obs);
+							}
 
-							Obs obs = new Obs();
-							obs.setConcept(questionConcept);
-							obs.setValueCoded(valueConcept);
-							members.add(obs);
+							// createing and adding parent obs
+							Obs parent = new Obs();
+							parent.setConcept(questionConcept);
+							parent.setGroupMembers(members);
+							parent.setValueCoded(parentValueConcept);
+							obsList.add(parent);
 						}
-
-						// createing and adding parent obs
-						Obs parent = new Obs();
-						parent.setConcept(questionConcept);
-						parent.setGroupMembers(members);
-
-						obsList.add(parent);
 					}
 						break;
 					case LOCATION:
@@ -397,7 +400,7 @@ public class FormService {
 							dateEntered = Utils.openMrsDateFormat.parse(date);
 							Calendar calendar = Calendar.getInstance();
 							calendar.setTime(dateEntered);
-							calendar.add(Calendar.MINUTE, -5);
+							// calendar.add(Calendar.MINUTE, -5);
 							dateEntered = calendar.getTime();
 						}
 						catch (ParseException e) {

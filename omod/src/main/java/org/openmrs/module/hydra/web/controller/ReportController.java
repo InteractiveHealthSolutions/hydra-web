@@ -205,7 +205,7 @@ public class ReportController {
 
 	private String generateQuery(int encounterId, int workflowId, String form, String from, String to) {
 		String query = "SELECT EN.encounter_id as ENCOUNTER_ID, " + "ID.IDENTIFIER AS PATIENT_ID, "
-		        + "UPPER(CONCAT(NM.GIVEN_NAME, ' ', NM.FAMILY_NAME)) AS PATIENT_NAME,PR.GENDER, "
+		        + "UPPER(CONCAT(NM.GIVEN_NAME, ' ', NM.FAMILY_NAME)) AS PATIENT_NAME,PR.GENDER as `PERSON_GENDER`, "
 		        + "YEAR(PR.date_created) - YEAR(PR.BIRTHDATE) AS AGE,PA.address2 AS ADDRESS,PA.state_province AS PROVINCE,PA.city_village AS CITY,PA.address3 As LAND_MARK "
 		        + ",EN.encounter_datetime as ENCOUNTER_DATE, " + "US.USERNAME as USERNAME, LO.NAME as LOCATION";
 

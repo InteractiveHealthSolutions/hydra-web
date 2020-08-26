@@ -2628,6 +2628,21 @@
 	    </sql>    
 	</changeSet>
 	
+	<changeSet author="naveed.iqbal" id="hydra-metadata-202008261837">  
+	    <comment>insert queries for concept related to phone number default question widget</comment>
+	    <sql
+			splitStatements="true"
+			stripComments="true">         
+		       	INSERT IGNORE INTO `concept` (`concept_id`,`retired`,`short_name`,`description`,`form_text`,`datatype_id`,`class_id`,`is_set`,`creator`,`date_created`,`version`,`changed_by`,`date_changed`,`retired_by`,`date_retired`,`retire_reason`,`uuid`) VALUES (168075,0,NULL,NULL,NULL,3,7,0,1,'2020-08-26 06:38:53',NULL,NULL,NULL,NULL,NULL,NULL,'51afc3ac-e7a1-11ea-adc1-0242ac120002');
+				
+				INSERT IGNORE INTO `concept_description` (`concept_id`,`description`,`locale`,`creator`,`date_created`,`changed_by`,`date_changed`,`uuid`) VALUES (168075,'Concept used by Hydra as value for the parent obs of multiselect questions','en',1,'2020-08-26 06:38:53',NULL,NULL,'b7c5b390-e7a1-11ea-adc1-0242ac120002');
+				
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168075,'Hydra - Multiple Responses','en',1,'2020-08-26 06:38:53',0,NULL,NULL,NULL,'c563dc7a-e7a1-11ea-adc1-0242ac120002','FULLY_SPECIFIED',1,NULL,NULL);
+				INSERT IGNORE INTO `concept_name` (`concept_id`,`name`,`locale`,`creator`,`date_created`,`voided`,`voided_by`,`date_voided`,`void_reason`,`uuid`,`concept_name_type`,`locale_preferred`,`date_changed`,`changed_by`) VALUES (168075,'hydra_multiple_responses','en',1,'2020-08-26 06:38:53',0,NULL,NULL,NULL,'caaee094-e7a1-11ea-adc1-0242ac120002','SHORT',0,NULL,NULL);
+				
+	    </sql>    
+	</changeSet>
+	
 	<changeSet author="naveed.iqbal" id="hydra-metadata-202003211041">  
 	    <comment>insert queries for hydramodule_field_type metadata</comment>
 	    <sql
