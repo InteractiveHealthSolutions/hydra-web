@@ -366,7 +366,7 @@ public class FormService {
 							Obs parent = new Obs();
 							parent.setConcept(questionConcept);
 							parent.setGroupMembers(members);
-							parent.setValueCoded(parentValueConcept);
+							// parent.setValueCoded(parentValueConcept);
 							obsList.add(parent);
 						}
 					}
