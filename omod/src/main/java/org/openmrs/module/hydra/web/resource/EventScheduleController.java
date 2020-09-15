@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleEventSchedule;
+import org.openmrs.module.hydra.model.HydramoduleEventSchedule;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -29,8 +29,7 @@ public class EventScheduleController extends DataDelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleEventSchedule newDelegate() {
@@ -39,19 +38,19 @@ public class EventScheduleController extends DataDelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleEventSchedule save(HydramoduleEventSchedule component) {
-		return service.saveEventSchedule(component);
+		return hydraService.getHydraEventService().saveEventSchedule(component);
 	}
 
 	@Override
 	public HydramoduleEventSchedule getByUniqueId(String uuid) {
-		return service.getEventSchedule(uuid);
+		return hydraService.getHydraEventService().getEventSchedule(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleEventSchedule> services = service.getAllEventSchedules(true);
-		services.addAll(service.getAllEventSchedules(false));
+		List<HydramoduleEventSchedule> services = hydraService.getHydraEventService().getAllEventSchedules(true);
+		services.addAll(hydraService.getHydraEventService().getAllEventSchedules(false));
 		simpleObject.put("eventSchedules", ConversionUtil.convertToRepresentation(services, context.getRepresentation()));
 		return simpleObject;
 	}

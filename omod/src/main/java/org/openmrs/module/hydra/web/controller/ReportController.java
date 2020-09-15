@@ -73,6 +73,8 @@ public class ReportController {
 
 	private static Log log = LogFactory.getLog(ReportController.class);
 
+	private HydraService hydraService;
+
 	public static final String STANDARD_DATE = "dd/MM/yyyy";
 
 	public static final String STANDARD_DATE_HYPHENATED = "dd-MM-yyyy";
@@ -114,10 +116,10 @@ public class ReportController {
 	@RequestMapping(value = "/dump/encounters", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getEncounterDumps(HttpServletRequest request,
-	        @RequestParam(value = "workflow", required = false) String workflow,
-	        @RequestParam(value = "form", required = false) String form,
-	        @RequestParam(value = "from", required = true) String from,
-	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
+			@RequestParam(value = "workflow", required = false) String workflow,
+			@RequestParam(value = "form", required = false) String form,
+			@RequestParam(value = "from", required = true) String from,
+			@RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
 		if (workflow == null)
 			workflow = "";
@@ -149,8 +151,7 @@ public class ReportController {
 		List<Map<String, Object>> aliasToValueMapList = new ArrayList<Map<String, Object>>();
 		try {
 			aliasToValueMapList = sql.list();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -205,9 +206,9 @@ public class ReportController {
 
 	private String generateQuery(int encounterId, int workflowId, String form, String from, String to) {
 		String query = "SELECT EN.encounter_id as ENCOUNTER_ID, " + "ID.IDENTIFIER AS PATIENT_ID, "
-		        + "UPPER(CONCAT(NM.GIVEN_NAME, ' ', NM.FAMILY_NAME)) AS PATIENT_NAME,PR.GENDER as `PERSON_GENDER`, "
-		        + "YEAR(PR.date_created) - YEAR(PR.BIRTHDATE) AS AGE,PA.address2 AS ADDRESS,PA.state_province AS PROVINCE,PA.city_village AS CITY,PA.address3 As LAND_MARK "
-		        + ",EN.encounter_datetime as ENCOUNTER_DATE, " + "US.USERNAME as USERNAME, LO.NAME as LOCATION";
+				+ "UPPER(CONCAT(NM.GIVEN_NAME, ' ', NM.FAMILY_NAME)) AS PATIENT_NAME,PR.GENDER as `PERSON_GENDER`, "
+				+ "YEAR(PR.date_created) - YEAR(PR.BIRTHDATE) AS AGE,PA.address2 AS ADDRESS,PA.state_province AS PROVINCE,PA.city_village AS CITY,PA.address3 As LAND_MARK "
+				+ ",EN.encounter_datetime as ENCOUNTER_DATE, " + "US.USERNAME as USERNAME, LO.NAME as LOCATION";
 
 		HydramoduleForm hydraForm = service.getHydraModuleFormByName(form);
 		List<HydramoduleFormField> formFields = hydraForm.getFormFields();
@@ -227,26 +228,28 @@ public class ReportController {
 		for (HydramoduleFormField f : formFields) {
 			HydramoduleField field = f.getField();
 			if (field.getConcept() != null) {
-				String obsValue = getObsValue(field.getConcept().getConceptId(), field.getAttributeName(), getAliasFor(f));
+				String obsValue = getObsValue(field.getConcept().getConceptId(), field.getAttributeName(),
+						getAliasFor(f));
 				if (!obsValue.isEmpty())
 					query += ("," + obsValue);
 			}
 		}
 
 		query += " FROM" + " `hydra`.`patient` AS PT"
-		        + " LEFT JOIN `hydra`.`patient_identifier` AS ID ON ID.PATIENT_ID = PT.PATIENT_ID AND ID.IDENTIFIER_TYPE = 3 and ID.voided=0"
-		        + " LEFT JOIN `hydra`.`person_name` AS NM ON NM.PERSON_ID = PT.PATIENT_ID and NM.voided=0"
-		        + " LEFT JOIN `hydra`.`person` AS PR ON PR.PERSON_ID = PT.PATIENT_ID and PR.voided=0"
-		        + " LEFT JOIN `hydra`.`person_address` AS PA ON PA.PERSON_ID = PT.PATIENT_ID and PA.voided=0 and PA.person_address_id=(select max(person_address_id) from person_address where person_id=PT.patient_id)"
-		        + " LEFT JOIN `hydra`.`encounter` AS EN ON EN.PATIENT_ID = PT.PATIENT_ID LEFT JOIN `hydra`.`users` AS US ON US.USER_ID = EN.CREATOR "
-		        + " LEFT JOIN `hydra`.`location` AS LO ON LO.LOCATION_ID = EN.LOCATION_ID"
-		        + " LEFT JOIN `hydra`.`hydramodule_form_encounter` AS FE ON FE.encounter_id = EN.encounter_id"
-		        + " LEFT JOIN `hydra`.`hydramodule_component_form` AS CF ON CF.component_form_id = FE.component_form_id"
-		        + " LEFT JOIN `hydra`.`hydramodule_workflow` AS WF ON WF.workflow_id = CF.workflow_id"
-		        + " LEFT OUTER JOIN `hydra`.obs as o_sc on o_sc.encounter_id = EN.encounter_id and o_sc.voided=0";
+				+ " LEFT JOIN `hydra`.`patient_identifier` AS ID ON ID.PATIENT_ID = PT.PATIENT_ID AND ID.IDENTIFIER_TYPE = 3 and ID.voided=0"
+				+ " LEFT JOIN `hydra`.`person_name` AS NM ON NM.PERSON_ID = PT.PATIENT_ID and NM.voided=0"
+				+ " LEFT JOIN `hydra`.`person` AS PR ON PR.PERSON_ID = PT.PATIENT_ID and PR.voided=0"
+				+ " LEFT JOIN `hydra`.`person_address` AS PA ON PA.PERSON_ID = PT.PATIENT_ID and PA.voided=0 and PA.person_address_id=(select max(person_address_id) from person_address where person_id=PT.patient_id)"
+				+ " LEFT JOIN `hydra`.`encounter` AS EN ON EN.PATIENT_ID = PT.PATIENT_ID LEFT JOIN `hydra`.`users` AS US ON US.USER_ID = EN.CREATOR "
+				+ " LEFT JOIN `hydra`.`location` AS LO ON LO.LOCATION_ID = EN.LOCATION_ID"
+				+ " LEFT JOIN `hydra`.`hydramodule_form_encounter` AS FE ON FE.encounter_id = EN.encounter_id"
+				+ " LEFT JOIN `hydra`.`hydramodule_component_form` AS CF ON CF.component_form_id = FE.component_form_id"
+				+ " LEFT JOIN `hydra`.`hydramodule_workflow` AS WF ON WF.workflow_id = CF.workflow_id"
+				+ " LEFT OUTER JOIN `hydra`.obs as o_sc on o_sc.encounter_id = EN.encounter_id and o_sc.voided=0";
 
-		query += " where" + " EN.encounter_datetime between '" + from + "' and '" + to + "' and" + " EN.encounter_type = "
-		        + encounterId + "  and PT.voided=0 and WF.workflow_id=" + workflowId + " group by EN.encounter_id;";
+		query += " where" + " EN.encounter_datetime between '" + from + "' and '" + to + "' and"
+				+ " EN.encounter_type = " + encounterId + "  and PT.voided=0 and WF.workflow_id=" + workflowId
+				+ " group by EN.encounter_id;";
 
 		return query;
 	}
@@ -275,13 +278,14 @@ public class ReportController {
 	public String getObsValue(int conceptId, String obsValueType, String alias) {
 		String toReturn = "";
 		String obsCoded = " group_concat(if(o_sc.concept_id = " + conceptId
-		        + ", (Select name from `hydra`.`concept_name` where concept_id=(concat(o_sc.value_coded))and LOCALE_PREFERRED = 1 and voided=0 and locale='en'), NULL)) AS "
-		        + alias;
-		String obsText = " group_concat(if(o_sc.concept_id = " + conceptId + ", concat(o_sc.value_text), NULL)) AS " + alias;
-		String obsDateTime = " group_concat(if(o_sc.concept_id = " + conceptId + ", concat(o_sc.value_datetime), NULL)) AS "
-		        + alias;
-		String obsNumeric = " group_concat(if(o_sc.concept_id = " + conceptId + ", concat(o_sc.value_numeric), NULL)) AS "
-		        + alias;
+				+ ", (Select name from `hydra`.`concept_name` where concept_id=(concat(o_sc.value_coded))and LOCALE_PREFERRED = 1 and voided=0 and locale='en'), NULL)) AS "
+				+ alias;
+		String obsText = " group_concat(if(o_sc.concept_id = " + conceptId + ", concat(o_sc.value_text), NULL)) AS "
+				+ alias;
+		String obsDateTime = " group_concat(if(o_sc.concept_id = " + conceptId
+				+ ", concat(o_sc.value_datetime), NULL)) AS " + alias;
+		String obsNumeric = " group_concat(if(o_sc.concept_id = " + conceptId
+				+ ", concat(o_sc.value_numeric), NULL)) AS " + alias;
 
 		if ("Coded".equals(obsValueType)) {
 			toReturn = obsCoded;
@@ -299,9 +303,9 @@ public class ReportController {
 	@RequestMapping(value = "/dump/patients", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getPatientDumps(HttpServletRequest request,
-	        @RequestParam(value = "workflow", required = false) String workflow,
-	        @RequestParam(value = "from", required = true) String from,
-	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
+			@RequestParam(value = "workflow", required = false) String workflow,
+			@RequestParam(value = "from", required = true) String from,
+			@RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
 		if (workflow == null)
 			workflow = "";
@@ -319,7 +323,7 @@ public class ReportController {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
 		String prefix = Context.getUserContext().getAuthenticatedUser().getUsername().replace(".", "") + "_"
-		        + sdf.format(cal.getTime());
+				+ sdf.format(cal.getTime());
 
 		ProcedureCall call = sessionFactory.getCurrentSession().createStoredProcedureCall("norm_patient");
 
@@ -345,7 +349,8 @@ public class ReportController {
 		File file = new File(outputFile);
 		file.delete();
 
-		SQLQuery dropSql = sessionFactory.getCurrentSession().createSQLQuery("drop table if exists normpatient_" + prefix);
+		SQLQuery dropSql = sessionFactory.getCurrentSession()
+				.createSQLQuery("drop table if exists normpatient_" + prefix);
 		dropSql.executeUpdate();
 
 		return new HttpEntity<byte[]>(bytes, header);
@@ -355,8 +360,8 @@ public class ReportController {
 	@RequestMapping(value = "/dump/providers", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getProviderDumps(HttpServletRequest request,
-	        @RequestParam(value = "from", required = true) String from,
-	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
+			@RequestParam(value = "from", required = true) String from,
+			@RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
@@ -371,7 +376,7 @@ public class ReportController {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
 		String prefix = Context.getUserContext().getAuthenticatedUser().getUsername().replace(".", "") + "_"
-		        + sdf.format(cal.getTime());
+				+ sdf.format(cal.getTime());
 
 		ProcedureCall call = sessionFactory.getCurrentSession().createStoredProcedureCall("norm_provider");
 
@@ -396,7 +401,8 @@ public class ReportController {
 		File file = new File(outputFile);
 		file.delete();
 
-		SQLQuery dropSql = sessionFactory.getCurrentSession().createSQLQuery("drop table if exists normprovider_" + prefix);
+		SQLQuery dropSql = sessionFactory.getCurrentSession()
+				.createSQLQuery("drop table if exists normprovider_" + prefix);
 		dropSql.executeUpdate();
 
 		return new HttpEntity<byte[]>(bytes, header);
@@ -406,8 +412,8 @@ public class ReportController {
 	@RequestMapping(value = "/dump/locations", method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getLocationDumps(HttpServletRequest request,
-	        @RequestParam(value = "from", required = true) String from,
-	        @RequestParam(value = "to", required = true) String to) throws JRException, IOException {
+			@RequestParam(value = "from", required = true) String from,
+			@RequestParam(value = "to", required = true) String to) throws JRException, IOException {
 
 		String format = detectDateFormat(from);
 		Date sDate = fromString(from, format);
@@ -422,7 +428,7 @@ public class ReportController {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
 		String prefix = Context.getUserContext().getAuthenticatedUser().getUsername().replace(".", "") + "_"
-		        + sdf.format(cal.getTime());
+				+ sdf.format(cal.getTime());
 
 		ProcedureCall call = sessionFactory.getCurrentSession().createStoredProcedureCall("norm_location");
 
@@ -447,7 +453,8 @@ public class ReportController {
 		File file = new File(outputFile);
 		file.delete();
 
-		SQLQuery dropSql = sessionFactory.getCurrentSession().createSQLQuery("drop table if exists normlocation_" + prefix);
+		SQLQuery dropSql = sessionFactory.getCurrentSession()
+				.createSQLQuery("drop table if exists normlocation_" + prefix);
 		dropSql.executeUpdate();
 
 		return new HttpEntity<byte[]>(bytes, header);
@@ -493,8 +500,7 @@ public class ReportController {
 			}
 
 			writer.close();
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -503,11 +509,11 @@ public class ReportController {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public HttpEntity<byte[]> getReportByName(HttpServletRequest request,
-	        @RequestParam(value = "name", required = true) String name,
-	        @RequestParam(value = "ext", required = true) String ext,
-	        @RequestParam(value = "from", required = true) String from,
-	        @RequestParam(value = "to", required = true) String to,
-	        @RequestParam(required = false) Map<String, String> params) throws JRException, IOException {
+			@RequestParam(value = "name", required = true) String name,
+			@RequestParam(value = "ext", required = true) String ext,
+			@RequestParam(value = "from", required = true) String from,
+			@RequestParam(value = "to", required = true) String to,
+			@RequestParam(required = false) Map<String, String> params) throws JRException, IOException {
 
 		String filePath = generateJasperReport(name, ext, params);
 		String fileName = name + "." + ext;
@@ -523,7 +529,8 @@ public class ReportController {
 
 	}
 
-	public String generateJasperReport(String reportName, String extension, Map<String, String> params) throws JRException {
+	public String generateJasperReport(String reportName, String extension, Map<String, String> params)
+			throws JRException {
 
 		InputStream reportStream = getClass().getResourceAsStream("/rpt/" + reportName + ".jrxml");
 		JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
@@ -535,8 +542,7 @@ public class ReportController {
 		Connection conn;
 		try {
 			conn = connect(url);
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			log.error("Error connecting to DB.", e);
 			return "Error connecting to DB.";
 		}
@@ -586,7 +592,7 @@ public class ReportController {
 	 * @throws JRException
 	 */
 	private static void exportPDFFormat(JasperPrint jasperPrint, String exportPath, boolean pdfAutoPrint)
-	        throws JRException {
+			throws JRException {
 		JRPdfExporter exporter = new JRPdfExporter();
 		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
 		exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, exportPath);
@@ -618,8 +624,7 @@ public class ReportController {
 		// Step 1: Load the JDBC driver.
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			log.error("Could not find JDBC driver class.", e);
 			throw (SQLException) e.fillInStackTrace();
 		}
@@ -627,7 +632,8 @@ public class ReportController {
 		// Step 2: Establish the connection to the database.
 		String username = Context.getRuntimeProperties().getProperty("connection.username");
 		String password = Context.getRuntimeProperties().getProperty("connection.password");
-		log.debug("connecting to DATABASE: " + OpenmrsConstants.DATABASE_NAME + " USERNAME: " + username + " URL: " + url);
+		log.debug("connecting to DATABASE: " + OpenmrsConstants.DATABASE_NAME + " USERNAME: " + username + " URL: "
+				+ url);
 		return DriverManager.getConnection(url, username, password);
 	}
 
@@ -654,13 +660,11 @@ public class ReportController {
 		Date date;
 		try {
 			date = simpleDateFormat.parse(string);
-		}
-		catch (ParseException e) {
+		} catch (ParseException e) {
 			try {
 				simpleDateFormat = new SimpleDateFormat(detectDateFormat(string));
 				date = simpleDateFormat.parse(string);
-			}
-			catch (ParseException e2) {
+			} catch (ParseException e2) {
 				log.error(e2.getMessage());
 				return null;
 			}

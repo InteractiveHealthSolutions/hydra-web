@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleServiceType;
+import org.openmrs.module.hydra.model.HydramoduleServiceType;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -29,8 +29,7 @@ public class ServiceTypeController extends MetadataDelegatingCrudResource<Hydram
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleServiceType newDelegate() {
@@ -39,18 +38,18 @@ public class ServiceTypeController extends MetadataDelegatingCrudResource<Hydram
 
 	@Override
 	public HydramoduleServiceType save(HydramoduleServiceType component) {
-		return service.saveServiceType(component);
+		return hydraService.getHydraServiceService().saveServiceType(component);
 	}
 
 	@Override
 	public HydramoduleServiceType getByUniqueId(String uuid) {
-		return service.getServiceType(uuid);
+		return hydraService.getHydraServiceService().getServiceType(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleServiceType> component = service.getAllServiceTypes(false);
+		List<HydramoduleServiceType> component = hydraService.getHydraServiceService().getAllServiceTypes(false);
 		simpleObject.put("serviceTypes", ConversionUtil.convertToRepresentation(component, context.getRepresentation()));
 		return simpleObject;
 	}

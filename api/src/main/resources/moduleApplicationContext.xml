@@ -3,14 +3,14 @@
 <!-- Beans to add to the current Application context definition -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jee="http://www.springframework.org/schema/jee"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
   		    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
   		    http://www.springframework.org/schema/context
   		    http://www.springframework.org/schema/context/spring-context-3.0.xsd
@@ -23,36 +23,161 @@
   		    http://www.springframework.org/schema/util
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-    <context:component-scan base-package="org.openmrs.module.hydra" />
+	<context:component-scan
+		base-package="org.openmrs.module.hydra" />
 
-    <!-- Wraps HydraService methods in DB transactions and OpenMRS interceptors,
-    which set audit info like dateCreated, changedBy, etc.-->
-    <bean id="hydra.HydraService"
-            class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager">
-            <ref bean="transactionManager" />
-        </property>
-        <property name="target">
-            <bean class="org.openmrs.module.hydra.api.impl.HydraServiceImpl">
-                <property name="dao" ref="hydra.HydraDao" />
-            </bean>
-        </property>
-        <property name="preInterceptors">
-            <ref bean="serviceInterceptors" />
-        </property>
-        <property name="transactionAttributeSource">
-            <ref bean="transactionAttributeSource" />
-        </property>
-    </bean>
 
-    <!-- Adds HydraService to OpenMRS context so it can be accessed
-    calling Context.getService(HydraService.class) -->
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list>
-                <value>org.openmrs.module.hydra.api.HydraService</value>
-                <ref bean="hydra.HydraService" />
-            </list>
-        </property>
-    </bean>
+	<bean id="hydraAssetService"
+		class="org.openmrs.module.hydra.api.impl.HydraAssetService">
+		<property name="assetDao" ref="assetDao" />
+
+	</bean>
+	<bean id="hydraComponentService"
+		class="org.openmrs.module.hydra.api.impl.HydraComponentService">
+		<property name="componentDao" ref="componentDao" />
+		<property name="fieldDao" ref="fieldDao" />
+
+	</bean>
+	<bean id="hydraEventService"
+		class="org.openmrs.module.hydra.api.impl.HydraEventService">
+		<property name="eventDao" ref="eventDao" />
+
+	</bean>
+	<bean id="hydraFieldService"
+		class="org.openmrs.module.hydra.api.impl.HydraFieldService">
+		<property name="fieldDao" ref="fieldDao" />
+
+	</bean>
+	<bean id="hydraFormService"
+		class="org.openmrs.module.hydra.api.impl.HydraFormService">
+		<property name="hydraFormDao" ref="hydraFormDao" />
+
+	</bean>
+	<bean id="hydraParticipantService"
+		class="org.openmrs.module.hydra.api.impl.HydraParticipantService">
+		<property name="participantDao" ref="participantDao" />
+
+	</bean>
+	<bean id="hydraPhaseService"
+		class="org.openmrs.module.hydra.api.impl.HydraPhaseService">
+		<property name="phaseDao" ref="phaseDao" />
+		<property name="workflowDao" ref="workflowDao" />
+
+	</bean>
+	<bean id="hydraServiceService"
+		class="org.openmrs.module.hydra.api.impl.HydraServiceService">
+		<property name="serviceDao" ref="serviceDao" />
+
+	</bean>
+	<bean id="hydraWorkflowService"
+		class="org.openmrs.module.hydra.api.impl.HydraWorkflowService">
+		<property name="workflowDao" ref="workflowDao" />
+
+	</bean>
+		<bean id="hydraLocationTypeService"
+		class="org.openmrs.module.hydra.api.impl.HydraLocationTypeService">
+		<property name="locationTypeDao" ref="locationTypeDao" />
+
+	</bean>
+	
+	<!-- <bean id="hydraServiceImpl" class="org.openmrs.module.hydra.api.impl.HydraServiceImpl"> 
+		<property name="hydraAssetService" ref="hydraAssetService" /> <property name="hydraComponentService" 
+		ref="hydraComponentService" /> <property name="hydraEventService" ref="hydraEventService" 
+		/> <property name="hydraFieldService" ref="hydraFieldService" /> <property 
+		name="hydraFormService" ref="hydraFormService" /> <property name="hydraParticipantService" 
+		ref="hydraParticipantService" /> <property name="hydraServiceService" ref="hydraServiceService" 
+		/> <property name="hydraPhaseService" ref="hydraPhaseService" /> <property 
+		name="hydraWorkflowService" ref="hydraWorkflowService" /> </bean> -->
+
+	<bean id="assetDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleAssetDao">
+	</bean>
+	<bean id="componentDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleComponentDao">
+	</bean>
+	<bean id="eventDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleEventDao">
+	</bean>
+	<bean id="fieldDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleFieldDao">
+		<property name="hydraFormDao" ref="hydraFormDao" />
+
+	</bean>
+	<bean id="hydraFormDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleFormDao">
+		<property name="fieldDao" ref="fieldDao" />
+		<property name="componentDao" ref="componentDao" />
+	</bean>
+	<bean id="participantDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleParticipantDao">
+	</bean>
+
+	<bean id="phaseDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramodulePhaseDao">
+	</bean>
+	<bean id="serviceDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleServiceDao">
+	</bean>
+	<bean id="workflowDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleWorkflowDao">
+	</bean>
+	<bean id="locationTypeDao"
+		class="org.openmrs.module.hydra.api.dao.impl.HydramoduleLocationTypeDao">
+	</bean>
+	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.hydra.api.HydraService</value>
+				<bean
+					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+					<property name="transactionManager">
+						<ref bean="transactionManager" />
+					</property>
+					<property name="target">
+						<bean
+							class="org.openmrs.module.hydra.api.impl.HydraServiceImpl">
+							<property name="hydraAssetService"
+								ref="hydraAssetService" />
+							<property name="hydraComponentService"
+								ref="hydraComponentService" />
+							<property name="hydraEventService"
+								ref="hydraEventService" />
+							<property name="hydraFieldService"
+								ref="hydraFieldService" />
+							<property name="hydraFormService" ref="hydraFormService" />
+							<property name="hydraParticipantService"
+								ref="hydraParticipantService" />
+							<property name="hydraServiceService"
+								ref="hydraServiceService" />
+							<property name="hydraPhaseService"
+								ref="hydraPhaseService" />
+							<property name="hydraWorkflowService"
+								ref="hydraWorkflowService" />
+							<property name="hydraLocationTypeService" 
+							    ref="hydraLocationTypeService"/>
+						</bean>
+					</property>
+					<property name="preInterceptors">
+						<ref bean="serviceInterceptors" />
+					</property>
+					<property name="transactionAttributeSource">
+						<bean
+							class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+					</property>
+				</bean>
+				<bean id="transactionInterceptor"
+					class="org.springframework.transaction.interceptor.TransactionInterceptor">
+					<property name="transactionManager"
+						ref="transactionManager" />
+					<property name="transactionAttributeSource">
+						<ref bean="transactionAttributeSource" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+
+
 </beans>

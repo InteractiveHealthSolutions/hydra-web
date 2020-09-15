@@ -6,7 +6,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflowPhases;
+import org.openmrs.module.hydra.model.HydramodulePhaseComponents;
+import org.openmrs.module.hydra.model.HydramoduleWorkflowPhases;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -15,8 +16,10 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ObjectNotFoundException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
@@ -30,8 +33,7 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleWorkflowPhases newDelegate() {
@@ -40,18 +42,18 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleWorkflowPhases save(HydramoduleWorkflowPhases delegate) {
-		return service.saveWorkflowPhaseRelation(delegate);
+		return hydraService.getHydraWorkflowService().saveWorkflowPhaseRelation(delegate);
 	}
 
 	@Override
 	public HydramoduleWorkflowPhases getByUniqueId(String uuid) {
-		return service.getWorkflowPhasesRelationByUUID(uuid);
+		return hydraService.getHydraWorkflowService().getWorkflowPhasesRelationByUUID(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleWorkflowPhases> p = service.getAllWorkflowPhaseRelations();
+		List<HydramoduleWorkflowPhases> p = hydraService.getHydraWorkflowService().getAllWorkflowPhaseRelations();
 		simpleObject.put("workflowPhasesMap", ConversionUtil.convertToRepresentation(p, context.getRepresentation()));
 		return simpleObject;
 	}
@@ -59,6 +61,14 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 	@Override
 	public void purge(HydramoduleWorkflowPhases delegate, RequestContext context) throws ResponseException {
 
+	}
+
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String queryParam = context.getParameter("q");
+		List<HydramoduleWorkflowPhases> hydramoduleWorkflowPhases = hydraService.getHydraWorkflowService()
+		        .getWorkflowPhaseByWorkflow(queryParam);
+		return new NeedsPaging<HydramoduleWorkflowPhases>(hydramoduleWorkflowPhases, context);
 	}
 
 	@Override
@@ -105,7 +115,7 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 	@Override
 	protected void delete(HydramoduleWorkflowPhases workflowphases, String reason, RequestContext context)
 	        throws ResponseException {
-		service.deleteWorkflowPhase(workflowphases);
+		hydraService.getHydraWorkflowService().deleteWorkflowPhase(workflowphases);
 	}
 
 	@Override
@@ -113,7 +123,7 @@ public class WorkflowPhasesMapController extends DelegatingCrudResource<Hydramod
 		HydramoduleWorkflowPhases workflowPhases = getByUniqueId(uuid);
 		if (workflowPhases == null)
 			throw new ObjectNotFoundException();
-		service.deleteWorkflowPhase(workflowPhases);
+		hydraService.getHydraWorkflowService().deleteWorkflowPhase(workflowPhases);
 	}
 
 }

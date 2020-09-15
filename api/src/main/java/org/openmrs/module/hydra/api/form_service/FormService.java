@@ -55,24 +55,22 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.PersonService;
-import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.api.dao.HydraDaoImpl;
-import org.openmrs.module.hydra.model.workflow.HydramoduleComponentForm;
-import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFormSubmissionData;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFormEncounter;
-import org.openmrs.module.hydra.model.workflow.HydramodulePatientWorkflow;
-import org.openmrs.module.hydra.model.workflow.HydramoduleWorkflow;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jmx.export.naming.ObjectNamingStrategy;
+import org.openmrs.module.hydra.model.HydramoduleComponentForm;
+import org.openmrs.module.hydra.model.HydramoduleDTOFormSubmissionData;
+import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
+import org.openmrs.module.hydra.model.HydramodulePatientWorkflow;
+import org.openmrs.module.hydra.model.HydramoduleWorkflow;
 
 import com.thoughtworks.xstream.core.util.Base64Encoder;
 
 public class FormService {
 
 	private HashMap<String, String> relationships;
+
+	HydraService hydraService = Context.getService(HydraService.class);
 
 	public FormService() {
 		relationships = new HashMap<String, String>();
@@ -101,32 +99,16 @@ public class FormService {
 	}
 
 	public static enum DATA_TYPE {
-		IDENTIFIER,
-		PERSON_ATTRIBUTE,
-		NAME,
-		GPS,
-		OBS,
-		OBS_CODED,
-		OBS_NUMERIC,
-		OBS_CODED_MULTI,
-		OBS_DATE_TIME,
-		LOCATION,
-		ENCOUNTER_TYPE,
-		AGE,
-		GENDER,
-		DOB,
-		DATE_ENTERED,
-		ADDRESS,
-		CONTACT_TRACING
+		IDENTIFIER, PERSON_ATTRIBUTE, NAME, GPS, OBS, OBS_CODED, OBS_NUMERIC, OBS_CODED_MULTI, OBS_DATE_TIME, LOCATION,
+		ENCOUNTER_TYPE, AGE, GENDER, DOB, DATE_ENTERED, ADDRESS, CONTACT_TRACING
 	}
 
-	private HydraService service;
+	// private HydraService service;
 
 	JSONParser parser;
 
-	public synchronized void createNewForm(HydraService service, HydramoduleDTOFormSubmissionData formSubmissionData)
-	        throws ContextAuthenticationException, ParseException, org.json.simple.parser.ParseException {
-		this.service = service;
+	public synchronized void createNewForm(HydramoduleDTOFormSubmissionData formSubmissionData)
+			throws ContextAuthenticationException, ParseException, org.json.simple.parser.ParseException {
 		parser = new JSONParser();
 
 		JSONArray data = (JSONArray) parser.parse(formSubmissionData.getData());
@@ -136,7 +118,7 @@ public class FormService {
 	}
 
 	public synchronized void createNewForm(JSONArray data, JSONObject metadata)
-	        throws ParseException, org.json.simple.parser.ParseException {
+			throws ParseException, org.json.simple.parser.ParseException {
 
 		// Getting user info
 		String username;
@@ -147,7 +129,6 @@ public class FormService {
 		username = (String) authentication.get("USERNAME");
 		password = (String) authentication.get("PASSWORD");
 		SecretKey sec;
-		String decPassword = null;
 
 		providerUUID = (String) authentication.get("provider");
 		Context.authenticate(username, password);
@@ -213,9 +194,9 @@ public class FormService {
 						personAddress.setStateProvince(addressObj.get("Province/State").toString());
 						personAddress.setCityVillage(addressObj.get("City/Village").toString());
 						personAddress.setAddress2(addressObj.get("address2").toString()); // open
-						                                                                  // address
+																							// address
 						personAddress.setAddress3(addressObj.get("address3").toString()); // nearest
-						                                                                  // landmark
+																							// landmark
 					}
 						break;
 					case GPS: {
@@ -248,8 +229,8 @@ public class FormService {
 							if (dataItem.containsKey("person_attribute")) {
 								boolean isAttribute = (Boolean) dataItem.get("person_attribute");
 								if (isAttribute) {
-									PersonAttribute personAttrib = saveAttribute(personService, concept.getDisplayString(),
-									    value);
+									PersonAttribute personAttrib = saveAttribute(personService,
+											concept.getDisplayString(), value);
 									personAttributes.add(personAttrib);
 								}
 							}
@@ -274,8 +255,8 @@ public class FormService {
 							if (dataItem.containsKey("person_attribute")) {
 								boolean isAttribute = (Boolean) dataItem.get("person_attribute");
 								if (isAttribute) {
-									PersonAttribute personAttrib = saveAttribute(personService, concept.getDisplayString(),
-									    value);
+									PersonAttribute personAttrib = saveAttribute(personService,
+											concept.getDisplayString(), value);
 									personAttributes.add(personAttrib);
 								}
 							}
@@ -300,7 +281,7 @@ public class FormService {
 								boolean isAttribute = (Boolean) dataItem.get("person_attribute");
 								if (isAttribute) {
 									PersonAttribute personAttrib = saveAttribute(personService,
-									    conceptDateTime.getDisplayString(), valueDateTime);
+											conceptDateTime.getDisplayString(), valueDateTime);
 									personAttributes.add(personAttrib);
 								}
 							}
@@ -334,7 +315,7 @@ public class FormService {
 							boolean isAttribute = (Boolean) dataItem.get("person_attribute");
 							if (isAttribute) {
 								PersonAttribute personAttrib = saveAttribute(personService,
-								    questionConcept.getDisplayString(), valueConcept.getDisplayString());
+										questionConcept.getDisplayString(), valueConcept.getDisplayString());
 								personAttributes.add(personAttrib);
 							}
 						}
@@ -346,7 +327,8 @@ public class FormService {
 						String valueStr = dataItem.get(ParamNames.VALUE).toString();
 
 						Concept questionConcept = conceptService.getConceptByUuid(questionConceptStr);
-						Concept parentValueConcept = conceptService.getConceptByUuid("51afc3ac-e7a1-11ea-adc1-0242ac120002");
+						Concept parentValueConcept = conceptService
+								.getConceptByUuid("51afc3ac-e7a1-11ea-adc1-0242ac120002");
 
 						JSONArray valuesArray = (JSONArray) parser.parse(valueStr);
 						if (valuesArray.size() > 0) {
@@ -402,8 +384,7 @@ public class FormService {
 							calendar.setTime(dateEntered);
 							// calendar.add(Calendar.MINUTE, -5);
 							dateEntered = calendar.getTime();
-						}
-						catch (ParseException e) {
+						} catch (ParseException e) {
 							e.printStackTrace();
 						}
 					}
@@ -415,7 +396,7 @@ public class FormService {
 						Long numberOfPeopleLong = (Long) dataItem.get("numberOfPeople");
 						double numberOfPeople = numberOfPeopleLong.doubleValue();
 						Concept questionNumberOfContacts = conceptService
-						        .getConceptByUuid("0e594b8c-cd8c-4437-9c6e-bc4e30ec7598");
+								.getConceptByUuid("0e594b8c-cd8c-4437-9c6e-bc4e30ec7598");
 						Obs obsNumberOfContacts = new Obs();
 						obsNumberOfContacts.setConcept(questionNumberOfContacts);
 						obsNumberOfContacts.setValueNumeric(numberOfPeople);
@@ -440,8 +421,9 @@ public class FormService {
 							String dob = (String) contactObj.get("dob");
 							String relationship = (String) contactObj.get("relation");
 
-							System.out.println(contactsArray.size() + "\nfirstName: " + givenName + "\nlast:" + familyName
-							        + "\ngender: " + gender + "\ndob: " + dob + "\nrelation: " + relationship + "\n\n\n");
+							System.out.println(contactsArray.size() + "\nfirstName: " + givenName + "\nlast:"
+									+ familyName + "\ngender: " + gender + "\ndob: " + dob + "\nrelation: "
+									+ relationship + "\n\n\n");
 
 							Date birthDate = Utils.formatterDate.parse(dob);
 
@@ -452,22 +434,23 @@ public class FormService {
 							// Creating a unique value group id
 
 							Calendar c = Calendar.getInstance();
-							int valueGroupId = (c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DAY_OF_MONTH)
-							        + c.get(Calendar.HOUR_OF_DAY) + c.get(Calendar.MINUTE) + c.get(Calendar.SECOND)
-							        + c.get(Calendar.MILLISECOND) + (i + 1)) * (j + 2);
+							int valueGroupId = (c.get(Calendar.YEAR) + c.get(Calendar.MONTH)
+									+ c.get(Calendar.DAY_OF_MONTH) + c.get(Calendar.HOUR_OF_DAY)
+									+ c.get(Calendar.MINUTE) + c.get(Calendar.SECOND) + c.get(Calendar.MILLISECOND)
+									+ (i + 1)) * (j + 2);
 
 							Concept questionConceptDOB = conceptService
-							        .getConceptByUuid("d3d9e77a-cb7c-431a-9457-bcc0e4ac9a91");
+									.getConceptByUuid("d3d9e77a-cb7c-431a-9457-bcc0e4ac9a91");
 							Concept questionConceptGender = conceptService
-							        .getConceptByUuid("75a17321-fd69-47be-831e-cd773dc9c3cc");
+									.getConceptByUuid("75a17321-fd69-47be-831e-cd773dc9c3cc");
 							Concept questionConceptGivenName = conceptService
-							        .getConceptByUuid("85fc8b27-8a08-4bdc-bf91-e34af50265aa");
+									.getConceptByUuid("85fc8b27-8a08-4bdc-bf91-e34af50265aa");
 							Concept questionConceptFamilyName = conceptService
-							        .getConceptByUuid("82c65f7c-b9e8-4775-a8bd-f7ad55ab8bf0");
+									.getConceptByUuid("82c65f7c-b9e8-4775-a8bd-f7ad55ab8bf0");
 							Concept questionConceptIdentifier = conceptService
-							        .getConceptByUuid("a24d649b-fb89-4b8c-beeb-aacf2872cf22");
+									.getConceptByUuid("a24d649b-fb89-4b8c-beeb-aacf2872cf22");
 							Concept questionConceptRelationship = conceptService
-							        .getConceptByUuid("7579f93d-ebe7-423f-822b-dbe792248499");
+									.getConceptByUuid("7579f93d-ebe7-423f-822b-dbe792248499");
 
 							Obs obsDOB = new Obs();
 							Obs obsGender = new Obs();
@@ -505,7 +488,8 @@ public class FormService {
 							setMembers.add(obsRelationship);
 							setMembers.add(obsIdentifier);
 
-							Concept parentConcept = conceptService.getConceptByUuid("9757f93d-ebe7-423f-822b-dbe792248488");
+							Concept parentConcept = conceptService
+									.getConceptByUuid("9757f93d-ebe7-423f-822b-dbe792248488");
 							Obs parentObs = new Obs();
 							parentObs.setConcept(parentConcept);
 							parentObs.setGroupMembers(setMembers);
@@ -565,14 +549,15 @@ public class FormService {
 					// Mapping encounter with workflow
 					HydramoduleFormEncounter formEncounter = new HydramoduleFormEncounter();
 					String formDetailsUUID = formDetails.get("uuid").toString(); // UUID
-					                                                             // of
-					                                                             // componentForm
+																					// of
+																					// componentForm
 					System.out.println("FormDetailsUUID: " + formDetailsUUID);
-					HydramoduleComponentForm componentForm = service.getComponentFormByUUID(formDetailsUUID);
+					HydramoduleComponentForm componentForm = hydraService.getHydraComponentService()
+							.getComponentFormByUUID(formDetailsUUID);
 					if (componentForm != null) {
 						formEncounter.setComponentForm(componentForm);
 						formEncounter.setEncounter(savedEncoounter);
-						service.saveFormEncounter(formEncounter);
+						hydraService.getHydraFormService().saveFormEncounter(formEncounter);
 					}
 
 					if (personAttributes.size() > 0) {
@@ -585,8 +570,7 @@ public class FormService {
 						}
 						try {
 							savePersonAttributeViaREST(person.getUuid(), personAttributes, username, password);
-						}
-						catch (IOException e) {
+						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
@@ -612,8 +596,8 @@ public class FormService {
 
 	}
 
-	private void createContactPatient(Patient indexPatient, JSONObject contactObj, Location location, String workflowUUID,
-	        JSONArray data) throws ParseException {
+	private void createContactPatient(Patient indexPatient, JSONObject contactObj, Location location,
+			String workflowUUID, JSONArray data) throws ParseException {
 		PersonService personService = Context.getPersonService();
 		ConceptService conceptService = Context.getConceptService();
 		PatientService patientService = Context.getPatientService();
@@ -622,7 +606,8 @@ public class FormService {
 
 		String identifier = (String) contactObj.get("patientID");
 		List<PatientIdentifier> patientIdentifiers = new ArrayList<PatientIdentifier>();
-		PatientIdentifierType patientIdentifierType = patientService.getPatientIdentifierTypeByName("Patient Identifier");
+		PatientIdentifierType patientIdentifierType = patientService
+				.getPatientIdentifierTypeByName("Patient Identifier");
 		PatientIdentifier patientIdentifier = new PatientIdentifier();
 		patientIdentifier.setIdentifier(identifier);
 		patientIdentifier.setIdentifierType(patientIdentifierType);
@@ -673,21 +658,22 @@ public class FormService {
 		System.out.println(patient.getPerson().getGivenName());
 		patient = patientService.savePatient(patient);
 		if (patient != null) {
-			HydramoduleWorkflow workflow = service.getWorkflowByUUID(workflowUUID);
+			HydramoduleWorkflow workflow = hydraService.getHydraWorkflowService().getWorkflowByUUID(workflowUUID);
 			if (workflow != null) {
 				HydramodulePatientWorkflow patientWorkflow = new HydramodulePatientWorkflow();
 				patientWorkflow.setWorkflow(workflow);
 				patientWorkflow.setPatient(patient);
-				service.saveHydramodulePatientWorkflow(patientWorkflow);
+				hydraService.getHydraWorkflowService().saveHydramodulePatientWorkflow(patientWorkflow);
 			}
 
 			// Save relationship
-			RelationshipType relationshipType = personService.getRelationshipTypeByUuid(relationships.get(relationship));
+			RelationshipType relationshipType = personService
+					.getRelationshipTypeByUuid(relationships.get(relationship));
 
 			if (relationshipType != null) {
 				System.out.println("RelationshipType " + relationshipType.getName());
 				Relationship relationshipObj = new Relationship(indexPatient.getPerson(), patient.getPerson(),
-				        relationshipType);
+						relationshipType);
 				personService.saveRelationship(relationshipObj);
 			} else {
 				System.out.println("RelationshipType " + null);
@@ -733,7 +719,7 @@ public class FormService {
 					String IdentifierValue = dataItem.get(ParamNames.VALUE).toString();
 					System.out.println("Identifier: " + IdentifierValue);
 					PatientIdentifierType patientIdentifierType = patientService
-					        .getPatientIdentifierTypeByName(identifierType);
+							.getPatientIdentifierTypeByName(identifierType);
 
 					PatientIdentifier patientIdentifier = new PatientIdentifier();
 					patientIdentifier.setIdentifier(IdentifierValue);
@@ -795,8 +781,7 @@ public class FormService {
 						calendar.setTime(dateEntered);
 						calendar.add(Calendar.MINUTE, -5);
 						dateEntered = calendar.getTime();
-					}
-					catch (ParseException e) {
+					} catch (ParseException e) {
 						e.printStackTrace();
 					}
 				}
@@ -841,12 +826,12 @@ public class FormService {
 		System.out.println(patient.getPerson().getGivenName());
 		patient = patientService.savePatient(patient);
 		if (patient != null) {
-			HydramoduleWorkflow workflow = service.getWorkflowByUUID(workflowUUID);
+			HydramoduleWorkflow workflow = hydraService.getHydraWorkflowService().getWorkflowByUUID(workflowUUID);
 			if (workflow != null) {
 				HydramodulePatientWorkflow patientWorkflow = new HydramodulePatientWorkflow();
 				patientWorkflow.setWorkflow(workflow);
 				patientWorkflow.setPatient(patient);
-				service.saveHydramodulePatientWorkflow(patientWorkflow);
+				hydraService.getHydraWorkflowService().saveHydramodulePatientWorkflow(patientWorkflow);
 			}
 		}
 		/*
@@ -910,8 +895,7 @@ public class FormService {
 		dob = currentYear - age + dob;
 		try {
 			return Utils.openMrsDateFormat.parse(dob);
-		}
-		catch (ParseException e) {
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -973,14 +957,13 @@ public class FormService {
 			}
 			jsonReponse.put("result", "success: Logedin");
 			jsonReponse.put("roles", rolesArray);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			jsonReponse.put("result", "failure: Invalid Username or Password");
 		}
 	}
 
 	private HttpPost buildHttpPostObject(String serverAddress, String json, String username, String password)
-	        throws UnsupportedEncodingException {
+			throws UnsupportedEncodingException {
 		HttpPost httppost = new HttpPost(serverAddress);
 		httppost.setHeader("Accept", "application/json");
 		httppost.setHeader("Content-Type", "application/json");
@@ -994,8 +977,8 @@ public class FormService {
 
 	}
 
-	private String savePersonAttributeViaREST(String patientUUID, Set<PersonAttribute> personAttributes, String username,
-	        String password) throws IOException {
+	private String savePersonAttributeViaREST(String patientUUID, Set<PersonAttribute> personAttributes,
+			String username, String password) throws IOException {
 		JSONArray attribueArray = new JSONArray();
 
 		for (PersonAttribute pa : personAttributes) {
@@ -1010,8 +993,9 @@ public class FormService {
 		personObj.put("attributes", attribueArray);
 
 		HttpClient client = new DefaultHttpClient();
-		HttpPost httpPost = buildHttpPostObject("http://localhost:8080" + "/openmrs/ws/rest/v1/person/" + patientUUID + "/",
-		    String.valueOf(personObj), username, password);
+		HttpPost httpPost = buildHttpPostObject(
+				"http://localhost:8080" + "/openmrs/ws/rest/v1/person/" + patientUUID + "/", String.valueOf(personObj),
+				username, password);
 		HttpResponse response = client.execute(httpPost);
 		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 		String line = "";

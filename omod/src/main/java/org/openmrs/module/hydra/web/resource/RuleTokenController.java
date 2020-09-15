@@ -6,9 +6,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleField;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFieldRule;
-import org.openmrs.module.hydra.model.workflow.HydramoduleRuleToken;
+import org.openmrs.module.hydra.model.HydramoduleField;
+import org.openmrs.module.hydra.model.HydramoduleFieldRule;
+import org.openmrs.module.hydra.model.HydramoduleRuleToken;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -34,8 +34,7 @@ public class RuleTokenController extends DelegatingCrudResource<HydramoduleRuleT
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleRuleToken newDelegate() {
@@ -44,18 +43,18 @@ public class RuleTokenController extends DelegatingCrudResource<HydramoduleRuleT
 
 	@Override
 	public HydramoduleRuleToken save(HydramoduleRuleToken delegate) {
-		return service.saveHydramoduleRuleToken(delegate);
+		return hydraService.getHydraFieldService().saveHydramoduleRuleToken(delegate);
 	}
 
 	@Override
 	public HydramoduleRuleToken getByUniqueId(String uuid) {
-		return service.getHydramoduleRuleToken(uuid);
+		return hydraService.getHydraFieldService().getHydramoduleRuleToken(uuid);
 	}
 
 	@Override
 	public SimpleObject getAll(RequestContext context) throws ResponseException {
 		SimpleObject simpleObject = new SimpleObject();
-		List<HydramoduleRuleToken> moduleForm = service.getAllHydramoduleRuleTokens();
+		List<HydramoduleRuleToken> moduleForm = hydraService.getHydraFieldService().getAllHydramoduleRuleTokens();
 		simpleObject.put("rules", ConversionUtil.convertToRepresentation(moduleForm, context.getRepresentation()));
 		return simpleObject;
 	}

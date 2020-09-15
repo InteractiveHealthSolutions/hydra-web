@@ -8,7 +8,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.hydra.api.HydraService;
 import org.openmrs.module.hydra.api.form_service.FormService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleDTOFormSubmissionData;
+import org.openmrs.module.hydra.model.HydramoduleDTOFormSubmissionData;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -30,6 +30,8 @@ public class FormSubmissionDataController extends DelegatingCrudResource<Hydramo
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
+	private HydraService hydraService = Context.getService(HydraService.class);
+
 	// @Autowired
 	private HydraService service = Context.getService(HydraService.class);
 
@@ -41,7 +43,7 @@ public class FormSubmissionDataController extends DelegatingCrudResource<Hydramo
 	@Override
 	public HydramoduleDTOFormSubmissionData save(HydramoduleDTOFormSubmissionData formSubmissionData) {
 		try {
-			FormService.getInstance().createNewForm(service, formSubmissionData);
+			FormService.getInstance().createNewForm(formSubmissionData);
 		}
 		catch (ContextAuthenticationException e) {
 			e.printStackTrace();

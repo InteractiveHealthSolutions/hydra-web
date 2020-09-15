@@ -1,10 +1,13 @@
 package org.openmrs.module.hydra.web.resource;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
+import org.openmrs.module.hydra.model.HydramoduleForm;
+import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -12,8 +15,10 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingCrudResource;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = RestConstants.VERSION_1
@@ -26,8 +31,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 	 */
 	protected final Log log = LogFactory.getLog(getClass());
 
-	// @Autowired
-	private HydraService service = Context.getService(HydraService.class);
+	private HydraService hydraService = Context.getService(HydraService.class);
 
 	@Override
 	public HydramoduleFormField newDelegate() {
@@ -43,7 +47,7 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 
 	@Override
 	public HydramoduleFormField getByUniqueId(String uuid) {
-		return service.getFormFieldByUUID(uuid);
+		return hydraService.getHydraFormService().getFormFieldByUUID(uuid);
 	}
 
 	/*
@@ -65,6 +69,14 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		 * context.getRepresentation())); return simpleObject;
 		 */
 		return null;
+	}
+
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		String queryParam = context.getParameter("q");
+		List<HydramoduleFormField> forms = hydraService.getHydraFormService().getFormFieldsByForm(queryParam);
+
+		return new NeedsPaging<HydramoduleFormField>(forms, context);
 	}
 
 	@Override
@@ -102,11 +114,14 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("uuid");
 		description.addProperty("createPatient");
 		description.addProperty("isCore");
+		description.addProperty("autoCompleteFromEarliest");
 		description.addProperty("field", Representation.FULL);
 		description.addProperty("fieldData", Representation.FULL);
 
 		description.addProperty("group", Representation.REF);
 		description.addProperty("children", Representation.REF);
+		description.addProperty("autoCompleteFromFormField", Representation.REF);
+		description.addProperty("autoCompleteFromComponentForm", Representation.REF);
 
 		// description.addProperty("form", Representation.REF);
 
@@ -158,7 +173,10 @@ public class FormFieldController extends MetadataDelegatingCrudResource<Hydramod
 		description.addProperty("children");
 		description.addProperty("group");
 		description.addProperty("createPatient");
+		description.addProperty("autoCompleteFromEarliest");
 		description.addProperty("isCore");
+		description.addProperty("autoCompleteFromFormField");
+		description.addProperty("autoCompleteFromComponentForm");
 
 		return description;
 
