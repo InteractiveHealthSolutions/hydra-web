@@ -56,41 +56,6 @@ public interface HydraService extends OpenmrsService {
 
 	void setHydraLocationTypeService(IHydraLocationTypeService hydraLocationTypeService);
 
-	<<<<<<<
-
-	HEAD HydramoduleWorkflow
-
-	getWorkflowByName(String name) throws APIException;
-
-	HydramoduleForm getHydraModuleFormByName(String name) throws APIException;
-
-	HydramoduleComponentForm getComponentFormByFormAndWorkflow(HydramoduleForm hydramoduleForm,
-			HydramoduleWorkflow hydramoduleWorkflow) throws APIException;
-
-	HydramodulePatientWorkflow getHydramodulePatientWorkflowByPatient(Integer patientId) throws APIException;
-
-	List<HydramodulePhaseComponents> getHydramodulePhaseComponentsByWorkflow(String uuid) throws APIException;
-
-	List<HydramoduleWorkflowPhases> getWorkflowPhaseByWorkflow(String workflowUUID) throws APIException;
-
-	List<HydramoduleComponentForm> getComponentFormsByComponent(String componentUUID) throws APIException;
-
-	List<HydramoduleFormField> getFormFieldsByForm(String uuid) throws APIException;
-	// HydramoduleEncounterMapper
-	// saveHydramoduleEncounterMapper(HydramoduleEncounterMapper
-	// hydramoduleEncounterMapper)
-	// throws APIException;
-	//
-	// HydramoduleEncounterMapper getHydramoduleEncounterMapper(String uuid) throws
-	// APIException;
-	//
-	// List<HydramoduleEncounterMapper> getAllHydramoduleEncounterMapper() throws
-	// APIException;
-	//
-	// List<HydramoduleEncounterMapper> getEncounterMapperByPatient(String
-	// patientIdentifier) throws APIException;
-	=======
-
-	IHydraLocationTypeService getHydraLocationTypeService();>>>>>>>qa
+	IHydraLocationTypeService getHydraLocationTypeService();
 
 }

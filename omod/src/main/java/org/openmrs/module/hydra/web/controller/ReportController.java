@@ -3,9 +3,9 @@ package org.openmrs.module.hydra.web.controller;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.hydra.api.HydraService;
-import org.openmrs.module.hydra.model.workflow.HydramoduleField;
-import org.openmrs.module.hydra.model.workflow.HydramoduleForm;
-import org.openmrs.module.hydra.model.workflow.HydramoduleFormField;
+import org.openmrs.module.hydra.model.HydramoduleField;
+import org.openmrs.module.hydra.model.HydramoduleForm;
+import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.util.OpenmrsConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,8 +140,8 @@ public class ReportController {
 		SimpleDateFormat sdf = new SimpleDateFormat(SQL_DATEIMESTAMP);
 		String prefix = sdf.format(cal.getTime());
 
-		int workflowId = service.getWorkflowByName(workflow).getId();
-		int encounterId = service.getHydraModuleFormByName(form).getEncounterType().getId();
+		int workflowId = service.getHydraWorkflowService().getWorkflowByName(workflow).getId();
+		int encounterId = service.getHydraFormService().getHydraModuleFormByName(form).getEncounterType().getId();
 
 		String query = generateQuery(encounterId, workflowId, form, from, to);
 
@@ -210,7 +210,7 @@ public class ReportController {
 				+ "YEAR(PR.date_created) - YEAR(PR.BIRTHDATE) AS AGE,PA.address2 AS ADDRESS,PA.state_province AS PROVINCE,PA.city_village AS CITY,PA.address3 As LAND_MARK "
 				+ ",EN.encounter_datetime as ENCOUNTER_DATE, " + "US.USERNAME as USERNAME, LO.NAME as LOCATION";
 
-		HydramoduleForm hydraForm = service.getHydraModuleFormByName(form);
+		HydramoduleForm hydraForm = service.getHydraFormService().getHydraModuleFormByName(form);
 		List<HydramoduleFormField> formFields = hydraForm.getFormFields();
 		Collections.sort(formFields, new Comparator<HydramoduleFormField>() {
 
