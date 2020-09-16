@@ -13,6 +13,7 @@ import org.openmrs.module.hydra.api.IHydraPhaseService;
 import org.openmrs.module.hydra.api.IHydraServiceService;
 import org.openmrs.module.hydra.api.IHydraWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
