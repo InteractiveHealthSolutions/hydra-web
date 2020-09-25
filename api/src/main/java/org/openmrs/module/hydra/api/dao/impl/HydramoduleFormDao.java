@@ -8,11 +8,9 @@ import javax.transaction.Transactional;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.APIException;
-import org.openmrs.module.hydra.api.dao.HydraDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleComponentDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFieldDao;
 import org.openmrs.module.hydra.api.dao.IHydramoduleFormDao;
@@ -24,7 +22,6 @@ import org.openmrs.module.hydra.model.HydramoduleFormEncounter;
 import org.openmrs.module.hydra.model.HydramoduleFormField;
 import org.openmrs.module.hydra.model.HydramoduleFormFieldGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Transactional
 public class HydramoduleFormDao implements IHydramoduleFormDao {
