@@ -246,7 +246,7 @@ public class ReportController {
 		        + " LEFT JOIN `hydra`.`hydramodule_workflow` AS WF ON WF.workflow_id = CF.workflow_id"
 		        + " LEFT OUTER JOIN `hydra`.obs as o_sc on o_sc.encounter_id = EN.encounter_id and o_sc.voided=0";
 
-		query += " where" + " EN.encounter_datetime between '" + from + "' and '" + to + "' and" + " EN.encounter_type = "
+		query += " where" + " EN.voided = 0 and" + " EN.encounter_datetime between '" + from + "' and '" + to + "' and" + " EN.encounter_type = "
 		        + encounterId + "  and PT.voided=0 and WF.workflow_id=" + workflowId + " group by EN.encounter_id;";
 
 		return query;

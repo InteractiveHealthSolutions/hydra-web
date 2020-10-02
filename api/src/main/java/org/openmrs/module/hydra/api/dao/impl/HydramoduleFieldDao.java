@@ -96,7 +96,8 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 		if (name != null) {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(HydramoduleField.class);
-			criteria.add(Restrictions.like("name", "%" + name + "%")).setMaxResults(25);
+			criteria.add(Restrictions.like("name", "%" + name + "%")).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+			        .setMaxResults(25);
 			// criteria.
 			List<HydramoduleField> fields = criteria.list();
 			// criteria.addOrder(Order.asc("hydramoduleFormId"));
