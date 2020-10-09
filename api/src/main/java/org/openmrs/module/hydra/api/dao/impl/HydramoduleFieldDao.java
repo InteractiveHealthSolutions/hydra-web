@@ -189,7 +189,7 @@ public class HydramoduleFieldDao implements IHydramoduleFieldDao {
 	@Override
 	public List<HydramoduleField> getAllHydramoduleFields() {
 		Session session = sessionFactory.getCurrentSession();
-		Criteria criteria = session.createCriteria(HydramoduleField.class);
+		Criteria criteria = session.createCriteria(HydramoduleField.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		criteria.addOrder(Order.asc("fieldId"));
 		return criteria.list();
 	}
